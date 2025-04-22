@@ -3,6 +3,9 @@ import { CONFIG } from '../config.js';
 import { createMesh } from './mesh.js';
 import { PlotRenderer } from './plotRenderer.js';
 
+// Added grid constants that were previously in main.js
+const GRID = { WIDTH: 100, HEIGHT: 60 };
+
 /**
  * Sets up the scene, camera, renderer, and controls.
  * @returns {Object} An object containing the scene, camera, renderer, and controls.
@@ -22,6 +25,48 @@ export function setupScene() {
     });
 
     return { scene, camera, renderer, surfaceMesh };
+}
+
+/**
+ * Sets up a new scene with custom surface mesh for concentration visualization.
+ * @param {Function} createBacteriumSystem - Function to create bacterium system
+ * @returns {Object} An object containing the scene, camera, renderer, and bacteriumSystem
+ */
+export function setupNewScene(createBacteriumSystem) {
+    console.log("Setting up new scene...");
+    const setup = setupScene();
+    const sceneState = setup; // Create local sceneState to be returned
+
+    // Append renderer to document if not already done
+    document.body.appendChild(sceneState.renderer.domElement);
+    
+    // Initialize the bacterium visualization system
+    sceneState.bacteriumSystem = createBacteriumSystem(sceneState.scene);
+
+    // Create the surface mesh geometry specifically for concentration visualization
+    const geometry = new THREE.PlaneGeometry(GRID.WIDTH, GRID.HEIGHT, GRID.WIDTH - 1, GRID.HEIGHT - 1);
+ 
+    // Initialize the color attribute buffer before creating the mesh
+    // The size is num_vertices * 3 (r, g, b per vertex)
+    const numVertices = geometry.attributes.position.count;
+    const initialColors = new Float32Array(numVertices * 3); // Initialize with zeros
+    geometry.setAttribute('color', new THREE.BufferAttribute(initialColors, 3)); // Add color attribute
+
+    // Create material with wireframe enabled
+    const material = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        side: THREE.DoubleSide,
+        wireframe: true // Render as wireframe
+    });
+    
+    // Create and position the surface mesh
+    sceneState.surfaceMesh = new THREE.Mesh(geometry, material);
+    sceneState.surfaceMesh.rotation.x = Math.PI;
+    sceneState.scene.add(sceneState.surfaceMesh);
+    
+    console.log("Surface mesh created (wireframe) and added to scene with color attribute.");
+    
+    return sceneState;
 }
 
 let plotRendererInstance = null;

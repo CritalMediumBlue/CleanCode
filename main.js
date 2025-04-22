@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { setupScene,initPlotRenderer,renderPlot, updatePlot } from './scene/sceneManager.js';
+import { setupScene, initPlotRenderer, renderPlot, updatePlot, setupNewScene } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
     updateBacteria,
@@ -79,7 +79,10 @@ const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
     cleanupResources();
     initializeParameters();
-    setupNewScene();
+    const newSceneState = setupNewScene(createBacteriumSystem);
+    Object.assign(sceneState, newSceneState);
+    resetArrays(); // Ensure data arrays are ready
+    updateSurfaceMesh(); // Initial update to set heights/colors
 };
 
 /**
@@ -171,43 +174,6 @@ const setBacteriaData = (data, processedData) => {
     console.log('Total time (h)', data.size * animationState.fromStepToMinutes / 60);
     console.log('Every time step is ', Math.floor(animationState.fromStepToMinutes), 'minutes',
         'and', Math.round(animationState.fromStepToMinutes % 1 * 60), 'seconds');
-};
-
-/**
- * Sets up a new Three.js scene, camera, and renderer using the `setupScene` utility.
- * Appends the renderer's canvas to the document body and creates the bacterium system.
- */
-const setupNewScene = () => {
-    console.log("Setting up new scene...");
-    const setup = setupScene();
-    Object.assign(sceneState, setup);
-
-    document.body.appendChild(sceneState.renderer.domElement);
-    sceneState.bacteriumSystem = createBacteriumSystem(sceneState.scene); // Initialize the bacterium visualization system
-
-    // Create the surface mesh geometry after the scene is set up
-    const geometry = new THREE.PlaneGeometry(GRID.WIDTH, GRID.HEIGHT, GRID.WIDTH - 1, GRID.HEIGHT - 1);
-
-    // Initialize the color attribute buffer before creating the mesh
-    // The size is num_vertices * 3 (r, g, b per vertex)
-    const numVertices = geometry.attributes.position.count;
-    const initialColors = new Float32Array(numVertices * 3); // Initialize with zeros or default color
-    geometry.setAttribute('color', new THREE.BufferAttribute(initialColors, 3)); // Add color attribute
-
-    // Create material with wireframe enabled
-    const material = new THREE.MeshBasicMaterial({
-        vertexColors: true,
-        side: THREE.DoubleSide,
-        wireframe: true // Render as wireframe
-    });
-    sceneState.surfaceMesh = new THREE.Mesh(geometry, material);
-    sceneState.surfaceMesh.rotation.x = Math.PI 
-    sceneState.scene.add(sceneState.surfaceMesh);
-    console.log("Surface mesh created (wireframe) and added to scene with color attribute.");
-
-    // Initialize data arrays and perform initial mesh update
-    resetArrays(); // Ensure data arrays like dataState.colors are ready
-    updateSurfaceMesh(); // Initial update to set heights/colors
 };
 
 

@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { quadtree } from 'd3-quadtree';
 import { CONFIG } from '../config.js';
 
-// Import from the refactored modules
 import { BacteriumPool, updateBacteriumColor, setBacteriumTransform, createBacteriumPool } from '../scene/bacteriumRenderer.js';
 import { 
     PhenotypeManager, 
