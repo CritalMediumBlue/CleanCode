@@ -14,8 +14,8 @@ import {
     clearHistories,
     diffuse
 } from './simulation/simulationManager.js';
-import { CONFIG } from './config.js';
-import { handleFileInput } from './dataProcessor.js';
+import { CONFIG } from './data/config.js';
+import { handleFileInput } from './data/dataProcessor.js';
 
 // --- Constants ---
 /** @const {object} GRID - Defines the dimensions of the simulation grid. */
