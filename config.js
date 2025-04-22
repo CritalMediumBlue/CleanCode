@@ -60,4 +60,11 @@ export const CONFIG = {
         Y_TICK_STEP: 200,
         UPDATE_PLOT_INTERVAL: 10,
     },
+    PHENOTYPES: {
+        MAGENTA: 'MAGENTA',
+        CYAN: 'CYAN'
+    }
 };
+
+// Export PHENOTYPES separately for convenience
+export const PHENOTYPES = CONFIG.PHENOTYPES;

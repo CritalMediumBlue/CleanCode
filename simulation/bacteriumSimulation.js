@@ -1,10 +1,4 @@
-import { CONFIG } from '../config.js';
-
-// Replace THREE.Color objects with simple string identifiers
-const PHENOTYPES = {
-    MAGENTA: 'MAGENTA',
-    CYAN: 'CYAN'
-};
+import { CONFIG, PHENOTYPES } from '../config.js';
 
 /**
  * Manages history tracking for bacteria simulation
