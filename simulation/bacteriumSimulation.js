@@ -1,5 +1,3 @@
-import { CONFIG, PHENOTYPES } from '../config.js';
-
 /**
  * Manages history tracking for bacteria simulation
  */
@@ -53,10 +51,17 @@ export class HistoryManager {
  * Manages phenotype determination, tracking, and related operations
  */
 export class PhenotypeManager {
-    constructor() {
+    /**
+     * Create a new PhenotypeManager
+     * @param {Object} config - Configuration object containing BACTERIUM settings
+     * @param {Object} phenotypes - Phenotype constants
+     */
+    constructor(config, phenotypes) {
+        this.config = config;
+        this.phenotypes = phenotypes;
         this.phenotypeMemo = new Map();
-        this.signal = CONFIG.BACTERIUM.SIGNAL.DEFAULT / 100;
-        this.alpha = CONFIG.BACTERIUM.ALPHA.DEFAULT;
+        this.signal = config.BACTERIUM.SIGNAL.DEFAULT / 100;
+        this.alpha = config.BACTERIUM.ALPHA.DEFAULT;
     }
 
     /**
@@ -70,14 +75,14 @@ export class PhenotypeManager {
      * Set the signal value used in phenotype determination
      */
     setSignalValue(value) {
-        this.signal = this.clamp(value, CONFIG.BACTERIUM.SIGNAL.MIN, CONFIG.BACTERIUM.SIGNAL.MAX) / 100;
+        this.signal = this.clamp(value, this.config.BACTERIUM.SIGNAL.MIN, this.config.BACTERIUM.SIGNAL.MAX) / 100;
     }
 
     /**
      * Set the alpha value used in phenotype determination
      */
     setAlphaValue(value) {
-        this.alpha = this.clamp(value, CONFIG.BACTERIUM.ALPHA.MIN, CONFIG.BACTERIUM.ALPHA.MAX);
+        this.alpha = this.clamp(value, this.config.BACTERIUM.ALPHA.MIN, this.config.BACTERIUM.ALPHA.MAX);
     }
 
     /**
@@ -97,7 +102,7 @@ export class PhenotypeManager {
         }
         
         // Assign random phenotype if no inheritance information
-        const phenotype = Math.random() < 0.5 ? PHENOTYPES.MAGENTA : PHENOTYPES.CYAN;
+        const phenotype = Math.random() < 0.5 ? this.phenotypes.MAGENTA : this.phenotypes.CYAN;
         this.phenotypeMemo.set(ID, phenotype);
         return phenotype;
     }
@@ -123,7 +128,7 @@ export class PhenotypeManager {
         
         // Handle initial bacteria (IDs 1000-2000)
         if (ID >= 1000n && ID <= 2000n) {
-            const phenotype = Math.random() < 0.5 ? PHENOTYPES.MAGENTA : PHENOTYPES.CYAN;
+            const phenotype = Math.random() < 0.5 ? this.phenotypes.MAGENTA : this.phenotypes.CYAN;
             this.phenotypeMemo.set(ID, phenotype);
             return phenotype;
         }
@@ -143,7 +148,7 @@ export class PhenotypeManager {
         // Calculate transition rates based on feedback type
         let K_c2m, K_m2c; // Transition rates: cyan-to-magenta and magenta-to-cyan
         
-        if (CONFIG.BACTERIUM.POSITIVE_FEEDBACK) {
+        if (this.config.BACTERIUM.POSITIVE_FEEDBACK) {
             K_c2m = this.alpha + localConcentration * this.signal;
             K_m2c = this.alpha + proportionCyan * this.signal;
         } else {
@@ -155,11 +160,10 @@ export class PhenotypeManager {
         const rand = Math.random();
         let phenotype;
         
-        // Replace .equals() with === for string comparison
-        if (originalPhenotype === PHENOTYPES.MAGENTA) {
-            phenotype = rand < K_m2c ? PHENOTYPES.CYAN : PHENOTYPES.MAGENTA;
+        if (originalPhenotype === this.phenotypes.MAGENTA) {
+            phenotype = rand < K_m2c ? this.phenotypes.CYAN : this.phenotypes.MAGENTA;
         } else {
-            phenotype = rand < K_c2m ? PHENOTYPES.MAGENTA : PHENOTYPES.CYAN;
+            phenotype = rand < K_c2m ? this.phenotypes.MAGENTA : this.phenotypes.CYAN;
         }
         
         this.phenotypeMemo.set(ID, phenotype);
@@ -186,8 +190,7 @@ export class PhenotypeManager {
         const magentaProportion = magentaNeighbors / totalNeighbors;
         const cyanProportion = cyanNeighbors / totalNeighbors;
         
-        // Replace .equals() with === for string comparison
-        const similarity = phenotype === PHENOTYPES.MAGENTA 
+        const similarity = phenotype === this.phenotypes.MAGENTA 
             ? magentaProportion 
             : cyanProportion;
         
@@ -203,14 +206,14 @@ export class PhenotypeManager {
      * Get count of bacteria with magenta phenotype
      */
     getMagentaCount(currentTimestepBacteria) {
-        return this.getPhenotypeCount(currentTimestepBacteria, PHENOTYPES.MAGENTA);
+        return this.getPhenotypeCount(currentTimestepBacteria, this.phenotypes.MAGENTA);
     }
 
     /**
      * Get count of bacteria with cyan phenotype
      */
     getCyanCount(currentTimestepBacteria) {
-        return this.getPhenotypeCount(currentTimestepBacteria, PHENOTYPES.CYAN);
+        return this.getPhenotypeCount(currentTimestepBacteria, this.phenotypes.CYAN);
     }
 
     /**
@@ -224,10 +227,9 @@ export class PhenotypeManager {
             const phenotype = this.phenotypeMemo.get(ID);
             if (!phenotype) return;
             
-            // Replace .equals() with === for string comparison
-            if (phenotype === PHENOTYPES.MAGENTA) {
+            if (phenotype === this.phenotypes.MAGENTA) {
                 magentaPositions.push(ID);
-            } else if (phenotype === PHENOTYPES.CYAN) {
+            } else if (phenotype === this.phenotypes.CYAN) {
                 cyanPositions.push(ID);
             }
         });
@@ -241,7 +243,6 @@ export class PhenotypeManager {
     getPhenotypeCount(currentTimestepBacteria, targetPhenotype) {
         return Array.from(currentTimestepBacteria).reduce((count, ID) => {
             const phenotype = this.phenotypeMemo.get(ID);
-            // Replace .equals() with === for string comparison
             return phenotype && phenotype === targetPhenotype ? count + 1 : count;
         }, 0);
     }
@@ -253,6 +254,3 @@ export class PhenotypeManager {
         this.phenotypeMemo.clear();
     }
 }
-
-// Export phenotype constants for external use
-export { PHENOTYPES };

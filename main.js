@@ -80,8 +80,11 @@ const resetAllData = () => {
     cleanupResources();
     initializeParameters();
     
+    // Create a function that will create a bacterium system with CONFIG
+    const createConfiguredBacteriumSystem = () => createBacteriumSystem(CONFIG);
+    
     // Set up new scene and create the bacterium system and renderer
-    const newSceneState = setupNewScene(createBacteriumSystem, CONFIG);
+    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, CONFIG);
     Object.assign(sceneState, newSceneState);
     
     resetArrays(); // Ensure data arrays are ready
@@ -365,8 +368,7 @@ const updateBacteriaPositions = (currentBacteria) => {
         animationState.currentTimeStep,
         dataState.bacteriaData,
         sceneState.visibleBacteria,
-        dataState.currentConcentrationData,
-        CONFIG
+        dataState.currentConcentrationData
     );
     
     // Render bacteria using the dedicated renderer

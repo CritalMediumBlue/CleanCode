@@ -2,8 +2,7 @@ import { quadtree } from 'd3-quadtree';
 
 import { 
     PhenotypeManager, 
-    HistoryManager, 
-    PHENOTYPES 
+    HistoryManager
 } from './bacteriumSimulation.js';
 
 import { BacteriumData } from './bacteriumData.js';
@@ -13,10 +12,12 @@ import {ADI} from './diffusion.js';
  * Main bacterium system class that handles simulation logic only
  */
 export class BacteriumSystem {
-    constructor() {
+    constructor(config) {
+        this.config = config;
+        this.phenotypes = config.PHENOTYPES; // Extract phenotypes from config
         this.quadtree = null;
         this.currentTimestepBacteria = new Set();
-        this.phenotypeManager = new PhenotypeManager();
+        this.phenotypeManager = new PhenotypeManager(config, this.phenotypes);
         this.averageSimilarityWithNeighbors = 0;
         this.historyManager = new HistoryManager();
     }
@@ -49,8 +50,8 @@ export class BacteriumSystem {
     /**
      * Count neighbors by phenotype within radius
      */
-    countNeighbors(x, y,CONFIG) {
-        const neighborRadius = CONFIG.BACTERIUM.NEIGHBOR_RADIUS;
+    countNeighbors(x, y) {
+        const neighborRadius = this.config.BACTERIUM.NEIGHBOR_RADIUS;
         let totalCount = 0;
         let magentaCount = 0;
         let cyanCount = 0;
@@ -76,10 +77,9 @@ export class BacteriumSystem {
                             totalCount++;
                             const phenotype = this.phenotypeManager.phenotypeMemo.get(node.data.ID);
                             
-                            // Replace .equals() with === for string comparison
-                            if (phenotype && phenotype === PHENOTYPES.MAGENTA) {
+                            if (phenotype && phenotype === this.phenotypes.MAGENTA) {
                                 magentaCount++;
-                            } else if (phenotype && phenotype === PHENOTYPES.CYAN) {
+                            } else if (phenotype && phenotype === this.phenotypes.CYAN) {
                                 cyanCount++;
                             }
                         }
@@ -97,7 +97,7 @@ export class BacteriumSystem {
      * Update bacteria for current time step and return data for rendering
      * @returns {BacteriumData[]} Array of bacterium data objects for rendering
      */
-    updateBacteria(timeStep, bacteriumData, visible, concentrations,CONFIG) {
+    updateBacteria(timeStep, bacteriumData, visible, concentrations) {
         const layer = bacteriumData.get(timeStep) || [];
         
         // Reset state for new time step
@@ -108,7 +108,7 @@ export class BacteriumSystem {
         // Process each bacterium
         const bacteriaData = [];
         layer.forEach((data) => {
-            const bacteriumData = this.processBacterium(data, visible, concentrations,CONFIG);
+            const bacteriumData = this.processBacterium(data, visible, concentrations);
             bacteriaData.push(bacteriumData);
             this.currentTimestepBacteria.add(data.ID);
             this.averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
@@ -125,7 +125,7 @@ export class BacteriumSystem {
     /**
      * Process a single bacterium and return data for rendering
      */
-    processBacterium(bacteriumData, visible, concentrations,CONFIG) {
+    processBacterium(bacteriumData, visible, concentrations) {
         const { x, y, longAxis, angle, ID, parent } = bacteriumData;
         const WIDTH = 100, HEIGHT = 60;
         
@@ -137,7 +137,7 @@ export class BacteriumSystem {
         const position = { x, y, z: 0 };
         
         // Get neighbors for this bacterium
-        const neighbors = this.countNeighbors(x, y,CONFIG);
+        const neighbors = this.countNeighbors(x, y);
         
         // Determine phenotype and calculate similarity
         const phenotypeInfo = this.phenotypeManager.determinePhenotypeAndSimilarity(
@@ -209,12 +209,12 @@ export function diffuse(
 }
 
 // Export functions for external use - these maintain the same API as before
-export function createBacteriumSystem() {
-    return new BacteriumSystem();
+export function createBacteriumSystem(config) {
+    return new BacteriumSystem(config);
 }
 
-export function updateBacteria(bacteriumSystem, timeStep, bacteriumData, visible, concentrations,CONFIG) {
-    return bacteriumSystem.updateBacteria(timeStep, bacteriumData, visible, concentrations, CONFIG);
+export function updateBacteria(bacteriumSystem, timeStep, bacteriumData, visible, concentrations) {
+    return bacteriumSystem.updateBacteria(timeStep, bacteriumData, visible, concentrations);
 }
 
 export function getMagentaCount(bacteriumSystem) {
