@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biofilm monolayer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" >
+    <script type="importmap">
+        {
+            "imports": {
+              "three": "https://cdn.jsdelivr.net/npm/three@v0.175.0/build/three.module.js",
+              "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/",
+              "d3-quadtree": "https://cdn.jsdelivr.net/npm/d3-quadtree@3/+esm"
+            }
+          }
+    </script>
+</head> 
+<body>
+    <div class="container">
+        
+    <input type="file" id="fileInput" accept=".json" />
+    
+    
+    <div class="controls">
+        <button id="playButton">Play</button>
+        <button id="pauseButton">Pause</button>
+        <button id="singleStepButton">Single Step</button>
+        <button id="visible">Visible Bacteria</button>
+        <button id="visibleMesh">Visible Concentration</button>
+        <label for="colorSelect">Display Mode:</label>
+        <select id="toggleColorButton" name="colorSelect">
+            <option value="phenotype">Phenotype</option>
+            <option value="similarity">Similarity</option>
+        </select>
+    
+        <label for="signalSelect">Signaling Type:</label>
+        <select id="toggleFeedbackButton" name="signalSelect">
+            <option value="negative">Negative</option>
+            <option value="positive">Positive</option>
+            
+        </select>
+
+    
+
+
+
+    </div>
+
+    
+    <div>
+        <label for="signalSlider">Signal Strength:</label>
+        <input type="range" id="signalSlider" min="0" max="0.3" step="0.001" value="0.15">
+        <span id="signalValue">0.15</span>
+    </div>
+    <div>
+        <label for="alphaSlider">Temperature:</label>
+        <input type="range" id="alphaSlider" min="0" max="0.001" step="0.00001" value="0.0001">
+        <span id="alphaValue">0.0001</span>
+    </div>
+</div>
+    
+    <div id="scene-container"></div>
+    
+    <div id="plot-overlay"></div>
+
+    <div id="text-overlay"></div>
+
+    
+    <script type="module" src="main.js"></script>
+</body>
+</html>
