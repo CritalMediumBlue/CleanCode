@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CONFIG } from '../config.js';
 
 
-class PlotRenderer {
+export class PlotRenderer {
     constructor() {
         this.scene2D = null;
         this.camera2D = null;
@@ -126,17 +126,5 @@ class PlotRenderer {
     }
 }
 
-let plotRendererInstance = new PlotRenderer();
 
-export function initPlotRenderer() {
-    plotRendererInstance = new PlotRenderer();
-    plotRendererInstance.init();
-}
 
-export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
-    plotRendererInstance.updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory);
-}
-
-export function renderPlot() {
-    plotRendererInstance.render();
-}

@@ -1,6 +1,7 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import {THREE, OrbitControls} from './threeImports.js';
 import { CONFIG } from '../config.js';
+import { createMesh } from './mesh.js';
+import { PlotRenderer } from './plotRenderer.js';
 
 /**
  * Sets up the scene, camera, renderer, and controls.
@@ -11,7 +12,7 @@ export function setupScene() {
     const camera = createCamera();
     const renderer = createRenderer();
     const controls = createControls(camera, renderer);
-    const surfaceMesh = createMesh(scene, camera, renderer, controls);
+    const surfaceMesh = createMesh(scene, THREE);
 
     // Handle window resize to match viewport dimensions
     window.addEventListener('resize', () => {
@@ -23,31 +24,20 @@ export function setupScene() {
     return { scene, camera, renderer, surfaceMesh };
 }
 
-function createMesh(scene) {
+let plotRendererInstance = null;
 
-    const WIDTH = 100, HEIGHT = 60;
-
-    const planeGeometry = new THREE.PlaneGeometry(WIDTH-1, HEIGHT-1, WIDTH -1, HEIGHT-1 ); // width, height, widthSegments, heightSegments
-    
-    const material = new THREE.MeshBasicMaterial({
-        wireframe: true, 
-        wireframeLinewidth: 3,
-        vertexColors: true
-    });
-
-    const surfaceMesh = new THREE.Mesh(planeGeometry, material);
-    scene.add(surfaceMesh);
-    surfaceMesh.position.set(0, 0, 0);
-    surfaceMesh.rotation.x = Math.PI ; // Rotate to be horizontal
-
-
-    //add helper axes
-    const axesHelper = new THREE.AxesHelper(10);
-    scene.add(axesHelper);
-    return surfaceMesh;
+export function initPlotRenderer() {
+    plotRendererInstance = new PlotRenderer();
+    plotRendererInstance.init();
 }
 
+export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
+    plotRendererInstance.updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory);
+}
 
+export function renderPlot() {
+    plotRendererInstance.render();
+}
 
 /**
  * Creates and returns a new THREE.Scene object.

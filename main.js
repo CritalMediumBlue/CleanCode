@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { setupScene } from './scene/sceneSetup.js';
+import { setupScene,initPlotRenderer,renderPlot, updatePlot } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
     updateBacteria,
@@ -15,7 +15,6 @@ import {
     clearHistories
 } from './simulation/bacteriumSystem.js';
 import { CONFIG } from './config.js';
-import { initPlotRenderer, renderPlot, updatePlot } from './scene/plotRenderer.js';
 import { handleFileInput } from './dataProcessor.js';
 import { ADI } from './utils.js';
 
@@ -369,9 +368,7 @@ const updateScene = () => {
         resetArrays();
         animationState.currentTimeStep = 1;
         animationState.play = false;
-        // Consider resetting plot/histories if needed
-        // clearHistories(sceneState.bacteriumSystem);
-        // initPlotRenderer();
+        
     }
 };
 
