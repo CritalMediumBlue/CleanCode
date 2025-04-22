@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { quadtree } from 'd3-quadtree';
-import { CONFIG } from './config.js';
+import { CONFIG } from '../config.js';
 
 /**
  * Manages history tracking for bacteria simulation

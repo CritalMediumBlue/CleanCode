@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { setupScene } from './sceneSetup.js';
+import { setupScene } from './scene/sceneSetup.js';
 import {
     createBacteriumSystem,
     updateBacteria,
@@ -13,9 +13,9 @@ import {
     updateHistories,
     getHistories,
     clearHistories
-} from './bacteriumSystem.js';
+} from './simulation/bacteriumSystem.js';
 import { CONFIG } from './config.js';
-import { initPlotRenderer, renderPlot, updatePlot } from './plotRenderer.js';
+import { initPlotRenderer, renderPlot, updatePlot } from './scene/plotRenderer.js';
 import { handleFileInput } from './dataProcessor.js';
 import { ADI } from './utils.js';
 

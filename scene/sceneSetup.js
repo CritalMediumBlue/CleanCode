@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { CONFIG } from './config.js';
+import { CONFIG } from '../config.js';
 
 /**
  * Sets up the scene, camera, renderer, and controls.
