@@ -16,7 +16,7 @@ import {
 } from './simulation/bacteriumSystem.js';
 import { CONFIG } from './config.js';
 import { handleFileInput } from './dataProcessor.js';
-import { ADI } from './utils.js';
+import { ADI } from './simulation/diffusion.js';
 
 // --- Constants ---
 /** @const {object} GRID - Defines the dimensions of the simulation grid. */

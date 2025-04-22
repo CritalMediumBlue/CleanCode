@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import { CONFIG } from '../config.js';
 
 
@@ -19,7 +18,7 @@ export class PlotRenderer {
         this.textMesh = null;   // Hold the current text mesh
     }
 
-    init() {
+    init(THREE) {
         const plot = document.getElementById('plot-overlay');
         plot.innerHTML = '';
         this.scene2D = new THREE.Scene();
@@ -30,19 +29,19 @@ export class PlotRenderer {
         this.renderer2D.domElement.style.position = 'absolute';
         document.getElementById('plot-overlay').appendChild(this.renderer2D.domElement);
    
-        this.createPlot();
+        this.createPlot(THREE);
     }
 
 
    
-    createPlot() {
-        this.createPlotGeometries();
-        this.createPlotMaterials();
-        this.createPlotPoints();
-        this.createTicks();
+    createPlot(THREE) {
+        this.createPlotGeometries(THREE);
+        this.createPlotMaterials(THREE);
+        this.createPlotPoints(THREE);
+        this.createTicks(THREE);
     }
 
-    createPlotGeometries() {
+    createPlotGeometries(THREE) {
         const positions = new Float32Array(CONFIG.PLOT_RENDERER.MAX_POINTS * 3);
         const createGeometry = () => {
             const geometry = new THREE.BufferGeometry();
@@ -56,14 +55,14 @@ export class PlotRenderer {
         this.similarityGeometry = createGeometry();
     }
 
-    createPlotMaterials() {
+    createPlotMaterials(THREE) {
         this.totalMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: CONFIG.PLOT_RENDERER.POINT_SIZE });
         this.magentaMaterial = new THREE.PointsMaterial({ color: 0xff00ff, size: CONFIG.PLOT_RENDERER.POINT_SIZE });
         this.cyanMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: CONFIG.PLOT_RENDERER.POINT_SIZE });
         this.similarityMaterial = new THREE.PointsMaterial({ color: 0xffff00, size: CONFIG.PLOT_RENDERER.POINT_SIZE });
     }
 
-    createPlotPoints() {
+    createPlotPoints(THREE) {
         this.totalPlotPoints = new THREE.Points(this.totalGeometry, this.totalMaterial);
         this.magentaPlotPoints = new THREE.Points(this.magentaGeometry, this.magentaMaterial);
         this.cyanPlotPoints = new THREE.Points(this.cyanGeometry, this.cyanMaterial);
@@ -72,7 +71,7 @@ export class PlotRenderer {
         this.scene2D.add(this.totalPlotPoints, this.magentaPlotPoints, this.cyanPlotPoints, this.similarityPlotPoints);
     }
 
-    createTicks() {
+    createTicks(THREE) {
         const tickMaterial = new THREE.LineBasicMaterial({ color: CONFIG.PLOT_RENDERER.AXIS_COLOR });
         this.yTicks = new THREE.Group();
         const points = [];

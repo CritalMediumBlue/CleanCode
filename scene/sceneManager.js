@@ -28,7 +28,7 @@ let plotRendererInstance = null;
 
 export function initPlotRenderer() {
     plotRendererInstance = new PlotRenderer();
-    plotRendererInstance.init();
+    plotRendererInstance.init(THREE);
 }
 
 export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
