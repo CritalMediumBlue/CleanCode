@@ -76,9 +76,10 @@ export class BacteriumSystem {
                             totalCount++;
                             const phenotype = this.phenotypeManager.phenotypeMemo.get(node.data.ID);
                             
-                            if (phenotype && phenotype.equals(PHENOTYPES.MAGENTA)) {
+                            // Replace .equals() with === for string comparison
+                            if (phenotype && phenotype === PHENOTYPES.MAGENTA) {
                                 magentaCount++;
-                            } else if (phenotype && phenotype.equals(PHENOTYPES.CYAN)) {
+                            } else if (phenotype && phenotype === PHENOTYPES.CYAN) {
                                 cyanCount++;
                             }
                         }

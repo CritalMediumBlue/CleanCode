@@ -1,10 +1,9 @@
-import * as THREE from 'three';
 import { CONFIG } from '../config.js';
 
-// Pre-define phenotype colors for reuse
+// Replace THREE.Color objects with simple string identifiers
 const PHENOTYPES = {
-    MAGENTA: new THREE.Color(CONFIG.COLORS.MAGENTA_PHENOTYPE),
-    CYAN: new THREE.Color(CONFIG.COLORS.CYAN_PHENOTYPE)
+    MAGENTA: 'MAGENTA',
+    CYAN: 'CYAN'
 };
 
 /**
@@ -162,7 +161,8 @@ export class PhenotypeManager {
         const rand = Math.random();
         let phenotype;
         
-        if (originalPhenotype.equals(PHENOTYPES.MAGENTA)) {
+        // Replace .equals() with === for string comparison
+        if (originalPhenotype === PHENOTYPES.MAGENTA) {
             phenotype = rand < K_m2c ? PHENOTYPES.CYAN : PHENOTYPES.MAGENTA;
         } else {
             phenotype = rand < K_c2m ? PHENOTYPES.MAGENTA : PHENOTYPES.CYAN;
@@ -192,8 +192,8 @@ export class PhenotypeManager {
         const magentaProportion = magentaNeighbors / totalNeighbors;
         const cyanProportion = cyanNeighbors / totalNeighbors;
         
-        // Set similarity based on phenotype
-        const similarity = phenotype.equals(PHENOTYPES.MAGENTA) 
+        // Replace .equals() with === for string comparison
+        const similarity = phenotype === PHENOTYPES.MAGENTA 
             ? magentaProportion 
             : cyanProportion;
         
@@ -230,9 +230,10 @@ export class PhenotypeManager {
             const phenotype = this.phenotypeMemo.get(ID);
             if (!phenotype) return;
             
-            if (phenotype.equals(PHENOTYPES.MAGENTA)) {
+            // Replace .equals() with === for string comparison
+            if (phenotype === PHENOTYPES.MAGENTA) {
                 magentaPositions.push(ID);
-            } else if (phenotype.equals(PHENOTYPES.CYAN)) {
+            } else if (phenotype === PHENOTYPES.CYAN) {
                 cyanPositions.push(ID);
             }
         });
@@ -246,7 +247,8 @@ export class PhenotypeManager {
     getPhenotypeCount(currentTimestepBacteria, targetPhenotype) {
         return Array.from(currentTimestepBacteria).reduce((count, ID) => {
             const phenotype = this.phenotypeMemo.get(ID);
-            return phenotype && phenotype.equals(targetPhenotype) ? count + 1 : count;
+            // Replace .equals() with === for string comparison
+            return phenotype && phenotype === targetPhenotype ? count + 1 : count;
         }, 0);
     }
 

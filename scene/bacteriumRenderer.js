@@ -1,5 +1,12 @@
 import { CONFIG } from '../config.js';
 import { THREE } from './threeImports.js';
+import { PHENOTYPES } from '../simulation/bacteriumSimulation.js';
+
+// Phenotype to THREE.Color mapping
+const PHENOTYPE_COLORS = {
+    'MAGENTA': new THREE.Color(CONFIG.COLORS.MAGENTA_PHENOTYPE),
+    'CYAN': new THREE.Color(CONFIG.COLORS.CYAN_PHENOTYPE)
+};
 
 /**
  * Manages a pool of bacterium objects for efficient reuse
@@ -151,21 +158,22 @@ export class BacteriumPool {
 /**
  * Updates a bacterium's visual appearance based on phenotype
  * @param {THREE.Mesh} bacterium - The bacterium mesh to update
- * @param {THREE.Color} phenotype - The phenotype color
+ * @param {string} phenotype - The phenotype identifier ('MAGENTA' or 'CYAN')
  * @param {number} magentaProportion - Proportion of magenta neighbors
  * @param {number} cyanProportion - Proportion of cyan neighbors
  */
 export function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion) {
-    // Pre-define phenotype colors for comparison
-    const MAGENTA = new THREE.Color(CONFIG.COLORS.MAGENTA_PHENOTYPE);
+    // Convert string phenotype to THREE.Color
+    const threeColor = PHENOTYPE_COLORS[phenotype];
 
     if (CONFIG.BACTERIUM.COLOR_BY_INHERITANCE) {
         // Color by phenotype
-        bacterium.material.color.set(phenotype);
-        bacterium.children[0].material.color.set(phenotype.clone().multiplyScalar(0.5));
+        bacterium.material.color.copy(threeColor);
+        bacterium.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.5));
     } else {
         // Color by similarity
-        const scalar = phenotype.equals(MAGENTA) 
+        const isMagenta = phenotype === PHENOTYPES.MAGENTA;
+        const scalar = isMagenta
             ? Math.round(magentaProportion * 255) 
             : Math.round(cyanProportion * 255);
             
