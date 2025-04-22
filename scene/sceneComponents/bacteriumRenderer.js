@@ -1,6 +1,6 @@
-import { CONFIG } from '../config.js';
-import { THREE } from './threeImports.js';
-import { PHENOTYPES } from '../simulation/bacteriumSimulation.js';
+import { CONFIG } from '../../config.js';
+import { THREE } from '../threeImports.js';
+import { PHENOTYPES } from '../../simulation/bacteriumSimulation.js';
 
 // Phenotype to THREE.Color mapping
 const PHENOTYPE_COLORS = {

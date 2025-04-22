@@ -8,6 +8,7 @@ import {
 } from './bacteriumSimulation.js';
 
 import { BacteriumData } from './bacteriumData.js';
+import {ADI} from './diffusion.js';
 
 /**
  * Main bacterium system class that handles simulation logic only
@@ -186,6 +187,26 @@ export class BacteriumSystem {
     setAlphaValue(value) {
         this.phenotypeManager.setAlphaValue(value);
     }
+}
+
+export function diffuse(
+        WIDTH, HEIGHT,
+        currentConcentrationData, nextConcentrationData, // Input concentration arrays
+        sources, sinks, // Input source/sink arrays
+        DIFFUSION_RATE, // Diffusion coefficient
+        timeStep, // Time step duration in minutes (dt)
+        subSteps // Number of substeps for ADI
+    ) 
+    {
+        return ADI(
+                WIDTH, HEIGHT,
+                currentConcentrationData, nextConcentrationData, // Input concentration arrays
+                sources, sinks, // Input source/sink arrays
+                DIFFUSION_RATE, // Diffusion coefficient
+                timeStep, // Time step duration in minutes (dt)
+                subSteps // Number of substeps for ADI
+            );
+    
 }
 
 // Export functions for external use - these maintain the same API as before

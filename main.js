@@ -11,12 +11,12 @@ import {
     getAverageSimilarityWithNeighbors,
     updateHistories,
     getHistories,
-    clearHistories
+    clearHistories,
+    diffuse
 } from './simulation/bacteriumSystem.js';
-import { BacteriumRenderer } from './scene/bacteriumRenderer.js';
+import { BacteriumRenderer } from './scene/sceneComponents/bacteriumRenderer.js';
 import { CONFIG } from './config.js';
 import { handleFileInput } from './dataProcessor.js';
-import { ADI } from './simulation/diffusion.js';
 
 // --- Constants ---
 /** @const {object} GRID - Defines the dimensions of the simulation grid. */
@@ -82,7 +82,7 @@ const resetAllData = () => {
     initializeParameters();
     
     // Set up new scene and create the bacterium system and renderer
-    const newSceneState = setupNewScene(createBacteriumSystem);
+    const newSceneState = setupNewScene(createBacteriumSystem, CONFIG);
     Object.assign(sceneState, newSceneState);
     
     // Create the bacterium renderer
@@ -319,8 +319,17 @@ const updateScene = () => {
 
    // [dataState.currentConcentrationData] = diffusion(dataState.currentConcentrationData, "ADI");
 
-     // 5. Run the ADI diffusion simulation step
+/*      // 5. Run the ADI diffusion simulation step
     [dataState.currentConcentrationData, dataState.nextConcentrationData] = ADI(
+        GRID.WIDTH, GRID.HEIGHT,
+        dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
+        dataState.sources, dataState.sinks, // Input source/sink arrays
+        SIMULATION.DIFFUSION_RATE, // Diffusion coefficient
+        1, // Time step duration in minutes (dt)
+        1 // Number of substeps for ADI
+    );  */
+
+    [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
         GRID.WIDTH, GRID.HEIGHT,
         dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
         dataState.sources, dataState.sinks, // Input source/sink arrays

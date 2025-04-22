@@ -1,7 +1,6 @@
 import {THREE, OrbitControls} from './threeImports.js';
-import { CONFIG } from '../config.js';
-import { createMesh } from './mesh.js';
-import { PlotRenderer } from './plotRenderer.js';
+import { createMesh } from './sceneComponents/mesh.js';
+import { PlotRenderer } from './sceneComponents/plotRenderer.js';
 
 // Added grid constants that were previously in main.js
 const GRID = { WIDTH: 100, HEIGHT: 60 };
@@ -10,11 +9,11 @@ const GRID = { WIDTH: 100, HEIGHT: 60 };
  * Sets up the scene, camera, renderer, and controls.
  * @returns {Object} An object containing the scene, camera, renderer, and controls.
  */
-export function setupScene() {
-    const scene = createScene();
-    const camera = createCamera();
+export function setupScene(CONFIG) {
+    const scene = createScene(CONFIG);
+    const camera = createCamera(CONFIG);
     const renderer = createRenderer();
-    const controls = createControls(camera, renderer);
+    const controls = createControls(camera, renderer,CONFIG);
     const surfaceMesh = createMesh(scene, THREE);
 
     // Handle window resize to match viewport dimensions
@@ -32,9 +31,9 @@ export function setupScene() {
  * @param {Function} createBacteriumSystem - Function to create bacterium system
  * @returns {Object} An object containing the scene, camera, renderer, and bacteriumSystem
  */
-export function setupNewScene(createBacteriumSystem) {
+export function setupNewScene(createBacteriumSystem, CONFIG) {
     console.log("Setting up new scene...");
-    const setup = setupScene();
+    const setup = setupScene(CONFIG);
     const sceneState = setup; // Create local sceneState to be returned
 
     // Append renderer to document if not already done
@@ -88,7 +87,7 @@ export function renderPlot() {
  * Creates and returns a new THREE.Scene object.
  * @returns {THREE.Scene} The created scene.
  */
-function createScene() {
+function createScene(CONFIG) {
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(CONFIG.SCENE.FOG_COLOR, CONFIG.SCENE.FOG_NEAR, CONFIG.SCENE.FOG_FAR);
     return scene;
@@ -98,7 +97,7 @@ function createScene() {
  * Creates and returns a new THREE.PerspectiveCamera object.
  * @returns {THREE.PerspectiveCamera} The created camera.
  */
-function createCamera() {
+function createCamera(CONFIG) {
     const camera = new THREE.PerspectiveCamera(
         CONFIG.SCENE.CAMERA_FOV,
         window.innerWidth / window.innerHeight,
@@ -135,7 +134,7 @@ function createRenderer() {
  * @param {THREE.WebGLRenderer} renderer - The renderer to control.
  * @returns {OrbitControls} The created controls.
  */
-function createControls(camera, renderer) {
+function createControls(camera, renderer,CONFIG) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = false;
     controls.autoRotate = false;
