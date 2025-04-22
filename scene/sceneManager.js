@@ -48,7 +48,7 @@ export function setupNewScene(createBacteriumSystem, config) {
     // Initialize the bacterium visualization system
     sceneState.bacteriumSystem = createBacteriumSystem();
     
-    // Initialize the bacterium renderer with config
+    // Pass the config to the bacterium renderer explicitly
     sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene, config);
 
     // Create the surface mesh geometry specifically for concentration visualization
@@ -214,10 +214,11 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor
 /**
  * Creates and returns a new BacteriumRenderer instance
  * @param {THREE.Scene} scene - The scene to add bacteria to
- * @param {Object} config - Configuration object
+ * @param {Object} config - Configuration object containing BACTERIUM and PHENOTYPES values
  * @returns {BacteriumRenderer} The created bacterium renderer
  */
-export function createBacteriumRenderer(scene, config = null) {
+export function createBacteriumRenderer(scene, config) {
+    // Ensure config parameter is properly passed down to BacteriumRenderer
     return new BacteriumRenderer(scene, config);
 }
 

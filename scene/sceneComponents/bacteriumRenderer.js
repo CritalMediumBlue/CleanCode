@@ -1,8 +1,4 @@
-import { CONFIG, PHENOTYPES } from '../../config.js';
 import { THREE } from '../threeImports.js';
-
-// This will be refactored to use injected config
-let PHENOTYPE_COLORS = {};
 
 /**
  * Manages a pool of bacterium objects for efficient reuse
@@ -158,18 +154,20 @@ export class BacteriumPool {
  * @param {string} phenotype - The phenotype identifier ('MAGENTA' or 'CYAN')
  * @param {number} magentaProportion - Proportion of magenta neighbors
  * @param {number} cyanProportion - Proportion of cyan neighbors
+ * @param {Object} phenotypeColors - Map of phenotype names to THREE.Color objects
+ * @param {Object} config - Configuration object
  */
-export function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion) {
+export function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, phenotypeColors, config) {
     // Convert string phenotype to THREE.Color
-    const threeColor = PHENOTYPE_COLORS[phenotype];
+    const threeColor = phenotypeColors[phenotype];
 
-    if (CONFIG.BACTERIUM.COLOR_BY_INHERITANCE) {
+    if (config.BACTERIUM.COLOR_BY_INHERITANCE) {
         // Color by phenotype
         bacterium.material.color.copy(threeColor);
         bacterium.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.5));
     } else {
         // Color by similarity
-        const isMagenta = phenotype === PHENOTYPES.MAGENTA;
+        const isMagenta = phenotype === config.PHENOTYPES.MAGENTA;
         const scalar = isMagenta
             ? Math.round(magentaProportion * 255) 
             : Math.round(cyanProportion * 255);
@@ -195,10 +193,11 @@ export function setBacteriumTransform(bacterium, position, angle, zPosition) {
 /**
  * Creates a new bacterium renderer system
  * @param {THREE.Scene} scene - Three.js scene to add bacteria to
+ * @param {Object} config - Configuration object
  * @returns {BacteriumPool} New bacterium pool instance
  */
-export function createBacteriumPool(scene) {
-    return new BacteriumPool(scene, CONFIG.BACTERIUM.INITIAL_POOL_SIZE);
+export function createBacteriumPool(scene, config) {
+    return new BacteriumPool(scene, config.BACTERIUM.INITIAL_POOL_SIZE, config);
 }
 
 /**
@@ -213,9 +212,11 @@ export class BacteriumRenderer {
      */
     constructor(scene, config = null) {
         this.scene = scene;
-        this.config = config ;
+        this.config = config;
         this.bacteriumPool = new BacteriumPool(scene, this.config.BACTERIUM.INITIAL_POOL_SIZE, this.config);
-        PHENOTYPE_COLORS = {
+        
+        // Initialize phenotype colors from config
+        this.phenotypeColors = {
             'MAGENTA': new THREE.Color(this.config.COLORS.MAGENTA_PHENOTYPE),
             'CYAN': new THREE.Color(this.config.COLORS.CYAN_PHENOTYPE)
         };
@@ -254,7 +255,7 @@ export class BacteriumRenderer {
         this.bacteriumPool.updateGeometry(bacterium, longAxis);
         
         // Update color
-        updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion);
+        updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, this.phenotypeColors, this.config);
         
         // Set visibility
         bacterium.visible = visible;
