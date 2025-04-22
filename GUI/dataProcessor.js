@@ -4,6 +4,26 @@
 let bacteriaData = new Map();
 let numberOfTimeSteps = 0;
 
+/**
+ * Stores the processed bacteria data and related statistics into the provided state objects.
+ * Calculates the time conversion factor.
+ * @param {object} dataState - Object to store bacteria data and related properties
+ * @param {object} animationState - Object to store animation timing properties
+ * @param {Map<number, Array<object>>} data - Map where keys are time steps and values are arrays of bacteria objects
+ * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime
+ */
+export const setBacteriaData = (dataState, animationState, data, processedData) => {
+    console.log("Setting bacteria data...");
+    dataState.bacteriaData = data;
+    animationState.numberOfTimeSteps = data.size;
+    dataState.AllUniqueIDs = processedData.totalUniqueIDs;
+    animationState.AverageLifetime = processedData.averageLifetime;
+    animationState.fromStepToMinutes = dataState.doublingTime / processedData.averageLifetime;
+
+    console.log('Total time (h)', data.size * animationState.fromStepToMinutes / 60);
+    console.log('Every time step is ', Math.floor(animationState.fromStepToMinutes), 'minutes',
+        'and', Math.round(animationState.fromStepToMinutes % 1 * 60), 'seconds');
+};
 
 export const handleFileInput = (event, resetCallback, animateCallback, setBacteriaDataCallback) => {
     // Set play to false and reset the scene
@@ -69,7 +89,7 @@ export function processFileData(fileContent) {
 
     // Log analysis results
     console.log('Average Bacteria Lifetime:', analysisResults.averageLifetime);
-    console.log('Bacteria with Parents and Children:', analysisResults.bacteriaWithParentsAndChildren);
+    console.log('Bacteria with Parents and Children:', analysisResults.bacteriaWithParentsandChildren);
     console.log('Total Unique Bacteria IDs:', analysisResults.totalUniqueIDs);
     console.log('Ready');
 

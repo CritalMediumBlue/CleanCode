@@ -14,60 +14,19 @@ import {
     clearHistories,
     diffuse
 } from './simulation/simulationManager.js';
-import { CONFIG } from './data/config.js';
-import { handleFileInput } from './data/dataProcessor.js';
-
-// --- Constants ---
-/** @const {object} GRID - Defines the dimensions of the simulation grid. */
-const GRID = { WIDTH: 100, HEIGHT: 60 };
-/** @const {object} SIMULATION - Holds simulation-specific parameters. */
-const SIMULATION = { DIFFUSION_RATE: 0.01 };
-
-/** @const {object} CONSTANTS - Holds constants for the simulation. */
-export const constants = {
-    DIFFUSION_RATE: 100,
-    deltaX: 1, // Grid spacing
-    deltaT: 0.002,
-    GRID: {
-        WIDTH: 100,
-        HEIGHT: 60
-    }
-}
-
-// --- State Management ---
-
-/** @type {object} sceneState - Manages Three.js scene components and related states. */
-const sceneState = {
-    /** @type {THREE.Scene | null} */ scene: null,
-    /** @type {THREE.PerspectiveCamera | null} */ camera: null,
-    /** @type {THREE.WebGLRenderer | null} */ renderer: null,
-    /** @type {THREE.Mesh | null} */ surfaceMesh: null, // The mesh representing the concentration surface
-    /** @type {object | null} */ bacteriumSystem: null, // Holds bacteria instances and related methods
-    /** @type {object | null} */ bacteriumRenderer: null, // New renderer component for bacteria
-    /** @type {boolean} */ visibleBacteria: true, // Toggles visibility of bacteria meshes
-};
-
-/** @type {object} animationState - Manages animation loop, timing, and playback state. */
-export const animationState = {
-    /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
-    /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
-    /** @type {number} */ numberOfTimeSteps: 0, // Total number of steps in the loaded data
-    /** @type {boolean} */ play: false, // Controls whether the animation is running
-    /** @type {number} */ AverageLifetime: 0, // Average lifespan of bacteria in steps
-    /** @type {number} */ fromStepToMinutes: 0, // Conversion factor from simulation steps to real-time minutes
-};
-
-/** @type {object} dataState - Manages simulation data arrays and parameters. */
-export const dataState = {
-    /** @type {Float32Array | null} */ currentConcentrationData: null, // Concentration values for the current step
-    /** @type {Float32Array | null} */ nextConcentrationData: null, // Concentration values for the next step (used in ADI)
-    /** @type {Float32Array | null} */ colors: null, // Color data for the surface mesh vertices
-    /** @type {Float32Array | null} */ sources: null, // Diffusion sources grid
-    /** @type {Float32Array | null} */ sinks: null, // Diffusion sinks grid
-    /** @type {Map<number, Array<object>> | null} */ bacteriaData: null, // Stores all bacteria data keyed by time step
-    /** @type {Set<number> | null} */ AllUniqueIDs: null, // Set of all unique bacteria IDs across the simulation
-    /** @type {number} */ doublingTime: 45, // Assumed doubling time for bacteria in minutes
-};
+import { CONFIG } from './GUI/config.js';
+import { handleFileInput, setBacteriaData as setProcessedBacteriaData } from './GUI/dataProcessor.js';
+import { 
+    sceneState, 
+    animationState, 
+    dataState, 
+    GRID, 
+    SIMULATION,
+    initializeArrays,
+    resetAnimationState,
+    getAdjustedCoordinates,
+    calculateColor
+} from './state/stateManager.js';
 
 // --- Initialization and Reset Functions ---
 
@@ -78,7 +37,9 @@ export const dataState = {
 const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
     cleanupResources();
-    initializeParameters();
+    
+    // Reset state via stateManager
+    resetAnimationState();
     
     // Create a function that will create a bacterium system with CONFIG
     const createConfiguredBacteriumSystem = () => createBacteriumSystem(CONFIG);
@@ -87,7 +48,12 @@ const resetAllData = () => {
     const newSceneState = setupNewScene(createConfiguredBacteriumSystem, CONFIG);
     Object.assign(sceneState, newSceneState);
     
-    resetArrays(); // Ensure data arrays are ready
+    // Initialize arrays via stateManager
+    initializeArrays();
+    
+    // Initialize plot renderer with CONFIG
+    initPlotRenderer(CONFIG);
+    
     updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor); // Initial update to set heights/colors
 };
 
@@ -133,6 +99,7 @@ const cleanupResources = () => {
     }
 };
 
+
 /**
  * Initializes simulation parameters (time step, play state) and resets data arrays.
  * Also clears history data and re-initializes the plot renderer.
@@ -171,24 +138,12 @@ const resetArrays = () => {
 }
 
 /**
- * Stores the processed bacteria data and related statistics into the dataState
- * and animationState. Calculates the time conversion factor.
+ * Wrapper function that passes the state objects to the dataProcessor's setBacteriaData function
  * @param {Map<number, Array<object>>} data - Map where keys are time steps and values are arrays of bacteria objects for that step.
  * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime.
- * @param {number} processedData.totalUniqueIDs - The total count of unique bacteria IDs found in the data.
- * @param {number} processedData.averageLifetime - The average lifespan of bacteria in simulation steps.
  */
 const setBacteriaData = (data, processedData) => {
-    console.log("Setting bacteria data...");
-    dataState.bacteriaData = data;
-    animationState.numberOfTimeSteps = data.size;
-    dataState.AllUniqueIDs = processedData.totalUniqueIDs;
-    animationState.AverageLifetime = processedData.averageLifetime;
-    animationState.fromStepToMinutes = dataState.doublingTime / processedData.averageLifetime;
-
-    console.log('Total time (h)', data.size * animationState.fromStepToMinutes / 60);
-    console.log('Every time step is ', Math.floor(animationState.fromStepToMinutes), 'minutes',
-        'and', Math.round(animationState.fromStepToMinutes % 1 * 60), 'seconds');
+    setProcessedBacteriaData(dataState, animationState, data, processedData);
 };
 
 
@@ -431,61 +386,9 @@ const updateSourcesAndSinks = (currentBacteria) => {
 
 // --- Helper Functions ---
 
-/**
- * Converts raw simulation coordinates (which might be centered around 0,0)
- * to grid indices used for accessing data arrays (concentration, sources, sinks).
- * Includes boundary checks and clamping.
- * @param {number} x - Raw x-coordinate from bacterium data.
- * @param {number} y - Raw y-coordinate from bacterium data.
- * @returns {{x: number, y: number, idx: number} | null} Object containing adjusted grid coordinates (x, y)
- *          and the corresponding 1D array index (idx), or null if the coordinates are out of bounds (specifically below y=0).
- */
-const getAdjustedCoordinates = (x, y) => {
-    // Translate coordinates so (0,0) is the bottom-left corner of the grid, then round.
-    let adjustedX = Math.round(x + GRID.WIDTH / 2);
-    let adjustedY = Math.round(y + GRID.HEIGHT / 2);
 
-    // Optimization: Skip bacteria below the grid's bottom edge.
-    if (adjustedY <= 0) {
-        return null; // Indicate that this bacterium is outside the relevant grid area
-    }
 
-    // Clamp coordinates to ensure they are within the valid grid boundaries (leaving a 1-cell border).
-    adjustedY = Math.min(adjustedY, GRID.HEIGHT - 2); // Clamp to max height - 2
-    adjustedX = Math.max(1, Math.min(adjustedX, GRID.WIDTH - 2)); // Clamp between 1 and max width - 2
 
-    // Calculate the 1D index corresponding to the 2D grid coordinates.
-    const idx = adjustedY * GRID.WIDTH + adjustedX;
-
-    return { x: adjustedX, y: adjustedY, idx }; // Return adjusted coordinates and index
-};
-
-/**
- * Calculates an RGB color based on a concentration value. Uses a sine wave
- * function with phase shifts to create a cyclical color gradient.
- * Normalizes the concentration before calculating color.
- * @param {number} concentration - The concentration value at a grid point.
- * @returns {{r: number, g: number, b: number}} An object containing RGB color components (0-1 range, approximately).
- */
-const calculateColor = (concentration) => {
-    // Normalize concentration value
-    const normalizedConcentration = concentration / 10; // Adjust divisor to control color cycle frequency
-
-    // Calculate the phase for the sine wave
-    const phase = normalizedConcentration * 2 * Math.PI;
-
-    // Calculate RGB components using sine waves with phase shifts, scaled to [0, 1]
-    const red = (Math.sin(phase) + 1) / 2;
-    const green = (Math.sin(phase - (2 * Math.PI / 3)) + 1) / 2;
-    const blue = (Math.sin(phase - (4 * Math.PI / 3)) + 1) / 2;
-
-    // Return RGB values, ensuring they are not NaN
-    return {
-        r: isNaN(red) ? 0 : red,
-        g: isNaN(green) ? 0 : green,
-        b: isNaN(blue) ? 0 : blue
-    };
-};
 
 
 // --- Rendering and Animation ---
