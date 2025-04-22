@@ -6,16 +6,15 @@ import {
     getCyanCount,
     getPositions,
     clearPhenotypeMemo,
-    setSignalValue,
-    setAlphaValue,
     getAverageSimilarityWithNeighbors,
     updateHistories,
     getHistories,
     clearHistories,
     diffuse
 } from './simulation/simulationManager.js';
-import { CONFIG } from './GUI/config.js';
-import { handleFileInput, setBacteriaData as setProcessedBacteriaData } from './GUI/dataProcessor.js';
+// Removed direct import of CONFIG
+import { setBacteriaData as setProcessedBacteriaData } from './GUI/dataProcessor.js';
+import { addEventListeners } from './GUI/guiManager.js';
 import { 
     sceneState, 
     animationState, 
@@ -27,6 +26,9 @@ import {
     getAdjustedCoordinates,
     calculateColor
 } from './state/stateManager.js';
+
+// Store the configuration object to be injected from guiManager
+let appConfig;
 
 // --- Initialization and Reset Functions ---
 
@@ -41,18 +43,18 @@ const resetAllData = () => {
     // Reset state via stateManager
     resetAnimationState();
     
-    // Create a function that will create a bacterium system with CONFIG
-    const createConfiguredBacteriumSystem = () => createBacteriumSystem(CONFIG);
+    // Create a function that will create a bacterium system with injected config
+    const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
     
-    // Set up new scene and create the bacterium system and renderer, passing CONFIG
-    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, CONFIG);
+    // Set up new scene and create the bacterium system and renderer, passing injected config
+    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig);
     Object.assign(sceneState, newSceneState);
     
     // Initialize arrays via stateManager
     initializeArrays();
     
-    // Initialize plot renderer with CONFIG
-    initPlotRenderer(CONFIG);
+    // Initialize plot renderer with injected config
+    initPlotRenderer(appConfig);
     
     updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor); // Initial update to set heights/colors
 };
@@ -117,8 +119,8 @@ const initializeParameters = () => {
         clearHistories(sceneState.bacteriumSystem);
     }
     
-    // Pass CONFIG to plotRenderer initialization
-    initPlotRenderer(CONFIG); // Re-initialize the plot for the new simulation
+    // Pass injected config to plotRenderer initialization
+    initPlotRenderer(appConfig); // Re-initialize the plot for the new simulation
 };
 
 /**
@@ -149,95 +151,8 @@ const setBacteriaData = (data, processedData) => {
 
 // --- Event Handling ---
 
-/**
- * Safely adds an event listener to a DOM element identified by its ID.
- * Logs a warning if the element is not found.
- * @param {string} id - The ID of the DOM element.
- * @param {string} event - The name of the event to listen for (e.g., 'click', 'input').
- * @param {Function} handler - The function to execute when the event occurs.
- */
-const addSafeEventListener = (id, event, handler) => {
-    const element = document.getElementById(id);
-    if (element) {
-        element.addEventListener(event, handler);
-    } else {
-        console.warn(`Element with id '${id}' not found`);
-    }
-};
-
-/**
- * Attaches event listeners to various UI controls (buttons, sliders, dropdowns, file input)
- * to manage simulation playback, parameter adjustments, and data loading.
- */
-const addEventListeners = () => {
-    console.log("Adding event listeners...");
-    // Simple toggle buttons with declarative configuration
-    const toggleButtons = [
-        { id: 'playButton', event: 'click', handler: () => { animationState.play = true; } },
-        { id: 'pauseButton', event: 'click', handler: () => { animationState.play = false; } },
-        {
-            id: 'singleStepButton', event: 'click', handler: () => {
-                animationState.play = false;
-                updateScene(); // Perform one update
-                // Manually render after single step if not playing
-                if (sceneState.renderer && sceneState.scene && sceneState.camera) {
-                    sceneState.renderer.render(sceneState.scene, sceneState.camera);
-                }
-                renderPlot();
-            }
-        },
-        { id: 'visible', event: 'click', handler: () => { sceneState.visibleBacteria = !sceneState.visibleBacteria; } },
-        { id: 'visibleMesh', event: 'click', handler: () => { if (sceneState.surfaceMesh) sceneState.surfaceMesh.visible = !sceneState.surfaceMesh.visible; } },
-
-        // Select/dropdown controls
-        {
-            id: 'toggleColorButton', event: 'change', handler: (event) => {
-                const selectedValue = event.target.value;
-                CONFIG.BACTERIUM.COLOR_BY_INHERITANCE = (selectedValue === 'phenotype');
-                CONFIG.BACTERIUM.COLOR_BY_SIMILARITY = (selectedValue === 'similarity');
-            }
-        },
-
-        {
-            id: 'toggleFeedbackButton', event: 'change', handler: (event) => {
-                CONFIG.BACTERIUM.POSITIVE_FEEDBACK = (event.target.value === 'positive');
-            }
-        },
-
-        // Slider controls
-        {
-            id: 'signalSlider', event: 'input', handler: (event) => {
-                const value = parseFloat(event.target.value);
-                const valueElement = document.getElementById('signalValue');
-                if (valueElement) valueElement.textContent = value.toFixed(2);
-                setSignalValue(sceneState.bacteriumSystem, value);
-            }
-        },
-
-        {
-            id: 'alphaSlider', event: 'input', handler: (event) => {
-                const value = parseFloat(event.target.value);
-                const valueElement = document.getElementById('alphaValue');
-                if (valueElement) valueElement.textContent = value.toFixed(5);
-                setAlphaValue(sceneState.bacteriumSystem, value);
-            }
-        },
-
-        // File input
-        {
-            id: 'fileInput', event: 'change', handler: (event) => {
-                // Pass animate function to start loop after data processing
-                handleFileInput(event, resetAllData, animate, setBacteriaData);
-            }
-        }
-    ];
-
-    // Register all event listeners
-    toggleButtons.forEach(({ id, event, handler }) => {
-        addSafeEventListener(id, event, handler);
-    });
-};
-
+// The addSafeEventListener and addEventListeners functions have been 
+// moved to GUI/guiManager.js
 
 // --- Simulation Update Logic ---
 
@@ -418,7 +333,12 @@ const animate = () => {
 // --- Initial Setup ---
 
 // Set up initial event listeners when the script loads
-addEventListeners();
+// Pass required functions as parameters for proper GUI-Simulation integration
+// Get configuration object via dependency injection
+appConfig = addEventListeners(updateScene, animate, resetAllData, setBacteriaData);
+
+// Alternative option to get configuration if needed later
+// const refreshConfig = () => { appConfig = getConfiguration(); };
 
 // Note: The simulation doesn't start automatically.
 // It waits for data to be loaded via the file input.
