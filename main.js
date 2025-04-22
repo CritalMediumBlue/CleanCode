@@ -13,8 +13,7 @@ import {
     getHistories,
     clearHistories,
     diffuse
-} from './simulation/bacteriumSystem.js';
-import { BacteriumRenderer } from './scene/sceneComponents/bacteriumRenderer.js';
+} from './simulation/simulationManager.js';
 import { CONFIG } from './config.js';
 import { handleFileInput } from './dataProcessor.js';
 
@@ -85,11 +84,8 @@ const resetAllData = () => {
     const newSceneState = setupNewScene(createBacteriumSystem, CONFIG);
     Object.assign(sceneState, newSceneState);
     
-    // Create the bacterium renderer
-    sceneState.bacteriumRenderer = new BacteriumRenderer(sceneState.scene);
-    
     resetArrays(); // Ensure data arrays are ready
-    updateSurfaceMesh(); // Initial update to set heights/colors
+    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor); // Initial update to set heights/colors
 };
 
 /**
@@ -317,17 +313,7 @@ const updateScene = () => {
     // 4. Update the plot with the latest historical data
     updatePlot(...Object.values(getHistories(sceneState.bacteriumSystem)));
 
-   // [dataState.currentConcentrationData] = diffusion(dataState.currentConcentrationData, "ADI");
 
-/*      // 5. Run the ADI diffusion simulation step
-    [dataState.currentConcentrationData, dataState.nextConcentrationData] = ADI(
-        GRID.WIDTH, GRID.HEIGHT,
-        dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
-        dataState.sources, dataState.sinks, // Input source/sink arrays
-        SIMULATION.DIFFUSION_RATE, // Diffusion coefficient
-        1, // Time step duration in minutes (dt)
-        1 // Number of substeps for ADI
-    );  */
 
     [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
         GRID.WIDTH, GRID.HEIGHT,
@@ -379,7 +365,8 @@ const updateBacteriaPositions = (currentBacteria) => {
         animationState.currentTimeStep,
         dataState.bacteriaData,
         sceneState.visibleBacteria,
-        dataState.currentConcentrationData
+        dataState.currentConcentrationData,
+        CONFIG
     );
     
     // Render bacteria using the dedicated renderer

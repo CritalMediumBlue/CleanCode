@@ -1,7 +1,8 @@
 import {THREE, OrbitControls} from './threeImports.js';
 import { createMesh } from './sceneComponents/mesh.js';
 import { PlotRenderer } from './sceneComponents/plotRenderer.js';
-import { updateOverlay } from './overlay.js';
+import { updateOverlay } from './sceneComponents/overlay.js';
+import { BacteriumRenderer } from './sceneComponents/bacteriumRenderer.js';
 
 // Added grid constants that were previously in main.js
 const GRID = { WIDTH: 100, HEIGHT: 60 };
@@ -30,7 +31,7 @@ export function setupScene(CONFIG) {
 /**
  * Sets up a new scene with custom surface mesh for concentration visualization.
  * @param {Function} createBacteriumSystem - Function to create bacterium system
- * @returns {Object} An object containing the scene, camera, renderer, and bacteriumSystem
+ * @returns {Object} An object containing the scene, camera, renderer, bacteriumSystem, and bacteriumRenderer
  */
 export function setupNewScene(createBacteriumSystem, CONFIG) {
     console.log("Setting up new scene...");
@@ -42,6 +43,9 @@ export function setupNewScene(createBacteriumSystem, CONFIG) {
     
     // Initialize the bacterium visualization system
     sceneState.bacteriumSystem = createBacteriumSystem(sceneState.scene);
+    
+    // Initialize the bacterium renderer
+    sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene);
 
     // Create the surface mesh geometry specifically for concentration visualization
     const geometry = new THREE.PlaneGeometry(GRID.WIDTH, GRID.HEIGHT, GRID.WIDTH - 1, GRID.HEIGHT - 1);
@@ -196,6 +200,15 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor
     // Mark attributes as needing update for Three.js
     surfaceMesh.geometry.attributes.position.needsUpdate = true;
     surfaceMesh.geometry.attributes.color.needsUpdate = true;
+}
+
+/**
+ * Creates and returns a new BacteriumRenderer instance
+ * @param {THREE.Scene} scene - The scene to add bacteria to
+ * @returns {BacteriumRenderer} The created bacterium renderer
+ */
+export function createBacteriumRenderer(scene) {
+    return new BacteriumRenderer(scene);
 }
 
 export { updateOverlay };

@@ -1,5 +1,4 @@
 import { quadtree } from 'd3-quadtree';
-import { CONFIG } from '../config.js';
 
 import { 
     PhenotypeManager, 
@@ -50,7 +49,7 @@ export class BacteriumSystem {
     /**
      * Count neighbors by phenotype within radius
      */
-    countNeighbors(x, y) {
+    countNeighbors(x, y,CONFIG) {
         const neighborRadius = CONFIG.BACTERIUM.NEIGHBOR_RADIUS;
         let totalCount = 0;
         let magentaCount = 0;
@@ -98,7 +97,7 @@ export class BacteriumSystem {
      * Update bacteria for current time step and return data for rendering
      * @returns {BacteriumData[]} Array of bacterium data objects for rendering
      */
-    updateBacteria(timeStep, bacteriumData, visible, concentrations) {
+    updateBacteria(timeStep, bacteriumData, visible, concentrations,CONFIG) {
         const layer = bacteriumData.get(timeStep) || [];
         
         // Reset state for new time step
@@ -109,7 +108,7 @@ export class BacteriumSystem {
         // Process each bacterium
         const bacteriaData = [];
         layer.forEach((data) => {
-            const bacteriumData = this.processBacterium(data, visible, concentrations);
+            const bacteriumData = this.processBacterium(data, visible, concentrations,CONFIG);
             bacteriaData.push(bacteriumData);
             this.currentTimestepBacteria.add(data.ID);
             this.averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
@@ -126,7 +125,7 @@ export class BacteriumSystem {
     /**
      * Process a single bacterium and return data for rendering
      */
-    processBacterium(bacteriumData, visible, concentrations) {
+    processBacterium(bacteriumData, visible, concentrations,CONFIG) {
         const { x, y, longAxis, angle, ID, parent } = bacteriumData;
         const WIDTH = 100, HEIGHT = 60;
         
@@ -138,7 +137,7 @@ export class BacteriumSystem {
         const position = { x, y, z: 0 };
         
         // Get neighbors for this bacterium
-        const neighbors = this.countNeighbors(x, y);
+        const neighbors = this.countNeighbors(x, y,CONFIG);
         
         // Determine phenotype and calculate similarity
         const phenotypeInfo = this.phenotypeManager.determinePhenotypeAndSimilarity(
@@ -214,8 +213,8 @@ export function createBacteriumSystem() {
     return new BacteriumSystem();
 }
 
-export function updateBacteria(bacteriumSystem, timeStep, bacteriumData, visible, concentrations) {
-    return bacteriumSystem.updateBacteria(timeStep, bacteriumData, visible, concentrations);
+export function updateBacteria(bacteriumSystem, timeStep, bacteriumData, visible, concentrations,CONFIG) {
+    return bacteriumSystem.updateBacteria(timeStep, bacteriumData, visible, concentrations, CONFIG);
 }
 
 export function getMagentaCount(bacteriumSystem) {
