@@ -1,6 +1,7 @@
 import {THREE, OrbitControls} from './threeImports.js';
 import { createMesh } from './sceneComponents/mesh.js';
 import { PlotRenderer } from './sceneComponents/plotRenderer.js';
+import { updateOverlay } from './overlay.js';
 
 // Added grid constants that were previously in main.js
 const GRID = { WIDTH: 100, HEIGHT: 60 };
@@ -13,7 +14,7 @@ export function setupScene(CONFIG) {
     const scene = createScene(CONFIG);
     const camera = createCamera(CONFIG);
     const renderer = createRenderer();
-    const controls = createControls(camera, renderer,CONFIG);
+    createControls(camera, renderer,CONFIG);
     const surfaceMesh = createMesh(scene, THREE);
 
     // Handle window resize to match viewport dimensions
@@ -146,6 +147,56 @@ function createControls(camera, renderer,CONFIG) {
         CONFIG.SCENE.CAMERA_LOOKAT.y,
         CONFIG.SCENE.CAMERA_LOOKAT.z
     );
-    return controls;
+    
 }
+
+/**
+ * Updates the geometry (vertex heights) and color attributes of the surface mesh
+ * based on the given concentration data.
+ * 
+ * @param {THREE.Mesh} surfaceMesh - The mesh representing the concentration surface
+ * @param {Float32Array} concentrationData - Array of concentration values
+ * @param {Function} calculateColor - Function to calculate color based on concentration
+ * @param {number} heightMultiplier - Optional multiplier for height values (default: 5)
+ */
+export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor, heightMultiplier = 5) {
+    if (!surfaceMesh) {
+        console.warn("updateSurfaceMesh called before surfaceMesh is initialized.");
+        return;
+    }
+    
+    // Get direct access to the position and color buffer arrays
+    const positions = surfaceMesh.geometry.attributes.position.array; // x, y, z for each vertex
+    const colorsAttribute = surfaceMesh.geometry.attributes.color; // r, g, b for each vertex
+
+    // Iterate through each point in the grid
+    for (let y = 0; y < GRID.HEIGHT; y++) {
+        for (let x = 0; x < GRID.WIDTH; x++) {
+            const idx = y * GRID.WIDTH + x; // Calculate 1D index
+            const bufferIndex = 3 * idx; // Base index for position and color arrays
+
+            // --- Update Height (Z-position) ---
+            let concentration = concentrationData[idx];
+            if (isNaN(concentration)) {
+                concentration = 0.0;
+                // Note: We don't modify the original data array here, as that should be handled
+                // by the calling code if needed
+            }
+            const height = concentration; // Direct mapping
+            positions[bufferIndex + 2] = isNaN(height) ? 0 : height * heightMultiplier; // Set Z value
+
+            // --- Update Color ---
+            const color = calculateColor(concentration);
+            colorsAttribute.array[bufferIndex] = color.r;
+            colorsAttribute.array[bufferIndex + 1] = color.g;
+            colorsAttribute.array[bufferIndex + 2] = color.b;
+        }
+    }
+
+    // Mark attributes as needing update for Three.js
+    surfaceMesh.geometry.attributes.position.needsUpdate = true;
+    surfaceMesh.geometry.attributes.color.needsUpdate = true;
+}
+
+export { updateOverlay };
 

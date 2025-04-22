@@ -1,4 +1,4 @@
-import { initPlotRenderer, renderPlot, updatePlot, setupNewScene } from './scene/sceneManager.js';
+import { initPlotRenderer, renderPlot, updatePlot, setupNewScene, updateOverlay, updateSurfaceMesh } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
     updateBacteria,
@@ -295,7 +295,7 @@ const addEventListeners = () => {
 const updateScene = () => {
     // Ensure bacteria data is loaded and scene is ready
     if (!dataState.bacteriaData || dataState.bacteriaData.size === 0 || !sceneState.surfaceMesh) {
-        // console.warn("Attempted to update scene before data/scene is ready.");
+        // console.warn("Attempted to update scene before data/scene is missing.");
         animationState.play = false; // Stop playback if data/scene is missing
         return;
     }
@@ -339,10 +339,16 @@ const updateScene = () => {
     ); 
 
     // 6. Update the surface mesh visualization based on the new concentration data
-    updateSurfaceMesh();
+    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor);
 
     // 7. Update UI overlay with current statistics
-    updateLoggsOverlay(currentBacteria.length);
+    updateOverlay(
+        currentBacteria.length, 
+        animationState.currentTimeStep, 
+        animationState.numberOfTimeSteps, 
+        animationState.fromStepToMinutes, 
+        dataState.AllUniqueIDs
+    );
 
     // 8. Increment the time step
     animationState.currentTimeStep++;
@@ -492,74 +498,6 @@ const calculateColor = (concentration) => {
 
 
 // --- Rendering and Animation ---
-
-/**
- * Updates the geometry (vertex heights) and color attributes of the surface mesh
- * based on the current concentration data. Requires `sceneState.surfaceMesh` to be initialized.
- */
-const updateSurfaceMesh = () => {
-    if (!sceneState.surfaceMesh) {
-        console.warn("updateSurfaceMesh called before surfaceMesh is initialized.");
-        return;
-    }
-    // Get direct access to the position and color buffer arrays
-    const positions = sceneState.surfaceMesh.geometry.attributes.position.array; // x, y, z for each vertex
-    const colorsAttribute = sceneState.surfaceMesh.geometry.attributes.color; // r, g, b for each vertex
-
-    // Iterate through each point in the grid
-    for (let y = 0; y < GRID.HEIGHT; y++) {
-        for (let x = 0; x < GRID.WIDTH; x++) {
-            const idx = y * GRID.WIDTH + x; // Calculate 1D index
-            const bufferIndex = 3 * idx; // Base index for position and color arrays
-
-            // --- Update Height (Z-position) ---
-            let concentration = dataState.currentConcentrationData[idx];
-            if (isNaN(concentration)) {
-                // console.warn(`NaN concentration at (${x}, ${y}), index ${idx}. Setting to 0.`);
-                concentration = 0.0;
-                dataState.currentConcentrationData[idx] = 0.0; // Correct in data
-            }
-            const height = concentration; // Direct mapping
-            positions[bufferIndex + 2] = isNaN(height) ? 0 : height*5; // Set Z value
-
-            // --- Update Color ---
-            const color = calculateColor(concentration);
-            colorsAttribute.array[bufferIndex] = color.r;
-            colorsAttribute.array[bufferIndex + 1] = color.g;
-            colorsAttribute.array[bufferIndex + 2] = color.b;
-        }
-    }
-
-    // Mark attributes as needing update for Three.js
-    sceneState.surfaceMesh.geometry.attributes.position.needsUpdate = true;
-    sceneState.surfaceMesh.geometry.attributes.color.needsUpdate = true;
-};
-
-/**
- * Updates the text overlay element with current simulation statistics
- * like time step, simulated time, and bacteria counts.
- * @param {number} bacteriaCount - The number of bacteria in the current time step.
- */
-const updateLoggsOverlay = (bacteriaCount) => {
-    const overlay = document.getElementById("text-overlay");
-    if (!overlay) return; // Exit if overlay element not found
-
-    // Calculate simulated time
-    const timeInMinutes = animationState.currentTimeStep * animationState.fromStepToMinutes;
-    const totalSeconds = Math.floor(timeInMinutes * 60);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    // Format time string
-    const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-    // Update overlay text content
-    overlay.innerText = `Step: ${animationState.currentTimeStep} / ${animationState.numberOfTimeSteps}
-Time: ${timeString}
-Bacteria Count: ${bacteriaCount}
-Total Unique Bacteria: ${dataState.AllUniqueIDs ? dataState.AllUniqueIDs.size : 'N/A'}`;
-};
 
 /**
  * The main animation loop function, called recursively via requestAnimationFrame.
