@@ -1,8 +1,8 @@
 import {THREE, OrbitControls} from './threeImports.js';
 import { createMesh } from './sceneComponents/mesh.js';
-import { PlotRenderer } from './sceneComponents/plotRenderer.js';
+import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
-import { BacteriumRenderer } from './sceneComponents/bacteriumRenderer.js';
+import { BacteriumRenderer } from './sceneComponents/bacteria.js';
 
 // Added grid constants that were previously in main.js
 const GRID = { WIDTH: 100, HEIGHT: 60 };
