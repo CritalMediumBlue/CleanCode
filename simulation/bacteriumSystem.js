@@ -1,21 +1,19 @@
-import * as THREE from 'three';
 import { quadtree } from 'd3-quadtree';
 import { CONFIG } from '../config.js';
 
-import { updateBacteriumColor, setBacteriumTransform, createBacteriumPool } from '../scene/bacteriumRenderer.js';
 import { 
     PhenotypeManager, 
     HistoryManager, 
     PHENOTYPES 
 } from './bacteriumSimulation.js';
 
+import { BacteriumData } from './bacteriumData.js';
+
 /**
- * Main bacterium system class that coordinates between simulation and rendering
+ * Main bacterium system class that handles simulation logic only
  */
 export class BacteriumSystem {
-    constructor(scene) {
-        this.scene = scene;
-        this.bacteriumPool = createBacteriumPool(scene);
+    constructor() {
         this.quadtree = null;
         this.currentTimestepBacteria = new Set();
         this.phenotypeManager = new PhenotypeManager();
@@ -27,11 +25,6 @@ export class BacteriumSystem {
      * Clean up resources
      */
     dispose() {
-        // Dispose of bacterium pool
-        if (this.bacteriumPool) {
-            this.bacteriumPool.dispose();
-        }
-
         // Reset all state
         this.phenotypeManager.clearPhenotypeMemo();
         this.quadtree = null;
@@ -100,35 +93,38 @@ export class BacteriumSystem {
     }
 
     /**
-     * Update bacteria for current time step
+     * Update bacteria for current time step and return data for rendering
+     * @returns {BacteriumData[]} Array of bacterium data objects for rendering
      */
     updateBacteria(timeStep, bacteriumData, visible, concentrations) {
         const layer = bacteriumData.get(timeStep) || [];
         
         // Reset state for new time step
-        this.bacteriumPool.reset();
         this.buildQuadtree(layer);
         this.currentTimestepBacteria.clear();
         this.averageSimilarityWithNeighbors = 0;
         
-        // Update each bacterium
+        // Process each bacterium
+        const bacteriaData = [];
         layer.forEach((data) => {
-            const bacterium = this.bacteriumPool.getBacterium();
-            this.updateBacterium(bacterium, data, 0, visible, concentrations);
+            const bacteriumData = this.processBacterium(data, visible, concentrations);
+            bacteriaData.push(bacteriumData);
             this.currentTimestepBacteria.add(data.ID);
-            this.averageSimilarityWithNeighbors += bacterium.similarity || 0;
+            this.averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
         });
 
         // Calculate average similarity
         this.averageSimilarityWithNeighbors = layer.length > 0 
             ? this.averageSimilarityWithNeighbors / layer.length 
             : 0;
+            
+        return bacteriaData;
     }
 
     /**
-     * Update a single bacterium
+     * Process a single bacterium and return data for rendering
      */
-    updateBacterium(bacterium, bacteriumData, zPosition, visible, concentrations) {
+    processBacterium(bacteriumData, visible, concentrations) {
         const { x, y, longAxis, angle, ID, parent } = bacteriumData;
         const WIDTH = 100, HEIGHT = 60;
         
@@ -136,11 +132,8 @@ export class BacteriumSystem {
         const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
         const localConcentration = concentrations[idx] || 0;
         
-        // Set position and rotation
-        const adjustedPosition = new THREE.Vector3(x, y, 0);
-        setBacteriumTransform(bacterium, adjustedPosition, angle, zPosition);
-        
-        this.bacteriumPool.updateGeometry(bacterium, longAxis, THREE);
+        // Create position as a plain object
+        const position = { x, y, z: 0 };
         
         // Get neighbors for this bacterium
         const neighbors = this.countNeighbors(x, y);
@@ -150,19 +143,18 @@ export class BacteriumSystem {
             ID, neighbors, parent, localConcentration
         );
         
-        // Update bacterium color based on phenotype information
-        updateBacteriumColor(
-            bacterium, 
-            phenotypeInfo.phenotype, 
-            phenotypeInfo.magentaProportion, 
-            phenotypeInfo.cyanProportion
+        // Return data object for rendering
+        return new BacteriumData(
+            ID,
+            position,
+            angle,
+            longAxis,
+            phenotypeInfo.phenotype,
+            phenotypeInfo.magentaProportion,
+            phenotypeInfo.cyanProportion,
+            phenotypeInfo.similarity,
+            visible
         );
-        
-        // Store similarity for later calculations
-        bacterium.similarity = phenotypeInfo.similarity;
-        
-        // Set visibility
-        bacterium.visible = visible;
     }
 
     // Delegate methods to phenotype manager
@@ -196,12 +188,12 @@ export class BacteriumSystem {
 }
 
 // Export functions for external use - these maintain the same API as before
-export function createBacteriumSystem(scene) {
-    return new BacteriumSystem(scene);
+export function createBacteriumSystem() {
+    return new BacteriumSystem();
 }
 
 export function updateBacteria(bacteriumSystem, timeStep, bacteriumData, visible, concentrations) {
-    bacteriumSystem.updateBacteria(timeStep, bacteriumData, visible, concentrations);
+    return bacteriumSystem.updateBacteria(timeStep, bacteriumData, visible, concentrations);
 }
 
 export function getMagentaCount(bacteriumSystem) {

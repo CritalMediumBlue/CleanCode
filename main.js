@@ -13,6 +13,7 @@ import {
     getHistories,
     clearHistories
 } from './simulation/bacteriumSystem.js';
+import { BacteriumRenderer } from './scene/bacteriumRenderer.js';
 import { CONFIG } from './config.js';
 import { handleFileInput } from './dataProcessor.js';
 import { ADI } from './simulation/diffusion.js';
@@ -43,6 +44,7 @@ const sceneState = {
     /** @type {THREE.WebGLRenderer | null} */ renderer: null,
     /** @type {THREE.Mesh | null} */ surfaceMesh: null, // The mesh representing the concentration surface
     /** @type {object | null} */ bacteriumSystem: null, // Holds bacteria instances and related methods
+    /** @type {object | null} */ bacteriumRenderer: null, // New renderer component for bacteria
     /** @type {boolean} */ visibleBacteria: true, // Toggles visibility of bacteria meshes
 };
 
@@ -78,8 +80,14 @@ const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
     cleanupResources();
     initializeParameters();
+    
+    // Set up new scene and create the bacterium system and renderer
     const newSceneState = setupNewScene(createBacteriumSystem);
     Object.assign(sceneState, newSceneState);
+    
+    // Create the bacterium renderer
+    sceneState.bacteriumRenderer = new BacteriumRenderer(sceneState.scene);
+    
     resetArrays(); // Ensure data arrays are ready
     updateSurfaceMesh(); // Initial update to set heights/colors
 };
@@ -100,6 +108,13 @@ const cleanupResources = () => {
     if (animationState.animationFrameId) {
         cancelAnimationFrame(animationState.animationFrameId);
         animationState.animationFrameId = null;
+    }
+
+    // Dispose bacterium renderer if it exists
+    if (sceneState.bacteriumRenderer) {
+        sceneState.bacteriumRenderer.dispose();
+        sceneState.bacteriumRenderer = null;
+        console.log("Bacterium renderer disposed.");
     }
 
     // Dispose bacterium system if it exists
@@ -343,14 +358,19 @@ const updateScene = () => {
  * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step.
  */
 const updateBacteriaPositions = (currentBacteria) => {
-    // Update the visual representation of bacteria in the scene
-    updateBacteria(
+    // Simulate bacteria - returns array of BacteriumData objects for rendering
+    const bacteriaData = updateBacteria(
         sceneState.bacteriumSystem,
         animationState.currentTimeStep,
         dataState.bacteriaData,
         sceneState.visibleBacteria,
         dataState.currentConcentrationData
     );
+    
+    // Render bacteria using the dedicated renderer
+    if (sceneState.bacteriumRenderer) {
+        sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
+    }
 
     // Calculate average similarity among neighbors (if applicable for coloring/analysis)
     const averageSimilarity = getAverageSimilarityWithNeighbors(sceneState.bacteriumSystem);

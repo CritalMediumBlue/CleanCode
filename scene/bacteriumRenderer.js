@@ -195,3 +195,66 @@ export function setBacteriumTransform(bacterium, position, angle, zPosition) {
 export function createBacteriumPool(scene) {
     return new BacteriumPool(scene, CONFIG.BACTERIUM.INITIAL_POOL_SIZE);
 }
+
+/**
+ * Renderer class that handles visualizing bacteria based on simulation data.
+ * This decouples rendering from simulation logic.
+ */
+export class BacteriumRenderer {
+    /**
+     * Create a new bacterium renderer
+     * @param {THREE.Scene} scene - Three.js scene to render bacteria in
+     */
+    constructor(scene) {
+        this.scene = scene;
+        this.bacteriumPool = new BacteriumPool(scene, CONFIG.BACTERIUM.INITIAL_POOL_SIZE);
+    }
+    
+    /**
+     * Render bacteria based on simulation data
+     * @param {BacteriumData[]} bacteriaData - Array of bacterium data from simulation
+     */
+    renderBacteria(bacteriaData) {
+        // Reset the pool for new render
+        this.bacteriumPool.reset();
+        
+        // Render each bacterium
+        bacteriaData.forEach(data => {
+            const bacterium = this.bacteriumPool.getBacterium();
+            this.renderBacterium(bacterium, data);
+        });
+    }
+    
+    /**
+     * Render a single bacterium
+     * @param {THREE.Mesh} bacterium - Three.js mesh to update
+     * @param {BacteriumData} data - Data for this bacterium
+     */
+    renderBacterium(bacterium, data) {
+        const { position, angle, longAxis, phenotype, magentaProportion, cyanProportion, visible } = data;
+        
+        // Convert plain position to THREE.Vector3
+        const threePosition = new THREE.Vector3(position.x, position.y, position.z || 0);
+        
+        // Set position and rotation
+        setBacteriumTransform(bacterium, threePosition, angle, position.z || 0);
+        
+        // Update geometry using THREE
+        this.bacteriumPool.updateGeometry(bacterium, longAxis);
+        
+        // Update color
+        updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion);
+        
+        // Set visibility
+        bacterium.visible = visible;
+    }
+    
+    /**
+     * Clean up resources
+     */
+    dispose() {
+        if (this.bacteriumPool) {
+            this.bacteriumPool.dispose();
+        }
+    }
+}
