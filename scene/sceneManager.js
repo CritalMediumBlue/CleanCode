@@ -7,15 +7,18 @@ import { BacteriumRenderer } from './sceneComponents/bacteriumRenderer.js';
 // Added grid constants that were previously in main.js
 const GRID = { WIDTH: 100, HEIGHT: 60 };
 
+let plotRendererInstance = null;
+
 /**
  * Sets up the scene, camera, renderer, and controls.
+ * @param {Object} config - Configuration object
  * @returns {Object} An object containing the scene, camera, renderer, and controls.
  */
-export function setupScene(CONFIG) {
-    const scene = createScene(CONFIG);
-    const camera = createCamera(CONFIG);
+export function setupScene(config) {
+    const scene = createScene(config);
+    const camera = createCamera(config);
     const renderer = createRenderer();
-    createControls(camera, renderer,CONFIG);
+    createControls(camera, renderer, config);
     const surfaceMesh = createMesh(scene, THREE);
 
     // Handle window resize to match viewport dimensions
@@ -31,21 +34,22 @@ export function setupScene(CONFIG) {
 /**
  * Sets up a new scene with custom surface mesh for concentration visualization.
  * @param {Function} createBacteriumSystem - Function to create bacterium system
+ * @param {Object} config - Configuration object
  * @returns {Object} An object containing the scene, camera, renderer, bacteriumSystem, and bacteriumRenderer
  */
-export function setupNewScene(createBacteriumSystem, CONFIG) {
+export function setupNewScene(createBacteriumSystem, config) {
     console.log("Setting up new scene...");
-    const setup = setupScene(CONFIG);
+    const setup = setupScene(config);
     const sceneState = setup; // Create local sceneState to be returned
 
     // Append renderer to document if not already done
     document.body.appendChild(sceneState.renderer.domElement);
     
     // Initialize the bacterium visualization system
-    sceneState.bacteriumSystem = createBacteriumSystem(sceneState.scene);
+    sceneState.bacteriumSystem = createBacteriumSystem();
     
-    // Initialize the bacterium renderer
-    sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene);
+    // Initialize the bacterium renderer with config
+    sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene, config);
 
     // Create the surface mesh geometry specifically for concentration visualization
     const geometry = new THREE.PlaneGeometry(GRID.WIDTH, GRID.HEIGHT, GRID.WIDTH - 1, GRID.HEIGHT - 1);
@@ -73,10 +77,12 @@ export function setupNewScene(createBacteriumSystem, CONFIG) {
     return sceneState;
 }
 
-let plotRendererInstance = null;
-
-export function initPlotRenderer() {
-    plotRendererInstance = new PlotRenderer();
+/**
+ * Initialize the plot renderer with configuration
+ * @param {Object} config - Optional configuration object
+ */
+export function initPlotRenderer(config = null) {
+    plotRendererInstance = new PlotRenderer(config);
     plotRendererInstance.init(THREE);
 }
 
@@ -90,34 +96,36 @@ export function renderPlot() {
 
 /**
  * Creates and returns a new THREE.Scene object.
+ * @param {Object} config - Configuration object
  * @returns {THREE.Scene} The created scene.
  */
-function createScene(CONFIG) {
+function createScene(config) {
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(CONFIG.SCENE.FOG_COLOR, CONFIG.SCENE.FOG_NEAR, CONFIG.SCENE.FOG_FAR);
+    scene.fog = new THREE.Fog(config.SCENE.FOG_COLOR, config.SCENE.FOG_NEAR, config.SCENE.FOG_FAR);
     return scene;
 }
 
 /**
  * Creates and returns a new THREE.PerspectiveCamera object.
+ * @param {Object} config - Configuration object
  * @returns {THREE.PerspectiveCamera} The created camera.
  */
-function createCamera(CONFIG) {
+function createCamera(config) {
     const camera = new THREE.PerspectiveCamera(
-        CONFIG.SCENE.CAMERA_FOV,
+        config.SCENE.CAMERA_FOV,
         window.innerWidth / window.innerHeight,
-        CONFIG.SCENE.CAMERA_NEAR,
-        CONFIG.SCENE.CAMERA_FAR
+        config.SCENE.CAMERA_NEAR,
+        config.SCENE.CAMERA_FAR
     );
     camera.position.set(
-        CONFIG.SCENE.CAMERA_POSITION.x,
-        CONFIG.SCENE.CAMERA_POSITION.y,
-        CONFIG.SCENE.CAMERA_POSITION.z
+        config.SCENE.CAMERA_POSITION.x,
+        config.SCENE.CAMERA_POSITION.y,
+        config.SCENE.CAMERA_POSITION.z
     );
     camera.lookAt(
-        CONFIG.SCENE.CAMERA_LOOKAT.x,
-        CONFIG.SCENE.CAMERA_LOOKAT.y,
-        CONFIG.SCENE.CAMERA_LOOKAT.z
+        config.SCENE.CAMERA_LOOKAT.x,
+        config.SCENE.CAMERA_LOOKAT.y,
+        config.SCENE.CAMERA_LOOKAT.z
     );
     return camera;
 }
@@ -137,19 +145,20 @@ function createRenderer() {
  * Creates and returns a new OrbitControls object.
  * @param {THREE.Camera} camera - The camera to control.
  * @param {THREE.WebGLRenderer} renderer - The renderer to control.
+ * @param {Object} config - Configuration object
  * @returns {OrbitControls} The created controls.
  */
-function createControls(camera, renderer,CONFIG) {
+function createControls(camera, renderer, config) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = false;
     controls.autoRotate = false;
     controls.screenSpacePanning = true;
-    controls.maxDistance = CONFIG.SCENE.CONTROLS_MAX_DISTANCE;
-    controls.minDistance = CONFIG.SCENE.CONTROLS_MIN_DISTANCE;
+    controls.maxDistance = config.SCENE.CONTROLS_MAX_DISTANCE;
+    controls.minDistance = config.SCENE.CONTROLS_MIN_DISTANCE;
     controls.target.set(
-        CONFIG.SCENE.CAMERA_LOOKAT.x,
-        CONFIG.SCENE.CAMERA_LOOKAT.y,
-        CONFIG.SCENE.CAMERA_LOOKAT.z
+        config.SCENE.CAMERA_LOOKAT.x,
+        config.SCENE.CAMERA_LOOKAT.y,
+        config.SCENE.CAMERA_LOOKAT.z
     );
     
 }
@@ -205,10 +214,11 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor
 /**
  * Creates and returns a new BacteriumRenderer instance
  * @param {THREE.Scene} scene - The scene to add bacteria to
+ * @param {Object} config - Configuration object
  * @returns {BacteriumRenderer} The created bacterium renderer
  */
-export function createBacteriumRenderer(scene) {
-    return new BacteriumRenderer(scene);
+export function createBacteriumRenderer(scene, config = null) {
+    return new BacteriumRenderer(scene, config);
 }
 
 export { updateOverlay };

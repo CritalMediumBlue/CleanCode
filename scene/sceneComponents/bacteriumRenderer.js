@@ -1,21 +1,19 @@
 import { CONFIG, PHENOTYPES } from '../../config.js';
 import { THREE } from '../threeImports.js';
 
-// Phenotype to THREE.Color mapping
-const PHENOTYPE_COLORS = {
-    'MAGENTA': new THREE.Color(CONFIG.COLORS.MAGENTA_PHENOTYPE),
-    'CYAN': new THREE.Color(CONFIG.COLORS.CYAN_PHENOTYPE)
-};
+// This will be refactored to use injected config
+let PHENOTYPE_COLORS = {};
 
 /**
  * Manages a pool of bacterium objects for efficient reuse
  */
 export class BacteriumPool {
-    constructor(scene, initialSize) {
+    constructor(scene, initialSize, config = null) {
         this.scene = scene;
+        this.config = config;
         this.bacteria = []; 
         this.activeCount = 0;
-        this.growthFactor = CONFIG.BACTERIUM.POOL_GROWTH_FACTOR;
+        this.growthFactor = this.config.BACTERIUM.POOL_GROWTH_FACTOR;
         this.capsuleGeometryCache = new Map();
         this.edgesGeometryCache = new Map();
         
@@ -47,9 +45,9 @@ export class BacteriumPool {
             wireframe.geometry.dispose();
             wireframe.geometry = newWireframeGeometry;
             wireframe.scale.set(
-                CONFIG.BACTERIUM.WIREFRAME_SCALE, 
-                CONFIG.BACTERIUM.WIREFRAME_SCALE, 
-                CONFIG.BACTERIUM.WIREFRAME_SCALE
+                this.config.BACTERIUM.WIREFRAME_SCALE, 
+                this.config.BACTERIUM.WIREFRAME_SCALE, 
+                this.config.BACTERIUM.WIREFRAME_SCALE
             );
         }
     }
@@ -61,8 +59,8 @@ export class BacteriumPool {
         return new THREE.CapsuleGeometry(
             0.4,
             length,
-            CONFIG.BACTERIUM.CAP_SEGMENTS,
-            CONFIG.BACTERIUM.RADIAL_SEGMENTS
+            this.config.BACTERIUM.CAP_SEGMENTS,
+            this.config.BACTERIUM.RADIAL_SEGMENTS
         );
     }
 
@@ -123,7 +121,7 @@ export class BacteriumPool {
         // Add wireframe
         const wireframeGeometry = new THREE.EdgesGeometry(capsuleGeometry);
         const wireframeMaterial = new THREE.LineBasicMaterial({ 
-            color: new THREE.Color(CONFIG.BACTERIUM.WIREFRAME_COLOR) 
+            color: new THREE.Color(this.config.BACTERIUM.WIREFRAME_COLOR) 
         });
         const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
         
@@ -211,10 +209,16 @@ export class BacteriumRenderer {
     /**
      * Create a new bacterium renderer
      * @param {THREE.Scene} scene - Three.js scene to render bacteria in
+     * @param {Object} config - Configuration object
      */
-    constructor(scene) {
+    constructor(scene, config = null) {
         this.scene = scene;
-        this.bacteriumPool = new BacteriumPool(scene, CONFIG.BACTERIUM.INITIAL_POOL_SIZE);
+        this.config = config ;
+        this.bacteriumPool = new BacteriumPool(scene, this.config.BACTERIUM.INITIAL_POOL_SIZE, this.config);
+        PHENOTYPE_COLORS = {
+            'MAGENTA': new THREE.Color(this.config.COLORS.MAGENTA_PHENOTYPE),
+            'CYAN': new THREE.Color(this.config.COLORS.CYAN_PHENOTYPE)
+        };
     }
     
     /**

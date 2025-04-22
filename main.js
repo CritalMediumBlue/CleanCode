@@ -83,7 +83,7 @@ const resetAllData = () => {
     // Create a function that will create a bacterium system with CONFIG
     const createConfiguredBacteriumSystem = () => createBacteriumSystem(CONFIG);
     
-    // Set up new scene and create the bacterium system and renderer
+    // Set up new scene and create the bacterium system and renderer, passing CONFIG
     const newSceneState = setupNewScene(createConfiguredBacteriumSystem, CONFIG);
     Object.assign(sceneState, newSceneState);
     
@@ -149,7 +149,9 @@ const initializeParameters = () => {
     if (sceneState.bacteriumSystem) {
         clearHistories(sceneState.bacteriumSystem);
     }
-    initPlotRenderer(); // Re-initialize the plot for the new simulation
+    
+    // Pass CONFIG to plotRenderer initialization
+    initPlotRenderer(CONFIG); // Re-initialize the plot for the new simulation
 };
 
 /**

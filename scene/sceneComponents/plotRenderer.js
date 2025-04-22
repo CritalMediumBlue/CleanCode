@@ -1,8 +1,8 @@
-import { CONFIG } from '../../config.js';
-
 
 export class PlotRenderer {
-    constructor() {
+    constructor(config = null) {
+        // Use injected config if provided, otherwise fall back to imported CONFIG
+        this.config = config ;
         this.scene2D = null;
         this.camera2D = null;
         this.renderer2D = null;
@@ -25,15 +25,13 @@ export class PlotRenderer {
         this.camera2D = new THREE.OrthographicCamera(-2, 2, 1, -1, 0.1, 100);
         this.camera2D.position.z = 1;
         this.renderer2D = new THREE.WebGLRenderer({ alpha: true, antialias: false });
-        this.renderer2D.setSize(window.innerWidth * CONFIG.PLOT_RENDERER.PLOT_WIDTH_RATIO, window.innerHeight * CONFIG.PLOT_RENDERER.PLOT_HEIGHT_RATIO);
+        this.renderer2D.setSize(window.innerWidth * this.config.PLOT_RENDERER.PLOT_WIDTH_RATIO, window.innerHeight * this.config.PLOT_RENDERER.PLOT_HEIGHT_RATIO);
         this.renderer2D.domElement.style.position = 'absolute';
         document.getElementById('plot-overlay').appendChild(this.renderer2D.domElement);
    
         this.createPlot(THREE);
     }
 
-
-   
     createPlot(THREE) {
         this.createPlotGeometries(THREE);
         this.createPlotMaterials(THREE);
@@ -42,7 +40,7 @@ export class PlotRenderer {
     }
 
     createPlotGeometries(THREE) {
-        const positions = new Float32Array(CONFIG.PLOT_RENDERER.MAX_POINTS * 3);
+        const positions = new Float32Array(this.config.PLOT_RENDERER.MAX_POINTS * 3);
         const createGeometry = () => {
             const geometry = new THREE.BufferGeometry();
             geometry.setAttribute('position', new THREE.BufferAttribute(positions.slice(), 3));
@@ -56,10 +54,10 @@ export class PlotRenderer {
     }
 
     createPlotMaterials(THREE) {
-        this.totalMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: CONFIG.PLOT_RENDERER.POINT_SIZE });
-        this.magentaMaterial = new THREE.PointsMaterial({ color: 0xff00ff, size: CONFIG.PLOT_RENDERER.POINT_SIZE });
-        this.cyanMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: CONFIG.PLOT_RENDERER.POINT_SIZE });
-        this.similarityMaterial = new THREE.PointsMaterial({ color: 0xffff00, size: CONFIG.PLOT_RENDERER.POINT_SIZE });
+        this.totalMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: this.config.PLOT_RENDERER.POINT_SIZE });
+        this.magentaMaterial = new THREE.PointsMaterial({ color: 0xff00ff, size: this.config.PLOT_RENDERER.POINT_SIZE });
+        this.cyanMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: this.config.PLOT_RENDERER.POINT_SIZE });
+        this.similarityMaterial = new THREE.PointsMaterial({ color: 0xffff00, size: this.config.PLOT_RENDERER.POINT_SIZE });
     }
 
     createPlotPoints(THREE) {
@@ -72,11 +70,11 @@ export class PlotRenderer {
     }
 
     createTicks(THREE) {
-        const tickMaterial = new THREE.LineBasicMaterial({ color: CONFIG.PLOT_RENDERER.AXIS_COLOR });
+        const tickMaterial = new THREE.LineBasicMaterial({ color: this.config.PLOT_RENDERER.AXIS_COLOR });
         this.yTicks = new THREE.Group();
         const points = [];
-        for (let i = 0; i <= CONFIG.PLOT_RENDERER.MAX_Y_VALUE; i += CONFIG.PLOT_RENDERER.Y_TICK_STEP) {
-            const y = (i / CONFIG.PLOT_RENDERER.MAX_Y_VALUE) * 2 - 0.999;
+        for (let i = 0; i <= this.config.PLOT_RENDERER.MAX_Y_VALUE; i += this.config.PLOT_RENDERER.Y_TICK_STEP) {
+            const y = (i / this.config.PLOT_RENDERER.MAX_Y_VALUE) * 2 - 0.999;
             points.push(new THREE.Vector3(-2, y, 0), new THREE.Vector3(2, y, 0));
         }
         const tickGeometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -88,12 +86,12 @@ export class PlotRenderer {
     updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
         const updateGeometry = (geometry, history) => {
             const positions = geometry.attributes.position.array;
-            const xStep = 4 / CONFIG.PLOT_RENDERER.MAX_POINTS;
+            const xStep = 4 / this.config.PLOT_RENDERER.MAX_POINTS;
             
-            for (let i = 0; i < CONFIG.PLOT_RENDERER.MAX_POINTS; i++) {
+            for (let i = 0; i < this.config.PLOT_RENDERER.MAX_POINTS; i++) {
                 const historyIndex = this.offset + i;
                 const x = -2 + i * xStep;
-                const y = historyIndex < history.length ? (history[historyIndex] / CONFIG.PLOT_RENDERER.MAX_Y_VALUE) * 2 - 0.999 : -1;
+                const y = historyIndex < history.length ? (history[historyIndex] / this.config.PLOT_RENDERER.MAX_Y_VALUE) * 2 - 0.999 : -1;
                 const index = i * 3;
                 positions[index] = x;
                 positions[index + 1] = y;
@@ -101,7 +99,7 @@ export class PlotRenderer {
             }
             
             geometry.attributes.position.needsUpdate = true;
-            geometry.setDrawRange(0, Math.min(this.currentIndex, CONFIG.PLOT_RENDERER.MAX_POINTS));
+            geometry.setDrawRange(0, Math.min(this.currentIndex, this.config.PLOT_RENDERER.MAX_POINTS));
         };
         
         updateGeometry(this.totalPlotPoints.geometry, totalHistory);
@@ -110,7 +108,7 @@ export class PlotRenderer {
         updateGeometry(this.similarityPlotPoints.geometry, similarityHistory);
         
         this.currentIndex++;
-        if (this.currentIndex > CONFIG.PLOT_RENDERER.MAX_POINTS) {
+        if (this.currentIndex > this.config.PLOT_RENDERER.MAX_POINTS) {
             this.offset++;
         }
         this.needsRender = true;
