@@ -4,7 +4,7 @@
  */
 
 import { CONFIG } from './config.js';
-import { handleFileInput } from './dataProcessor.js';
+import { handleFileInput as processFileInput, setBacteriaData as setProcessedBacteriaData } from './dataProcessor.js';
 import { 
     sceneState, 
     animationState, 
@@ -39,17 +39,53 @@ const getConfiguration = () => {
 };
 
 /**
+ * Handles file input processing, decoupling main.js from dataProcessor.js
+ * @param {Event} event - The file input event
+ * @param {Function} resetCallback - Function to reset all data
+ * @param {Function} animateCallback - Function to start animation
+ */
+const handleFileInput = (event, resetCallback, animateCallback) => {
+    // Forward to the dataProcessor's handleFileInput but intercept the data callback
+    processFileInput(event, resetCallback, animateCallback, (data, processedData) => {
+        // Process the data through our internal function before sending to main
+        setBacteriaData(data, processedData);
+    });
+};
+
+/**
+ * Centralized function to set bacteria data, abstracting the direct dependency on dataProcessor
+ * @param {Map<number, Array<object>>} data - Map where keys are time steps and values are arrays of bacteria objects
+ * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime
+ */
+let setBacteriaDataCallback = null;
+
+const setBacteriaData = (data, processedData) => {
+    // Use the registered callback if available
+    if (setBacteriaDataCallback) {
+        setBacteriaDataCallback(data, processedData);
+    } else {
+        console.warn("setBacteriaDataCallback not registered");
+        // Fall back to direct processing if needed
+        setProcessedBacteriaData(dataState, animationState, data, processedData);
+    }
+};
+
+/**
  * Attaches event listeners to various UI controls (buttons, sliders, dropdowns, file input)
  * to manage simulation playback, parameter adjustments, and data loading.
  * 
  * @param {Function} updateScene - Function to update the scene for single step operations
  * @param {Function} animate - Function to start the animation loop
  * @param {Function} resetAllData - Function to reset all data 
- * @param {Function} setBacteriaData - Function to set the bacteria data
+ * @param {Function} externalSetBacteriaData - Function to set the bacteria data
  * @returns {Object} The configuration object for dependency injection
  */
-const addEventListeners = (updateScene, animate, resetAllData, setBacteriaData) => {
+const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData) => {
     console.log("Adding event listeners...");
+    
+    // Store the callback for setting bacteria data
+    setBacteriaDataCallback = externalSetBacteriaData;
+    
     // Simple toggle buttons with declarative configuration
     const toggleButtons = [
         { id: 'playButton', event: 'click', handler: () => { animationState.play = true; } },
@@ -105,8 +141,8 @@ const addEventListeners = (updateScene, animate, resetAllData, setBacteriaData) 
         // File input
         {
             id: 'fileInput', event: 'change', handler: (event) => {
-                // Pass animate function to start loop after data processing
-                handleFileInput(event, resetAllData, animate, setBacteriaData);
+                // Use our own handleFileInput which wraps dataProcessor's function
+                handleFileInput(event, resetAllData, animate);
             }
         }
     ];
@@ -121,4 +157,4 @@ const addEventListeners = (updateScene, animate, resetAllData, setBacteriaData) 
 };
 
 // Export functions
-export { addEventListeners, addSafeEventListener, getConfiguration };
+export { addEventListeners, addSafeEventListener, getConfiguration, handleFileInput, setBacteriaData };

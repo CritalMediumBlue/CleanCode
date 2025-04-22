@@ -12,8 +12,7 @@ import {
     clearHistories,
     diffuse
 } from './simulation/simulationManager.js';
-// Removed direct import of CONFIG
-import { setBacteriaData as setProcessedBacteriaData } from './GUI/dataProcessor.js';
+// Remove direct import of setBacteriaData from dataProcessor.js
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     sceneState, 
@@ -140,14 +139,23 @@ const resetArrays = () => {
 }
 
 /**
- * Wrapper function that passes the state objects to the dataProcessor's setBacteriaData function
+ * Callback function that sets bacteria data in the appropriate state objects.
+ * This is called by guiManager.js after data processing.
  * @param {Map<number, Array<object>>} data - Map where keys are time steps and values are arrays of bacteria objects for that step.
  * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime.
  */
 const setBacteriaData = (data, processedData) => {
-    setProcessedBacteriaData(dataState, animationState, data, processedData);
-};
+    console.log("Setting bacteria data from main.js...");
+    dataState.bacteriaData = data;
+    animationState.numberOfTimeSteps = data.size;
+    dataState.AllUniqueIDs = processedData.totalUniqueIDs;
+    animationState.AverageLifetime = processedData.averageLifetime;
+    animationState.fromStepToMinutes = dataState.doublingTime / processedData.averageLifetime;
 
+    console.log('Total time (h)', data.size * animationState.fromStepToMinutes / 60);
+    console.log('Every time step is ', Math.floor(animationState.fromStepToMinutes), 'minutes',
+        'and', Math.round(animationState.fromStepToMinutes % 1 * 60), 'seconds');
+};
 
 // --- Event Handling ---
 
@@ -336,9 +344,6 @@ const animate = () => {
 // Pass required functions as parameters for proper GUI-Simulation integration
 // Get configuration object via dependency injection
 appConfig = addEventListeners(updateScene, animate, resetAllData, setBacteriaData);
-
-// Alternative option to get configuration if needed later
-// const refreshConfig = () => { appConfig = getConfiguration(); };
 
 // Note: The simulation doesn't start automatically.
 // It waits for data to be loaded via the file input.

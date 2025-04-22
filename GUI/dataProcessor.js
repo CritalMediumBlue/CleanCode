@@ -7,13 +7,14 @@ let numberOfTimeSteps = 0;
 /**
  * Stores the processed bacteria data and related statistics into the provided state objects.
  * Calculates the time conversion factor.
+ * This function is maintained for backward compatibility but main.js now uses its own implementation.
  * @param {object} dataState - Object to store bacteria data and related properties
  * @param {object} animationState - Object to store animation timing properties
  * @param {Map<number, Array<object>>} data - Map where keys are time steps and values are arrays of bacteria objects
  * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime
  */
 export const setBacteriaData = (dataState, animationState, data, processedData) => {
-    console.log("Setting bacteria data...");
+    console.log("Setting bacteria data in dataProcessor...");
     dataState.bacteriaData = data;
     animationState.numberOfTimeSteps = data.size;
     dataState.AllUniqueIDs = processedData.totalUniqueIDs;
@@ -25,6 +26,14 @@ export const setBacteriaData = (dataState, animationState, data, processedData) 
         'and', Math.round(animationState.fromStepToMinutes % 1 * 60), 'seconds');
 };
 
+/**
+ * Handles file input processing.
+ * This version no longer directly calls setBacteriaData but uses the provided callback.
+ * @param {Event} event - The file input event
+ * @param {Function} resetCallback - Function to reset all data
+ * @param {Function} animateCallback - Function to start animation
+ * @param {Function} setBacteriaDataCallback - Callback to handle bacteria data
+ */
 export const handleFileInput = (event, resetCallback, animateCallback, setBacteriaDataCallback) => {
     // Set play to false and reset the scene
     resetCallback();
@@ -36,10 +45,10 @@ export const handleFileInput = (event, resetCallback, animateCallback, setBacter
         const processedData = processFileData(e.target.result);
         console.log('Number of time steps:', processedData.numberOfTimeSteps);
         
-        // Initialize bacteria data in main.js dataState using callback
+        // Initialize bacteria data via callback
         if (setBacteriaDataCallback) {
-            setBacteriaDataCallback(bacteriaData,processedData);
-            console.log('Bacteria data initialized in dataState via callback');
+            setBacteriaDataCallback(bacteriaData, processedData);
+            console.log('Bacteria data passed to callback');
         }
         
         // Start animation with the processed data
