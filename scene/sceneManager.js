@@ -218,8 +218,8 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor
  * @returns {BacteriumRenderer} The created bacterium renderer
  */
 export function createBacteriumRenderer(scene, config) {
-    // Ensure config parameter is properly passed down to BacteriumRenderer
-    return new BacteriumRenderer(scene, config);
+    // Pass THREE to BacteriumRenderer to implement dependency injection
+    return new BacteriumRenderer(scene, config, THREE);
 }
 
 export { updateOverlay };
