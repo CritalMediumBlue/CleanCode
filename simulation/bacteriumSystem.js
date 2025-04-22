@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { quadtree } from 'd3-quadtree';
 import { CONFIG } from '../config.js';
 
-import { BacteriumPool, updateBacteriumColor, setBacteriumTransform, createBacteriumPool } from '../scene/bacteriumRenderer.js';
+import { updateBacteriumColor, setBacteriumTransform, createBacteriumPool } from '../scene/bacteriumRenderer.js';
 import { 
     PhenotypeManager, 
     HistoryManager, 
@@ -140,7 +140,7 @@ export class BacteriumSystem {
         const adjustedPosition = new THREE.Vector3(x, y, 0);
         setBacteriumTransform(bacterium, adjustedPosition, angle, zPosition);
         
-        this.bacteriumPool.updateGeometry(bacterium, longAxis);
+        this.bacteriumPool.updateGeometry(bacterium, longAxis, THREE);
         
         // Get neighbors for this bacterium
         const neighbors = this.countNeighbors(x, y);

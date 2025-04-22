@@ -1,5 +1,4 @@
-import * as THREE from 'three';
-import { setupScene, initPlotRenderer, renderPlot, updatePlot, setupNewScene } from './scene/sceneManager.js';
+import { initPlotRenderer, renderPlot, updatePlot, setupNewScene } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
     updateBacteria,

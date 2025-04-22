@@ -1,5 +1,5 @@
-import * as THREE from 'three';
 import { CONFIG } from '../config.js';
+import { THREE } from './threeImports.js';
 
 /**
  * Manages a pool of bacterium objects for efficient reuse
