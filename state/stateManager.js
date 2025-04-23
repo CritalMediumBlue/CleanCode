@@ -1,9 +1,3 @@
-// --- Constants ---
-/** @const {object} GRID - Defines the dimensions of the simulation grid. */
-export const GRID = { WIDTH: 100, HEIGHT: 60 };
-/** @const {object} SIMULATION - Holds simulation-specific parameters. */
-export const SIMULATION = { DIFFUSION_RATE: 0.01 };
-
 
 
 // --- State Objects ---
@@ -47,9 +41,10 @@ export const dataState = {
 /**
  * Initializes all data arrays for the simulation.
  * Creates empty Float32Arrays for concentration data, colors, sources, and sinks.
+ * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties (optional, uses default GRID if not provided)
  */
-export const initializeArrays = () => {
-    const gridSize = GRID.WIDTH * GRID.HEIGHT;
+export const initializeArrays = (grid = GRID) => {
+    const gridSize = grid.WIDTH * grid.HEIGHT;
     console.log(`Initializing arrays for grid size: ${gridSize}`);
 
     // Initialize data arrays with grid dimensions
@@ -72,22 +67,24 @@ export const resetAnimationState = () => {
 
 /**
  * Performs full state reset for a new simulation.
+ * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties (optional)
  */
-export const resetState = () => {
+export const resetState = (grid = GRID) => {
     resetAnimationState();
-    initializeArrays();
+    initializeArrays(grid);
 };
 
 /**
  * Converts raw simulation coordinates to grid indices.
  * @param {number} x - Raw x-coordinate from bacterium data.
  * @param {number} y - Raw y-coordinate from bacterium data.
+ * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties (optional, uses default GRID if not provided)
  * @returns {{x: number, y: number, idx: number} | null} Object containing adjusted grid coordinates and array index.
  */
-export const getAdjustedCoordinates = (x, y) => {
+export const getAdjustedCoordinates = (x, y, grid = GRID) => {
     // Translate coordinates so (0,0) is the bottom-left corner of the grid, then round.
-    let adjustedX = Math.round(x + GRID.WIDTH / 2);
-    let adjustedY = Math.round(y + GRID.HEIGHT / 2);
+    let adjustedX = Math.round(x + grid.WIDTH / 2);
+    let adjustedY = Math.round(y + grid.HEIGHT / 2);
 
     // Skip bacteria below the grid's bottom edge.
     if (adjustedY <= 0) {
@@ -95,11 +92,11 @@ export const getAdjustedCoordinates = (x, y) => {
     }
 
     // Clamp coordinates to valid grid boundaries (leaving a 1-cell border).
-    adjustedY = Math.min(adjustedY, GRID.HEIGHT - 2); 
-    adjustedX = Math.max(1, Math.min(adjustedX, GRID.WIDTH - 2));
+    adjustedY = Math.min(adjustedY, grid.HEIGHT - 2); 
+    adjustedX = Math.max(1, Math.min(adjustedX, grid.WIDTH - 2));
 
     // Calculate the 1D index corresponding to the 2D grid coordinates.
-    const idx = adjustedY * GRID.WIDTH + adjustedX;
+    const idx = adjustedY * grid.WIDTH + adjustedX;
 
     return { x: adjustedX, y: adjustedY, idx };
 };

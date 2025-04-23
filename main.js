@@ -26,7 +26,7 @@ import {
     sceneState, 
     animationState, 
     dataState, 
-    GRID, 
+    // Remove GRID import from stateManager.js
     initializeArrays,
     resetAnimationState,
     getAdjustedCoordinates,
@@ -109,23 +109,22 @@ const resetAllData = () => {
     const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
     
     // Set up new scene and create the bacterium system and renderer, passing injected config
-    // Now passing GRID object from stateManager.js to setupNewScene
-    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig, GRID);
+    // Now passing GRID object from appConfig instead of stateManager
+    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig, appConfig.GRID);
     Object.assign(sceneState, newSceneState);
     
     // Initialize history manager
     sceneState.historyManager = new HistoryManager();
     
-    // Initialize arrays via stateManager
-    initializeArrays();
+    // Initialize arrays via stateManager, now passing GRID from appConfig
+    initializeArrays(appConfig.GRID);
     
     // Initialize plot renderer with injected config
     initPlotRenderer(appConfig);
     
-    // Now pass the GRID object to updateSurfaceMesh
-    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, GRID); // Initial update to set heights/colors
+    // Now pass the GRID object from appConfig to updateSurfaceMesh
+    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, appConfig.GRID); // Initial update to set heights/colors
 };
-
 
 /**
  * Cleans up existing Three.js resources (renderer, scene objects) and cancels
@@ -175,15 +174,12 @@ const cleanupResources = () => {
     }
 };
 
-
-
-
 /**
  * Resets the core data arrays (concentration, colors, sources, sinks)
  * to their initial state (zero-filled Float32Arrays).
  */
 const resetArrays = () => {
-    const gridSize = GRID.WIDTH * GRID.HEIGHT;
+    const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
     console.log(`Resetting arrays for grid size: ${gridSize}`);
 
     // Initialize data arrays with grid dimensions
@@ -244,7 +240,7 @@ const updateScene = () => {
      * @see simulation/diffusion.js for implementation details
      */
     [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
-        GRID.WIDTH, GRID.HEIGHT,
+        appConfig.GRID.WIDTH, appConfig.GRID.HEIGHT,
         dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
         dataState.sources, dataState.sinks, // Input source/sink arrays
         appConfig.GRID.DIFFUSION_RATE, // Diffusion coefficient
@@ -253,8 +249,8 @@ const updateScene = () => {
     ); 
 
     // 6. Update the surface mesh visualization based on the new concentration data
-    // Now passing GRID object to updateSurfaceMesh
-    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, GRID);
+    // Now passing GRID object from appConfig to updateSurfaceMesh
+    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, appConfig.GRID);
 
     // 7. Update UI overlay with current statistics
     updateOverlay(
@@ -338,8 +334,8 @@ const updateSourcesAndSinks = (currentBacteria) => {
 
     // Iterate through each bacterium in the current time step
     for (const bacterium of currentBacteria) {
-        // Convert bacterium's position to grid coordinates and index
-        const coords = getAdjustedCoordinates(bacterium.x, bacterium.y);
+        // Convert bacterium's position to grid coordinates and index using appConfig.GRID
+        const coords = getAdjustedCoordinates(bacterium.x, bacterium.y, appConfig.GRID);
 
         // Skip if the bacterium is outside the valid grid area
         if (!coords) continue;
@@ -355,9 +351,6 @@ const updateSourcesAndSinks = (currentBacteria) => {
         }
     }
 };
-
-
-
 
 // --- Rendering and Animation ---
 
