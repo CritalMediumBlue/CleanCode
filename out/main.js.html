@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: main.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: main.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { initPlotRenderer, renderPlot,
+     updatePlot, setupNewScene, 
+     updateOverlay, updateSurfaceMesh 
+    } from './scene/sceneManager.js';
+import {
+    createBacteriumSystem,
+    updateBacteria,
+    getMagentaCount,
+    getCyanCount,
+    getPositions,
+    clearPhenotypeMemo,
+    getAverageSimilarityWithNeighbors,
+    updateHistories,
+    getHistories,
+    diffuse,
+    setSignalValue,
+    setAlphaValue
+} from './simulation/simulationManager.js';
+// Remove direct import of setBacteriaData from dataProcessor.js
+import { addEventListeners } from './GUI/guiManager.js';
+import { 
+    sceneState, 
+    animationState, 
+    dataState, 
+    GRID, 
+    SIMULATION,
+    initializeArrays,
+    resetAnimationState,
+    getAdjustedCoordinates,
+    calculateColor
+} from './state/stateManager.js';
+
+// Store the configuration object to be injected from guiManager
+let appConfig;
+
+// --- State Action Interfaces ---
+
+/**
+ * Interface for state-related actions to be used by guiManager
+ * This decouples guiManager.js from direct dependence on stateManager.js
+ */
+const stateActions = {
+    setPlayState: (isPlaying) => {
+        animationState.play = isPlaying;
+    },
+    toggleBacteriaVisibility: () => {
+        sceneState.visibleBacteria = !sceneState.visibleBacteria;
+    },
+    toggleMeshVisibility: () => {
+        if (sceneState.surfaceMesh) {
+            sceneState.surfaceMesh.visible = !sceneState.surfaceMesh.visible;
+        }
+    },
+    renderScene: () => {
+        if (sceneState.renderer &amp;&amp; sceneState.scene &amp;&amp; sceneState.camera) {
+            sceneState.renderer.render(sceneState.scene, sceneState.camera);
+        }
+    }
+};
+
+/**
+ * Interface for simulation-related actions to be used by guiManager
+ * This decouples guiManager.js from direct dependence on simulationManager.js
+ */
+const simulationActions = {
+    setSignalValue: (value) => {
+        setSignalValue(sceneState.bacteriumSystem, value);
+    },
+    setAlphaValue: (value) => {
+        setAlphaValue(sceneState.bacteriumSystem, value);
+    }
+};
+
+// --- Initialization and Reset Functions ---
+
+/**
+ * Resets all simulation data, cleans up resources, and initializes a new simulation environment.
+ * Called when new data is loaded.
+ */
+const resetAllData = () => {
+    console.log("Resetting all data and initializing new simulation...");
+    cleanupResources();
+    
+    // Reset state via stateManager
+    resetAnimationState();
+    
+    // Create a function that will create a bacterium system with injected config
+    const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
+    
+    // Set up new scene and create the bacterium system and renderer, passing injected config
+    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig);
+    Object.assign(sceneState, newSceneState);
+    
+    // Initialize arrays via stateManager
+    initializeArrays();
+    
+    // Initialize plot renderer with injected config
+    initPlotRenderer(appConfig);
+    
+    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor); // Initial update to set heights/colors
+};
+
+/**
+ * Cleans up existing Three.js resources (renderer, scene objects) and cancels
+ * the animation frame to prevent memory leaks and prepare for a new simulation setup.
+ */
+const cleanupResources = () => {
+    console.log("Cleaning up resources...");
+    // Clean up renderer
+    if (sceneState.renderer?.domElement?.parentNode) {
+        sceneState.renderer.domElement.parentNode.removeChild(sceneState.renderer.domElement);
+        sceneState.renderer.dispose();
+    }
+
+    // Cancel animation frame
+    if (animationState.animationFrameId) {
+        cancelAnimationFrame(animationState.animationFrameId);
+        animationState.animationFrameId = null;
+    }
+
+    // Dispose bacterium renderer if it exists
+    if (sceneState.bacteriumRenderer) {
+        sceneState.bacteriumRenderer.dispose();
+        sceneState.bacteriumRenderer = null;
+        console.log("Bacterium renderer disposed.");
+    }
+
+    // Dispose bacterium system if it exists
+    if (sceneState.bacteriumSystem) {
+        sceneState.bacteriumSystem.dispose();
+        sceneState.bacteriumSystem = null;
+        console.log("Bacterium system disposed.");
+    }
+
+    // Clean up surface mesh if it exists
+    if (sceneState.surfaceMesh &amp;&amp; sceneState.scene) {
+        sceneState.scene.remove(sceneState.surfaceMesh);
+        sceneState.surfaceMesh.geometry.dispose();
+        sceneState.surfaceMesh.material.dispose(); // Ensure material is disposed too
+        sceneState.surfaceMesh = null; // Nullify the reference
+        console.log("Surface mesh removed and disposed.");
+    }
+};
+
+
+
+
+/**
+ * Resets the core data arrays (concentration, colors, sources, sinks)
+ * to their initial state (zero-filled Float32Arrays).
+ */
+const resetArrays = () => {
+    const gridSize = GRID.WIDTH * GRID.HEIGHT;
+    console.log(`Resetting arrays for grid size: ${gridSize}`);
+
+    // Initialize data arrays with grid dimensions
+    dataState.currentConcentrationData = new Float32Array(gridSize).fill(0);
+    dataState.nextConcentrationData = new Float32Array(gridSize).fill(0);
+    dataState.colors = new Float32Array(gridSize * 3).fill(0);
+    dataState.sources = new Float32Array(gridSize).fill(0);
+    dataState.sinks = new Float32Array(gridSize).fill(0);
+}
+
+/**
+ * Callback function that sets bacteria data in the appropriate state objects.
+ * This is called by guiManager.js after data processing.
+ * @param {Map&lt;number, Array&lt;object>>} data - Map where keys are time steps and values are arrays of bacteria objects for that step.
+ * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime.
+ */
+const setBacteriaData = (data, processedData) => {
+    console.log("Setting bacteria data from main.js...");
+    dataState.bacteriaData = data;
+    animationState.numberOfTimeSteps = data.size;
+    dataState.AllUniqueIDs = processedData.totalUniqueIDs;
+    animationState.AverageLifetime = processedData.averageLifetime;
+    animationState.fromStepToMinutes = dataState.doublingTime / processedData.averageLifetime;
+
+    console.log('Total time (h)', data.size * animationState.fromStepToMinutes / 60);
+    console.log('Every time step is ', Math.floor(animationState.fromStepToMinutes), 'minutes',
+        'and', Math.round(animationState.fromStepToMinutes % 1 * 60), 'seconds');
+};
+
+
+// --- Simulation Update Logic ---
+
+/**
+ * Performs all updates required for a single simulation time step.
+ * Fetches current bacteria data, updates bacteria visualization,
+ * updates sources/sinks, runs the diffusion simulation (ADI),
+ * updates the surface mesh, updates UI overlays, and increments the time step.
+ * Handles simulation loop reset.
+ */
+const updateScene = () => {
+    // Ensure bacteria data is loaded and scene is ready
+    if (!dataState.bacteriaData || dataState.bacteriaData.size === 0 || !sceneState.surfaceMesh) {
+        // console.warn("Attempted to update scene before data/scene is missing.");
+        animationState.play = false; // Stop playback if data/scene is missing
+        return;
+    }
+
+    // 1. Get bacteria data for the current time step
+    const currentBacteria = dataState.bacteriaData.get(animationState.currentTimeStep);
+    if (!currentBacteria) {
+        console.warn(`No bacteria data found for time step ${animationState.currentTimeStep}. Pausing.`);
+        animationState.play = false;
+        return;
+    }
+
+    // 2. Update bacteria visualization (positions, colors, etc.)
+    updateBacteriaPositions(currentBacteria);
+
+    // 3. Update diffusion sources and sinks based on bacteria locations/types
+    updateSourcesAndSinks(currentBacteria);
+
+    // 4. Update the plot with the latest historical data
+    updatePlot(...Object.values(getHistories(sceneState.bacteriumSystem)));
+
+
+
+    [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
+        GRID.WIDTH, GRID.HEIGHT,
+        dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
+        dataState.sources, dataState.sinks, // Input source/sink arrays
+        SIMULATION.DIFFUSION_RATE, // Diffusion coefficient
+        1, // Time step duration in minutes (dt)
+        1 // Number of substeps for ADI
+    ); 
+
+    // 6. Update the surface mesh visualization based on the new concentration data
+    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor);
+
+    // 7. Update UI overlay with current statistics
+    updateOverlay(
+        currentBacteria.length, 
+        animationState.currentTimeStep, 
+        animationState.numberOfTimeSteps, 
+        animationState.fromStepToMinutes, 
+        dataState.AllUniqueIDs
+    );
+
+    // 8. Increment the time step
+    animationState.currentTimeStep++;
+
+    // 9. Check if the simulation reached the end
+    if (animationState.currentTimeStep > animationState.numberOfTimeSteps) {
+        console.log('Simulation finished.');
+        console.log('Total simulated time (hours):', (animationState.numberOfTimeSteps * animationState.fromStepToMinutes / 60).toFixed(2));
+
+        // Reset for potential replay or new data load
+        clearPhenotypeMemo(sceneState.bacteriumSystem);
+        resetArrays();
+        animationState.currentTimeStep = 1;
+        animationState.play = false;
+        
+    }
+};
+
+/**
+ * Updates the positions, visibility, and potentially other properties (like color based on phenotype/similarity)
+ * of the bacteria meshes for the current time step. Also calculates and updates history data for plotting.
+ * @param {Array&lt;object>} currentBacteria - Array of bacteria objects for the current time step.
+ */
+const updateBacteriaPositions = (currentBacteria) => {
+    // Simulate bacteria - returns array of BacteriumData objects for rendering
+    const bacteriaData = updateBacteria(
+        sceneState.bacteriumSystem,
+        animationState.currentTimeStep,
+        dataState.bacteriaData,
+        sceneState.visibleBacteria,
+        dataState.currentConcentrationData
+    );
+    
+    // Render bacteria using the dedicated renderer
+    if (sceneState.bacteriumRenderer) {
+        sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
+    }
+
+    // Calculate average similarity among neighbors (if applicable for coloring/analysis)
+    const averageSimilarity = getAverageSimilarityWithNeighbors(sceneState.bacteriumSystem);
+    // Scale similarity for plotting or other uses (adjust scaling factor as needed)
+    const scaledSimilarity = (averageSimilarity - 0.5) * 2800; // Example scaling
+
+    // Update historical data arrays for plotting trends over time
+    updateHistories(
+        sceneState.bacteriumSystem,
+        currentBacteria.length,
+        getMagentaCount(sceneState.bacteriumSystem),
+        getCyanCount(sceneState.bacteriumSystem),
+        scaledSimilarity
+    );
+};
+
+/**
+ * Updates the `sources` and `sinks` arrays based on the positions and types (Magenta/Cyan)
+ * of bacteria in the current time step. These arrays are used as input for the diffusion simulation.
+ * @param {Array&lt;object>} currentBacteria - Array of bacteria objects for the current time step.
+ */
+const updateSourcesAndSinks = (currentBacteria) => {
+    // Get the IDs of currently active Magenta and Cyan bacteria
+    const [magentaIDsRaw, cyanIDsRaw] = getPositions(sceneState.bacteriumSystem); // Assumes getPositions returns [magentaIds, cyanIds]
+    const MagentaIDs = new Set(magentaIDsRaw);
+    const CyanIDs = new Set(cyanIDsRaw);
+
+    // Reset source and sink arrays for the current step
+    dataState.sources.fill(0);
+    dataState.sinks.fill(0);
+
+    // Iterate through each bacterium in the current time step
+    for (const bacterium of currentBacteria) {
+        // Convert bacterium's position to grid coordinates and index
+        const coords = getAdjustedCoordinates(bacterium.x, bacterium.y);
+
+        // Skip if the bacterium is outside the valid grid area
+        if (!coords) continue;
+
+        // Increment source count if the bacterium is Magenta
+        if (MagentaIDs.has(bacterium.ID)) {
+            dataState.sources[coords.idx] += 1; // Simple count for now
+        }
+
+        // Increment sink count if the bacterium is Cyan
+        if (CyanIDs.has(bacterium.ID)) {
+            dataState.sinks[coords.idx] += 1; // Simple count for now
+        }
+    }
+};
+
+
+
+
+// --- Rendering and Animation ---
+
+/**
+ * The main animation loop function, called recursively via requestAnimationFrame.
+ * Updates the simulation state if `animationState.play` is true, and renders
+ * the scene and plot in every frame.
+ */
+const animate = () => {
+    // Schedule the next frame
+    animationState.animationFrameId = requestAnimationFrame(animate);
+
+    // Update simulation logic only if in 'play' state
+    if (animationState.play) {
+        updateScene(); // Advance the simulation by one step
+    }
+
+    // Render the 3D scene and the 2D plot regardless of play state
+    if (sceneState.renderer &amp;&amp; sceneState.scene &amp;&amp; sceneState.camera) {
+        sceneState.renderer.render(sceneState.scene, sceneState.camera);
+    }
+    renderPlot(); // Render the plot
+};
+
+
+// --- Initial Setup ---
+
+// Set up initial event listeners when the script loads
+// Pass required functions as parameters for proper GUI-Simulation integration
+// Get configuration object via dependency injection
+appConfig = addEventListeners(
+    updateScene, 
+    animate, 
+    resetAllData, 
+    setBacteriaData,
+    renderPlot,  // Inject renderPlot function from sceneManager
+    stateActions,  // Pass state actions for GUI to use
+    simulationActions  // Pass simulation actions for GUI to use
+);
+
+// Note: The simulation doesn't start automatically.
+// It waits for data to be loaded via the file input.
+// The `handleFileInput` callback triggers `resetAllData` and then `animate`.
+console.log("Initial setup complete. Waiting for data file...");
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#animate">animate</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 12:12:29 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
