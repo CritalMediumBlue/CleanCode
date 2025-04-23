@@ -98,17 +98,26 @@
 
         
             
-<h4 class="name" id="simulationActions"><span class="type-signature">(constant) </span>simulationActions<span class="type-signature"></span></h4>
+<h4 class="name" id="CONSTANTS"><span class="type-signature">(constant) </span>CONSTANTS<span class="type-signature"> :object</span></h4>
 
 
 
 
 <div class="description">
-    Interface for simulation-related actions to be used by guiManager
-This decouples guiManager.js from direct dependence on simulationManager.js
+    Holds constants for the simulation.
 </div>
 
 
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
 
 
 
@@ -143,7 +152,7 @@ This decouples guiManager.js from direct dependence on simulationManager.js
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line65">line 65</a>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -161,17 +170,242 @@ This decouples guiManager.js from direct dependence on simulationManager.js
 
         
             
-<h4 class="name" id="stateActions"><span class="type-signature">(constant) </span>stateActions<span class="type-signature"></span></h4>
+<h4 class="name" id="GRID"><span class="type-signature">(constant) </span>GRID<span class="type-signature"> :object</span></h4>
 
 
 
 
 <div class="description">
-    Interface for state-related actions to be used by guiManager
-This decouples guiManager.js from direct dependence on stateManager.js
+    Defines the dimensions of the simulation grid.
 </div>
 
 
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="SIMULATION"><span class="type-signature">(constant) </span>SIMULATION<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    Holds simulation-specific parameters.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line5">line 5</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="animationState"><span class="type-signature">(constant) </span>animationState<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    animationState - Manages animation loop, timing, and playback state.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="appConfig"><span class="type-signature"></span>appConfig<span class="type-signature"> :Object</span></h4>
+
+
+
+
+<div class="description">
+    Configuration object injected from guiManager
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
 
 
 
@@ -223,10 +457,1441 @@ This decouples guiManager.js from direct dependence on stateManager.js
 
 
         
+            
+<h4 class="name" id="calculateColor"><span class="type-signature">(constant) </span>calculateColor<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Calculates an RGB color based on a concentration value.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line121">line 121</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dataState"><span class="type-signature">(constant) </span>dataState<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    dataState - Manages simulation data arrays and parameters.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="getAdjustedCoordinates"><span class="type-signature">(constant) </span>getAdjustedCoordinates<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Converts raw simulation coordinates to grid indices.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line96">line 96</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="handleFileInput"><span class="type-signature">(constant) </span>handleFileInput<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Handles file input processing.
+This version no longer directly calls setBacteriaData but uses the provided callback.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_dataProcessor.js.html">GUI/dataProcessor.js</a>, <a href="GUI_dataProcessor.js.html#line37">line 37</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="initializeArrays"><span class="type-signature">(constant) </span>initializeArrays<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Initializes all data arrays for the simulation.
+Creates empty Float32Arrays for concentration data, colors, sources, and sinks.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="resetAnimationState"><span class="type-signature">(constant) </span>resetAnimationState<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Resets animation state to initial values.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="resetState"><span class="type-signature">(constant) </span>resetState<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Performs full state reset for a new simulation.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line85">line 85</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="sceneState"><span class="type-signature">(constant) </span>sceneState<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    sceneState - Manages Three.js scene components and related states.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="state_stateManager.js.html">state/stateManager.js</a>, <a href="state_stateManager.js.html#line22">line 22</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="setBacteriaData"><span class="type-signature">(constant) </span>setBacteriaData<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Stores the processed bacteria data and related statistics into the provided state objects.
+Calculates the time conversion factor.
+This function is maintained for backward compatibility but main.js now uses its own implementation.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_dataProcessor.js.html">GUI/dataProcessor.js</a>, <a href="GUI_dataProcessor.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="setBacteriaDataCallback"><span class="type-signature"></span>setBacteriaDataCallback<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Centralized function to set bacteria data, abstracting the direct dependency on dataProcessor
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_guiManager.js.html">GUI/guiManager.js</a>, <a href="GUI_guiManager.js.html#line56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="simulationActions"><span class="type-signature">(constant) </span>simulationActions<span class="type-signature"> :<a href="global.html#SimulationActions">SimulationActions</a></span></h4>
+
+
+
+
+<div class="description">
+    Interface for simulation-related actions to be used by guiManager.
+This decouples guiManager.js from direct dependence on simulationManager.js
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#SimulationActions">SimulationActions</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="stateActions"><span class="type-signature">(constant) </span>stateActions<span class="type-signature"> :<a href="global.html#StateActions">StateActions</a></span></h4>
+
+
+
+
+<div class="description">
+    Interface for state-related actions to be used by guiManager.
+This decouples guiManager.js from direct dependence on stateManager.js
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#StateActions">StateActions</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line59">line 59</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="addEventListeners"><span class="type-signature"></span>addEventListeners<span class="signature">(updateScene, animate, resetAllData, externalSetBacteriaData, renderPlot, stateActions, simulationActions)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Attaches event listeners to various UI controls (buttons, sliders, dropdowns, file input)
+to manage simulation playback, parameter adjustments, and data loading.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>updateScene</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to update the scene for single step operations</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>animate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to start the animation loop</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resetAllData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to reset all data</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>externalSetBacteriaData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to set the bacteria data</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>renderPlot</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to render the plot from sceneManager</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stateActions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object containing functions to manipulate state</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>simulationActions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object containing functions for simulation operations</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_guiManager.js.html">GUI/guiManager.js</a>, <a href="GUI_guiManager.js.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The configuration object for dependency injection
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="addSafeEventListener"><span class="type-signature"></span>addSafeEventListener<span class="signature">(id, event, handler)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Safely adds an event listener to a DOM element identified by its ID.
+Logs a warning if the element is not found.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The ID of the DOM element.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The name of the event to listen for (e.g., 'click', 'input').</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function to execute when the event occurs.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_guiManager.js.html">GUI/guiManager.js</a>, <a href="GUI_guiManager.js.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="analyzeBacteriaLineage"><span class="type-signature"></span>analyzeBacteriaLineage<span class="signature">(bacteriaData)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Analyze bacteria lineage and calculate statistics
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriaData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Map</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Processed bacteria data</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_dataProcessor.js.html">GUI/dataProcessor.js</a>, <a href="GUI_dataProcessor.js.html#line117">line 117</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Lineage analysis results
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
 
         
             
@@ -242,9 +1907,10 @@ This decouples guiManager.js from direct dependence on stateManager.js
 
 
 <div class="description">
-    The main animation loop function, called recursively via requestAnimationFrame.
-Updates the simulation state if `animationState.play` is true, and renders
-the scene and plot in every frame.
+    The main animation loop function that drives the simulation.
+Called recursively via requestAnimationFrame to maintain smooth animation.
+Updates the simulation state when in play mode and renders both the 3D scene
+and 2D plot visualization in every frame.
 </div>
 
 
@@ -288,7 +1954,7 @@ the scene and plot in every frame.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line338">line 338</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line371">line 371</a>
     </li></ul></dd>
     
 
@@ -377,7 +2043,7 @@ the animation frame to prevent memory leaks and prepare for a new simulation set
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line107">line 107</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -402,6 +2068,3347 @@ the animation frame to prevent memory leaks and prepare for a new simulation set
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="clearHistories"><span class="type-signature"></span>clearHistories<span class="signature">(bacteriumSystem)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Clear all history arrays
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line400">line 400</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="clearPhenotypeMemo"><span class="type-signature"></span>clearPhenotypeMemo<span class="signature">(bacteriumSystem)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Clears the phenotype memoization cache
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line344">line 344</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createBacteriumPool"><span class="type-signature"></span>createBacteriumPool<span class="signature">(scene, config, THREE)</span><span class="type-signature"> &rarr; {<a href="BacteriumPool.html">BacteriumPool</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a new bacterium renderer system
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>scene</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Scene</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Three.js scene to add bacteria to</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>THREE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">THREE.js library</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneComponents_bacteria.js.html">scene/sceneComponents/bacteria.js</a>, <a href="scene_sceneComponents_bacteria.js.html#line201">line 201</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    New bacterium pool instance
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BacteriumPool.html">BacteriumPool</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createBacteriumRenderer"><span class="type-signature"></span>createBacteriumRenderer<span class="signature">(scene, config)</span><span class="type-signature"> &rarr; {<a href="BacteriumRenderer.html">BacteriumRenderer</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates and returns a new BacteriumRenderer instance
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>scene</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Scene</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The scene to add bacteria to</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object containing BACTERIUM and PHENOTYPES values</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line220">line 220</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The created bacterium renderer
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BacteriumRenderer.html">BacteriumRenderer</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createBacteriumSystem"><span class="type-signature"></span>createBacteriumSystem<span class="signature">(config)</span><span class="type-signature"> &rarr; {<a href="BacteriumSystem.html">BacteriumSystem</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a new bacterium system instance
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object for the bacterium system</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line296">line 296</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A new bacterium system instance
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createCamera"><span class="type-signature"></span>createCamera<span class="signature">(config)</span><span class="type-signature"> &rarr; {THREE.PerspectiveCamera}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates and returns a new THREE.PerspectiveCamera object.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line113">line 113</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The created camera.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">THREE.PerspectiveCamera</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createControls"><span class="type-signature"></span>createControls<span class="signature">(camera, renderer, config)</span><span class="type-signature"> &rarr; {OrbitControls}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates and returns a new OrbitControls object.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>camera</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Camera</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The camera to control.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>renderer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.WebGLRenderer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The renderer to control.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line151">line 151</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The created controls.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">OrbitControls</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createMesh"><span class="type-signature"></span>createMesh<span class="signature">(scene)</span><span class="type-signature"> &rarr; {THREE.Mesh}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates and returns a surface mesh for the scene.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>scene</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Scene</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The scene to add the mesh to.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneComponents_mesh.js.html">scene/sceneComponents/mesh.js</a>, <a href="scene_sceneComponents_mesh.js.html#line7">line 7</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The created surface mesh.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">THREE.Mesh</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createRenderer"><span class="type-signature"></span>createRenderer<span class="signature">()</span><span class="type-signature"> &rarr; {THREE.WebGLRenderer}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates and returns a new THREE.WebGLRenderer object.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line137">line 137</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The created renderer.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">THREE.WebGLRenderer</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createScene"><span class="type-signature"></span>createScene<span class="signature">(config)</span><span class="type-signature"> &rarr; {THREE.Scene}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates and returns a new THREE.Scene object.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line102">line 102</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The created scene.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">THREE.Scene</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="diffuse"><span class="type-signature"></span>diffuse<span class="signature">(WIDTH, HEIGHT, currentConcentrationData, nextConcentrationData, sources, sinks, DIFFUSION_RATE, timeStep, subSteps)</span><span class="type-signature"> &rarr; {Array.&lt;Float32Array>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Performs diffusion calculation using the Alternating Direction Implicit (ADI) method.
+This function delegates the actual calculation to the ADI function from diffusion.js.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>WIDTH</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The width of the simulation grid</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>HEIGHT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The height of the simulation grid</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>currentConcentrationData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of current concentration values</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nextConcentrationData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array to store the next concentration values</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sources</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of diffusion source values</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sinks</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of diffusion sink values</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>DIFFUSION_RATE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Coefficient that determines the diffusion speed</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>timeStep</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Time step duration in minutes</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subSteps</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Number of ADI iterations to perform per step</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line269">line 269</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Updated concentration arrays [currentData, nextData]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Float32Array></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getAverageSimilarityWithNeighbors"><span class="type-signature"></span>getAverageSimilarityWithNeighbors<span class="signature">(bacteriumSystem)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Gets the average similarity value among neighboring bacteria
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line371">line 371</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The average similarity value (0-1 range)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getConfiguration"><span class="type-signature"></span>getConfiguration<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Provides the current configuration to external modules.
+Acts as a configuration provider to decouple direct dependencies.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_guiManager.js.html">GUI/guiManager.js</a>, <a href="GUI_guiManager.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The current configuration object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getCyanCount"><span class="type-signature"></span>getCyanCount<span class="signature">(bacteriumSystem)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Gets the count of bacteria with cyan phenotype
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line327">line 327</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Count of bacteria with cyan phenotype
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getHistories"><span class="type-signature"></span>getHistories<span class="signature">(bacteriumSystem)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get all history arrays
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line392">line 392</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Object containing all history arrays
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getMagentaCount"><span class="type-signature"></span>getMagentaCount<span class="signature">(bacteriumSystem)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Gets the count of bacteria with magenta phenotype
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line318">line 318</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Count of bacteria with magenta phenotype
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getPositions"><span class="type-signature"></span>getPositions<span class="signature">(bacteriumSystem)</span><span class="type-signature"> &rarr; {Array.&lt;Array.&lt;bigint>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Gets the positions of bacteria by phenotype
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line336">line 336</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Array containing [magentaPositions, cyanPositions]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Array.&lt;bigint>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="handleFileInput"><span class="type-signature"></span>handleFileInput<span class="signature">(event, resetCallback, animateCallback)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Handles file input processing, decoupling main.js from dataProcessor.js
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The file input event</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resetCallback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to reset all data</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>animateCallback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to start animation</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_guiManager.js.html">GUI/guiManager.js</a>, <a href="GUI_guiManager.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="initPlotRenderer"><span class="type-signature"></span>initPlotRenderer<span class="signature">(config)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Initialize the plot renderer with configuration
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Optional configuration object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line84">line 84</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="processFileData"><span class="type-signature"></span>processFileData<span class="signature">(fileContent)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Process the input file data
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fileContent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JSON string content of the input file</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GUI_dataProcessor.js.html">GUI/dataProcessor.js</a>, <a href="GUI_dataProcessor.js.html#line64">line 64</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Processed data statistics
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -466,7 +5473,7 @@ Called when new data is loaded.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line80">line 80</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line104">line 104</a>
     </li></ul></dd>
     
 
@@ -555,7 +5562,167 @@ to their initial state (zero-filled Float32Arrays).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line152">line 152</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line176">line 176</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setAlphaValue"><span class="type-signature"></span>setAlphaValue<span class="signature">(bacteriumSystem, value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sets the alpha (temperature) value used in phenotype determination
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new alpha value (typically small, e.g., 0.0001)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line362">line 362</a>
     </li></ul></dd>
     
 
@@ -716,7 +5883,7 @@ This is called by guiManager.js after data processing.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line170">line 170</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line194">line 194</a>
     </li></ul></dd>
     
 
@@ -752,6 +5919,1278 @@ This is called by guiManager.js after data processing.
     
 
     
+    <h4 class="name" id="setBacteriumTransform"><span class="type-signature"></span>setBacteriumTransform<span class="signature">(bacterium, position, angle, zPosition, THREE)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sets bacterium position and rotation
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacterium</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Mesh</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium mesh to transform</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Vector3</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Position vector</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>angle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Rotation angle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>zPosition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Z-axis position</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>THREE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">THREE.js library</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneComponents_bacteria.js.html">scene/sceneComponents/bacteria.js</a>, <a href="scene_sceneComponents_bacteria.js.html#line189">line 189</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setSignalValue"><span class="type-signature"></span>setSignalValue<span class="signature">(bacteriumSystem, value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sets the signal value used in phenotype determination
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new signal value (typically 0-1 range)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line353">line 353</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setupNewScene"><span class="type-signature"></span>setupNewScene<span class="signature">(createBacteriumSystem, config)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sets up a new scene with custom surface mesh for concentration visualization.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>createBacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to create bacterium system</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line40">line 40</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An object containing the scene, camera, renderer, bacteriumSystem, and bacteriumRenderer
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setupScene"><span class="type-signature"></span>setupScene<span class="signature">(config)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sets up the scene, camera, renderer, and controls.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An object containing the scene, camera, renderer, and controls.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="thomasAlgorithm"><span class="type-signature"></span>thomasAlgorithm<span class="signature">(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, solution, systemSize)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Solves a tridiagonal system of linear equations using the Thomas algorithm.
+
+The Thomas algorithm (also known as the tridiagonal matrix algorithm) is an
+efficient form of Gaussian elimination specialized for tridiagonal systems.
+It solves systems of the form:
+
+b₀x₀ + c₀x₁             = d₀
+a₁x₀ + b₁x₁ + c₁x₂      = d₁
+a₂x₁ + b₂x₂ + c₂x₃      = d₂
+...
+aₙ₋₁xₙ₋₂ + bₙ₋₁xₙ₋₁     = dₙ₋₁
+
+The algorithm has two phases:
+1. Forward elimination: Transforms the system into an upper triangular form
+2. Back substitution: Solves the transformed system from bottom to top
+
+Time complexity: O(n) where n is the system size
+Space complexity: O(n) for the temporary arrays
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lowerDiagonal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The lower diagonal elements (a)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mainDiagonal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The main diagonal elements (b)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>upperDiagonal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The upper diagonal elements (c)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rightHandSide</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The right-hand side vector (d)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>solution</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The solution vector (x) to be filled</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>systemSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The size of the system (n)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_diffusion.js.html">simulation/diffusion.js</a>, <a href="simulation_diffusion.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - The solution is written to the solution parameter
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="updateBacteria"><span class="type-signature"></span>updateBacteria<span class="signature">(bacteriumSystem, timeStep, bacteriumData, visible, concentrations)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="BacteriumData.html">BacteriumData</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates bacteria for the current time step and returns data for rendering
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BacteriumSystem.html">BacteriumSystem</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>timeStep</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The current simulation time step</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Map.&lt;number, Array.&lt;Object>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Map of bacteria data keyed by time step</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visible</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Whether bacteria should be visible</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>concentrations</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Concentration values across the grid</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line309">line 309</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Array of bacterium data objects for rendering
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;<a href="BacteriumData.html">BacteriumData</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="updateBacteriaPositions"><span class="type-signature"></span>updateBacteriaPositions<span class="signature">(currentBacteria)</span><span class="type-signature"></span></h4>
     
 
@@ -760,8 +7199,9 @@ This is called by guiManager.js after data processing.
 
 
 <div class="description">
-    Updates the positions, visibility, and potentially other properties (like color based on phenotype/similarity)
-of the bacteria meshes for the current time step. Also calculates and updates history data for plotting.
+    Updates the positions, visibility, and properties of bacteria for the current time step.
+This function handles both the simulation logic via updateBacteria and the visualization
+via bacteriumRenderer. It also calculates similarity metrics for plotting.
 </div>
 
 
@@ -813,7 +7253,7 @@ of the bacteria meshes for the current time step. Also calculates and updates hi
 
             
 
-            <td class="description last">Array of bacteria objects for the current time step.</td>
+            <td class="description last">Array of bacteria objects for the current time step</td>
         </tr>
 
     
@@ -854,7 +7294,744 @@ of the bacteria meshes for the current time step. Also calculates and updates hi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line263">line 263</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line293">line 293</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="updateBacteriumColor"><span class="type-signature"></span>updateBacteriumColor<span class="signature">(bacterium, phenotype, magentaProportion, cyanProportion, phenotypeColors, config, THREE)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates a bacterium's visual appearance based on phenotype
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacterium</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Mesh</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium mesh to update</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>phenotype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The phenotype identifier ('MAGENTA' or 'CYAN')</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>magentaProportion</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Proportion of magenta neighbors</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cyanProportion</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Proportion of cyan neighbors</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>phenotypeColors</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Map of phenotype names to THREE.Color objects</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Configuration object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>THREE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">THREE.js library</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneComponents_bacteria.js.html">scene/sceneComponents/bacteria.js</a>, <a href="scene_sceneComponents_bacteria.js.html#line160">line 160</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="updateHistories"><span class="type-signature"></span>updateHistories<span class="signature">(bacteriumSystem, totalCount, magentaCount, cyanCount, averageSimilarity)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Update history arrays with new data
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriumSystem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bacterium system instance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>totalCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Total bacteria count</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>magentaCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Magenta bacteria count</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cyanCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Cyan bacteria count</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>averageSimilarity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Average similarity value</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line383">line 383</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="updateOverlay"><span class="type-signature"></span>updateOverlay<span class="signature">(bacteriaCount, currentTimeStep, numberOfTimeSteps, fromStepToMinutes, allUniqueIDs)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates the text overlay element with current simulation statistics
+like time step, simulated time, and bacteria counts.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bacteriaCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number of bacteria in the current time step.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>currentTimeStep</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The current simulation time step.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>numberOfTimeSteps</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The total number of time steps in the simulation.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fromStepToMinutes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Conversion factor from simulation step to minutes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>allUniqueIDs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Set.&lt;number></span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Set of all unique bacteria IDs across the simulation.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneComponents_overlay.js.html">scene/sceneComponents/overlay.js</a>, <a href="scene_sceneComponents_overlay.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -946,7 +8123,7 @@ Handles simulation loop reset.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line193">line 193</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line217">line 217</a>
     </li></ul></dd>
     
 
@@ -990,8 +8167,9 @@ Handles simulation loop reset.
 
 
 <div class="description">
-    Updates the `sources` and `sinks` arrays based on the positions and types (Magenta/Cyan)
-of bacteria in the current time step. These arrays are used as input for the diffusion simulation.
+    Updates the diffusion sources and sinks based on bacteria positions and phenotypes.
+Magenta bacteria act as signal sources while Cyan bacteria act as signal sinks.
+The resulting arrays are used in the ADI diffusion simulation.
 </div>
 
 
@@ -1043,7 +8221,7 @@ of bacteria in the current time step. These arrays are used as input for the dif
 
             
 
-            <td class="description last">Array of bacteria objects for the current time step.</td>
+            <td class="description last">Array of bacteria objects for the current time step</td>
         </tr>
 
     
@@ -1084,7 +8262,214 @@ of bacteria in the current time step. These arrays are used as input for the dif
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line298">line 298</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line330">line 330</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="updateSurfaceMesh"><span class="type-signature"></span>updateSurfaceMesh<span class="signature">(surfaceMesh, concentrationData, calculateColor, heightMultiplier)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates the geometry (vertex heights) and color attributes of the surface mesh
+based on the given concentration data.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>surfaceMesh</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Mesh</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The mesh representing the concentration surface</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>concentrationData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of concentration values</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>calculateColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to calculate color based on concentration</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>heightMultiplier</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Optional multiplier for height values (default: 5)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scene_sceneManager.js.html">scene/sceneManager.js</a>, <a href="scene_sceneManager.js.html#line175">line 175</a>
     </li></ul></dd>
     
 
@@ -1118,6 +8503,342 @@ of bacteria in the current time step. These arrays are used as input for the dif
     
 
     
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id="SimulationActions">SimulationActions</h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>setSignalValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Updates the signal value in the simulation</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>setAlphaValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Updates the alpha/temperature value in the simulation</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line78">line 78</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="StateActions">StateActions</h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>setPlayState</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Sets the animation playback state</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toggleBacteriaVisibility</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Toggles bacteria visibility</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toggleMeshVisibility</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Toggles surface mesh visibility</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>renderScene</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Renders the scene manually</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line46">line 46</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+    
 
     
 </article>
@@ -1130,13 +8851,13 @@ of bacteria in the current time step. These arrays are used as input for the dif
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#animate">animate</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumData.html">BacteriumData</a></li><li><a href="BacteriumPool.html">BacteriumPool</a></li><li><a href="BacteriumRenderer.html">BacteriumRenderer</a></li><li><a href="BacteriumSystem.html">BacteriumSystem</a></li><li><a href="HistoryManager.html">HistoryManager</a></li><li><a href="PhenotypeManager.html">PhenotypeManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONSTANTS">CONSTANTS</a></li><li><a href="global.html#GRID">GRID</a></li><li><a href="global.html#SIMULATION">SIMULATION</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addSafeEventListener">addSafeEventListener</a></li><li><a href="global.html#analyzeBacteriaLineage">analyzeBacteriaLineage</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animationState">animationState</a></li><li><a href="global.html#appConfig">appConfig</a></li><li><a href="global.html#calculateColor">calculateColor</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#clearHistories">clearHistories</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumPool">createBacteriumPool</a></li><li><a href="global.html#createBacteriumRenderer">createBacteriumRenderer</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createControls">createControls</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createRenderer">createRenderer</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#dataState">dataState</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAdjustedCoordinates">getAdjustedCoordinates</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getConfiguration">getConfiguration</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getHistories">getHistories</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#handleFileInput">handleFileInput</a></li><li><a href="global.html#initPlotRenderer">initPlotRenderer</a></li><li><a href="global.html#initializeArrays">initializeArrays</a></li><li><a href="global.html#processFileData">processFileData</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetAnimationState">resetAnimationState</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#resetState">resetState</a></li><li><a href="global.html#sceneState">sceneState</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#setBacteriaDataCallback">setBacteriaDataCallback</a></li><li><a href="global.html#setBacteriumTransform">setBacteriumTransform</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#setupNewScene">setupNewScene</a></li><li><a href="global.html#setupScene">setupScene</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#thomasAlgorithm">thomasAlgorithm</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateBacteriumColor">updateBacteriumColor</a></li><li><a href="global.html#updateHistories">updateHistories</a></li><li><a href="global.html#updateOverlay">updateOverlay</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li><li><a href="global.html#updateSurfaceMesh">updateSurfaceMesh</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 12:12:29 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 12:39:25 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

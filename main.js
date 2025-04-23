@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Main entry point for the bacteria simulation visualization.
+ * Manages the core simulation loop, scene updates, and integrates components.
+ */
+
 import { initPlotRenderer, renderPlot,
      updatePlot, setupNewScene, 
      updateOverlay, updateSurfaceMesh 
@@ -30,14 +35,26 @@ import {
     calculateColor
 } from './state/stateManager.js';
 
-// Store the configuration object to be injected from guiManager
+/**
+ * Configuration object injected from guiManager
+ * @type {Object}
+ */
 let appConfig;
 
 // --- State Action Interfaces ---
 
 /**
- * Interface for state-related actions to be used by guiManager
+ * @typedef {Object} StateActions
+ * @property {function(boolean): void} setPlayState - Sets the animation playback state
+ * @property {function(): void} toggleBacteriaVisibility - Toggles bacteria visibility
+ * @property {function(): void} toggleMeshVisibility - Toggles surface mesh visibility
+ * @property {function(): void} renderScene - Renders the scene manually
+ */
+
+/**
+ * Interface for state-related actions to be used by guiManager.
  * This decouples guiManager.js from direct dependence on stateManager.js
+ * @type {StateActions}
  */
 const stateActions = {
     setPlayState: (isPlaying) => {
@@ -59,8 +76,15 @@ const stateActions = {
 };
 
 /**
- * Interface for simulation-related actions to be used by guiManager
+ * @typedef {Object} SimulationActions
+ * @property {function(number): void} setSignalValue - Updates the signal value in the simulation
+ * @property {function(number): void} setAlphaValue - Updates the alpha/temperature value in the simulation
+ */
+
+/**
+ * Interface for simulation-related actions to be used by guiManager.
  * This decouples guiManager.js from direct dependence on simulationManager.js
+ * @type {SimulationActions}
  */
 const simulationActions = {
     setSignalValue: (value) => {
@@ -215,8 +239,12 @@ const updateScene = () => {
     // 4. Update the plot with the latest historical data
     updatePlot(...Object.values(getHistories(sceneState.bacteriumSystem)));
 
-
-
+    // 5. Run the diffusion simulation step (ADI method)
+    /**
+     * Perform diffusion calculation using Alternating Direction Implicit (ADI) method
+     * Returns updated concentration arrays after applying diffusion to current state
+     * @see simulation/diffusion.js for implementation details
+     */
     [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
         GRID.WIDTH, GRID.HEIGHT,
         dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
@@ -256,9 +284,11 @@ const updateScene = () => {
 };
 
 /**
- * Updates the positions, visibility, and potentially other properties (like color based on phenotype/similarity)
- * of the bacteria meshes for the current time step. Also calculates and updates history data for plotting.
- * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step.
+ * Updates the positions, visibility, and properties of bacteria for the current time step.
+ * This function handles both the simulation logic via updateBacteria and the visualization
+ * via bacteriumRenderer. It also calculates similarity metrics for plotting.
+ * 
+ * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
  */
 const updateBacteriaPositions = (currentBacteria) => {
     // Simulate bacteria - returns array of BacteriumData objects for rendering
@@ -275,10 +305,10 @@ const updateBacteriaPositions = (currentBacteria) => {
         sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
     }
 
-    // Calculate average similarity among neighbors (if applicable for coloring/analysis)
+    // Calculate average similarity among neighbors (for coloring/analysis)
     const averageSimilarity = getAverageSimilarityWithNeighbors(sceneState.bacteriumSystem);
-    // Scale similarity for plotting or other uses (adjust scaling factor as needed)
-    const scaledSimilarity = (averageSimilarity - 0.5) * 2800; // Example scaling
+    // Scale similarity for plotting (transforms from 0-1 range to centered range for visualization)
+    const scaledSimilarity = (averageSimilarity - 0.5) * 2800; 
 
     // Update historical data arrays for plotting trends over time
     updateHistories(
@@ -291,13 +321,15 @@ const updateBacteriaPositions = (currentBacteria) => {
 };
 
 /**
- * Updates the `sources` and `sinks` arrays based on the positions and types (Magenta/Cyan)
- * of bacteria in the current time step. These arrays are used as input for the diffusion simulation.
- * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step.
+ * Updates the diffusion sources and sinks based on bacteria positions and phenotypes.
+ * Magenta bacteria act as signal sources while Cyan bacteria act as signal sinks.
+ * The resulting arrays are used in the ADI diffusion simulation.
+ * 
+ * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
  */
 const updateSourcesAndSinks = (currentBacteria) => {
     // Get the IDs of currently active Magenta and Cyan bacteria
-    const [magentaIDsRaw, cyanIDsRaw] = getPositions(sceneState.bacteriumSystem); // Assumes getPositions returns [magentaIds, cyanIds]
+    const [magentaIDsRaw, cyanIDsRaw] = getPositions(sceneState.bacteriumSystem); 
     const MagentaIDs = new Set(magentaIDsRaw);
     const CyanIDs = new Set(cyanIDsRaw);
 
@@ -331,9 +363,10 @@ const updateSourcesAndSinks = (currentBacteria) => {
 // --- Rendering and Animation ---
 
 /**
- * The main animation loop function, called recursively via requestAnimationFrame.
- * Updates the simulation state if `animationState.play` is true, and renders
- * the scene and plot in every frame.
+ * The main animation loop function that drives the simulation.
+ * Called recursively via requestAnimationFrame to maintain smooth animation.
+ * Updates the simulation state when in play mode and renders both the 3D scene
+ * and 2D plot visualization in every frame.
  */
 const animate = () => {
     // Schedule the next frame

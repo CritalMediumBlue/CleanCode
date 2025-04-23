@@ -26,7 +26,12 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { initPlotRenderer, renderPlot,
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Main entry point for the bacteria simulation visualization.
+ * Manages the core simulation loop, scene updates, and integrates components.
+ */
+
+import { initPlotRenderer, renderPlot,
      updatePlot, setupNewScene, 
      updateOverlay, updateSurfaceMesh 
     } from './scene/sceneManager.js';
@@ -58,14 +63,26 @@ import {
     calculateColor
 } from './state/stateManager.js';
 
-// Store the configuration object to be injected from guiManager
+/**
+ * Configuration object injected from guiManager
+ * @type {Object}
+ */
 let appConfig;
 
 // --- State Action Interfaces ---
 
 /**
- * Interface for state-related actions to be used by guiManager
+ * @typedef {Object} StateActions
+ * @property {function(boolean): void} setPlayState - Sets the animation playback state
+ * @property {function(): void} toggleBacteriaVisibility - Toggles bacteria visibility
+ * @property {function(): void} toggleMeshVisibility - Toggles surface mesh visibility
+ * @property {function(): void} renderScene - Renders the scene manually
+ */
+
+/**
+ * Interface for state-related actions to be used by guiManager.
  * This decouples guiManager.js from direct dependence on stateManager.js
+ * @type {StateActions}
  */
 const stateActions = {
     setPlayState: (isPlaying) => {
@@ -87,8 +104,15 @@ const stateActions = {
 };
 
 /**
- * Interface for simulation-related actions to be used by guiManager
+ * @typedef {Object} SimulationActions
+ * @property {function(number): void} setSignalValue - Updates the signal value in the simulation
+ * @property {function(number): void} setAlphaValue - Updates the alpha/temperature value in the simulation
+ */
+
+/**
+ * Interface for simulation-related actions to be used by guiManager.
  * This decouples guiManager.js from direct dependence on simulationManager.js
+ * @type {SimulationActions}
  */
 const simulationActions = {
     setSignalValue: (value) => {
@@ -243,8 +267,12 @@ const updateScene = () => {
     // 4. Update the plot with the latest historical data
     updatePlot(...Object.values(getHistories(sceneState.bacteriumSystem)));
 
-
-
+    // 5. Run the diffusion simulation step (ADI method)
+    /**
+     * Perform diffusion calculation using Alternating Direction Implicit (ADI) method
+     * Returns updated concentration arrays after applying diffusion to current state
+     * @see simulation/diffusion.js for implementation details
+     */
     [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
         GRID.WIDTH, GRID.HEIGHT,
         dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
@@ -284,9 +312,11 @@ const updateScene = () => {
 };
 
 /**
- * Updates the positions, visibility, and potentially other properties (like color based on phenotype/similarity)
- * of the bacteria meshes for the current time step. Also calculates and updates history data for plotting.
- * @param {Array&lt;object>} currentBacteria - Array of bacteria objects for the current time step.
+ * Updates the positions, visibility, and properties of bacteria for the current time step.
+ * This function handles both the simulation logic via updateBacteria and the visualization
+ * via bacteriumRenderer. It also calculates similarity metrics for plotting.
+ * 
+ * @param {Array&lt;object>} currentBacteria - Array of bacteria objects for the current time step
  */
 const updateBacteriaPositions = (currentBacteria) => {
     // Simulate bacteria - returns array of BacteriumData objects for rendering
@@ -303,10 +333,10 @@ const updateBacteriaPositions = (currentBacteria) => {
         sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
     }
 
-    // Calculate average similarity among neighbors (if applicable for coloring/analysis)
+    // Calculate average similarity among neighbors (for coloring/analysis)
     const averageSimilarity = getAverageSimilarityWithNeighbors(sceneState.bacteriumSystem);
-    // Scale similarity for plotting or other uses (adjust scaling factor as needed)
-    const scaledSimilarity = (averageSimilarity - 0.5) * 2800; // Example scaling
+    // Scale similarity for plotting (transforms from 0-1 range to centered range for visualization)
+    const scaledSimilarity = (averageSimilarity - 0.5) * 2800; 
 
     // Update historical data arrays for plotting trends over time
     updateHistories(
@@ -319,13 +349,15 @@ const updateBacteriaPositions = (currentBacteria) => {
 };
 
 /**
- * Updates the `sources` and `sinks` arrays based on the positions and types (Magenta/Cyan)
- * of bacteria in the current time step. These arrays are used as input for the diffusion simulation.
- * @param {Array&lt;object>} currentBacteria - Array of bacteria objects for the current time step.
+ * Updates the diffusion sources and sinks based on bacteria positions and phenotypes.
+ * Magenta bacteria act as signal sources while Cyan bacteria act as signal sinks.
+ * The resulting arrays are used in the ADI diffusion simulation.
+ * 
+ * @param {Array&lt;object>} currentBacteria - Array of bacteria objects for the current time step
  */
 const updateSourcesAndSinks = (currentBacteria) => {
     // Get the IDs of currently active Magenta and Cyan bacteria
-    const [magentaIDsRaw, cyanIDsRaw] = getPositions(sceneState.bacteriumSystem); // Assumes getPositions returns [magentaIds, cyanIds]
+    const [magentaIDsRaw, cyanIDsRaw] = getPositions(sceneState.bacteriumSystem); 
     const MagentaIDs = new Set(magentaIDsRaw);
     const CyanIDs = new Set(cyanIDsRaw);
 
@@ -359,9 +391,10 @@ const updateSourcesAndSinks = (currentBacteria) => {
 // --- Rendering and Animation ---
 
 /**
- * The main animation loop function, called recursively via requestAnimationFrame.
- * Updates the simulation state if `animationState.play` is true, and renders
- * the scene and plot in every frame.
+ * The main animation loop function that drives the simulation.
+ * Called recursively via requestAnimationFrame to maintain smooth animation.
+ * Updates the simulation state when in play mode and renders both the 3D scene
+ * and 2D plot visualization in every frame.
  */
 const animate = () => {
     // Schedule the next frame
@@ -409,13 +442,13 @@ console.log("Initial setup complete. Waiting for data file...");
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#animate">animate</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumData.html">BacteriumData</a></li><li><a href="BacteriumPool.html">BacteriumPool</a></li><li><a href="BacteriumRenderer.html">BacteriumRenderer</a></li><li><a href="BacteriumSystem.html">BacteriumSystem</a></li><li><a href="HistoryManager.html">HistoryManager</a></li><li><a href="PhenotypeManager.html">PhenotypeManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONSTANTS">CONSTANTS</a></li><li><a href="global.html#GRID">GRID</a></li><li><a href="global.html#SIMULATION">SIMULATION</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addSafeEventListener">addSafeEventListener</a></li><li><a href="global.html#analyzeBacteriaLineage">analyzeBacteriaLineage</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animationState">animationState</a></li><li><a href="global.html#appConfig">appConfig</a></li><li><a href="global.html#calculateColor">calculateColor</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#clearHistories">clearHistories</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumPool">createBacteriumPool</a></li><li><a href="global.html#createBacteriumRenderer">createBacteriumRenderer</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createControls">createControls</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createRenderer">createRenderer</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#dataState">dataState</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAdjustedCoordinates">getAdjustedCoordinates</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getConfiguration">getConfiguration</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getHistories">getHistories</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#handleFileInput">handleFileInput</a></li><li><a href="global.html#initPlotRenderer">initPlotRenderer</a></li><li><a href="global.html#initializeArrays">initializeArrays</a></li><li><a href="global.html#processFileData">processFileData</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetAnimationState">resetAnimationState</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#resetState">resetState</a></li><li><a href="global.html#sceneState">sceneState</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#setBacteriaDataCallback">setBacteriaDataCallback</a></li><li><a href="global.html#setBacteriumTransform">setBacteriumTransform</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#setupNewScene">setupNewScene</a></li><li><a href="global.html#setupScene">setupScene</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#thomasAlgorithm">thomasAlgorithm</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateBacteriumColor">updateBacteriumColor</a></li><li><a href="global.html#updateHistories">updateHistories</a></li><li><a href="global.html#updateOverlay">updateOverlay</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li><li><a href="global.html#updateSurfaceMesh">updateSurfaceMesh</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 12:12:29 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 12:39:25 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

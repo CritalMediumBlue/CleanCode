@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: scene/sceneComponents/overlay.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,224 +17,51 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
-
-    
-
-
-
-    
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>main.js</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Main entry point for the bacteria simulation visualization.
-Manages the core simulation loop, scene updates, and integrates components.</div>
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>simulation/simulationManager.js</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Manages the bacteria simulation by coordinating the phenotype determination, 
-spatial positioning, and diffusion calculations. Provides a unified API for the main application
-to interact with the simulation components.
-
-This module serves as the primary interface between the rendering/UI layer and the
-underlying simulation mechanisms, handling updates, state management, and data flow.</div>
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <h1 class="page-title">Source: scene/sceneComponents/overlay.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * overlay.js - Handles UI overlay functionality for the simulation
+ * Responsible for updating text information and other UI overlays
+ */
+
+/**
+ * Updates the text overlay element with current simulation statistics
+ * like time step, simulated time, and bacteria counts.
+ * @param {number} bacteriaCount - The number of bacteria in the current time step.
+ * @param {number} currentTimeStep - The current simulation time step.
+ * @param {number} numberOfTimeSteps - The total number of time steps in the simulation.
+ * @param {number} fromStepToMinutes - Conversion factor from simulation step to minutes.
+ * @param {Set&lt;number> | null} allUniqueIDs - Set of all unique bacteria IDs across the simulation.
+ */
+export function updateOverlay(bacteriaCount, currentTimeStep, numberOfTimeSteps, fromStepToMinutes, allUniqueIDs) {
+    const overlay = document.getElementById("text-overlay");
+    if (!overlay) return; // Exit if overlay element not found
+
+    // Calculate simulated time
+    const timeInMinutes = currentTimeStep * fromStepToMinutes;
+    const totalSeconds = Math.floor(timeInMinutes * 60);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    // Format time string
+    const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+    // Update overlay text content
+    overlay.innerText = `Step: ${currentTimeStep} / ${numberOfTimeSteps}
+Time: ${timeString}
+Bacteria Count: ${bacteriaCount}
+Total Unique Bacteria: ${allUniqueIDs ? allUniqueIDs.size : 'N/A'}`;
+}</code></pre>
+        </article>
+    </section>
 
 
 

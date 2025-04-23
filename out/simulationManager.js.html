@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: simulationManager.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: simulationManager.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @fileoverview Manages the bacteria simulation by coordinating the phenotype determination, 
  * spatial positioning, and diffusion calculations. Provides a unified API for the main application
  * to interact with the simulation components.
@@ -55,7 +83,7 @@ export class BacteriumSystem {
 
     /**
      * Build quadtree for efficient spatial queries of bacteria positions
-     * @param {Array<Object>} layer - Array of bacteria objects for the current time step
+     * @param {Array&lt;Object>} layer - Array of bacteria objects for the current time step
      */
     buildQuadtree(layer) {
         this.quadtree = quadtree()
@@ -71,7 +99,7 @@ export class BacteriumSystem {
      * Count neighbors by phenotype within the configured radius
      * @param {number} x - X coordinate to search from
      * @param {number} y - Y coordinate to search from
-     * @returns {Array<number>} Array containing [totalCount, magentaCount, cyanCount]
+     * @returns {Array&lt;number>} Array containing [totalCount, magentaCount, cyanCount]
      */
     countNeighbors(x, y) {
         const neighborRadius = this.config.BACTERIUM.NEIGHBOR_RADIUS;
@@ -82,9 +110,9 @@ export class BacteriumSystem {
         this.quadtree.visit((node, x1, y1, x2, y2) => {
             // Skip if node is outside search radius
             if (x1 > x + neighborRadius || 
-                x2 < x - neighborRadius || 
+                x2 &lt; x - neighborRadius || 
                 y1 > y + neighborRadius || 
-                y2 < y - neighborRadius) {
+                y2 &lt; y - neighborRadius) {
                 return true;
             }
             
@@ -96,13 +124,13 @@ export class BacteriumSystem {
                         const dy = node.data.y - y;
                         const distSquared = dx * dx + dy * dy;
                         
-                        if (distSquared < neighborRadius * neighborRadius) {
+                        if (distSquared &lt; neighborRadius * neighborRadius) {
                             totalCount++;
                             const phenotype = this.phenotypeManager.phenotypeMemo.get(node.data.ID);
                             
-                            if (phenotype && phenotype === this.phenotypes.MAGENTA) {
+                            if (phenotype &amp;&amp; phenotype === this.phenotypes.MAGENTA) {
                                 magentaCount++;
-                            } else if (phenotype && phenotype === this.phenotypes.CYAN) {
+                            } else if (phenotype &amp;&amp; phenotype === this.phenotypes.CYAN) {
                                 cyanCount++;
                             }
                         }
@@ -119,10 +147,10 @@ export class BacteriumSystem {
     /**
      * Update bacteria for current time step and return data for rendering
      * @param {number} timeStep - The current simulation time step
-     * @param {Map<number, Array<Object>>} bacteriumData - Map of bacteria data keyed by time step
+     * @param {Map&lt;number, Array&lt;Object>>} bacteriumData - Map of bacteria data keyed by time step
      * @param {boolean} visible - Whether bacteria should be visible
      * @param {Float32Array} concentrations - Concentration values across the grid
-     * @returns {Array<BacteriumData>} Array of bacterium data objects for rendering
+     * @returns {Array&lt;BacteriumData>} Array of bacterium data objects for rendering
      */
     updateBacteria(timeStep, bacteriumData, visible, concentrations) {
         const layer = bacteriumData.get(timeStep) || [];
@@ -213,7 +241,7 @@ export class BacteriumSystem {
 
     /**
      * Gets the positions of bacteria by phenotype
-     * @returns {Array<Array<bigint>>} Array containing [magentaPositions, cyanPositions]
+     * @returns {Array&lt;Array&lt;bigint>>} Array containing [magentaPositions, cyanPositions]
      */
     getPositions() {
         return this.phenotypeManager.getPositions(this.currentTimestepBacteria);
@@ -264,7 +292,7 @@ export class BacteriumSystem {
  * @param {number} DIFFUSION_RATE - Coefficient that determines the diffusion speed
  * @param {number} timeStep - Time step duration in minutes
  * @param {number} subSteps - Number of ADI iterations to perform per step
- * @returns {Array<Float32Array>} Updated concentration arrays [currentData, nextData]
+ * @returns {Array&lt;Float32Array>} Updated concentration arrays [currentData, nextData]
  */
 export function diffuse(
         WIDTH, HEIGHT,
@@ -301,10 +329,10 @@ export function createBacteriumSystem(config) {
  * Updates bacteria for the current time step and returns data for rendering
  * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
  * @param {number} timeStep - The current simulation time step
- * @param {Map<number, Array<Object>>} bacteriumData - Map of bacteria data keyed by time step
+ * @param {Map&lt;number, Array&lt;Object>>} bacteriumData - Map of bacteria data keyed by time step
  * @param {boolean} visible - Whether bacteria should be visible
  * @param {Float32Array} concentrations - Concentration values across the grid
- * @returns {Array<BacteriumData>} Array of bacterium data objects for rendering
+ * @returns {Array&lt;BacteriumData>} Array of bacterium data objects for rendering
  */
 export function updateBacteria(bacteriumSystem, timeStep, bacteriumData, visible, concentrations) {
     return bacteriumSystem.updateBacteria(timeStep, bacteriumData, visible, concentrations);
@@ -331,7 +359,7 @@ export function getCyanCount(bacteriumSystem) {
 /**
  * Gets the positions of bacteria by phenotype
  * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @returns {Array<Array<bigint>>} Array containing [magentaPositions, cyanPositions]
+ * @returns {Array&lt;Array&lt;bigint>>} Array containing [magentaPositions, cyanPositions]
  */
 export function getPositions(bacteriumSystem) {
     return bacteriumSystem.getPositions();
@@ -400,3 +428,26 @@ export function getHistories(bacteriumSystem) {
 export function clearHistories(bacteriumSystem) {
     bacteriumSystem.historyManager.clear();
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumSystem.html">BacteriumSystem</a></li></ul><h3>Global</h3><ul><li><a href="global.html#clearHistories">clearHistories</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getHistories">getHistories</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateHistories">updateHistories</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 12:35:18 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

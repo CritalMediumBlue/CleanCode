@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: simulation/bacteriumData.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,224 +17,34 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
-
-    
-
-
-
-    
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>main.js</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Main entry point for the bacteria simulation visualization.
-Manages the core simulation loop, scene updates, and integrates components.</div>
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>simulation/simulationManager.js</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Manages the bacteria simulation by coordinating the phenotype determination, 
-spatial positioning, and diffusion calculations. Provides a unified API for the main application
-to interact with the simulation components.
-
-This module serves as the primary interface between the rendering/UI layer and the
-underlying simulation mechanisms, handling updates, state management, and data flow.</div>
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simulation_simulationManager.js.html">simulation/simulationManager.js</a>, <a href="simulation_simulationManager.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <h1 class="page-title">Source: simulation/bacteriumData.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Data model for bacterium that can be passed between simulation and rendering systems.
+ * This decouples the simulation logic from rendering concerns.
+ */
+export class BacteriumData {
+    constructor(id, position, angle, longAxis, phenotype, magentaProportion, cyanProportion, similarity, visible) {
+        this.id = id;
+        this.position = position;  // {x, y, z} plain object
+        this.angle = angle;
+        this.longAxis = longAxis;
+        this.phenotype = phenotype;
+        this.magentaProportion = magentaProportion;
+        this.cyanProportion = cyanProportion;
+        this.similarity = similarity;
+        this.visible = visible;
+    }
+}</code></pre>
+        </article>
+    </section>
 
 
 
