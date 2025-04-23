@@ -12,7 +12,6 @@ import {
     getAverageSimilarityWithNeighbors,
     updateHistories,
     getHistories,
-    clearHistories,
     diffuse,
     setSignalValue,
     setAlphaValue
@@ -144,26 +143,7 @@ const cleanupResources = () => {
 };
 
 
-/**
- * Initializes simulation parameters (time step, play state) and resets data arrays.
- * Also clears history data and re-initializes the plot renderer.
- */
-const initializeParameters = () => {
-    console.log("Initializing parameters...");
-    // Reset animation state
-    animationState.currentTimeStep = 1;
-    animationState.numberOfTimeSteps = 0;
-    animationState.play = false;
-    sceneState.visibleBacteria = true;
-    resetArrays();
-    // Clear history data and initialize plot
-    if (sceneState.bacteriumSystem) {
-        clearHistories(sceneState.bacteriumSystem);
-    }
-    
-    // Pass injected config to plotRenderer initialization
-    initPlotRenderer(appConfig); // Re-initialize the plot for the new simulation
-};
+
 
 /**
  * Resets the core data arrays (concentration, colors, sources, sinks)
@@ -200,10 +180,6 @@ const setBacteriaData = (data, processedData) => {
         'and', Math.round(animationState.fromStepToMinutes % 1 * 60), 'seconds');
 };
 
-// --- Event Handling ---
-
-// The addSafeEventListener and addEventListeners functions have been 
-// moved to GUI/guiManager.js
 
 // --- Simulation Update Logic ---
 
@@ -348,11 +324,6 @@ const updateSourcesAndSinks = (currentBacteria) => {
         }
     }
 };
-
-
-// --- Helper Functions ---
-
-
 
 
 
