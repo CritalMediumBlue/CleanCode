@@ -297,11 +297,19 @@ export function diffuse(
 /**
  * Creates a new bacterium system instance
  * @param {Object} config - Configuration object for the bacterium system
- * @param {Object} [phenotypeManager] - Optional phenotype manager object (if not provided, will need to be set before using the system)
  * @returns {BacteriumSystem} A new bacterium system instance
  */
-export function createBacteriumSystem(config, phenotypeManager) {
-    return new BacteriumSystem(config, phenotypeManager);
+export function createBacteriumSystem(config) {
+    // Create phenotype state internally
+    const phenotypeState = {
+        config,
+        phenotypes: config.PHENOTYPES,
+        phenotypeMemo: new Map(),
+        signal: config.BACTERIUM.SIGNAL.DEFAULT / 100,
+        alpha: config.BACTERIUM.ALPHA.DEFAULT
+    };
+    
+    return new BacteriumSystem(config, phenotypeState);
 }
 
 /**

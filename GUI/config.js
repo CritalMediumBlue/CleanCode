@@ -40,16 +40,7 @@ export const CONFIG = {
         CYAN_PHENOTYPE: 0x00FFFF,
         DEFAULT_PHENOTYPE: 0xFFFFFF,
     },
-    CONCENTRATION: {
-        GRID_SIZE: 40,
-        CUBE_SIZE: 0.2,
-        COLOR: 0x808080,
-        OPACITY: 0.8,
-        X_MIN: -50,
-        X_MAX: 50,
-        Y_MIN: 140,
-        Y_MAX: 200,
-    },
+   
     PLOT_RENDERER: {
         MAX_POINTS: 1000,
         POINT_SIZE:2,

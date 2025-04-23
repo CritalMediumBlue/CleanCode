@@ -181,7 +181,7 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor
         console.warn("updateSurfaceMesh called before surfaceMesh is initialized.");
         return;
     }
-    
+
     // Get direct access to the position and color buffer arrays
     const positions = surfaceMesh.geometry.attributes.position.array; // x, y, z for each vertex
     const colorsAttribute = surfaceMesh.geometry.attributes.color; // r, g, b for each vertex

@@ -25,14 +25,7 @@ const addSafeEventListener = (id, event, handler) => {
     }
 };
 
-/**
- * Provides the current configuration to external modules.
- * Acts as a configuration provider to decouple direct dependencies.
- * @returns {Object} The current configuration object
- */
-const getConfiguration = () => {
-    return CONFIG;
-};
+
 
 /**
  * Handles file input processing, decoupling main.js from dataProcessor.js
@@ -78,7 +71,7 @@ const setBacteriaData = (data, processedData) => {
  * @param {Object} simulationActions - Object containing functions for simulation operations
  * @returns {Object} The configuration object for dependency injection
  */
-const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData, stateActions, simulationActions) => {
+export const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData, stateActions, simulationActions) => {
     console.log("Adding event listeners...");
     
     // Store the callback for setting bacteria data
@@ -151,5 +144,3 @@ const addEventListeners = (updateScene, animate, resetAllData, externalSetBacter
     return CONFIG;
 };
 
-// Export functions
-export { addEventListeners, addSafeEventListener, getConfiguration, handleFileInput, setBacteriaData };

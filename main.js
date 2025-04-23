@@ -107,11 +107,8 @@ const resetAllData = () => {
     // Reset state via stateManager
     resetAnimationState();
     
-    // Create phenotype state first - decouples simulationManager from stateManager
-    const phenotypeState = createPhenotypeState(appConfig, appConfig.PHENOTYPES);
-    
-    // Create a function that creates a bacterium system with injected config and phenotype state
-    const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig, phenotypeState);
+    // Create a function that creates a bacterium system with injected config only
+    const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
     
     // Set up new scene and create the bacterium system and renderer, passing injected config
     const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig);
@@ -128,6 +125,7 @@ const resetAllData = () => {
     
     updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor); // Initial update to set heights/colors
 };
+
 
 /**
  * Cleans up existing Three.js resources (renderer, scene objects) and cancels
