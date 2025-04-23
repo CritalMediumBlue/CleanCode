@@ -88,10 +88,14 @@ export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarity
     plotRendererInstance.updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory);
 }
 
-export function renderScene(sceneState) {
+export function renderScene(sceneState,bacteriaData) {
     plotRendererInstance.render();
     if (sceneState.renderer && sceneState.scene && sceneState.camera) {
         sceneState.renderer.render(sceneState.scene, sceneState.camera);
+    }
+     // Render bacteria using the dedicated renderer
+     if (sceneState.bacteriumRenderer && bacteriaData) {
+        sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
     }
 }
 

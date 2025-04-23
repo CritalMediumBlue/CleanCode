@@ -286,19 +286,9 @@ const updateScene = () => {
  * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
  */
 const updateBacteriaPositions = (currentBacteria) => {
-    // Simulate bacteria - returns array of BacteriumData objects for rendering
-    const bacteriaData = updateBacteria(
-        sceneState.bacteriumSystem,
-        animationState.currentTimeStep,
-        dataState.bacteriaData,
-        sceneState.visibleBacteria,
-        dataState.currentConcentrationData
-    );
+  
     
-    // Render bacteria using the dedicated renderer
-    if (sceneState.bacteriumRenderer) {
-        sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
-    }
+   
 
     // Get metric values from bacterium system
     const magentaCount = getMagentaCount(sceneState.bacteriumSystem);
@@ -363,13 +353,22 @@ const updateSourcesAndSinks = (currentBacteria) => {
 const animate = () => {
     // Schedule the next frame
     animationState.animationFrameId = requestAnimationFrame(animate);
-
+    let bacteriaData = null; // Initialize bacteriaData to null
     // Update simulation logic only if in 'play' state
     if (animationState.play) {
         updateScene(); // Advance the simulation by one step
+         // Simulate bacteria - returns array of BacteriumData objects for rendering
+        bacteriaData = updateBacteria(
+        sceneState.bacteriumSystem,
+        animationState.currentTimeStep,
+        dataState.bacteriaData,
+        sceneState.visibleBacteria,
+        dataState.currentConcentrationData
+    );
     }
+     
 
-    renderScene(sceneState); // Render the 3D scene
+    renderScene(sceneState,bacteriaData); // Render the 3D scene
 };
 
 
