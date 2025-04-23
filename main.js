@@ -33,7 +33,6 @@ import {
     getAdjustedCoordinates,
     calculateColor,
     HistoryManager,
-    createPhenotypeState
 } from './state/stateManager.js';
 
 /**

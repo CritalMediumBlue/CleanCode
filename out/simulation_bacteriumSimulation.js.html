@@ -27,260 +27,236 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Manages history tracking for bacteria simulation
+ * Phenotype determination, tracking, and related operations
  */
-export class HistoryManager {
-    constructor() {
-        this.totalBacteriaCountHistory = [];
-        this.magentaBacteriaCountHistory = [];
-        this.cyanBacteriaCountHistory = [];
-        this.averageSimilarityHistory = [];
-    }
 
-    /**
-     * Update history arrays with new data
-     * @param {number} totalCount - Total bacteria count
-     * @param {number} magentaCount - Magenta bacteria count
-     * @param {number} cyanCount - Cyan bacteria count
-     * @param {number} averageSimilarity - Average similarity value
-     */
-    update(totalCount, magentaCount, cyanCount, averageSimilarity) {
-        this.totalBacteriaCountHistory.push(totalCount);
-        this.magentaBacteriaCountHistory.push(magentaCount);
-        this.cyanBacteriaCountHistory.push(cyanCount);
-        this.averageSimilarityHistory.push(averageSimilarity);
-    }
 
-    /**
-     * Get all history arrays
-     * @returns {Object} Object containing all history arrays
-     */
-    getHistories() {
-        return {
-            totalBacteriaCountHistory: this.totalBacteriaCountHistory,
-            magentaBacteriaCountHistory: this.magentaBacteriaCountHistory,
-            cyanBacteriaCountHistory: this.cyanBacteriaCountHistory,
-            averageSimilarityHistory: this.averageSimilarityHistory
-        };
-    }
 
-    /**
-     * Clear all history arrays
-     */
-    clear() {
-        this.totalBacteriaCountHistory = [];
-        this.magentaBacteriaCountHistory = [];
-        this.cyanBacteriaCountHistory = [];
-        this.averageSimilarityHistory = [];
-    }
+/**
+ * Clamp a value between min and max
+ * @param {number} value - Value to clamp
+ * @param {number} min - Minimum value
+ * @param {number} max - Maximum value
+ * @returns {number} Clamped value
+ */
+export function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
 }
 
 /**
- * Manages phenotype determination, tracking, and related operations
+ * Set the signal value used in phenotype determination
+ * @param {Object} state - Phenotype state object
+ * @param {number} value - Signal value to set
  */
-export class PhenotypeManager {
-    /**
-     * Create a new PhenotypeManager
-     * @param {Object} config - Configuration object containing BACTERIUM settings
-     * @param {Object} phenotypes - Phenotype constants
-     */
-    constructor(config, phenotypes) {
-        this.config = config;
-        this.phenotypes = phenotypes;
-        this.phenotypeMemo = new Map();
-        this.signal = config.BACTERIUM.SIGNAL.DEFAULT / 100;
-        this.alpha = config.BACTERIUM.ALPHA.DEFAULT;
-    }
+export function setSignalValue(state, value) {
+    state.signal = clamp(value, state.config.BACTERIUM.SIGNAL.MIN, state.config.BACTERIUM.SIGNAL.MAX) / 100;
+}
 
-    /**
-     * Clamp a value between min and max
-     */
-    clamp(value, min, max) {
-        return Math.max(min, Math.min(max, value));
-    }
+/**
+ * Set the alpha value used in phenotype determination
+ * @param {Object} state - Phenotype state object
+ * @param {number} value - Alpha value to set
+ */
+export function setAlphaValue(state, value) {
+    state.alpha = clamp(value, state.config.BACTERIUM.ALPHA.MIN, state.config.BACTERIUM.ALPHA.MAX);
+}
 
-    /**
-     * Set the signal value used in phenotype determination
-     */
-    setSignalValue(value) {
-        this.signal = this.clamp(value, this.config.BACTERIUM.SIGNAL.MIN, this.config.BACTERIUM.SIGNAL.MAX) / 100;
+/**
+ * Get phenotype for a bacterium based on inheritance from parent
+ * @param {Object} state - Phenotype state object
+ * @param {bigint} ID - Bacterium ID
+ * @param {bigint} parentID - Parent bacterium ID
+ * @returns {string} Phenotype value
+ */
+export function simplifiedInheritancePhenotype(state, ID, parentID) {
+    // Check if phenotype is already determined for this ID
+    if (state.phenotypeMemo.has(ID)) {
+        return state.phenotypeMemo.get(ID);
     }
-
-    /**
-     * Set the alpha value used in phenotype determination
-     */
-    setAlphaValue(value) {
-        this.alpha = this.clamp(value, this.config.BACTERIUM.ALPHA.MIN, this.config.BACTERIUM.ALPHA.MAX);
-    }
-
-    /**
-     * Get phenotype for a bacterium based on inheritance from parent
-     */
-    simplifiedInheritancePhenotype(ID, parentID) {
-        // Check if phenotype is already determined for this ID
-        if (this.phenotypeMemo.has(ID)) {
-            return this.phenotypeMemo.get(ID);
-        }
-        
-        // Check if parent phenotype is available
-        if (parentID !== undefined &amp;&amp; this.phenotypeMemo.has(parentID)) {
-            const phenotype = this.phenotypeMemo.get(parentID);
-            this.phenotypeMemo.set(ID, phenotype);
-            return phenotype;
-        }
-        
-        // Assign random phenotype if no inheritance information
-        const phenotype = Math.random() &lt; 0.5 ? this.phenotypes.MAGENTA : this.phenotypes.CYAN;
-        this.phenotypeMemo.set(ID, phenotype);
+    
+    // Check if parent phenotype is available
+    if (parentID !== undefined &amp;&amp; state.phenotypeMemo.has(parentID)) {
+        const phenotype = state.phenotypeMemo.get(parentID);
+        state.phenotypeMemo.set(ID, phenotype);
         return phenotype;
     }
+    
+    // Assign random phenotype if no inheritance information
+    const phenotype = Math.random() &lt; 0.5 ? state.phenotypes.MAGENTA : state.phenotypes.CYAN;
+    state.phenotypeMemo.set(ID, phenotype);
+    return phenotype;
+}
 
-    /**
-     * Determine phenotype based on neighbors and local concentration
-     */
-    inheritancePhenotype(ID, neighbors, localConcentration) {
-        // If phenotype already determined, use transition rules
-        if (this.phenotypeMemo.has(ID)) {
-            return this.determineTransitionPhenotype(ID, neighbors, localConcentration);
-        }
-        
-        // Handle parent inheritance for IDs > 2000
-        if (ID > 2000n) {
-            const parentID = ID / 2n;
-            if (this.phenotypeMemo.has(parentID)) {
-                const phenotype = this.phenotypeMemo.get(parentID);
-                this.phenotypeMemo.set(ID, phenotype);
-                return phenotype;
-            }
-        }
-        
-        // Handle initial bacteria (IDs 1000-2000)
-        if (ID >= 1000n &amp;&amp; ID &lt;= 2000n) {
-            const phenotype = Math.random() &lt; 0.5 ? this.phenotypes.MAGENTA : this.phenotypes.CYAN;
-            this.phenotypeMemo.set(ID, phenotype);
+/**
+ * Determine phenotype based on neighbors and local concentration
+ * @param {Object} state - Phenotype state object
+ * @param {bigint} ID - Bacterium ID
+ * @param {Array} neighbors - Count of [total, magenta, cyan] neighbors
+ * @param {number} localConcentration - Local concentration value
+ * @returns {string} Phenotype value
+ */
+export function inheritancePhenotype(state, ID, neighbors, localConcentration) {
+    // If phenotype already determined, use transition rules
+    if (state.phenotypeMemo.has(ID)) {
+        return determineTransitionPhenotype(state, ID, neighbors, localConcentration);
+    }
+    
+    // Handle parent inheritance for IDs > 2000
+    if (ID > 2000n) {
+        const parentID = ID / 2n;
+        if (state.phenotypeMemo.has(parentID)) {
+            const phenotype = state.phenotypeMemo.get(parentID);
+            state.phenotypeMemo.set(ID, phenotype);
             return phenotype;
         }
-        
-        // Default case - should not reach here in normal operation
-        return null;
     }
-
-    /**
-     * Determine phenotype transition based on current phenotype and environment
-     */
-    determineTransitionPhenotype(ID, neighbors, localConcentration) {
-        const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
-        const proportionCyan = cyanNeighbors / totalNeighbors;
-        const originalPhenotype = this.phenotypeMemo.get(ID);
-        
-        // Calculate transition rates based on feedback type
-        let K_c2m, K_m2c; // Transition rates: cyan-to-magenta and magenta-to-cyan
-        
-        if (this.config.BACTERIUM.POSITIVE_FEEDBACK) {
-            K_c2m = this.alpha + localConcentration * this.signal;
-            K_m2c = this.alpha + proportionCyan * this.signal;
-        } else {
-            K_c2m = this.alpha + proportionCyan * this.signal;
-            K_m2c = this.alpha + localConcentration * this.signal;
-        }
-        
-        // Determine new phenotype based on transition probabilities
-        const rand = Math.random();
-        let phenotype;
-        
-        if (originalPhenotype === this.phenotypes.MAGENTA) {
-            phenotype = rand &lt; K_m2c ? this.phenotypes.CYAN : this.phenotypes.MAGENTA;
-        } else {
-            phenotype = rand &lt; K_c2m ? this.phenotypes.MAGENTA : this.phenotypes.CYAN;
-        }
-        
-        this.phenotypeMemo.set(ID, phenotype);
+    
+    // Handle initial bacteria (IDs 1000-2000)
+    if (ID >= 1000n &amp;&amp; ID &lt;= 2000n) {
+        const phenotype = Math.random() &lt; 0.5 ? state.phenotypes.MAGENTA : state.phenotypes.CYAN;
+        state.phenotypeMemo.set(ID, phenotype);
         return phenotype;
     }
+    
+    // Default case - should not reach here in normal operation
+    return null;
+}
 
-    /**
-     * Determine phenotype and calculate similarity with neighbors
-     * 
-     * @param {bigint} ID - Bacterium ID
-     * @param {Array} neighbors - Count of [total, magenta, cyan] neighbors
-     * @param {bigint} parentID - Parent bacterium ID
-     * @param {number} localConcentration - Local concentration value
-     * @returns {Object} Object containing phenotype and similarity information
-     */
-    determinePhenotypeAndSimilarity(ID, neighbors, parentID, localConcentration) {
-        // Determine phenotype based on inheritance or neighbors
-        const phenotype = parentID === undefined 
-            ? this.inheritancePhenotype(ID, neighbors, localConcentration) 
-            : this.simplifiedInheritancePhenotype(ID, parentID);
+/**
+ * Determine phenotype transition based on current phenotype and environment
+ * @param {Object} state - Phenotype state object
+ * @param {bigint} ID - Bacterium ID
+ * @param {Array} neighbors - Count of [total, magenta, cyan] neighbors
+ * @param {number} localConcentration - Local concentration value
+ * @returns {string} Phenotype value after potential transition
+ */
+export function determineTransitionPhenotype(state, ID, neighbors, localConcentration) {
+    const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
+    const proportionCyan = cyanNeighbors / totalNeighbors;
+    const originalPhenotype = state.phenotypeMemo.get(ID);
+    
+    // Calculate transition rates based on feedback type
+    let K_c2m, K_m2c; // Transition rates: cyan-to-magenta and magenta-to-cyan
+    
+    if (state.config.BACTERIUM.POSITIVE_FEEDBACK) {
+        K_c2m = state.alpha + localConcentration * state.signal;
+        K_m2c = state.alpha + proportionCyan * state.signal;
+    } else {
+        K_c2m = state.alpha + proportionCyan * state.signal;
+        K_m2c = state.alpha + localConcentration * state.signal;
+    }
+    
+    // Determine new phenotype based on transition probabilities
+    const rand = Math.random();
+    let phenotype;
+    
+    if (originalPhenotype === state.phenotypes.MAGENTA) {
+        phenotype = rand &lt; K_m2c ? state.phenotypes.CYAN : state.phenotypes.MAGENTA;
+    } else {
+        phenotype = rand &lt; K_c2m ? state.phenotypes.MAGENTA : state.phenotypes.CYAN;
+    }
+    
+    state.phenotypeMemo.set(ID, phenotype);
+    return phenotype;
+}
+
+/**
+ * Determine phenotype and calculate similarity with neighbors
+ * 
+ * @param {Object} state - Phenotype state object
+ * @param {bigint} ID - Bacterium ID
+ * @param {Array} neighbors - Count of [total, magenta, cyan] neighbors
+ * @param {bigint} parentID - Parent bacterium ID
+ * @param {number} localConcentration - Local concentration value
+ * @returns {Object} Object containing phenotype and similarity information
+ */
+export function determinePhenotypeAndSimilarity(state, ID, neighbors, parentID, localConcentration) {
+    // Determine phenotype based on inheritance or neighbors
+    const phenotype = parentID === undefined 
+        ? inheritancePhenotype(state, ID, neighbors, localConcentration) 
+        : simplifiedInheritancePhenotype(state, ID, parentID);
+    
+    // Calculate similarity with neighbors
+    const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
+    const magentaProportion = magentaNeighbors / totalNeighbors;
+    const cyanProportion = cyanNeighbors / totalNeighbors;
+    
+    const similarity = phenotype === state.phenotypes.MAGENTA 
+        ? magentaProportion 
+        : cyanProportion;
+    
+    return {
+        phenotype, 
+        similarity, 
+        magentaProportion, 
+        cyanProportion
+    };
+}
+
+/**
+ * Get count of bacteria with magenta phenotype
+ * @param {Object} state - Phenotype state object
+ * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep
+ * @returns {number} Count of magenta bacteria
+ */
+export function getMagentaCount(state, currentTimestepBacteria) {
+    return getPhenotypeCount(state, currentTimestepBacteria, state.phenotypes.MAGENTA);
+}
+
+/**
+ * Get count of bacteria with cyan phenotype
+ * @param {Object} state - Phenotype state object
+ * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep
+ * @returns {number} Count of cyan bacteria
+ */
+export function getCyanCount(state, currentTimestepBacteria) {
+    return getPhenotypeCount(state, currentTimestepBacteria, state.phenotypes.CYAN);
+}
+
+/**
+ * Get positions of bacteria by phenotype
+ * @param {Object} state - Phenotype state object
+ * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep
+ * @returns {Array} Array of [magentaPositions, cyanPositions]
+ */
+export function getPositions(state, currentTimestepBacteria) {
+    const magentaPositions = [];
+    const cyanPositions = [];
+
+    Array.from(currentTimestepBacteria).forEach((ID) => {
+        const phenotype = state.phenotypeMemo.get(ID);
+        if (!phenotype) return;
         
-        // Calculate similarity with neighbors
-        const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
-        const magentaProportion = magentaNeighbors / totalNeighbors;
-        const cyanProportion = cyanNeighbors / totalNeighbors;
-        
-        const similarity = phenotype === this.phenotypes.MAGENTA 
-            ? magentaProportion 
-            : cyanProportion;
-        
-        return {
-            phenotype, 
-            similarity, 
-            magentaProportion, 
-            cyanProportion
-        };
-    }
+        if (phenotype === state.phenotypes.MAGENTA) {
+            magentaPositions.push(ID);
+        } else if (phenotype === state.phenotypes.CYAN) {
+            cyanPositions.push(ID);
+        }
+    });
 
-    /**
-     * Get count of bacteria with magenta phenotype
-     */
-    getMagentaCount(currentTimestepBacteria) {
-        return this.getPhenotypeCount(currentTimestepBacteria, this.phenotypes.MAGENTA);
-    }
+    return [magentaPositions, cyanPositions];
+}
 
-    /**
-     * Get count of bacteria with cyan phenotype
-     */
-    getCyanCount(currentTimestepBacteria) {
-        return this.getPhenotypeCount(currentTimestepBacteria, this.phenotypes.CYAN);
-    }
+/**
+ * Count bacteria with a specific phenotype
+ * @param {Object} state - Phenotype state object
+ * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep
+ * @param {string} targetPhenotype - Target phenotype to count
+ * @returns {number} Count of bacteria with the specified phenotype
+ */
+export function getPhenotypeCount(state, currentTimestepBacteria, targetPhenotype) {
+    return Array.from(currentTimestepBacteria).reduce((count, ID) => {
+        const phenotype = state.phenotypeMemo.get(ID);
+        return phenotype &amp;&amp; phenotype === targetPhenotype ? count + 1 : count;
+    }, 0);
+}
 
-    /**
-     * Get positions of bacteria by phenotype
-     */
-    getPositions(currentTimestepBacteria) {
-        const magentaPositions = [];
-        const cyanPositions = [];
-
-        Array.from(currentTimestepBacteria).forEach((ID) => {
-            const phenotype = this.phenotypeMemo.get(ID);
-            if (!phenotype) return;
-            
-            if (phenotype === this.phenotypes.MAGENTA) {
-                magentaPositions.push(ID);
-            } else if (phenotype === this.phenotypes.CYAN) {
-                cyanPositions.push(ID);
-            }
-        });
-
-        return [magentaPositions, cyanPositions];
-    }
-
-    /**
-     * Count bacteria with a specific phenotype
-     */
-    getPhenotypeCount(currentTimestepBacteria, targetPhenotype) {
-        return Array.from(currentTimestepBacteria).reduce((count, ID) => {
-            const phenotype = this.phenotypeMemo.get(ID);
-            return phenotype &amp;&amp; phenotype === targetPhenotype ? count + 1 : count;
-        }, 0);
-    }
-
-    /**
-     * Clear phenotype memoization cache
-     */
-    clearPhenotypeMemo() {
-        this.phenotypeMemo.clear();
-    }
+/**
+ * Clear phenotype memoization cache
+ * @param {Object} state - Phenotype state object
+ */
+export function clearPhenotypeMemo(state) {
+    state.phenotypeMemo.clear();
 }</code></pre>
         </article>
     </section>
@@ -291,13 +267,13 @@ export class PhenotypeManager {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumData.html">BacteriumData</a></li><li><a href="BacteriumPool.html">BacteriumPool</a></li><li><a href="BacteriumRenderer.html">BacteriumRenderer</a></li><li><a href="BacteriumSystem.html">BacteriumSystem</a></li><li><a href="HistoryManager.html">HistoryManager</a></li><li><a href="PhenotypeManager.html">PhenotypeManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONSTANTS">CONSTANTS</a></li><li><a href="global.html#GRID">GRID</a></li><li><a href="global.html#SIMULATION">SIMULATION</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addSafeEventListener">addSafeEventListener</a></li><li><a href="global.html#analyzeBacteriaLineage">analyzeBacteriaLineage</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animationState">animationState</a></li><li><a href="global.html#appConfig">appConfig</a></li><li><a href="global.html#calculateColor">calculateColor</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#clearHistories">clearHistories</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumPool">createBacteriumPool</a></li><li><a href="global.html#createBacteriumRenderer">createBacteriumRenderer</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createControls">createControls</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createRenderer">createRenderer</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#dataState">dataState</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAdjustedCoordinates">getAdjustedCoordinates</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getConfiguration">getConfiguration</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getHistories">getHistories</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#handleFileInput">handleFileInput</a></li><li><a href="global.html#initPlotRenderer">initPlotRenderer</a></li><li><a href="global.html#initializeArrays">initializeArrays</a></li><li><a href="global.html#processFileData">processFileData</a></li><li><a href="global.html#renderScene">renderScene</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetAnimationState">resetAnimationState</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#resetState">resetState</a></li><li><a href="global.html#sceneState">sceneState</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#setBacteriaDataCallback">setBacteriaDataCallback</a></li><li><a href="global.html#setBacteriumTransform">setBacteriumTransform</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#setupNewScene">setupNewScene</a></li><li><a href="global.html#setupScene">setupScene</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#thomasAlgorithm">thomasAlgorithm</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateBacteriumColor">updateBacteriumColor</a></li><li><a href="global.html#updateBacteriumMetrics">updateBacteriumMetrics</a></li><li><a href="global.html#updateHistories">updateHistories</a></li><li><a href="global.html#updateOverlay">updateOverlay</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li><li><a href="global.html#updateSurfaceMesh">updateSurfaceMesh</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumData.html">BacteriumData</a></li><li><a href="BacteriumPool.html">BacteriumPool</a></li><li><a href="BacteriumRenderer.html">BacteriumRenderer</a></li><li><a href="BacteriumSystem.html">BacteriumSystem</a></li><li><a href="HistoryManager.html">HistoryManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONSTANTS">CONSTANTS</a></li><li><a href="global.html#GRID">GRID</a></li><li><a href="global.html#SIMULATION">SIMULATION</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addSafeEventListener">addSafeEventListener</a></li><li><a href="global.html#analyzeBacteriaLineage">analyzeBacteriaLineage</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animationState">animationState</a></li><li><a href="global.html#appConfig">appConfig</a></li><li><a href="global.html#calculateColor">calculateColor</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumPool">createBacteriumPool</a></li><li><a href="global.html#createBacteriumRenderer">createBacteriumRenderer</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createControls">createControls</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createRenderer">createRenderer</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#dataState">dataState</a></li><li><a href="global.html#determinePhenotypeAndSimilarity">determinePhenotypeAndSimilarity</a></li><li><a href="global.html#determineTransitionPhenotype">determineTransitionPhenotype</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAdjustedCoordinates">getAdjustedCoordinates</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getConfiguration">getConfiguration</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPhenotypeCount">getPhenotypeCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#handleFileInput">handleFileInput</a></li><li><a href="global.html#inheritancePhenotype">inheritancePhenotype</a></li><li><a href="global.html#initPlotRenderer">initPlotRenderer</a></li><li><a href="global.html#initializeArrays">initializeArrays</a></li><li><a href="global.html#processFileData">processFileData</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetAnimationState">resetAnimationState</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#resetState">resetState</a></li><li><a href="global.html#sceneState">sceneState</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#setBacteriaDataCallback">setBacteriaDataCallback</a></li><li><a href="global.html#setBacteriumTransform">setBacteriumTransform</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#setupNewScene">setupNewScene</a></li><li><a href="global.html#setupScene">setupScene</a></li><li><a href="global.html#simplifiedInheritancePhenotype">simplifiedInheritancePhenotype</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#thomasAlgorithm">thomasAlgorithm</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateBacteriumColor">updateBacteriumColor</a></li><li><a href="global.html#updateBacteriumMetrics">updateBacteriumMetrics</a></li><li><a href="global.html#updateOverlay">updateOverlay</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li><li><a href="global.html#updateSurfaceMesh">updateSurfaceMesh</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 14:31:15 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 17:17:55 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

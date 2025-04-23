@@ -26,8 +26,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>
-// --- Constants ---
+            <pre class="prettyprint source linenums"><code>// --- Constants ---
 /** @const {object} GRID - Defines the dimensions of the simulation grid. */
 export const GRID = { WIDTH: 100, HEIGHT: 60 };
 /** @const {object} SIMULATION - Holds simulation-specific parameters. */
@@ -78,6 +77,7 @@ export const dataState = {
     /** @type {Set&lt;number> | null} */ AllUniqueIDs: null, // Set of all unique bacteria IDs across the simulation
     /** @type {number} */ doublingTime: 45, // Assumed doubling time for bacteria in minutes
 };
+
 
 // --- State Initialization Functions ---
 
@@ -164,7 +164,61 @@ export const calculateColor = (concentration) => {
         g: isNaN(green) ? 0 : green,
         b: isNaN(blue) ? 0 : blue
     };
-};</code></pre>
+};
+
+/**
+ * Manages history tracking for bacteria simulation
+ * @class
+ * @classdesc Tracks and stores historical data for the bacteria simulation
+ */
+export class HistoryManager {
+    constructor() {
+        this.totalBacteriaCountHistory = [];
+        this.magentaBacteriaCountHistory = [];
+        this.cyanBacteriaCountHistory = [];
+        this.averageSimilarityHistory = [];
+    }
+
+    /**
+     * Update history arrays with new data
+     * @param {number} totalCount - Total bacteria count
+     * @param {number} magentaCount - Magenta bacteria count
+     * @param {number} cyanCount - Cyan bacteria count
+     * @param {number} averageSimilarity - Average similarity value
+     */
+    update(totalCount, magentaCount, cyanCount, averageSimilarity) {
+        this.totalBacteriaCountHistory.push(totalCount);
+        this.magentaBacteriaCountHistory.push(magentaCount);
+        this.cyanBacteriaCountHistory.push(cyanCount);
+        this.averageSimilarityHistory.push(averageSimilarity);
+    }
+
+    /**
+     * Get all history arrays
+     * @returns {Object} Object containing all history arrays
+     */
+    getHistories() {
+        return {
+            totalBacteriaCountHistory: this.totalBacteriaCountHistory,
+            magentaBacteriaCountHistory: this.magentaBacteriaCountHistory,
+            cyanBacteriaCountHistory: this.cyanBacteriaCountHistory,
+            averageSimilarityHistory: this.averageSimilarityHistory
+        };
+    }
+
+    /**
+     * Clear all history arrays
+     */
+    clear() {
+        this.totalBacteriaCountHistory = [];
+        this.magentaBacteriaCountHistory = [];
+        this.cyanBacteriaCountHistory = [];
+        this.averageSimilarityHistory = [];
+    }
+}
+
+
+</code></pre>
         </article>
     </section>
 
@@ -174,13 +228,13 @@ export const calculateColor = (concentration) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumData.html">BacteriumData</a></li><li><a href="BacteriumPool.html">BacteriumPool</a></li><li><a href="BacteriumRenderer.html">BacteriumRenderer</a></li><li><a href="BacteriumSystem.html">BacteriumSystem</a></li><li><a href="HistoryManager.html">HistoryManager</a></li><li><a href="PhenotypeManager.html">PhenotypeManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONSTANTS">CONSTANTS</a></li><li><a href="global.html#GRID">GRID</a></li><li><a href="global.html#SIMULATION">SIMULATION</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addSafeEventListener">addSafeEventListener</a></li><li><a href="global.html#analyzeBacteriaLineage">analyzeBacteriaLineage</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animationState">animationState</a></li><li><a href="global.html#appConfig">appConfig</a></li><li><a href="global.html#calculateColor">calculateColor</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#clearHistories">clearHistories</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumPool">createBacteriumPool</a></li><li><a href="global.html#createBacteriumRenderer">createBacteriumRenderer</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createControls">createControls</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createRenderer">createRenderer</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#dataState">dataState</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAdjustedCoordinates">getAdjustedCoordinates</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getConfiguration">getConfiguration</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getHistories">getHistories</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#handleFileInput">handleFileInput</a></li><li><a href="global.html#initPlotRenderer">initPlotRenderer</a></li><li><a href="global.html#initializeArrays">initializeArrays</a></li><li><a href="global.html#processFileData">processFileData</a></li><li><a href="global.html#renderScene">renderScene</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetAnimationState">resetAnimationState</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#resetState">resetState</a></li><li><a href="global.html#sceneState">sceneState</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#setBacteriaDataCallback">setBacteriaDataCallback</a></li><li><a href="global.html#setBacteriumTransform">setBacteriumTransform</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#setupNewScene">setupNewScene</a></li><li><a href="global.html#setupScene">setupScene</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#thomasAlgorithm">thomasAlgorithm</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateBacteriumColor">updateBacteriumColor</a></li><li><a href="global.html#updateBacteriumMetrics">updateBacteriumMetrics</a></li><li><a href="global.html#updateHistories">updateHistories</a></li><li><a href="global.html#updateOverlay">updateOverlay</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li><li><a href="global.html#updateSurfaceMesh">updateSurfaceMesh</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumData.html">BacteriumData</a></li><li><a href="BacteriumPool.html">BacteriumPool</a></li><li><a href="BacteriumRenderer.html">BacteriumRenderer</a></li><li><a href="BacteriumSystem.html">BacteriumSystem</a></li><li><a href="HistoryManager.html">HistoryManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONSTANTS">CONSTANTS</a></li><li><a href="global.html#GRID">GRID</a></li><li><a href="global.html#SIMULATION">SIMULATION</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addSafeEventListener">addSafeEventListener</a></li><li><a href="global.html#analyzeBacteriaLineage">analyzeBacteriaLineage</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animationState">animationState</a></li><li><a href="global.html#appConfig">appConfig</a></li><li><a href="global.html#calculateColor">calculateColor</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumPool">createBacteriumPool</a></li><li><a href="global.html#createBacteriumRenderer">createBacteriumRenderer</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createControls">createControls</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createRenderer">createRenderer</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#dataState">dataState</a></li><li><a href="global.html#determinePhenotypeAndSimilarity">determinePhenotypeAndSimilarity</a></li><li><a href="global.html#determineTransitionPhenotype">determineTransitionPhenotype</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAdjustedCoordinates">getAdjustedCoordinates</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getConfiguration">getConfiguration</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPhenotypeCount">getPhenotypeCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#handleFileInput">handleFileInput</a></li><li><a href="global.html#inheritancePhenotype">inheritancePhenotype</a></li><li><a href="global.html#initPlotRenderer">initPlotRenderer</a></li><li><a href="global.html#initializeArrays">initializeArrays</a></li><li><a href="global.html#processFileData">processFileData</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetAnimationState">resetAnimationState</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#resetState">resetState</a></li><li><a href="global.html#sceneState">sceneState</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#setBacteriaDataCallback">setBacteriaDataCallback</a></li><li><a href="global.html#setBacteriumTransform">setBacteriumTransform</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#setupNewScene">setupNewScene</a></li><li><a href="global.html#setupScene">setupScene</a></li><li><a href="global.html#simplifiedInheritancePhenotype">simplifiedInheritancePhenotype</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#thomasAlgorithm">thomasAlgorithm</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateBacteriumColor">updateBacteriumColor</a></li><li><a href="global.html#updateBacteriumMetrics">updateBacteriumMetrics</a></li><li><a href="global.html#updateOverlay">updateOverlay</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li><li><a href="global.html#updateSurfaceMesh">updateSurfaceMesh</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 14:31:15 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 17:17:55 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

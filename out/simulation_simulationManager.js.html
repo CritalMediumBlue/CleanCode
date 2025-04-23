@@ -37,8 +37,13 @@
 import { quadtree } from 'd3-quadtree';
 
 import { 
-    PhenotypeManager, 
-    HistoryManager
+    setSignalValue as setSignalValueFn,
+    setAlphaValue as setAlphaValueFn,
+    determinePhenotypeAndSimilarity,
+    getMagentaCount as getMagentaCountFn,
+    getCyanCount as getCyanCountFn,
+    getPositions as getPositionsFn,
+    clearPhenotypeMemo as clearPhenotypeMemoFn
 } from './bacteriumSimulation.js';
 
 import { BacteriumData } from './bacteriumData.js';
@@ -57,15 +62,15 @@ export class BacteriumSystem {
      * @param {Object} config.PHENOTYPES - Phenotype definitions (MAGENTA, CYAN)
      * @param {Object} config.BACTERIUM - Bacterium-related configuration parameters
      * @param {number} config.BACTERIUM.NEIGHBOR_RADIUS - Radius for neighbor detection
+     * @param {Object} phenotypeManager - Pre-created phenotype manager object with state information
      */
-    constructor(config) {
+    constructor(config, phenotypeManager) {
         this.config = config;
         this.phenotypes = config.PHENOTYPES; // Extract phenotypes from config
         this.quadtree = null;
         this.currentTimestepBacteria = new Set();
-        this.phenotypeManager = new PhenotypeManager(config, this.phenotypes);
+        this.phenotypeManager = phenotypeManager;
         this.averageSimilarityWithNeighbors = 0;
-        this.historyManager = new HistoryManager();
     }
 
     /**
@@ -74,11 +79,10 @@ export class BacteriumSystem {
      */
     dispose() {
         // Reset all state
-        this.phenotypeManager.clearPhenotypeMemo();
+        clearPhenotypeMemoFn(this.phenotypeManager);
         this.quadtree = null;
         this.currentTimestepBacteria.clear();
         this.averageSimilarityWithNeighbors = 0;
-        this.historyManager.clear();
     }
 
     /**
@@ -205,8 +209,8 @@ export class BacteriumSystem {
         const neighbors = this.countNeighbors(x, y);
         
         // Determine phenotype and calculate similarity
-        const phenotypeInfo = this.phenotypeManager.determinePhenotypeAndSimilarity(
-            ID, neighbors, parent, localConcentration
+        const phenotypeInfo = determinePhenotypeAndSimilarity(
+            this.phenotypeManager, ID, neighbors, parent, localConcentration
         );
         
         // Return data object for rendering
@@ -228,7 +232,7 @@ export class BacteriumSystem {
      * @returns {number} Count of bacteria with magenta phenotype
      */
     getMagentaCount() {
-        return this.phenotypeManager.getMagentaCount(this.currentTimestepBacteria);
+        return getMagentaCountFn(this.phenotypeManager, this.currentTimestepBacteria);
     }
 
     /**
@@ -236,7 +240,7 @@ export class BacteriumSystem {
      * @returns {number} Count of bacteria with cyan phenotype
      */
     getCyanCount() {
-        return this.phenotypeManager.getCyanCount(this.currentTimestepBacteria);
+        return getCyanCountFn(this.phenotypeManager, this.currentTimestepBacteria);
     }
 
     /**
@@ -244,8 +248,32 @@ export class BacteriumSystem {
      * @returns {Array&lt;Array&lt;bigint>>} Array containing [magentaPositions, cyanPositions]
      */
     getPositions() {
-        return this.phenotypeManager.getPositions(this.currentTimestepBacteria);
+        return getPositionsFn(this.phenotypeManager, this.currentTimestepBacteria);
     }
+
+    /**
+     * Clears the phenotype memoization cache
+     */
+    clearPhenotypeMemo() {
+        clearPhenotypeMemoFn(this.phenotypeManager);
+    }
+
+    /**
+     * Sets the signal value used in phenotype determination
+     * @param {number} value - The new signal value (typically 0-1 range)
+     */
+    setSignalValue(value) {
+        setSignalValueFn(this.phenotypeManager, value);
+    }
+
+    /**
+     * Sets the alpha (temperature) value used in phenotype determination
+     * @param {number} value - The new alpha value (typically small, e.g., 0.0001)
+     */
+    setAlphaValue(value) {
+        setAlphaValueFn(this.phenotypeManager, value);
+    }
+
 
     /**
      * Gets the average similarity value among neighboring bacteria
@@ -255,28 +283,6 @@ export class BacteriumSystem {
         return isNaN(this.averageSimilarityWithNeighbors) ? 0 : this.averageSimilarityWithNeighbors;
     }
 
-    /**
-     * Clears the phenotype memoization cache
-     */
-    clearPhenotypeMemo() {
-        this.phenotypeManager.clearPhenotypeMemo();
-    }
-
-    /**
-     * Sets the signal value used in phenotype determination
-     * @param {number} value - The new signal value (typically 0-1 range)
-     */
-    setSignalValue(value) {
-        this.phenotypeManager.setSignalValue(value);
-    }
-
-    /**
-     * Sets the alpha (temperature) value used in phenotype determination
-     * @param {number} value - The new alpha value (typically small, e.g., 0.0001)
-     */
-    setAlphaValue(value) {
-        this.phenotypeManager.setAlphaValue(value);
-    }
 }
 
 /**
@@ -319,10 +325,11 @@ export function diffuse(
 /**
  * Creates a new bacterium system instance
  * @param {Object} config - Configuration object for the bacterium system
+ * @param {Object} [phenotypeManager] - Optional phenotype manager object (if not provided, will need to be set before using the system)
  * @returns {BacteriumSystem} A new bacterium system instance
  */
-export function createBacteriumSystem(config) {
-    return new BacteriumSystem(config);
+export function createBacteriumSystem(config, phenotypeManager) {
+    return new BacteriumSystem(config, phenotypeManager);
 }
 
 /**
@@ -354,14 +361,6 @@ export function updateBacteriumMetrics(bacteriumSystem, totalCount) {
     // Calculate similarity internally
     const averageSimilarity = bacteriumSystem.getAverageSimilarityWithNeighbors();
     const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
-    
-    // Update histories with all metrics
-    bacteriumSystem.historyManager.update(
-        totalCount, 
-        magentaCount,
-        cyanCount,
-        scaledSimilarity
-    );
     
     // Return the calculated values if needed elsewhere
     return {
@@ -433,35 +432,6 @@ export function setAlphaValue(bacteriumSystem, value) {
 export function getAverageSimilarityWithNeighbors(bacteriumSystem) {
     return bacteriumSystem.getAverageSimilarityWithNeighbors();
 }
-
-/**
- * Update history arrays with new data
- * @param {object} bacteriumSystem - The bacterium system instance
- * @param {number} totalCount - Total bacteria count
- * @param {number} magentaCount - Magenta bacteria count
- * @param {number} cyanCount - Cyan bacteria count
- * @param {number} averageSimilarity - Average similarity value
- */
-export function updateHistories(bacteriumSystem, totalCount, magentaCount, cyanCount, averageSimilarity) {
-    bacteriumSystem.historyManager.update(totalCount, magentaCount, cyanCount, averageSimilarity);
-}
-
-/**
- * Get all history arrays
- * @param {object} bacteriumSystem - The bacterium system instance
- * @returns {Object} Object containing all history arrays
- */
-export function getHistories(bacteriumSystem) {
-    return bacteriumSystem.historyManager.getHistories();
-}
-
-/**
- * Clear all history arrays
- * @param {object} bacteriumSystem - The bacterium system instance
- */
-export function clearHistories(bacteriumSystem) {
-    bacteriumSystem.historyManager.clear();
-}
 </code></pre>
         </article>
     </section>
@@ -472,13 +442,13 @@ export function clearHistories(bacteriumSystem) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumData.html">BacteriumData</a></li><li><a href="BacteriumPool.html">BacteriumPool</a></li><li><a href="BacteriumRenderer.html">BacteriumRenderer</a></li><li><a href="BacteriumSystem.html">BacteriumSystem</a></li><li><a href="HistoryManager.html">HistoryManager</a></li><li><a href="PhenotypeManager.html">PhenotypeManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONSTANTS">CONSTANTS</a></li><li><a href="global.html#GRID">GRID</a></li><li><a href="global.html#SIMULATION">SIMULATION</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addSafeEventListener">addSafeEventListener</a></li><li><a href="global.html#analyzeBacteriaLineage">analyzeBacteriaLineage</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animationState">animationState</a></li><li><a href="global.html#appConfig">appConfig</a></li><li><a href="global.html#calculateColor">calculateColor</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#clearHistories">clearHistories</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumPool">createBacteriumPool</a></li><li><a href="global.html#createBacteriumRenderer">createBacteriumRenderer</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createControls">createControls</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createRenderer">createRenderer</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#dataState">dataState</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAdjustedCoordinates">getAdjustedCoordinates</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getConfiguration">getConfiguration</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getHistories">getHistories</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#handleFileInput">handleFileInput</a></li><li><a href="global.html#initPlotRenderer">initPlotRenderer</a></li><li><a href="global.html#initializeArrays">initializeArrays</a></li><li><a href="global.html#processFileData">processFileData</a></li><li><a href="global.html#renderScene">renderScene</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetAnimationState">resetAnimationState</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#resetState">resetState</a></li><li><a href="global.html#sceneState">sceneState</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#setBacteriaDataCallback">setBacteriaDataCallback</a></li><li><a href="global.html#setBacteriumTransform">setBacteriumTransform</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#setupNewScene">setupNewScene</a></li><li><a href="global.html#setupScene">setupScene</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#thomasAlgorithm">thomasAlgorithm</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateBacteriumColor">updateBacteriumColor</a></li><li><a href="global.html#updateBacteriumMetrics">updateBacteriumMetrics</a></li><li><a href="global.html#updateHistories">updateHistories</a></li><li><a href="global.html#updateOverlay">updateOverlay</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li><li><a href="global.html#updateSurfaceMesh">updateSurfaceMesh</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BacteriumData.html">BacteriumData</a></li><li><a href="BacteriumPool.html">BacteriumPool</a></li><li><a href="BacteriumRenderer.html">BacteriumRenderer</a></li><li><a href="BacteriumSystem.html">BacteriumSystem</a></li><li><a href="HistoryManager.html">HistoryManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONSTANTS">CONSTANTS</a></li><li><a href="global.html#GRID">GRID</a></li><li><a href="global.html#SIMULATION">SIMULATION</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addSafeEventListener">addSafeEventListener</a></li><li><a href="global.html#analyzeBacteriaLineage">analyzeBacteriaLineage</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#animationState">animationState</a></li><li><a href="global.html#appConfig">appConfig</a></li><li><a href="global.html#calculateColor">calculateColor</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#cleanupResources">cleanupResources</a></li><li><a href="global.html#clearPhenotypeMemo">clearPhenotypeMemo</a></li><li><a href="global.html#createBacteriumPool">createBacteriumPool</a></li><li><a href="global.html#createBacteriumRenderer">createBacteriumRenderer</a></li><li><a href="global.html#createBacteriumSystem">createBacteriumSystem</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createControls">createControls</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createRenderer">createRenderer</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#dataState">dataState</a></li><li><a href="global.html#determinePhenotypeAndSimilarity">determinePhenotypeAndSimilarity</a></li><li><a href="global.html#determineTransitionPhenotype">determineTransitionPhenotype</a></li><li><a href="global.html#diffuse">diffuse</a></li><li><a href="global.html#getAdjustedCoordinates">getAdjustedCoordinates</a></li><li><a href="global.html#getAverageSimilarityWithNeighbors">getAverageSimilarityWithNeighbors</a></li><li><a href="global.html#getConfiguration">getConfiguration</a></li><li><a href="global.html#getCyanCount">getCyanCount</a></li><li><a href="global.html#getMagentaCount">getMagentaCount</a></li><li><a href="global.html#getPhenotypeCount">getPhenotypeCount</a></li><li><a href="global.html#getPositions">getPositions</a></li><li><a href="global.html#handleFileInput">handleFileInput</a></li><li><a href="global.html#inheritancePhenotype">inheritancePhenotype</a></li><li><a href="global.html#initPlotRenderer">initPlotRenderer</a></li><li><a href="global.html#initializeArrays">initializeArrays</a></li><li><a href="global.html#processFileData">processFileData</a></li><li><a href="global.html#resetAllData">resetAllData</a></li><li><a href="global.html#resetAnimationState">resetAnimationState</a></li><li><a href="global.html#resetArrays">resetArrays</a></li><li><a href="global.html#resetState">resetState</a></li><li><a href="global.html#sceneState">sceneState</a></li><li><a href="global.html#setAlphaValue">setAlphaValue</a></li><li><a href="global.html#setBacteriaData">setBacteriaData</a></li><li><a href="global.html#setBacteriaDataCallback">setBacteriaDataCallback</a></li><li><a href="global.html#setBacteriumTransform">setBacteriumTransform</a></li><li><a href="global.html#setSignalValue">setSignalValue</a></li><li><a href="global.html#setupNewScene">setupNewScene</a></li><li><a href="global.html#setupScene">setupScene</a></li><li><a href="global.html#simplifiedInheritancePhenotype">simplifiedInheritancePhenotype</a></li><li><a href="global.html#simulationActions">simulationActions</a></li><li><a href="global.html#stateActions">stateActions</a></li><li><a href="global.html#thomasAlgorithm">thomasAlgorithm</a></li><li><a href="global.html#updateBacteria">updateBacteria</a></li><li><a href="global.html#updateBacteriaPositions">updateBacteriaPositions</a></li><li><a href="global.html#updateBacteriumColor">updateBacteriumColor</a></li><li><a href="global.html#updateBacteriumMetrics">updateBacteriumMetrics</a></li><li><a href="global.html#updateOverlay">updateOverlay</a></li><li><a href="global.html#updateScene">updateScene</a></li><li><a href="global.html#updateSourcesAndSinks">updateSourcesAndSinks</a></li><li><a href="global.html#updateSurfaceMesh">updateSurfaceMesh</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 14:31:15 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Apr 23 2025 17:17:55 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
