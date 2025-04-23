@@ -50,6 +50,9 @@ export const dataState = {
     /** @type {number} */ doublingTime: 45, // Assumed doubling time for bacteria in minutes
 };
 
+/** @type {object | null} phenotypeState - Manages phenotype determination and related state. */
+export let phenotypeState = null;
+
 // --- State Initialization Functions ---
 
 /**
@@ -185,5 +188,31 @@ export class HistoryManager {
         this.magentaBacteriaCountHistory = [];
         this.cyanBacteriaCountHistory = [];
         this.averageSimilarityHistory = [];
+    }
+}
+
+/**
+ * Create initial phenotype state object
+ * @param {Object} config - Configuration object containing BACTERIUM settings
+ * @param {Object} phenotypes - Phenotype constants
+ * @returns {Object} The initialized phenotype state
+ */
+export function createPhenotypeState(config, phenotypes) {
+    phenotypeState = {
+        config,
+        phenotypes,
+        phenotypeMemo: new Map(),
+        signal: config.BACTERIUM.SIGNAL.DEFAULT / 100,
+        alpha: config.BACTERIUM.ALPHA.DEFAULT
+    };
+    return phenotypeState;
+}
+
+/**
+ * Reset phenotype state
+ */
+export function resetPhenotypeState() {
+    if (phenotypeState) {
+        phenotypeState.phenotypeMemo.clear();
     }
 }

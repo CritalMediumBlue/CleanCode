@@ -9,8 +9,19 @@
 import { quadtree } from 'd3-quadtree';
 
 import { 
-    PhenotypeManager
+    setSignalValue as setSignalValueFn,
+    setAlphaValue as setAlphaValueFn,
+    determinePhenotypeAndSimilarity,
+    getMagentaCount as getMagentaCountFn,
+    getCyanCount as getCyanCountFn,
+    getPositions as getPositionsFn,
+    clearPhenotypeMemo as clearPhenotypeMemoFn
 } from './bacteriumSimulation.js';
+
+import { 
+    phenotypeState,
+    createPhenotypeState
+} from '../state/stateManager.js';
 
 import { BacteriumData } from './bacteriumData.js';
 import {ADI} from './diffusion.js';
@@ -34,7 +45,7 @@ export class BacteriumSystem {
         this.phenotypes = config.PHENOTYPES; // Extract phenotypes from config
         this.quadtree = null;
         this.currentTimestepBacteria = new Set();
-        this.phenotypeManager = new PhenotypeManager(config, this.phenotypes);
+        this.phenotypeManager = createPhenotypeState(config, this.phenotypes);
         this.averageSimilarityWithNeighbors = 0;
     }
 
@@ -44,7 +55,7 @@ export class BacteriumSystem {
      */
     dispose() {
         // Reset all state
-        this.phenotypeManager.clearPhenotypeMemo();
+        clearPhenotypeMemoFn(this.phenotypeManager);
         this.quadtree = null;
         this.currentTimestepBacteria.clear();
         this.averageSimilarityWithNeighbors = 0;
@@ -174,8 +185,8 @@ export class BacteriumSystem {
         const neighbors = this.countNeighbors(x, y);
         
         // Determine phenotype and calculate similarity
-        const phenotypeInfo = this.phenotypeManager.determinePhenotypeAndSimilarity(
-            ID, neighbors, parent, localConcentration
+        const phenotypeInfo = determinePhenotypeAndSimilarity(
+            this.phenotypeManager, ID, neighbors, parent, localConcentration
         );
         
         // Return data object for rendering
@@ -197,7 +208,7 @@ export class BacteriumSystem {
      * @returns {number} Count of bacteria with magenta phenotype
      */
     getMagentaCount() {
-        return this.phenotypeManager.getMagentaCount(this.currentTimestepBacteria);
+        return getMagentaCountFn(this.phenotypeManager, this.currentTimestepBacteria);
     }
 
     /**
@@ -205,7 +216,7 @@ export class BacteriumSystem {
      * @returns {number} Count of bacteria with cyan phenotype
      */
     getCyanCount() {
-        return this.phenotypeManager.getCyanCount(this.currentTimestepBacteria);
+        return getCyanCountFn(this.phenotypeManager, this.currentTimestepBacteria);
     }
 
     /**
@@ -213,8 +224,32 @@ export class BacteriumSystem {
      * @returns {Array<Array<bigint>>} Array containing [magentaPositions, cyanPositions]
      */
     getPositions() {
-        return this.phenotypeManager.getPositions(this.currentTimestepBacteria);
+        return getPositionsFn(this.phenotypeManager, this.currentTimestepBacteria);
     }
+
+    /**
+     * Clears the phenotype memoization cache
+     */
+    clearPhenotypeMemo() {
+        clearPhenotypeMemoFn(this.phenotypeManager);
+    }
+
+    /**
+     * Sets the signal value used in phenotype determination
+     * @param {number} value - The new signal value (typically 0-1 range)
+     */
+    setSignalValue(value) {
+        setSignalValueFn(this.phenotypeManager, value);
+    }
+
+    /**
+     * Sets the alpha (temperature) value used in phenotype determination
+     * @param {number} value - The new alpha value (typically small, e.g., 0.0001)
+     */
+    setAlphaValue(value) {
+        setAlphaValueFn(this.phenotypeManager, value);
+    }
+
 
     /**
      * Gets the average similarity value among neighboring bacteria
@@ -224,28 +259,6 @@ export class BacteriumSystem {
         return isNaN(this.averageSimilarityWithNeighbors) ? 0 : this.averageSimilarityWithNeighbors;
     }
 
-    /**
-     * Clears the phenotype memoization cache
-     */
-    clearPhenotypeMemo() {
-        this.phenotypeManager.clearPhenotypeMemo();
-    }
-
-    /**
-     * Sets the signal value used in phenotype determination
-     * @param {number} value - The new signal value (typically 0-1 range)
-     */
-    setSignalValue(value) {
-        this.phenotypeManager.setSignalValue(value);
-    }
-
-    /**
-     * Sets the alpha (temperature) value used in phenotype determination
-     * @param {number} value - The new alpha value (typically small, e.g., 0.0001)
-     */
-    setAlphaValue(value) {
-        this.phenotypeManager.setAlphaValue(value);
-    }
 }
 
 /**
