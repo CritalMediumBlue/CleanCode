@@ -13,11 +13,12 @@ import {
     updateBacteria,
     getPositions,
     clearPhenotypeMemo,
-    getHistories,
     diffuse,
     setSignalValue,
     setAlphaValue,
-    updateBacteriumMetrics
+    getMagentaCount,
+    getCyanCount,
+    getAverageSimilarityWithNeighbors
 } from './simulation/simulationManager.js';
 // Remove direct import of setBacteriaData from dataProcessor.js
 import { addEventListeners } from './GUI/guiManager.js';
@@ -30,7 +31,8 @@ import {
     initializeArrays,
     resetAnimationState,
     getAdjustedCoordinates,
-    calculateColor
+    calculateColor,
+    HistoryManager
 } from './state/stateManager.js';
 
 /**
@@ -111,6 +113,9 @@ const resetAllData = () => {
     const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig);
     Object.assign(sceneState, newSceneState);
     
+    // Initialize history manager
+    sceneState.historyManager = new HistoryManager();
+    
     // Initialize arrays via stateManager
     initializeArrays();
     
@@ -143,6 +148,12 @@ const cleanupResources = () => {
         sceneState.bacteriumRenderer.dispose();
         sceneState.bacteriumRenderer = null;
         console.log("Bacterium renderer disposed.");
+    }
+
+    // Clear historyManager if it exists
+    if (sceneState.historyManager) {
+        sceneState.historyManager.clear();
+        console.log("History manager cleared.");
     }
 
     // Dispose bacterium system if it exists
@@ -221,8 +232,8 @@ const updateScene = () => {
     // 3. Update diffusion sources and sinks based on bacteria locations/types
     updateSourcesAndSinks(currentBacteria);
 
-    // 4. Update the plot with the latest historical data
-    updatePlot(...Object.values(getHistories(sceneState.bacteriumSystem)));
+    // 4. Update the plot with the latest historical data from our local history manager
+    updatePlot(...Object.values(sceneState.historyManager.getHistories()));
 
     // 5. Run the diffusion simulation step (ADI method)
     /**
@@ -290,10 +301,18 @@ const updateBacteriaPositions = (currentBacteria) => {
         sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
     }
 
-    // Update metrics and history data using consolidated function
-    updateBacteriumMetrics(
-        sceneState.bacteriumSystem,
-        currentBacteria.length
+    // Get metric values from bacterium system
+    const magentaCount = getMagentaCount(sceneState.bacteriumSystem);
+    const cyanCount = getCyanCount(sceneState.bacteriumSystem);
+    const averageSimilarity = getAverageSimilarityWithNeighbors(sceneState.bacteriumSystem);
+    const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
+    
+    // Update our local history manager
+    sceneState.historyManager.update(
+        currentBacteria.length,
+        magentaCount,
+        cyanCount,
+        scaledSimilarity
     );
 };
 

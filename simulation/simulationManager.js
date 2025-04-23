@@ -9,8 +9,7 @@
 import { quadtree } from 'd3-quadtree';
 
 import { 
-    PhenotypeManager, 
-    HistoryManager
+    PhenotypeManager
 } from './bacteriumSimulation.js';
 
 import { BacteriumData } from './bacteriumData.js';
@@ -37,7 +36,6 @@ export class BacteriumSystem {
         this.currentTimestepBacteria = new Set();
         this.phenotypeManager = new PhenotypeManager(config, this.phenotypes);
         this.averageSimilarityWithNeighbors = 0;
-        this.historyManager = new HistoryManager();
     }
 
     /**
@@ -50,7 +48,6 @@ export class BacteriumSystem {
         this.quadtree = null;
         this.currentTimestepBacteria.clear();
         this.averageSimilarityWithNeighbors = 0;
-        this.historyManager.clear();
     }
 
     /**
@@ -327,14 +324,6 @@ export function updateBacteriumMetrics(bacteriumSystem, totalCount) {
     const averageSimilarity = bacteriumSystem.getAverageSimilarityWithNeighbors();
     const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
     
-    // Update histories with all metrics
-    bacteriumSystem.historyManager.update(
-        totalCount, 
-        magentaCount,
-        cyanCount,
-        scaledSimilarity
-    );
-    
     // Return the calculated values if needed elsewhere
     return {
         magentaCount,
@@ -404,33 +393,4 @@ export function setAlphaValue(bacteriumSystem, value) {
  */
 export function getAverageSimilarityWithNeighbors(bacteriumSystem) {
     return bacteriumSystem.getAverageSimilarityWithNeighbors();
-}
-
-/**
- * Update history arrays with new data
- * @param {object} bacteriumSystem - The bacterium system instance
- * @param {number} totalCount - Total bacteria count
- * @param {number} magentaCount - Magenta bacteria count
- * @param {number} cyanCount - Cyan bacteria count
- * @param {number} averageSimilarity - Average similarity value
- */
-export function updateHistories(bacteriumSystem, totalCount, magentaCount, cyanCount, averageSimilarity) {
-    bacteriumSystem.historyManager.update(totalCount, magentaCount, cyanCount, averageSimilarity);
-}
-
-/**
- * Get all history arrays
- * @param {object} bacteriumSystem - The bacterium system instance
- * @returns {Object} Object containing all history arrays
- */
-export function getHistories(bacteriumSystem) {
-    return bacteriumSystem.historyManager.getHistories();
-}
-
-/**
- * Clear all history arrays
- * @param {object} bacteriumSystem - The bacterium system instance
- */
-export function clearHistories(bacteriumSystem) {
-    bacteriumSystem.historyManager.clear();
 }

@@ -1,4 +1,3 @@
-
 // --- Constants ---
 /** @const {object} GRID - Defines the dimensions of the simulation grid. */
 export const GRID = { WIDTH: 100, HEIGHT: 60 };
@@ -137,3 +136,54 @@ export const calculateColor = (concentration) => {
         b: isNaN(blue) ? 0 : blue
     };
 };
+
+/**
+ * Manages history tracking for bacteria simulation
+ * @class
+ * @classdesc Tracks and stores historical data for the bacteria simulation
+ */
+export class HistoryManager {
+    constructor() {
+        this.totalBacteriaCountHistory = [];
+        this.magentaBacteriaCountHistory = [];
+        this.cyanBacteriaCountHistory = [];
+        this.averageSimilarityHistory = [];
+    }
+
+    /**
+     * Update history arrays with new data
+     * @param {number} totalCount - Total bacteria count
+     * @param {number} magentaCount - Magenta bacteria count
+     * @param {number} cyanCount - Cyan bacteria count
+     * @param {number} averageSimilarity - Average similarity value
+     */
+    update(totalCount, magentaCount, cyanCount, averageSimilarity) {
+        this.totalBacteriaCountHistory.push(totalCount);
+        this.magentaBacteriaCountHistory.push(magentaCount);
+        this.cyanBacteriaCountHistory.push(cyanCount);
+        this.averageSimilarityHistory.push(averageSimilarity);
+    }
+
+    /**
+     * Get all history arrays
+     * @returns {Object} Object containing all history arrays
+     */
+    getHistories() {
+        return {
+            totalBacteriaCountHistory: this.totalBacteriaCountHistory,
+            magentaBacteriaCountHistory: this.magentaBacteriaCountHistory,
+            cyanBacteriaCountHistory: this.cyanBacteriaCountHistory,
+            averageSimilarityHistory: this.averageSimilarityHistory
+        };
+    }
+
+    /**
+     * Clear all history arrays
+     */
+    clear() {
+        this.totalBacteriaCountHistory = [];
+        this.magentaBacteriaCountHistory = [];
+        this.cyanBacteriaCountHistory = [];
+        this.averageSimilarityHistory = [];
+    }
+}
