@@ -32,7 +32,8 @@ import {
     resetAnimationState,
     getAdjustedCoordinates,
     calculateColor,
-    HistoryManager
+    HistoryManager,
+    createPhenotypeState
 } from './state/stateManager.js';
 
 /**
@@ -106,8 +107,11 @@ const resetAllData = () => {
     // Reset state via stateManager
     resetAnimationState();
     
-    // Create a function that will create a bacterium system with injected config
-    const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
+    // Create phenotype state first - decouples simulationManager from stateManager
+    const phenotypeState = createPhenotypeState(appConfig, appConfig.PHENOTYPES);
+    
+    // Create a function that creates a bacterium system with injected config and phenotype state
+    const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig, phenotypeState);
     
     // Set up new scene and create the bacterium system and renderer, passing injected config
     const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig);

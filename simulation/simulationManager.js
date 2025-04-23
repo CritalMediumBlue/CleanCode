@@ -18,11 +18,6 @@ import {
     clearPhenotypeMemo as clearPhenotypeMemoFn
 } from './bacteriumSimulation.js';
 
-import { 
-    phenotypeState,
-    createPhenotypeState
-} from '../state/stateManager.js';
-
 import { BacteriumData } from './bacteriumData.js';
 import {ADI} from './diffusion.js';
 
@@ -39,13 +34,14 @@ export class BacteriumSystem {
      * @param {Object} config.PHENOTYPES - Phenotype definitions (MAGENTA, CYAN)
      * @param {Object} config.BACTERIUM - Bacterium-related configuration parameters
      * @param {number} config.BACTERIUM.NEIGHBOR_RADIUS - Radius for neighbor detection
+     * @param {Object} phenotypeManager - Pre-created phenotype manager object with state information
      */
-    constructor(config) {
+    constructor(config, phenotypeManager) {
         this.config = config;
         this.phenotypes = config.PHENOTYPES; // Extract phenotypes from config
         this.quadtree = null;
         this.currentTimestepBacteria = new Set();
-        this.phenotypeManager = createPhenotypeState(config, this.phenotypes);
+        this.phenotypeManager = phenotypeManager;
         this.averageSimilarityWithNeighbors = 0;
     }
 
@@ -301,10 +297,11 @@ export function diffuse(
 /**
  * Creates a new bacterium system instance
  * @param {Object} config - Configuration object for the bacterium system
+ * @param {Object} [phenotypeManager] - Optional phenotype manager object (if not provided, will need to be set before using the system)
  * @returns {BacteriumSystem} A new bacterium system instance
  */
-export function createBacteriumSystem(config) {
-    return new BacteriumSystem(config);
+export function createBacteriumSystem(config, phenotypeManager) {
+    return new BacteriumSystem(config, phenotypeManager);
 }
 
 /**
