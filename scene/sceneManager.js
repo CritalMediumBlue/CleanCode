@@ -8,7 +8,7 @@ import { BacteriumRenderer } from './sceneComponents/bacteria.js';
 const GRID = { WIDTH: 100, HEIGHT: 60 };
 
 let plotRendererInstance = null;
-
+ 
 /**
  * Sets up the scene, camera, renderer, and controls.
  * @param {Object} config - Configuration object

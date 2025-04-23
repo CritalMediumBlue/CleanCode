@@ -1,4 +1,7 @@
-import { initPlotRenderer, renderPlot, updatePlot, setupNewScene, updateOverlay, updateSurfaceMesh } from './scene/sceneManager.js';
+import { initPlotRenderer, renderPlot,
+     updatePlot, setupNewScene, 
+     updateOverlay, updateSurfaceMesh 
+    } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
     updateBacteria,
@@ -343,7 +346,13 @@ const animate = () => {
 // Set up initial event listeners when the script loads
 // Pass required functions as parameters for proper GUI-Simulation integration
 // Get configuration object via dependency injection
-appConfig = addEventListeners(updateScene, animate, resetAllData, setBacteriaData);
+appConfig = addEventListeners(
+    updateScene, 
+    animate, 
+    resetAllData, 
+    setBacteriaData,
+    renderPlot  // Inject renderPlot function from sceneManager
+);
 
 // Note: The simulation doesn't start automatically.
 // It waits for data to be loaded via the file input.

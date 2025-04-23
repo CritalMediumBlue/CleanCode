@@ -11,7 +11,7 @@ import {
     dataState, 
 } from '../state/stateManager.js';
 import { setSignalValue, setAlphaValue } from '../simulation/simulationManager.js';
-import { renderPlot } from '../scene/sceneManager.js';
+// Remove direct import of renderPlot from sceneManager.js
 
 /**
  * Safely adds an event listener to a DOM element identified by its ID.
@@ -78,9 +78,10 @@ const setBacteriaData = (data, processedData) => {
  * @param {Function} animate - Function to start the animation loop
  * @param {Function} resetAllData - Function to reset all data 
  * @param {Function} externalSetBacteriaData - Function to set the bacteria data
+ * @param {Function} renderPlot - Function to render the plot from sceneManager
  * @returns {Object} The configuration object for dependency injection
  */
-const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData) => {
+const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData, renderPlot) => {
     console.log("Adding event listeners...");
     
     // Store the callback for setting bacteria data
