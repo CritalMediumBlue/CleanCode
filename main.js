@@ -3,23 +3,21 @@
  * Manages the core simulation loop, scene updates, and integrates components.
  */
 
-import { initPlotRenderer, renderPlot,
+import { initPlotRenderer,
      updatePlot, setupNewScene, 
-     updateOverlay, updateSurfaceMesh 
+     updateOverlay, updateSurfaceMesh,
+     renderScene
     } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
     updateBacteria,
-    getMagentaCount,
-    getCyanCount,
     getPositions,
     clearPhenotypeMemo,
-    getAverageSimilarityWithNeighbors,
-    updateHistories,
     getHistories,
     diffuse,
     setSignalValue,
-    setAlphaValue
+    setAlphaValue,
+    updateBacteriumMetrics
 } from './simulation/simulationManager.js';
 // Remove direct import of setBacteriaData from dataProcessor.js
 import { addEventListeners } from './GUI/guiManager.js';
@@ -69,9 +67,7 @@ const stateActions = {
         }
     },
     renderScene: () => {
-        if (sceneState.renderer && sceneState.scene && sceneState.camera) {
-            sceneState.renderer.render(sceneState.scene, sceneState.camera);
-        }
+        renderScene(sceneState);
     }
 };
 
@@ -215,20 +211,9 @@ const setBacteriaData = (data, processedData) => {
  * Handles simulation loop reset.
  */
 const updateScene = () => {
-    // Ensure bacteria data is loaded and scene is ready
-    if (!dataState.bacteriaData || dataState.bacteriaData.size === 0 || !sceneState.surfaceMesh) {
-        // console.warn("Attempted to update scene before data/scene is missing.");
-        animationState.play = false; // Stop playback if data/scene is missing
-        return;
-    }
-
+  
     // 1. Get bacteria data for the current time step
     const currentBacteria = dataState.bacteriaData.get(animationState.currentTimeStep);
-    if (!currentBacteria) {
-        console.warn(`No bacteria data found for time step ${animationState.currentTimeStep}. Pausing.`);
-        animationState.play = false;
-        return;
-    }
 
     // 2. Update bacteria visualization (positions, colors, etc.)
     updateBacteriaPositions(currentBacteria);
@@ -305,18 +290,10 @@ const updateBacteriaPositions = (currentBacteria) => {
         sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
     }
 
-    // Calculate average similarity among neighbors (for coloring/analysis)
-    const averageSimilarity = getAverageSimilarityWithNeighbors(sceneState.bacteriumSystem);
-    // Scale similarity for plotting (transforms from 0-1 range to centered range for visualization)
-    const scaledSimilarity = (averageSimilarity - 0.5) * 2800; 
-
-    // Update historical data arrays for plotting trends over time
-    updateHistories(
+    // Update metrics and history data using consolidated function
+    updateBacteriumMetrics(
         sceneState.bacteriumSystem,
-        currentBacteria.length,
-        getMagentaCount(sceneState.bacteriumSystem),
-        getCyanCount(sceneState.bacteriumSystem),
-        scaledSimilarity
+        currentBacteria.length
     );
 };
 
@@ -377,11 +354,7 @@ const animate = () => {
         updateScene(); // Advance the simulation by one step
     }
 
-    // Render the 3D scene and the 2D plot regardless of play state
-    if (sceneState.renderer && sceneState.scene && sceneState.camera) {
-        sceneState.renderer.render(sceneState.scene, sceneState.camera);
-    }
-    renderPlot(); // Render the plot
+    renderScene(sceneState); // Render the 3D scene
 };
 
 
@@ -395,7 +368,6 @@ appConfig = addEventListeners(
     animate, 
     resetAllData, 
     setBacteriaData,
-    renderPlot,  // Inject renderPlot function from sceneManager
     stateActions,  // Pass state actions for GUI to use
     simulationActions  // Pass simulation actions for GUI to use
 );

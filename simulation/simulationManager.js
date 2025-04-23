@@ -311,6 +311,40 @@ export function updateBacteria(bacteriumSystem, timeStep, bacteriumData, visible
 }
 
 /**
+ * Updates historical tracking data with current bacteria metrics and returns the metrics.
+ * Consolidates multiple related metrics into a single function call.
+ * 
+ * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
+ * @param {number} totalCount - Total bacteria count
+ * @returns {Object} Object containing the calculated metrics
+ */
+export function updateBacteriumMetrics(bacteriumSystem, totalCount) {
+    // Get counts internally rather than requiring them as parameters
+    const magentaCount = bacteriumSystem.getMagentaCount();
+    const cyanCount = bacteriumSystem.getCyanCount();
+    
+    // Calculate similarity internally
+    const averageSimilarity = bacteriumSystem.getAverageSimilarityWithNeighbors();
+    const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
+    
+    // Update histories with all metrics
+    bacteriumSystem.historyManager.update(
+        totalCount, 
+        magentaCount,
+        cyanCount,
+        scaledSimilarity
+    );
+    
+    // Return the calculated values if needed elsewhere
+    return {
+        magentaCount,
+        cyanCount,
+        averageSimilarity,
+        scaledSimilarity
+    };
+}
+
+/**
  * Gets the count of bacteria with magenta phenotype
  * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
  * @returns {number} Count of bacteria with magenta phenotype

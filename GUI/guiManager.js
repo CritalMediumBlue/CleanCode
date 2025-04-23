@@ -78,7 +78,7 @@ const setBacteriaData = (data, processedData) => {
  * @param {Object} simulationActions - Object containing functions for simulation operations
  * @returns {Object} The configuration object for dependency injection
  */
-const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData, renderPlot, stateActions, simulationActions) => {
+const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData, stateActions, simulationActions) => {
     console.log("Adding event listeners...");
     
     // Store the callback for setting bacteria data
@@ -94,7 +94,6 @@ const addEventListeners = (updateScene, animate, resetAllData, externalSetBacter
                 updateScene(); // Perform one update
                 // Manually render after single step
                 stateActions.renderScene();
-                renderPlot();
             }
         },
         { id: 'visible', event: 'click', handler: () => stateActions.toggleBacteriaVisibility() },

@@ -39,8 +39,7 @@ export function setupScene(config) {
  */
 export function setupNewScene(createBacteriumSystem, config) {
     console.log("Setting up new scene...");
-    const setup = setupScene(config);
-    const sceneState = setup; // Create local sceneState to be returned
+    const sceneState = setupScene(config);
 
     // Append renderer to document if not already done
     document.body.appendChild(sceneState.renderer.domElement);
@@ -90,9 +89,14 @@ export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarity
     plotRendererInstance.updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory);
 }
 
-export function renderPlot() {
+export function renderScene(sceneState) {
     plotRendererInstance.render();
+    if (sceneState.renderer && sceneState.scene && sceneState.camera) {
+        sceneState.renderer.render(sceneState.scene, sceneState.camera);
+    }
 }
+
+
 
 /**
  * Creates and returns a new THREE.Scene object.
