@@ -13,7 +13,9 @@ import {
     updateHistories,
     getHistories,
     clearHistories,
-    diffuse
+    diffuse,
+    setSignalValue,
+    setAlphaValue
 } from './simulation/simulationManager.js';
 // Remove direct import of setBacteriaData from dataProcessor.js
 import { addEventListeners } from './GUI/guiManager.js';
@@ -31,6 +33,44 @@ import {
 
 // Store the configuration object to be injected from guiManager
 let appConfig;
+
+// --- State Action Interfaces ---
+
+/**
+ * Interface for state-related actions to be used by guiManager
+ * This decouples guiManager.js from direct dependence on stateManager.js
+ */
+const stateActions = {
+    setPlayState: (isPlaying) => {
+        animationState.play = isPlaying;
+    },
+    toggleBacteriaVisibility: () => {
+        sceneState.visibleBacteria = !sceneState.visibleBacteria;
+    },
+    toggleMeshVisibility: () => {
+        if (sceneState.surfaceMesh) {
+            sceneState.surfaceMesh.visible = !sceneState.surfaceMesh.visible;
+        }
+    },
+    renderScene: () => {
+        if (sceneState.renderer && sceneState.scene && sceneState.camera) {
+            sceneState.renderer.render(sceneState.scene, sceneState.camera);
+        }
+    }
+};
+
+/**
+ * Interface for simulation-related actions to be used by guiManager
+ * This decouples guiManager.js from direct dependence on simulationManager.js
+ */
+const simulationActions = {
+    setSignalValue: (value) => {
+        setSignalValue(sceneState.bacteriumSystem, value);
+    },
+    setAlphaValue: (value) => {
+        setAlphaValue(sceneState.bacteriumSystem, value);
+    }
+};
 
 // --- Initialization and Reset Functions ---
 
@@ -351,7 +391,9 @@ appConfig = addEventListeners(
     animate, 
     resetAllData, 
     setBacteriaData,
-    renderPlot  // Inject renderPlot function from sceneManager
+    renderPlot,  // Inject renderPlot function from sceneManager
+    stateActions,  // Pass state actions for GUI to use
+    simulationActions  // Pass simulation actions for GUI to use
 );
 
 // Note: The simulation doesn't start automatically.

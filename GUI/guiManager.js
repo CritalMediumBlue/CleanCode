@@ -5,13 +5,9 @@
 
 import { CONFIG } from './config.js';
 import { handleFileInput as processFileInput, setBacteriaData as setProcessedBacteriaData } from './dataProcessor.js';
-import { 
-    sceneState, 
-    animationState, 
-    dataState, 
-} from '../state/stateManager.js';
-import { setSignalValue, setAlphaValue } from '../simulation/simulationManager.js';
-// Remove direct import of renderPlot from sceneManager.js
+// Removed direct imports from stateManager.js
+// Removed direct import from simulationManager.js
+// These will now be provided via callbacks from main.js
 
 /**
  * Safely adds an event listener to a DOM element identified by its ID.
@@ -65,8 +61,7 @@ const setBacteriaData = (data, processedData) => {
         setBacteriaDataCallback(data, processedData);
     } else {
         console.warn("setBacteriaDataCallback not registered");
-        // Fall back to direct processing if needed
-        setProcessedBacteriaData(dataState, animationState, data, processedData);
+        // No fallback to direct processing - this maintains proper decoupling
     }
 };
 
@@ -79,9 +74,11 @@ const setBacteriaData = (data, processedData) => {
  * @param {Function} resetAllData - Function to reset all data 
  * @param {Function} externalSetBacteriaData - Function to set the bacteria data
  * @param {Function} renderPlot - Function to render the plot from sceneManager
+ * @param {Object} stateActions - Object containing functions to manipulate state
+ * @param {Object} simulationActions - Object containing functions for simulation operations
  * @returns {Object} The configuration object for dependency injection
  */
-const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData, renderPlot) => {
+const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData, renderPlot, stateActions, simulationActions) => {
     console.log("Adding event listeners...");
     
     // Store the callback for setting bacteria data
@@ -89,21 +86,19 @@ const addEventListeners = (updateScene, animate, resetAllData, externalSetBacter
     
     // Simple toggle buttons with declarative configuration
     const toggleButtons = [
-        { id: 'playButton', event: 'click', handler: () => { animationState.play = true; } },
-        { id: 'pauseButton', event: 'click', handler: () => { animationState.play = false; } },
+        { id: 'playButton', event: 'click', handler: () => stateActions.setPlayState(true) },
+        { id: 'pauseButton', event: 'click', handler: () => stateActions.setPlayState(false) },
         {
             id: 'singleStepButton', event: 'click', handler: () => {
-                animationState.play = false;
+                stateActions.setPlayState(false);
                 updateScene(); // Perform one update
-                // Manually render after single step if not playing
-                if (sceneState.renderer && sceneState.scene && sceneState.camera) {
-                    sceneState.renderer.render(sceneState.scene, sceneState.camera);
-                }
+                // Manually render after single step
+                stateActions.renderScene();
                 renderPlot();
             }
         },
-        { id: 'visible', event: 'click', handler: () => { sceneState.visibleBacteria = !sceneState.visibleBacteria; } },
-        { id: 'visibleMesh', event: 'click', handler: () => { if (sceneState.surfaceMesh) sceneState.surfaceMesh.visible = !sceneState.surfaceMesh.visible; } },
+        { id: 'visible', event: 'click', handler: () => stateActions.toggleBacteriaVisibility() },
+        { id: 'visibleMesh', event: 'click', handler: () => stateActions.toggleMeshVisibility() },
 
         // Select/dropdown controls
         {
@@ -126,7 +121,7 @@ const addEventListeners = (updateScene, animate, resetAllData, externalSetBacter
                 const value = parseFloat(event.target.value);
                 const valueElement = document.getElementById('signalValue');
                 if (valueElement) valueElement.textContent = value.toFixed(2);
-                setSignalValue(sceneState.bacteriumSystem, value);
+                simulationActions.setSignalValue(value);
             }
         },
 
@@ -135,7 +130,7 @@ const addEventListeners = (updateScene, animate, resetAllData, externalSetBacter
                 const value = parseFloat(event.target.value);
                 const valueElement = document.getElementById('alphaValue');
                 if (valueElement) valueElement.textContent = value.toFixed(5);
-                setAlphaValue(sceneState.bacteriumSystem, value);
+                simulationActions.setAlphaValue(value);
             }
         },
 
