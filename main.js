@@ -27,7 +27,6 @@ import {
     animationState, 
     dataState, 
     GRID, 
-    SIMULATION,
     initializeArrays,
     resetAnimationState,
     getAdjustedCoordinates,
@@ -110,7 +109,8 @@ const resetAllData = () => {
     const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
     
     // Set up new scene and create the bacterium system and renderer, passing injected config
-    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig);
+    // Now passing GRID object from stateManager.js to setupNewScene
+    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig, GRID);
     Object.assign(sceneState, newSceneState);
     
     // Initialize history manager
@@ -122,7 +122,8 @@ const resetAllData = () => {
     // Initialize plot renderer with injected config
     initPlotRenderer(appConfig);
     
-    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor); // Initial update to set heights/colors
+    // Now pass the GRID object to updateSurfaceMesh
+    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, GRID); // Initial update to set heights/colors
 };
 
 
@@ -246,13 +247,14 @@ const updateScene = () => {
         GRID.WIDTH, GRID.HEIGHT,
         dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
         dataState.sources, dataState.sinks, // Input source/sink arrays
-        SIMULATION.DIFFUSION_RATE, // Diffusion coefficient
+        appConfig.GRID.DIFFUSION_RATE, // Diffusion coefficient
         1, // Time step duration in minutes (dt)
         1 // Number of substeps for ADI
     ); 
 
     // 6. Update the surface mesh visualization based on the new concentration data
-    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor);
+    // Now passing GRID object to updateSurfaceMesh
+    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, GRID);
 
     // 7. Update UI overlay with current statistics
     updateOverlay(

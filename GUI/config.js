@@ -1,3 +1,4 @@
+
 export const CONFIG = {
     SCENE: {
         FOG_COLOR: 0x0f0000,
@@ -54,8 +55,11 @@ export const CONFIG = {
     PHENOTYPES: {
         MAGENTA: 'MAGENTA',
         CYAN: 'CYAN'
-    }
+    },
+    GRID: {
+        WIDTH: 100,
+        HEIGHT: 100,
+        DIFFUSION_RATE: 0.01,
+    },
 };
 
-// Export PHENOTYPES separately for convenience
-export const PHENOTYPES = CONFIG.PHENOTYPES;

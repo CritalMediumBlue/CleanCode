@@ -4,9 +4,7 @@ import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { BacteriumRenderer } from './sceneComponents/bacteria.js';
 
-// Added grid constants that were previously in main.js
-const GRID = { WIDTH: 100, HEIGHT: 60 };
-
+// Removed local GRID constant as it will now be passed to functions
 let plotRendererInstance = null;
  
 /**
@@ -35,9 +33,10 @@ export function setupScene(config) {
  * Sets up a new scene with custom surface mesh for concentration visualization.
  * @param {Function} createBacteriumSystem - Function to create bacterium system
  * @param {Object} config - Configuration object
+ * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties
  * @returns {Object} An object containing the scene, camera, renderer, bacteriumSystem, and bacteriumRenderer
  */
-export function setupNewScene(createBacteriumSystem, config) {
+export function setupNewScene(createBacteriumSystem, config, grid) {
     console.log("Setting up new scene...");
     const sceneState = setupScene(config);
 
@@ -51,7 +50,7 @@ export function setupNewScene(createBacteriumSystem, config) {
     sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene, config);
 
     // Create the surface mesh geometry specifically for concentration visualization
-    const geometry = new THREE.PlaneGeometry(GRID.WIDTH, GRID.HEIGHT, GRID.WIDTH - 1, GRID.HEIGHT - 1);
+    const geometry = new THREE.PlaneGeometry(grid.WIDTH, grid.HEIGHT, grid.WIDTH - 1, grid.HEIGHT - 1);
  
     // Initialize the color attribute buffer before creating the mesh
     // The size is num_vertices * 3 (r, g, b per vertex)
@@ -174,9 +173,10 @@ function createControls(camera, renderer, config) {
  * @param {THREE.Mesh} surfaceMesh - The mesh representing the concentration surface
  * @param {Float32Array} concentrationData - Array of concentration values
  * @param {Function} calculateColor - Function to calculate color based on concentration
+ * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties
  * @param {number} heightMultiplier - Optional multiplier for height values (default: 5)
  */
-export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor, heightMultiplier = 5) {
+export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor, grid, heightMultiplier = 5) {
     if (!surfaceMesh) {
         console.warn("updateSurfaceMesh called before surfaceMesh is initialized.");
         return;
@@ -187,9 +187,9 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor
     const colorsAttribute = surfaceMesh.geometry.attributes.color; // r, g, b for each vertex
 
     // Iterate through each point in the grid
-    for (let y = 0; y < GRID.HEIGHT; y++) {
-        for (let x = 0; x < GRID.WIDTH; x++) {
-            const idx = y * GRID.WIDTH + x; // Calculate 1D index
+    for (let y = 0; y < grid.HEIGHT; y++) {
+        for (let x = 0; x < grid.WIDTH; x++) {
+            const idx = y * grid.WIDTH + x; // Calculate 1D index
             const bufferIndex = 3 * idx; // Base index for position and color arrays
 
             // --- Update Height (Z-position) ---

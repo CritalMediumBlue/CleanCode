@@ -4,16 +4,7 @@ export const GRID = { WIDTH: 100, HEIGHT: 60 };
 /** @const {object} SIMULATION - Holds simulation-specific parameters. */
 export const SIMULATION = { DIFFUSION_RATE: 0.01 };
 
-/** @const {object} CONSTANTS - Holds constants for the simulation. */
-export const constants = {
-    DIFFUSION_RATE: 100,
-    deltaX: 1, // Grid spacing
-    deltaT: 0.002,
-    GRID: {
-        WIDTH: 100,
-        HEIGHT: 60
-    }
-};
+
 
 // --- State Objects ---
 
