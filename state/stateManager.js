@@ -89,8 +89,8 @@ export const cleanupResources = () => {
  * Creates empty Float32Arrays for concentration data, colors, sources, and sinks.
  * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties (optional, uses default GRID if not provided)
  */
-export const initializeArrays = (grid) => {
-    const gridSize = grid.WIDTH * grid.HEIGHT;
+export const initializeArrays = (appConfig) => {
+    const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
     console.log(`Initializing arrays for grid size: ${gridSize}`);
 
     // Initialize data arrays with grid dimensions

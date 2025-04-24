@@ -6,7 +6,7 @@
 import {
      setupNewScene, 
      renderScene,
-        updateScene,
+    updateScene,
     } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
