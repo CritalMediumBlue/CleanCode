@@ -173,7 +173,7 @@ export function determinePhenotypeAndSimilarity(state, ID, neighbors, parentID, 
  */
 export function getMagentaCount(state, currentTimestepBacteria) {
     return getPhenotypeCount(state, currentTimestepBacteria, state.phenotypes.MAGENTA);
-}
+}  //this seems wrong
 
 /**
  * Get count of bacteria with cyan phenotype
