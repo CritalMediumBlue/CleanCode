@@ -17,7 +17,7 @@ export function setupScene(config) {
     const camera = createCamera(config);
     const renderer = createRenderer();
     createControls(camera, renderer, config);
-    const surfaceMesh = createMesh(scene, THREE);
+    const surfaceMesh = createMesh(scene, THREE, config);
 
     // Handle window resize to match viewport dimensions
     window.addEventListener('resize', () => {
@@ -28,6 +28,8 @@ export function setupScene(config) {
 
     return { scene, camera, renderer, surfaceMesh };
 }
+
+
 
 /**
  * Sets up a new scene with custom surface mesh for concentration visualization.
@@ -71,17 +73,10 @@ export function setupNewScene(createBacteriumSystem, config, grid) {
     sceneState.scene.add(sceneState.surfaceMesh);
     
     console.log("Surface mesh created (wireframe) and added to scene with color attribute.");
-    
-    return sceneState;
-}
-
-/**
- * Initialize the plot renderer with configuration
- * @param {Object} config - Optional configuration object
- */
-export function initPlotRenderer(config = null) {
     plotRendererInstance = new PlotRenderer(config);
     plotRendererInstance.init(THREE);
+    
+    return sceneState;
 }
 
 export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
@@ -170,19 +165,47 @@ function createControls(camera, renderer, config) {
     
 }
 
+
+const calculateColor = (concentration) => {
+    // Normalize concentration value
+    const normalizedConcentration = concentration ; 
+
+    // Calculate the phase for the sine wave
+    const phase = normalizedConcentration * 2 * Math.PI;
+
+    // Calculate RGB components using sine waves with phase shifts, scaled to [0, 1]
+    const red = (Math.sin(phase) + 1) / 2;
+    const green = (Math.sin(phase - (2 * Math.PI / 3)) + 1) / 2;
+    const blue = (Math.sin(phase - (4 * Math.PI / 3)) + 1) / 2;
+
+    // Return RGB values, ensuring they are not NaN
+    return {
+        r: isNaN(red) ? 0 : red,
+        g: isNaN(green) ? 0 : green,
+        b: isNaN(blue) ? 0 : blue
+    };
+};
+
 /**
  * Updates the geometry (vertex heights) and color attributes of the surface mesh
  * based on the given concentration data.
  * 
  * @param {THREE.Mesh} surfaceMesh - The mesh representing the concentration surface
  * @param {Float32Array} concentrationData - Array of concentration values
- * @param {Function} calculateColor - Function to calculate color based on concentration
  * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties
  * @param {number} heightMultiplier - Optional multiplier for height values (default: 5)
  */
-export function updateSurfaceMesh(surfaceMesh, concentrationData, calculateColor, grid, heightMultiplier = 5) {
+export function updateSurfaceMesh(sceneState, dataState, grid, heightMultiplier = 10) {
+    const histories = Object.values(sceneState.historyManager.getHistories());
+
+
+
+    plotRendererInstance.updatePlot(...histories)
+
+    const surfaceMesh = sceneState.surfaceMesh;
+    const concentrationData = dataState.currentConcentrationData;
     if (!surfaceMesh) {
-        console.warn("updateSurfaceMesh called before surfaceMesh is initialized.");
+        console.warn(" called before surfaceMesh is initialized.");
         return;
     }
 

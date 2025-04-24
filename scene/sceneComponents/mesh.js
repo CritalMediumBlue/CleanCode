@@ -4,8 +4,9 @@
  * @param {THREE.Scene} scene - The scene to add the mesh to.
  * @returns {THREE.Mesh} The created surface mesh.
  */
-export function createMesh(scene,THREE) {
-    const WIDTH = 100, HEIGHT = 60;
+export function createMesh(scene,THREE, config) {
+    const WIDTH = config.GRID.WIDTH;
+    const HEIGHT = config.GRID.HEIGHT;
 
     const planeGeometry = new THREE.PlaneGeometry(WIDTH-1, HEIGHT-1, WIDTH -1, HEIGHT-1 ); // width, height, widthSegments, heightSegments
     

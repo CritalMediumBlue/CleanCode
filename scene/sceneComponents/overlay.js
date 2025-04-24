@@ -12,8 +12,12 @@
  * @param {number} fromStepToMinutes - Conversion factor from simulation step to minutes.
  * @param {Set<number> | null} allUniqueIDs - Set of all unique bacteria IDs across the simulation.
  */
-export function updateOverlay(bacteriaCount, currentTimeStep, numberOfTimeSteps, fromStepToMinutes, allUniqueIDs) {
+export function updateOverlay(bacteria,animationState, dataState) {
+    const allUniqueIDs = dataState.AllUniqueIDs; // Get all unique IDs from dataState
     const overlay = document.getElementById("text-overlay");
+    const currentTimeStep = animationState.currentTimeStep;
+    const numberOfTimeSteps = animationState.numberOfTimeSteps;
+    const fromStepToMinutes = animationState.fromStepToMinutes;
     if (!overlay) return; // Exit if overlay element not found
 
     // Calculate simulated time
@@ -25,7 +29,7 @@ export function updateOverlay(bacteriaCount, currentTimeStep, numberOfTimeSteps,
 
     // Format time string
     const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
+    const bacteriaCount = bacteria.length; // Get the number of bacteria in the current time step
     // Update overlay text content
     overlay.innerText = `Step: ${currentTimeStep} / ${numberOfTimeSteps}
 Time: ${timeString}

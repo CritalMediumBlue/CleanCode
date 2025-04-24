@@ -3,7 +3,7 @@
  * Manages the core simulation loop, scene updates, and integrates components.
  */
 
-import { initPlotRenderer,
+import {
      updatePlot, setupNewScene, 
      updateOverlay, updateSurfaceMesh,
      renderScene
@@ -12,7 +12,6 @@ import {
     createBacteriumSystem,
     diffuse,
 } from './simulation/simulationManager.js';
-// Remove direct import of setBacteriaData from dataProcessor.js
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     sceneState, 
@@ -20,7 +19,6 @@ import {
     dataState, 
     initializeArrays,
     getAdjustedCoordinates,
-    calculateColor,
     HistoryManager,
     cleanupResources, 
 } from './state/stateManager.js';
@@ -92,43 +90,17 @@ const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
     cleanupResources();
 
-    
-    // Create a function that creates a bacterium system with injected config only
     const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
     
-    // Set up new scene and create the bacterium system and renderer, passing injected config
-    // Now passing GRID object from appConfig instead of stateManager
     const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig, appConfig.GRID);
     Object.assign(sceneState, newSceneState);
     
-    // Initialize history manager
     sceneState.historyManager = new HistoryManager();
     
-    // Initialize arrays via stateManager, now passing GRID from appConfig
-    initializeArrays(appConfig.GRID);
-    
-    // Initialize plot renderer with injected config
-    initPlotRenderer(appConfig);
-    
-    // Now pass the GRID object from appConfig to updateSurfaceMesh
-    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, appConfig.GRID); // Initial update to set heights/colors
+    initializeArrays(appConfig.GRID);    
 };
 
-/**
- * Resets the core data arrays (concentration, colors, sources, sinks)
- * to their initial state (zero-filled Float32Arrays).
- */
-const resetArrays = () => {
-    const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
-    console.log(`Resetting arrays for grid size: ${gridSize}`);
 
-    // Initialize data arrays with grid dimensions
-    dataState.currentConcentrationData = new Float32Array(gridSize).fill(0);
-    dataState.nextConcentrationData = new Float32Array(gridSize).fill(0);
-    dataState.colors = new Float32Array(gridSize * 3).fill(0);
-    dataState.sources = new Float32Array(gridSize).fill(0);
-    dataState.sinks = new Float32Array(gridSize).fill(0);
-}
 
 /**
  * Callback function that sets bacteria data in the appropriate state objects.
@@ -186,36 +158,24 @@ const updateScene = () => {
         1 // Number of substeps for ADI
     ); 
 
-
-    // 4. Update the plot with the latest historical data from our local history manager
-    updatePlot(...Object.values(sceneState.historyManager.getHistories()));
-
-    // 6. Update the surface mesh visualization based on the new concentration data
-    // Now passing GRID object from appConfig to updateSurfaceMesh
-    updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, appConfig.GRID);
-
+  
+    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
     updateOverlay(
-        currentBacteria.length, 
-        animationState.currentTimeStep, 
-        animationState.numberOfTimeSteps, 
-        animationState.fromStepToMinutes, 
-        dataState.AllUniqueIDs
+        currentBacteria, 
+        animationState,
+        dataState
     );
 
+
+    
     // 8. Increment the time step
     animationState.currentTimeStep++;
 
     // 9. Check if the simulation reached the end
     if (animationState.currentTimeStep > animationState.numberOfTimeSteps) {
         console.log('Simulation finished.');
-        console.log('Total simulated time (hours):', (animationState.numberOfTimeSteps * animationState.fromStepToMinutes / 60).toFixed(2));
-
-        // Reset for potential replay or new data load
-        sceneState.bacteriumSystem.clearPhenotypeMemo();
-        resetArrays();
         animationState.currentTimeStep = 1;
         animationState.play = false;
-        
     }
 };
 

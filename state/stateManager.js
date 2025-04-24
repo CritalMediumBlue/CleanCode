@@ -134,30 +134,7 @@ export const getAdjustedCoordinates = (x, y, grid) => {
     return { x: adjustedX, y: adjustedY, idx };
 };
 
-/**
- * Calculates an RGB color based on a concentration value.
- * @param {number} concentration - The concentration value at a grid point.
- * @returns {{r: number, g: number, b: number}} An object containing RGB color components.
- */
-export const calculateColor = (concentration) => {
-    // Normalize concentration value
-    const normalizedConcentration = concentration / 10; 
 
-    // Calculate the phase for the sine wave
-    const phase = normalizedConcentration * 2 * Math.PI;
-
-    // Calculate RGB components using sine waves with phase shifts, scaled to [0, 1]
-    const red = (Math.sin(phase) + 1) / 2;
-    const green = (Math.sin(phase - (2 * Math.PI / 3)) + 1) / 2;
-    const blue = (Math.sin(phase - (4 * Math.PI / 3)) + 1) / 2;
-
-    // Return RGB values, ensuring they are not NaN
-    return {
-        r: isNaN(red) ? 0 : red,
-        g: isNaN(green) ? 0 : green,
-        b: isNaN(blue) ? 0 : blue
-    };
-};
 
 /**
  * Manages history tracking for bacteria simulation
