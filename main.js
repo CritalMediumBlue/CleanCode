@@ -92,7 +92,7 @@ const resetAllData = () => {
 
     const newSceneState = setupNewScene(createBacteriumSystem, appConfig);
     Object.assign(sceneState, newSceneState);
-    
+      
     sceneState.historyManager = new HistoryManager();
     
     initializeArrays(appConfig);    
