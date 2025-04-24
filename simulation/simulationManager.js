@@ -378,20 +378,3 @@ export function getPositions(bacteriumSystem) {
     return bacteriumSystem.getPositions();
 }
 
-/**
- * Clears the phenotype memoization cache
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- */
-export function clearPhenotypeMemo(bacteriumSystem) {
-    bacteriumSystem.clearPhenotypeMemo();
-}
-
-
-/**
- * Gets the average similarity value among neighboring bacteria
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @returns {number} The average similarity value (0-1 range)
- */
-export function getAverageSimilarityWithNeighbors(bacteriumSystem) {
-    return bacteriumSystem.getAverageSimilarityWithNeighbors();
-}

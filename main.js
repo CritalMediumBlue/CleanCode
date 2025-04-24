@@ -11,12 +11,9 @@ import { initPlotRenderer,
 import {
     createBacteriumSystem,
     updateBacteria,
-    getPositions,
-    clearPhenotypeMemo,
     diffuse,
     getMagentaCount,
     getCyanCount,
-    getAverageSimilarityWithNeighbors
 } from './simulation/simulationManager.js';
 // Remove direct import of setBacteriaData from dataProcessor.js
 import { addEventListeners } from './GUI/guiManager.js';
@@ -268,7 +265,7 @@ const updateScene = () => {
         console.log('Total simulated time (hours):', (animationState.numberOfTimeSteps * animationState.fromStepToMinutes / 60).toFixed(2));
 
         // Reset for potential replay or new data load
-        clearPhenotypeMemo(sceneState.bacteriumSystem);
+        sceneState.bacteriumSystem.clearPhenotypeMemo();
         resetArrays();
         animationState.currentTimeStep = 1;
         animationState.play = false;
@@ -291,7 +288,7 @@ const updateBacteriaPositions = (currentBacteria) => {
     // Get metric values from bacterium system
     const magentaCount = getMagentaCount(sceneState.bacteriumSystem);
     const cyanCount = getCyanCount(sceneState.bacteriumSystem);
-    const averageSimilarity = getAverageSimilarityWithNeighbors(sceneState.bacteriumSystem);
+    const averageSimilarity = sceneState.bacteriumSystem.getAverageSimilarityWithNeighbors()
     const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
     
     // Update our local history manager
@@ -312,7 +309,7 @@ const updateBacteriaPositions = (currentBacteria) => {
  */
 const updateSourcesAndSinks = (currentBacteria) => {
     // Get the IDs of currently active Magenta and Cyan bacteria
-    const [magentaIDsRaw, cyanIDsRaw] = getPositions(sceneState.bacteriumSystem); 
+    const [magentaIDsRaw, cyanIDsRaw] = sceneState.bacteriumSystem.getPositions();
     const MagentaIDs = new Set(magentaIDsRaw);
     const CyanIDs = new Set(cyanIDsRaw);
 
