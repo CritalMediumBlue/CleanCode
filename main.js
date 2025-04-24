@@ -14,8 +14,6 @@ import {
     getPositions,
     clearPhenotypeMemo,
     diffuse,
-    setSignalValue,
-    setAlphaValue,
     getMagentaCount,
     getCyanCount,
     getAverageSimilarityWithNeighbors
@@ -85,10 +83,10 @@ const stateActions = {
  */
 const simulationActions = {
     setSignalValue: (value) => {
-        setSignalValue(sceneState.bacteriumSystem, value);
+        sceneState.bacteriumSystem.setSignalValue(value);
     },
     setAlphaValue: (value) => {
-        setAlphaValue(sceneState.bacteriumSystem, value);
+        sceneState.bacteriumSystem.setAlphaValue(value);
     }
 };
 

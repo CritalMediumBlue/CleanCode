@@ -386,23 +386,6 @@ export function clearPhenotypeMemo(bacteriumSystem) {
     bacteriumSystem.clearPhenotypeMemo();
 }
 
-/**
- * Sets the signal value used in phenotype determination
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @param {number} value - The new signal value (typically 0-1 range)
- */
-export function setSignalValue(bacteriumSystem, value) {
-    bacteriumSystem.setSignalValue(value);
-}
-
-/**
- * Sets the alpha (temperature) value used in phenotype determination
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @param {number} value - The new alpha value (typically small, e.g., 0.0001)
- */
-export function setAlphaValue(bacteriumSystem, value) {
-    bacteriumSystem.setAlphaValue(value);
-}
 
 /**
  * Gets the average similarity value among neighboring bacteria
