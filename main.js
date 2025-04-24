@@ -19,10 +19,10 @@ import {
     animationState, 
     dataState, 
     initializeArrays,
-    resetAnimationState,
     getAdjustedCoordinates,
     calculateColor,
     HistoryManager,
+    cleanupResources, 
 } from './state/stateManager.js';
 
 /**
@@ -83,7 +83,6 @@ const simulationActions = {
     }
 };
 
-// --- Initialization and Reset Functions ---
 
 /**
  * Resets all simulation data, cleans up resources, and initializes a new simulation environment.
@@ -92,9 +91,7 @@ const simulationActions = {
 const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
     cleanupResources();
-    
-    // Reset state via stateManager
-    resetAnimationState();
+
     
     // Create a function that creates a bacterium system with injected config only
     const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
@@ -115,54 +112,6 @@ const resetAllData = () => {
     
     // Now pass the GRID object from appConfig to updateSurfaceMesh
     updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, appConfig.GRID); // Initial update to set heights/colors
-};
-
-/**
- * Cleans up existing Three.js resources (renderer, scene objects) and cancels
- * the animation frame to prevent memory leaks and prepare for a new simulation setup.
- */
-const cleanupResources = () => {
-    console.log("Cleaning up resources...");
-    // Clean up renderer
-    if (sceneState.renderer?.domElement?.parentNode) {
-        sceneState.renderer.domElement.parentNode.removeChild(sceneState.renderer.domElement);
-        sceneState.renderer.dispose();
-    }
-
-    // Cancel animation frame
-    if (animationState.animationFrameId) {
-        cancelAnimationFrame(animationState.animationFrameId);
-        animationState.animationFrameId = null;
-    }
-
-    // Dispose bacterium renderer if it exists
-    if (sceneState.bacteriumRenderer) {
-        sceneState.bacteriumRenderer.dispose();
-        sceneState.bacteriumRenderer = null;
-        console.log("Bacterium renderer disposed.");
-    }
-
-    // Clear historyManager if it exists
-    if (sceneState.historyManager) {
-        sceneState.historyManager.clear();
-        console.log("History manager cleared.");
-    }
-
-    // Dispose bacterium system if it exists
-    if (sceneState.bacteriumSystem) {
-        sceneState.bacteriumSystem.dispose();
-        sceneState.bacteriumSystem = null;
-        console.log("Bacterium system disposed.");
-    }
-
-    // Clean up surface mesh if it exists
-    if (sceneState.surfaceMesh && sceneState.scene) {
-        sceneState.scene.remove(sceneState.surfaceMesh);
-        sceneState.surfaceMesh.geometry.dispose();
-        sceneState.surfaceMesh.material.dispose(); // Ensure material is disposed too
-        sceneState.surfaceMesh = null; // Nullify the reference
-        console.log("Surface mesh removed and disposed.");
-    }
 };
 
 /**
@@ -221,9 +170,7 @@ const updateScene = () => {
     // 3. Update diffusion sources and sinks based on bacteria locations/types
     updateSourcesAndSinks(currentBacteria);
 
-    // 4. Update the plot with the latest historical data from our local history manager
-    updatePlot(...Object.values(sceneState.historyManager.getHistories()));
-
+  
     // 5. Run the diffusion simulation step (ADI method)
     /**
      * Perform diffusion calculation using Alternating Direction Implicit (ADI) method
@@ -239,11 +186,14 @@ const updateScene = () => {
         1 // Number of substeps for ADI
     ); 
 
+
+    // 4. Update the plot with the latest historical data from our local history manager
+    updatePlot(...Object.values(sceneState.historyManager.getHistories()));
+
     // 6. Update the surface mesh visualization based on the new concentration data
     // Now passing GRID object from appConfig to updateSurfaceMesh
     updateSurfaceMesh(sceneState.surfaceMesh, dataState.currentConcentrationData, calculateColor, appConfig.GRID);
 
-    // 7. Update UI overlay with current statistics
     updateOverlay(
         currentBacteria.length, 
         animationState.currentTimeStep, 
@@ -376,7 +326,5 @@ appConfig = addEventListeners(
     simulationActions  // Pass simulation actions for GUI to use
 );
 
-// Note: The simulation doesn't start automatically.
-// It waits for data to be loaded via the file input.
-// The `handleFileInput` callback triggers `resetAllData` and then `animate`.
+
 console.log("Initial setup complete. Waiting for data file...");
