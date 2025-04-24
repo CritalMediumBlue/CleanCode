@@ -5,8 +5,8 @@
 
 import {
      setupNewScene, 
-     updateOverlay, updateSurfaceMesh,
-     renderScene
+     renderScene,
+        updateScene,
     } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
@@ -121,20 +121,12 @@ const setBacteriaData = (data, processedData) => {
 
 
 
-/**
- * Performs all updates required for a single simulation time step.
- * Fetches current bacteria data, updates bacteria visualization,
- * updates sources/sinks, runs the diffusion simulation (ADI),
- * updates the surface mesh, updates UI overlays, and increments the time step.
- * Handles simulation loop reset.
- */
+
 const updateSimulation = (currentBacteria) => {
   
   
-    // 2. Update bacteria visualization (positions, colors, etc.)
     updateBacteriaPositions(currentBacteria);
 
-    // 3. Update diffusion sources and sinks based on bacteria locations/types
     updateSourcesAndSinks(currentBacteria);
 
   
@@ -157,15 +149,7 @@ const updateSimulation = (currentBacteria) => {
 };
 
 
-const updateScene = (currentBacteria) => {
 
-    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
-    updateOverlay(
-        currentBacteria, 
-        animationState,
-        dataState
-    );
-}
 
 /**
  * Updates the positions, visibility, and properties of bacteria for the current time step.
@@ -249,8 +233,7 @@ const animate = () => {
         const currentBacteria = dataState.bacteriaData.get(animationState.currentTimeStep);
 
         updateSimulation(currentBacteria); // Advance the simulation by one step
-        updateScene(currentBacteria); // Update the scene with new data
-         // Simulate bacteria - returns array of BacteriumData objects for rendering
+        updateScene( sceneState,dataState,appConfig,animationState);
         bacteriaData = sceneState.bacteriumSystem.updateBacteria(
             animationState.currentTimeStep,
             dataState.bacteriaData,

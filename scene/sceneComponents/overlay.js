@@ -12,7 +12,8 @@
  * @param {number} fromStepToMinutes - Conversion factor from simulation step to minutes.
  * @param {Set<number> | null} allUniqueIDs - Set of all unique bacteria IDs across the simulation.
  */
-export function updateOverlay(bacteria,animationState, dataState) {
+export function updateOverlay(animationState, dataState) {
+    const bacteria = dataState.bacteriaData.get(animationState.currentTimeStep)
     const allUniqueIDs = dataState.AllUniqueIDs; // Get all unique IDs from dataState
     const overlay = document.getElementById("text-overlay");
     const currentTimeStep = animationState.currentTimeStep;

@@ -20,7 +20,6 @@ import {
 
 import { BacteriumData } from './bacteriumData.js';
 import {ADI} from './diffusion.js';
-import { dataState } from '../state/stateManager.js';
 
 /**
  * Main bacterium system class that handles simulation logic only

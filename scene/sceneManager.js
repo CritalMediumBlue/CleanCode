@@ -133,6 +133,15 @@ function createCamera(config) {
     return camera;
 }
 
+export const updateScene = (sceneState,dataState,appConfig,animationState) => {
+
+    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
+    updateOverlay( 
+        animationState,
+        dataState
+    );
+}
+
 /**
  * Creates and returns a new THREE.WebGLRenderer object.
  * @returns {THREE.WebGLRenderer} The created renderer.
