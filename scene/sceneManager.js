@@ -38,7 +38,8 @@ export function setupScene(config) {
  * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties
  * @returns {Object} An object containing the scene, camera, renderer, bacteriumSystem, and bacteriumRenderer
  */
-export function setupNewScene(createBacteriumSystem, config, grid) {
+export function setupNewScene(createBacteriumSystem, config) {
+    const grid = config.GRID;
     console.log("Setting up new scene...");
     const sceneState = setupScene(config);
 
@@ -46,7 +47,7 @@ export function setupNewScene(createBacteriumSystem, config, grid) {
     document.body.appendChild(sceneState.renderer.domElement);
     
     // Initialize the bacterium visualization system
-    sceneState.bacteriumSystem = createBacteriumSystem();
+    sceneState.bacteriumSystem = createBacteriumSystem(config);
     
     // Pass the config to the bacterium renderer explicitly
     sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene, config);

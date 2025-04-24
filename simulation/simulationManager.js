@@ -20,6 +20,7 @@ import {
 
 import { BacteriumData } from './bacteriumData.js';
 import {ADI} from './diffusion.js';
+import { dataState } from '../state/stateManager.js';
 
 /**
  * Main bacterium system class that handles simulation logic only
@@ -273,14 +274,19 @@ export class BacteriumSystem {
  * @returns {Array<Float32Array>} Updated concentration arrays [currentData, nextData]
  */
 export function diffuse(
-        WIDTH, HEIGHT,
-        currentConcentrationData, nextConcentrationData, // Input concentration arrays
-        sources, sinks, // Input source/sink arrays
-        DIFFUSION_RATE, // Diffusion coefficient
+    appConfig,
+    dataState,
         timeStep, // Time step duration in minutes (dt)
         subSteps // Number of substeps for ADI
     ) 
     {
+    const WIDTH = appConfig.GRID.WIDTH;
+    const HEIGHT = appConfig.GRID.HEIGHT;
+    const DIFFUSION_RATE = appConfig.GRID.DIFFUSION_RATE;
+    const currentConcentrationData = dataState.currentConcentrationData;
+    const nextConcentrationData = dataState.nextConcentrationData;
+    const sources = dataState.sources;
+    const sinks = dataState.sinks;
         return ADI(
                 WIDTH, HEIGHT,
                 currentConcentrationData, nextConcentrationData, // Input concentration arrays

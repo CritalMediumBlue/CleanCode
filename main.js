@@ -4,7 +4,7 @@
  */
 
 import {
-     updatePlot, setupNewScene, 
+     setupNewScene, 
      updateOverlay, updateSurfaceMesh,
      renderScene
     } from './scene/sceneManager.js';
@@ -90,9 +90,7 @@ const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
     cleanupResources();
 
-    const createConfiguredBacteriumSystem = () => createBacteriumSystem(appConfig);
-    
-    const newSceneState = setupNewScene(createConfiguredBacteriumSystem, appConfig, appConfig.GRID);
+    const newSceneState = setupNewScene(createBacteriumSystem, appConfig);
     Object.assign(sceneState, newSceneState);
     
     sceneState.historyManager = new HistoryManager();
@@ -122,7 +120,6 @@ const setBacteriaData = (data, processedData) => {
 };
 
 
-// --- Simulation Update Logic ---
 
 /**
  * Performs all updates required for a single simulation time step.
@@ -131,11 +128,9 @@ const setBacteriaData = (data, processedData) => {
  * updates the surface mesh, updates UI overlays, and increments the time step.
  * Handles simulation loop reset.
  */
-const updateScene = () => {
+const updateSimulation = (currentBacteria) => {
   
-    // 1. Get bacteria data for the current time step
-    const currentBacteria = dataState.bacteriaData.get(animationState.currentTimeStep);
-
+  
     // 2. Update bacteria visualization (positions, colors, etc.)
     updateBacteriaPositions(currentBacteria);
 
@@ -143,32 +138,14 @@ const updateScene = () => {
     updateSourcesAndSinks(currentBacteria);
 
   
-    // 5. Run the diffusion simulation step (ADI method)
-    /**
-     * Perform diffusion calculation using Alternating Direction Implicit (ADI) method
-     * Returns updated concentration arrays after applying diffusion to current state
-     * @see simulation/diffusion.js for implementation details
-     */
     [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
-        appConfig.GRID.WIDTH, appConfig.GRID.HEIGHT,
-        dataState.currentConcentrationData, dataState.nextConcentrationData, // Input concentration arrays
-        dataState.sources, dataState.sinks, // Input source/sink arrays
-        appConfig.GRID.DIFFUSION_RATE, // Diffusion coefficient
+        appConfig,
+        dataState,
         1, // Time step duration in minutes (dt)
         1 // Number of substeps for ADI
     ); 
 
-  
-    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
-    updateOverlay(
-        currentBacteria, 
-        animationState,
-        dataState
-    );
-
-
     
-    // 8. Increment the time step
     animationState.currentTimeStep++;
 
     // 9. Check if the simulation reached the end
@@ -178,6 +155,17 @@ const updateScene = () => {
         animationState.play = false;
     }
 };
+
+
+const updateScene = (currentBacteria) => {
+
+    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
+    updateOverlay(
+        currentBacteria, 
+        animationState,
+        dataState
+    );
+}
 
 /**
  * Updates the positions, visibility, and properties of bacteria for the current time step.
@@ -257,7 +245,11 @@ const animate = () => {
     let bacteriaData = null; // Initialize bacteriaData to null
     // Update simulation logic only if in 'play' state
     if (animationState.play) {
-        updateScene(); // Advance the simulation by one step
+          // 1. Get bacteria data for the current time step
+        const currentBacteria = dataState.bacteriaData.get(animationState.currentTimeStep);
+
+        updateSimulation(currentBacteria); // Advance the simulation by one step
+        updateScene(currentBacteria); // Update the scene with new data
          // Simulate bacteria - returns array of BacteriumData objects for rendering
         bacteriaData = sceneState.bacteriumSystem.updateBacteria(
             animationState.currentTimeStep,

@@ -33,10 +33,7 @@ export const dataState = {
     /** @type {number} */ doublingTime: 45, // Assumed doubling time for bacteria in minutes
 };
 
-/**
- * Cleans up existing Three.js resources (renderer, scene objects) and cancels
- * the animation frame to prevent memory leaks and prepare for a new simulation setup.
- */
+
 export const cleanupResources = () => {
     console.log("Cleaning up resources...");
     // Clean up renderer
@@ -92,7 +89,7 @@ export const cleanupResources = () => {
  * Creates empty Float32Arrays for concentration data, colors, sources, and sinks.
  * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties (optional, uses default GRID if not provided)
  */
-export const initializeArrays = (grid = GRID) => {
+export const initializeArrays = (grid) => {
     const gridSize = grid.WIDTH * grid.HEIGHT;
     console.log(`Initializing arrays for grid size: ${gridSize}`);
 
