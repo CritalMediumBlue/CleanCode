@@ -95,7 +95,7 @@ const resetAllData = () => {
     
     sceneState.historyManager = new HistoryManager();
     
-    initializeArrays(appConfig.GRID);    
+    initializeArrays(appConfig);    
 };
 
 
