@@ -313,19 +313,6 @@ export function createBacteriumSystem(config) {
 }
 
 /**
- * Updates bacteria for the current time step and returns data for rendering
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @param {number} timeStep - The current simulation time step
- * @param {Map<number, Array<Object>>} bacteriumData - Map of bacteria data keyed by time step
- * @param {boolean} visible - Whether bacteria should be visible
- * @param {Float32Array} concentrations - Concentration values across the grid
- * @returns {Array<BacteriumData>} Array of bacterium data objects for rendering
- */
-export function updateBacteria(bacteriumSystem, timeStep, bacteriumData, visible, concentrations) {
-    return bacteriumSystem.updateBacteria(timeStep, bacteriumData, visible, concentrations);
-}
-
-/**
  * Updates historical tracking data with current bacteria metrics and returns the metrics.
  * Consolidates multiple related metrics into a single function call.
  * 
@@ -349,32 +336,5 @@ export function updateBacteriumMetrics(bacteriumSystem, totalCount) {
         averageSimilarity,
         scaledSimilarity
     };
-}
-
-/**
- * Gets the count of bacteria with magenta phenotype
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @returns {number} Count of bacteria with magenta phenotype
- */
-export function getMagentaCount(bacteriumSystem) {
-    return bacteriumSystem.getMagentaCount();
-}
-
-/**
- * Gets the count of bacteria with cyan phenotype
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @returns {number} Count of bacteria with cyan phenotype
- */
-export function getCyanCount(bacteriumSystem) {
-    return bacteriumSystem.getCyanCount();
-}
-
-/**
- * Gets the positions of bacteria by phenotype
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @returns {Array<Array<bigint>>} Array containing [magentaPositions, cyanPositions]
- */
-export function getPositions(bacteriumSystem) {
-    return bacteriumSystem.getPositions();
 }
 

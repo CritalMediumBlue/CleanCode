@@ -10,10 +10,7 @@ import { initPlotRenderer,
     } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
-    updateBacteria,
     diffuse,
-    getMagentaCount,
-    getCyanCount,
 } from './simulation/simulationManager.js';
 // Remove direct import of setBacteriaData from dataProcessor.js
 import { addEventListeners } from './GUI/guiManager.js';
@@ -21,7 +18,6 @@ import {
     sceneState, 
     animationState, 
     dataState, 
-    // Remove GRID import from stateManager.js
     initializeArrays,
     resetAnimationState,
     getAdjustedCoordinates,
@@ -286,8 +282,8 @@ const updateBacteriaPositions = (currentBacteria) => {
    
 
     // Get metric values from bacterium system
-    const magentaCount = getMagentaCount(sceneState.bacteriumSystem);
-    const cyanCount = getCyanCount(sceneState.bacteriumSystem);
+    const magentaCount = sceneState.bacteriumSystem.getMagentaCount();
+    const cyanCount = sceneState.bacteriumSystem.getCyanCount();
     const averageSimilarity = sceneState.bacteriumSystem.getAverageSimilarityWithNeighbors()
     const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
     
@@ -353,13 +349,12 @@ const animate = () => {
     if (animationState.play) {
         updateScene(); // Advance the simulation by one step
          // Simulate bacteria - returns array of BacteriumData objects for rendering
-        bacteriaData = updateBacteria(
-        sceneState.bacteriumSystem,
-        animationState.currentTimeStep,
-        dataState.bacteriaData,
-        sceneState.visibleBacteria,
-        dataState.currentConcentrationData
-    );
+        bacteriaData = sceneState.bacteriumSystem.updateBacteria(
+            animationState.currentTimeStep,
+            dataState.bacteriaData,
+            sceneState.visibleBacteria,
+            dataState.currentConcentrationData
+        );
     }
      
 
