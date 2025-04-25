@@ -25,9 +25,10 @@ export function setupNewScene(config) {
     plotRendererInstance = new PlotRenderer(config);
     plotRendererInstance.init(THREE);
 
-    // Setup the concentration visualization mesh
+    const size = config.BACTERIUM.INITIAL_POOL_SIZE;
+
     mesh = setupMesh(stage, THREE,config);
-    capsules = setupBacteriaPool(stage, config, THREE,capsules);
+    capsules = setupBacteriaPool(stage, size, THREE,capsules);
 
         
 }
