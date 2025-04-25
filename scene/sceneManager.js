@@ -9,7 +9,6 @@ import { updateSurfaceMesh } from './sceneComponents/mesh.js';
 let plotRendererInstance = null;
 let mesh = null;
 let stage = {};
-
 let bacteriaPool = null;
 
 
@@ -18,18 +17,16 @@ export function setupNewScene(config) {
 
     stage = setupStage(config.SCENE, THREE, OrbitControls,stage,mesh);
 
-    // Initialize the bacterium pool with the correct parameter name
-    bacteriaPool = new BacteriaPool(stage.scene, config.BACTERIUM.INITIAL_POOL_SIZE, config, THREE);
 
-    if (!bacteriaPool || !bacteriaPool.bacteria) {
-        console.error("Bacteria pool not initialized.");
-        return;
-    }
     plotRendererInstance = new PlotRenderer(config);
     plotRendererInstance.init(THREE);
 
     // Setup the concentration visualization mesh
     mesh = setupMesh(stage, THREE,config);
+    bacteriaPool = setupBacteriaPool(stage, config, THREE);
+
+
+
         
 }
 
@@ -50,6 +47,7 @@ export function renderScene(sceneState, bacteriaData, dataState, appConfig, anim
 function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
     updateSurfaceMesh(mesh, dataState, appConfig.GRID);
     updateOverlay( animationState,dataState);
+
     const histories = Object.values(sceneState.historyManager.getHistories());
     plotRendererInstance.updatePlot(...histories)
 
@@ -60,6 +58,10 @@ function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
 
 
 
+
+function setupBacteriaPool(stage, config, THREE) {
+    return new BacteriaPool(stage.scene, config.BACTERIUM.INITIAL_POOL_SIZE, config, THREE);
+}
 
 
 
@@ -79,11 +81,7 @@ const phenotypeColors = {
 
 
 function renderBacteria(bacteriaData, config) {
-   // Check if bacteriaPool is properly initialized
-   if (!bacteriaPool || !bacteriaPool.reset) {
-       console.error("Bacteria pool not properly initialized.");
-       return;
-   }
+
 
    // Reset the pool for new render
    bacteriaPool.reset();
@@ -91,10 +89,7 @@ function renderBacteria(bacteriaData, config) {
    // Render each bacterium
    bacteriaData.forEach(data => {
        const bacterium = bacteriaPool.getBacterium();
-       if (!bacterium) {
-           console.error("No available bacterium in the pool.");
-           return;
-       }
+   
        const { position, angle, longAxis, phenotype, magentaProportion, cyanProportion, visible } = data;
    
        // Convert plain position to THREE.Vector3
