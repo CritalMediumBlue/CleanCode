@@ -65,27 +65,6 @@ function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
 
 
 
-
-
-
-
-
-
-
-
-function setBacteriumTransform(bacterium, position, angle, zPosition) {
-    bacterium.position.set(position.x, position.y, zPosition);
-    bacterium.rotation.z = angle * Math.PI; // 0 or PI means vertical, PI/2 means horizontal
-}
-
-
-
-const phenotypeColors = {
-    'MAGENTA': new THREE.Color(0xFF00FF),
-    'CYAN': new THREE.Color(0x00FFFF)
-};
- 
-
 function renderBacteria(bacteriaData, config, THREE) {
    // Reset active count and hide all capsules
    activeCount = 0;
@@ -101,29 +80,29 @@ function renderBacteria(bacteriaData, config, THREE) {
    
        const threePosition = new THREE.Vector3(position.x, position.y, 0);
        
-       // Set position and rotation
-       setBacteriumTransform(bacterium, threePosition, angle, 0);
-       
+       bacterium.position.set(threePosition.x, threePosition.y, 0);
+       bacterium.rotation.z = angle * Math.PI;  
+
        // Update geometry using the new function
-       updateCapsuleGeometry(bacterium, longAxis, config, THREE);
+       updateCapsuleGeometry(bacterium, longAxis, config.BACTERIUM, THREE);
        
        // Update color
-       updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, phenotypeColors, config, THREE);
+       updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, config, THREE);
        
        // Set visibility
        bacterium.visible = visible;
    });
 }
 
-function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, phenotypeColors, config, THREE) {
+function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, config, THREE) {
     // Convert string phenotype to THREE.Color
-    const threeColor = phenotypeColors[phenotype];
+    const threeColor = new THREE.Color(config.COLORS[phenotype]);
 
     switch (config.BACTERIUM.COLOR_BY_INHERITANCE) {
         case true:
             // Color by phenotype
             bacterium.material.color.copy(threeColor);
-            bacterium.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.5));
+            bacterium.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
             break;
             
         case false:
@@ -135,7 +114,7 @@ function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanPropo
                 
             const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
             bacterium.material.color.set(similarityColor);
-            bacterium.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.5));
+            bacterium.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.3));
             break;
         }
 }
@@ -145,17 +124,17 @@ function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanPropo
  * @param {THREE.Mesh} capsule - The capsule mesh to update
  * @param {number} adjustedLength - The new length for the capsule
  */
-function updateCapsuleGeometry(capsule, adjustedLength, config, THREE) {
+function updateCapsuleGeometry(capsule, adjustedLength, BACTERIUM, THREE) {
     // Get or create geometry for this length
     let newGeometry = capsuleGeometryCache.get(adjustedLength);
     let newWireframeGeometry = edgesGeometryCache.get(adjustedLength);
 
     if (!newGeometry) {
         newGeometry = new THREE.CapsuleGeometry(
-            0.4,
+            0.5,
             adjustedLength,
-            config.BACTERIUM.CAP_SEGMENTS,
-            config.BACTERIUM.RADIAL_SEGMENTS
+            BACTERIUM.CAP_SEGMENTS,
+            BACTERIUM.RADIAL_SEGMENTS
         );
         capsuleGeometryCache.set(adjustedLength, newGeometry);
         newWireframeGeometry = new THREE.EdgesGeometry(newGeometry);
@@ -171,9 +150,9 @@ function updateCapsuleGeometry(capsule, adjustedLength, config, THREE) {
         wireframe.geometry.dispose();
         wireframe.geometry = newWireframeGeometry;
         wireframe.scale.set(
-            config.BACTERIUM.WIREFRAME_SCALE, 
-            config.BACTERIUM.WIREFRAME_SCALE, 
-            config.BACTERIUM.WIREFRAME_SCALE
+            BACTERIUM.WIREFRAME_SCALE, 
+            BACTERIUM.WIREFRAME_SCALE, 
+            BACTERIUM.WIREFRAME_SCALE
         );
     }
 }

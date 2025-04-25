@@ -37,8 +37,8 @@ export const CONFIG = {
     COLORS: {
         MIN_COLOR: 0x0000FF,
         MAX_COLOR: 0xFF0000,
-        MAGENTA_PHENOTYPE: 0xFF00FF,
-        CYAN_PHENOTYPE: 0x00FFFF,
+        MAGENTA: 0xFF00FF,
+        CYAN: 0x00FFFF,
         DEFAULT_PHENOTYPE: 0xFFFFFF,
     },
    
