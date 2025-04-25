@@ -9,11 +9,28 @@ import { updateSurfaceMesh } from './sceneComponents/mesh.js';
 let plotRendererInstance = null;
 let bacteriumRendererInstance = null;
 let mesh = null;
+let stage = null;
+
 
 
 export function setupNewScene(config) {
-    console.log("Setting up new scene...");
-    const stage = setupStage(config.SCENE, THREE, OrbitControls);
+
+        if (mesh && stage) {
+            stage.scene.remove(mesh);
+            mesh.geometry.dispose();
+            mesh.material.dispose(); // Ensure material is disposed too
+            mesh = null; // Nullify the reference
+            console.log("Surface mesh removed and disposed.");
+        }
+
+       // Clean up renderer
+        if (stage) {
+            stage.renderer.domElement.parentNode.removeChild(stage.renderer.domElement);
+            stage.renderer.dispose();
+        }
+
+
+    stage = setupStage(config.SCENE, THREE, OrbitControls);
 
     
     // Initialize the bacterium visualization system
@@ -24,7 +41,6 @@ export function setupNewScene(config) {
     // Setup the concentration visualization mesh
     mesh = setupMesh(stage, THREE,config);
         
-    return stage;
 }
 
 
@@ -33,8 +49,8 @@ export function renderScene(sceneState,bacteriaData, dataState, appConfig,animat
     if (plotRendererInstance.render) {
     plotRendererInstance.render();
     }
-    if (sceneState.renderer && sceneState.scene && sceneState.camera) {
-        sceneState.renderer.render(sceneState.scene, sceneState.camera);
+    if (stage.renderer && stage.scene && stage.camera) {
+        stage.renderer.render(stage.scene, stage.camera);
     }
      if (bacteriumRendererInstance&& bacteriaData) {
         bacteriumRendererInstance.renderBacteria(bacteriaData);

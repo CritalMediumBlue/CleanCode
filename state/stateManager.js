@@ -37,11 +37,7 @@ export const dataState = {
 
 export const cleanupResources = () => {
     console.log("Cleaning up resources...");
-    // Clean up renderer
-    if (sceneState.renderer?.domElement?.parentNode) {
-        sceneState.renderer.domElement.parentNode.removeChild(sceneState.renderer.domElement);
-        sceneState.renderer.dispose();
-    }
+ 
 
     // Cancel animation frame
     if (animationState.animationFrameId) {
@@ -69,14 +65,7 @@ export const cleanupResources = () => {
         console.log("Bacterium system disposed.");
     }
 
-    // Clean up surface mesh if it exists
-    if (sceneState.surfaceMesh && sceneState.scene) {
-        sceneState.scene.remove(sceneState.surfaceMesh);
-        sceneState.surfaceMesh.geometry.dispose();
-        sceneState.surfaceMesh.material.dispose(); // Ensure material is disposed too
-        sceneState.surfaceMesh = null; // Nullify the reference
-        console.log("Surface mesh removed and disposed.");
-    }
+
     animationState.currentTimeStep = 1;
     animationState.numberOfTimeSteps = 0;
     animationState.play = false;
