@@ -191,16 +191,6 @@ export function setBacteriumTransform(bacterium, position, angle, zPosition, THR
     bacterium.rotation.z = angle * Math.PI; // 0 or PI means vertical, PI/2 means horizontal
 }
 
-/**
- * Creates a new bacterium renderer system
- * @param {THREE.Scene} scene - Three.js scene to add bacteria to
- * @param {Object} config - Configuration object
- * @param {Object} THREE - THREE.js library
- * @returns {BacteriumPool} New bacterium pool instance
- */
-export function createBacteriumPool(scene, config, THREE) {
-    return new BacteriumPool(scene, config.BACTERIUM.INITIAL_POOL_SIZE, config, THREE);
-}
 
 /**
  * Renderer class that handles visualizing bacteria based on simulation data.

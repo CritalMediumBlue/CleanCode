@@ -9,30 +9,14 @@ import { updateSurfaceMesh } from './sceneComponents/mesh.js';
 let plotRendererInstance = null;
 let bacteriumRendererInstance = null;
 let mesh = null;
-let stage = null;
+let stage = {};
 
 
 
 export function setupNewScene(config) {
 
-        if (mesh && stage) {
-            stage.scene.remove(mesh);
-            mesh.geometry.dispose();
-            mesh.material.dispose(); // Ensure material is disposed too
-            mesh = null; // Nullify the reference
-            console.log("Surface mesh removed and disposed.");
-        }
+    stage = setupStage(config.SCENE, THREE, OrbitControls,stage,mesh);
 
-       // Clean up renderer
-        if (stage) {
-            stage.renderer.domElement.parentNode.removeChild(stage.renderer.domElement);
-            stage.renderer.dispose();
-        }
-
-
-    stage = setupStage(config.SCENE, THREE, OrbitControls);
-
-    
     // Initialize the bacterium visualization system
     bacteriumRendererInstance = new BacteriumRenderer(stage.scene, config, THREE);
     plotRendererInstance = new PlotRenderer(config);
