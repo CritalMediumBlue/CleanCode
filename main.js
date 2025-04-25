@@ -144,7 +144,6 @@ const updateSimulation = (currentBacteria) => {
 /**
  * Updates the positions, visibility, and properties of bacteria for the current time step.
  * This function handles both the simulation logic via updateBacteria and the visualization
- * via bacteriumRenderer. It also calculates similarity metrics for plotting.
  * 
  * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
  */

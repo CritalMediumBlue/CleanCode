@@ -45,12 +45,6 @@ export const cleanupResources = () => {
         animationState.animationFrameId = null;
     }
 
-    // Dispose bacterium renderer if it exists
-    if (sceneState.bacteriumRenderer) {
-        sceneState.bacteriumRenderer.dispose();
-        sceneState.bacteriumRenderer = null;
-        console.log("Bacterium renderer disposed.");
-    }
 
     // Clear historyManager if it exists
     if (sceneState.historyManager) {
