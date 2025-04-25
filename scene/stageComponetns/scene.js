@@ -1,12 +1,15 @@
 /**
- * Scene creation and configuration module
+ * Scene creation and configuration module for Three.js
  */
 
 /**
- * Creates and configures a Three.js scene
- * @param {Object} config - Configuration object containing scene settings
- * @param {Object} THREE - Three.js library
- * @returns {Object} - Configured Three.js scene
+ * Creates and configures a Three.js scene with fog settings
+ * @param {Object} SCENE - Configuration object containing scene settings
+ * @param {number} SCENE.FOG_COLOR - Fog color in hexadecimal format
+ * @param {number} SCENE.FOG_NEAR - Near distance for fog effect
+ * @param {number} SCENE.FOG_FAR - Far distance for fog effect
+ * @param {Object} THREE - Three.js library instance
+ * @returns {THREE.Scene} - Configured Three.js scene object with fog
  */
 export function createScene(SCENE, THREE) {
     const scene = new THREE.Scene();

@@ -8,10 +8,10 @@ import { createRenderer } from './stageComponetns/renderer.js';
 
 /**
  * Sets up a complete Three.js stage with scene, camera, and renderer
- * @param {Object} config - Configuration object containing stage settings
- * @param {Object} THREE - Three.js library
- * @param {Object} OrbitControls - Three.js OrbitControls class
- * @returns {Object} - Object containing scene, camera, and renderer
+ * @param {Object} SCENE - Configuration object containing scene settings (fog, camera parameters, etc.)
+ * @param {Object} THREE - Three.js library instance
+ * @param {Function} OrbitControls - Three.js OrbitControls class constructor
+ * @returns {Object} - Object containing {scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer}
  */
 export function setupStage(SCENE, THREE, OrbitControls) {
     const scene = createScene(SCENE, THREE);

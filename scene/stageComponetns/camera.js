@@ -1,13 +1,19 @@
 /**
- * Camera creation and configuration module
+ * Camera creation and configuration module for Three.js
  */
 
-
 /**
- * Creates and configures a Three.js camera
- * @param {Object} config - Configuration object containing camera settings
- * @param {Object} THREE - Three.js library
- * @returns {Object} - Configured Three.js camera
+ * Creates and configures a Three.js perspective camera with orbit controls
+ * @param {Object} SCENE - Configuration object containing camera settings
+ * @param {number} SCENE.CAMERA_FOV - Field of view in degrees
+ * @param {number} SCENE.CAMERA_NEAR - Near clipping plane distance
+ * @param {number} SCENE.CAMERA_FAR - Far clipping plane distance
+ * @param {Object} SCENE.CAMERA_POSITION - Initial camera position {x, y, z}
+ * @param {Object} SCENE.CAMERA_LOOKAT - Target point for camera to look at {x, y, z}
+ * @param {Object} THREE - Three.js library instance
+ * @param {Function} OrbitControlsClass - Three.js OrbitControls class constructor
+ * @param {HTMLElement} domElement - DOM element to bind controls to (typically the renderer's DOM element)
+ * @returns {THREE.PerspectiveCamera} - Configured Three.js camera with orbit controls attached
  */
 export function createCamera(SCENE, THREE, OrbitControlsClass, domElement) {
     const camera = new THREE.PerspectiveCamera(
@@ -32,12 +38,18 @@ export function createCamera(SCENE, THREE, OrbitControlsClass, domElement) {
     return camera;
 }
 
+/**
+ * Creates and configures orbit controls for a camera
+ * @param {THREE.PerspectiveCamera} camera - The camera to attach controls to
+ * @param {HTMLElement} domElement - DOM element to bind controls to
+ * @param {Object} SCENE - Configuration object containing control settings
+ * @param {number} SCENE.CONTROLS_MAX_DISTANCE - Maximum distance for orbit controls
+ * @param {number} SCENE.CONTROLS_MIN_DISTANCE - Minimum distance for orbit controls
+ * @param {Object} SCENE.CAMERA_LOOKAT - Target point for camera to look at {x, y, z}
+ * @param {Function} OrbitControlsClass - Three.js OrbitControls class constructor
+ * @returns {void}
+ */
 function createControls(camera, domElement, SCENE, OrbitControlsClass) {
-    if (!(domElement instanceof HTMLElement)) {
-        console.error("Invalid domElement passed to OrbitControls. Ensure it is a valid DOM element.");
-        return;
-    }
-
     const controls = new OrbitControlsClass(camera, domElement);
     controls.enableDamping = false;
     controls.autoRotate = false;
