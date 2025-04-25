@@ -70,7 +70,12 @@ export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarity
     plotRendererInstance.updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory);
 }
 
-export function renderScene(sceneState,bacteriaData) {
+export function renderScene(sceneState,bacteriaData, dataState, appConfig,animationState) {
+    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
+    updateOverlay( 
+        animationState,
+        dataState
+    );
     plotRendererInstance.render();
     if (sceneState.renderer && sceneState.scene && sceneState.camera) {
         sceneState.renderer.render(sceneState.scene, sceneState.camera);
@@ -119,14 +124,7 @@ function createCamera(config) {
     return camera;
 }
 
-export const updateScene = (sceneState,dataState,appConfig,animationState) => {
 
-    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
-    updateOverlay( 
-        animationState,
-        dataState
-    );
-}
 
 /**
  * Creates and returns a new THREE.WebGLRenderer object.

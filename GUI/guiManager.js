@@ -62,7 +62,6 @@ const setBacteriaData = (data, processedData) => {
  * Attaches event listeners to various UI controls (buttons, sliders, dropdowns, file input)
  * to manage simulation playback, parameter adjustments, and data loading.
  * 
- * @param {Function} updateScene - Function to update the scene for single step operations
  * @param {Function} animate - Function to start the animation loop
  * @param {Function} resetAllData - Function to reset all data 
  * @param {Function} externalSetBacteriaData - Function to set the bacteria data
@@ -71,7 +70,7 @@ const setBacteriaData = (data, processedData) => {
  * @param {Object} simulationActions - Object containing functions for simulation operations
  * @returns {Object} The configuration object for dependency injection
  */
-export const addEventListeners = (updateScene, animate, resetAllData, externalSetBacteriaData, stateActions, simulationActions) => {
+export const addEventListeners = ( animate, resetAllData, externalSetBacteriaData, stateActions, simulationActions) => {
     console.log("Adding event listeners...");
     
     // Store the callback for setting bacteria data

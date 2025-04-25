@@ -6,7 +6,6 @@
 import {
      setupNewScene, 
      renderScene,
-    updateScene,
     } from './scene/sceneManager.js';
 import {
     createBacteriumSystem,
@@ -235,7 +234,6 @@ const animate = () => {
         const currentBacteria = dataState.bacteriaData.get(animationState.currentTimeStep);
 
         updateSimulation(currentBacteria); // Advance the simulation by one step
-        updateScene( sceneState,dataState,appConfig,animationState);
         bacteriaData = simulationState.bacteriumSystem.updateBacteria(
             animationState.currentTimeStep,
             dataState.bacteriaData,
@@ -245,7 +243,7 @@ const animate = () => {
     }
      
 
-    renderScene(sceneState,bacteriaData); // Render the 3D scene
+    renderScene(sceneState,bacteriaData, dataState, appConfig, animationState);
 };
 
 
@@ -255,7 +253,6 @@ const animate = () => {
 // Pass required functions as parameters for proper GUI-Simulation integration
 // Get configuration object via dependency injection
 appConfig = addEventListeners(
-    updateScene, 
     animate, 
     resetAllData, 
     setBacteriaData,
