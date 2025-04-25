@@ -6,6 +6,7 @@ import { BacteriumRenderer } from './sceneComponents/bacteria.js';
 import { setupScene } from './scene.js';
 
 let plotRendererInstance = null;
+let bacteriumRendererInstance = null;
 
 export function renderScene(sceneState,bacteriaData, dataState, appConfig,animationState) {
     updateScene(sceneState, dataState, appConfig, animationState)
@@ -15,8 +16,8 @@ export function renderScene(sceneState,bacteriaData, dataState, appConfig,animat
     if (sceneState.renderer && sceneState.scene && sceneState.camera) {
         sceneState.renderer.render(sceneState.scene, sceneState.camera);
     }
-     if (sceneState.bacteriumRenderer && bacteriaData) {
-        sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
+     if (bacteriumRendererInstance&& bacteriaData) {
+        bacteriumRendererInstance.renderBacteria(bacteriaData);
     }
 }
 
@@ -28,28 +29,24 @@ export function renderScene(sceneState,bacteriaData, dataState, appConfig,animat
  */
 export function setupNewScene(config) {
     console.log("Setting up new scene...");
-    const sceneState = setupScene(config, THREE, OrbitControls);
+    const stage = setupScene(config, THREE, OrbitControls);
 
     // Append renderer to document if not already done
-    document.body.appendChild(sceneState.renderer.domElement);
+    document.body.appendChild(stage.renderer.domElement);
     
     // Initialize the bacterium visualization system
-    sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene, config);
-
-    // Setup the concentration visualization mesh
-    setupMesh(sceneState, THREE,config);
-    
-    // Setup the plot renderer
-    setupPlot(config);
-    
-    return sceneState;
-}
-
-function setupPlot(config) {
+    bacteriumRendererInstance = new BacteriumRenderer(stage.scene, config, THREE);
     plotRendererInstance = new PlotRenderer(config);
     plotRendererInstance.init(THREE);
-    console.log("Plot renderer initialized.");
+
+    // Setup the concentration visualization mesh
+    setupMesh(stage, THREE,config);
+    
+    // Setup the plot renderer
+    
+    return stage;
 }
+
 
 
 function updateScene(sceneState, dataState, appConfig, animationState) {
