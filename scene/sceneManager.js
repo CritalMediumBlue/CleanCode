@@ -4,6 +4,7 @@ import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { setupStage } from './setupStage.js';
 import { updateSurfaceMesh } from './sceneComponents/mesh.js';
+import { expandPool } from './sceneComponents/capsulePool.js';
 
 
 let plotRendererInstance = null;
@@ -47,7 +48,7 @@ export function renderScene(sceneState, bacteriaData, dataState, appConfig, anim
 
 function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
     updateSurfaceMesh(mesh, dataState, appConfig.GRID);
-    updateOverlay( animationState,dataState);
+    updateOverlay(animationState,dataState);
 
     const histories = Object.values(sceneState.historyManager.getHistories());
     plotRendererInstance.updatePlot(...histories)
@@ -58,42 +59,6 @@ function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
 
 
 
-
-
-function   expandPool(Size,config, THREE, capsules) {
-        while (capsules.length < Size) {
-            const capsule = createCapsule(config, THREE);
-            capsules.push(capsule);
-        }
-        return capsules;
-}
-
-function createCapsule(config, THREE) {
-        const capsuleGeometry = new THREE.CapsuleGeometry(
-            0.4,
-            1,
-            config.BACTERIUM.CAP_SEGMENTS,
-            config.BACTERIUM.RADIAL_SEGMENTS
-        );
-        const capsuleMaterial = new THREE.MeshBasicMaterial({ 
-            color: new THREE.Color(0xffffff),
-            transparent: true,
-            opacity: 1
-        });
-        
-        const capsule = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
-        
-        // Add wireframe
-        const wireframeGeometry = new THREE.EdgesGeometry(capsuleGeometry);
-        const wireframeMaterial = new THREE.LineBasicMaterial({ 
-            color: new THREE.Color(config.BACTERIUM.WIREFRAME_COLOR) 
-        });
-        const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
-        
-        capsule.add(wireframe);
-        
-        return capsule;
-    }
 
 
 
