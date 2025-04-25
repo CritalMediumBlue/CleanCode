@@ -1,5 +1,5 @@
 
-export function   expandPool(Size,config, THREE, capsules) {
+ function   expandPool(Size,config, THREE, capsules) {
     while (capsules.length < Size) {
         const capsule = createCapsule(config, THREE);
         capsules.push(capsule);
@@ -34,3 +34,16 @@ function createCapsule(config, THREE) {
     return capsule;
 }
 
+export function setupBacteriaPool(stage, config, THREE, capsules) {
+    const initialSize = config.BACTERIUM.INITIAL_POOL_SIZE;
+    
+    // Expand the pool to the initial size
+    capsules = expandPool(initialSize, config, THREE, capsules);
+
+    // Add all capsules to the scene
+    capsules.forEach(capsule => {
+        stage.scene.add(capsule);
+    });
+    return capsules;
+
+}

@@ -4,7 +4,7 @@ import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { setupStage } from './setupStage.js';
 import { updateSurfaceMesh } from './sceneComponents/mesh.js';
-import { expandPool } from './sceneComponents/capsulePool.js';
+import { setupBacteriaPool } from './sceneComponents/capsulePool.js';
 
 
 let plotRendererInstance = null;
@@ -62,34 +62,11 @@ function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
 
 
 
-function getCapsule(config, THREE) {
-    if (activeCount >= capsules.length) {
-        const newSize = Math.ceil(capsules.length * config.BACTERIUM.POOL_GROWTH_FACTOR);
-        console.log(`Expanding pool from ${capsules.length} to ${newSize}`);
-        capsules = expandPool(newSize, config, THREE, capsules);
-    }
-    return capsules[activeCount++];
-}
 
 
 
 
 
-
-
-function setupBacteriaPool(stage, config, THREE, capsules) {
-    const initialSize = config.BACTERIUM.INITIAL_POOL_SIZE;
-    
-    // Expand the pool to the initial size
-    capsules = expandPool(initialSize, config, THREE, capsules);
-
-    // Add all capsules to the scene
-    capsules.forEach(capsule => {
-        stage.scene.add(capsule);
-    });
-    return capsules;
-
-}
 
 
 
@@ -117,7 +94,7 @@ function renderBacteria(bacteriaData, config, THREE) {
    
    // Render each bacterium
    bacteriaData.forEach(data => {
-       const bacterium = getCapsule(config, THREE); // Get a capsule from the pool
+       const bacterium = capsules[activeCount++]
    
        const { position, angle, longAxis, phenotype, magentaProportion, cyanProportion, visible = true } = data;
    

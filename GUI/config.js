@@ -15,7 +15,7 @@ export const CONFIG = {
     BACTERIUM: {
         CAP_SEGMENTS: 1,
         RADIAL_SEGMENTS: 6,
-        INITIAL_POOL_SIZE: 1000,
+        INITIAL_POOL_SIZE: 2000,
         POOL_GROWTH_FACTOR: 1.1,
         WIREFRAME_SCALE: 1.005,
         WIREFRAME_COLOR: 'rgb(100, 100, 100)',
