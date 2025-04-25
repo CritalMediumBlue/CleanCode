@@ -3,7 +3,7 @@ import { setupMesh } from './sceneComponents/mesh.js';
 import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { BacteriumRenderer } from './sceneComponents/bacteria.js';
-import { setupScene } from './stage.js';
+import { setupStage } from './setupStage.js';
 
 let plotRendererInstance = null;
 let bacteriumRendererInstance = null;
@@ -30,7 +30,7 @@ export function renderScene(sceneState,bacteriaData, dataState, appConfig,animat
  */
 export function setupNewScene(config) {
     console.log("Setting up new scene...");
-    const stage = setupScene(config, THREE, OrbitControls);
+    const stage = setupStage(config, THREE, OrbitControls);
 
     // Append renderer to document if not already done
     document.body.appendChild(stage.renderer.domElement);
