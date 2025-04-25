@@ -7,7 +7,6 @@ export const sceneState = {
     /** @type {THREE.WebGLRenderer | null} */ renderer: null,
     /** @type {THREE.Mesh | null} */ surfaceMesh: null, // The mesh representing the concentration surface
     /** @type {object | null} */ bacteriumRenderer: null, // New renderer component for bacteria
-    /** @type {boolean} */ visibleBacteria: true, // Toggles visibility of bacteria meshes
 };
 
 /** @type {object} animationState - Manages animation loop, timing, and playback state. */

@@ -33,13 +33,10 @@ export function setupScene(config) {
 
 /**
  * Sets up a new scene with custom surface mesh for concentration visualization.
- * @param {Function} createBacteriumSystem - Function to create bacterium system
  * @param {Object} config - Configuration object
- * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties
- * @returns {Object} An object containing the scene, camera, renderer, bacteriumSystem, and bacteriumRenderer
+ * @returns {Object} An object containing the scene components
  */
-export function setupNewScene( config) {
-    const grid = config.GRID;
+export function setupNewScene(config) {
     console.log("Setting up new scene...");
     const sceneState = setupScene(config);
 
@@ -47,10 +44,21 @@ export function setupNewScene( config) {
     document.body.appendChild(sceneState.renderer.domElement);
     
     // Initialize the bacterium visualization system
-    
-    // Pass the config to the bacterium renderer explicitly
     sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene, config);
 
+    // Setup the concentration visualization mesh
+    setupMesh(sceneState, config);
+    
+    // Setup the plot renderer
+    setupPlot(config);
+    
+    return sceneState;
+}
+
+
+function setupMesh(sceneState, config) {
+    const grid = config.GRID;
+    
     // Create the surface mesh geometry specifically for concentration visualization
     const geometry = new THREE.PlaneGeometry(grid.WIDTH, grid.HEIGHT, grid.WIDTH - 1, grid.HEIGHT - 1);
  
@@ -73,10 +81,12 @@ export function setupNewScene( config) {
     sceneState.scene.add(sceneState.surfaceMesh);
     
     console.log("Surface mesh created (wireframe) and added to scene with color attribute.");
+}
+
+function setupPlot(config) {
     plotRendererInstance = new PlotRenderer(config);
     plotRendererInstance.init(THREE);
-    
-    return sceneState;
+    console.log("Plot renderer initialized.");
 }
 
 export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {

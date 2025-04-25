@@ -81,15 +81,7 @@ export const addEventListeners = (updateScene, animate, resetAllData, externalSe
     const toggleButtons = [
         { id: 'playButton', event: 'click', handler: () => stateActions.setPlayState(true) },
         { id: 'pauseButton', event: 'click', handler: () => stateActions.setPlayState(false) },
-        {
-            id: 'singleStepButton', event: 'click', handler: () => {
-                stateActions.setPlayState(false);
-                updateScene(); // Perform one update
-                // Manually render after single step
-                stateActions.renderScene();
-            }
-        },
-        { id: 'visible', event: 'click', handler: () => stateActions.toggleBacteriaVisibility() },
+    
         { id: 'visibleMesh', event: 'click', handler: () => stateActions.toggleMeshVisibility() },
 
         // Select/dropdown controls
