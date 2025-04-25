@@ -15,6 +15,7 @@ import {
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     sceneState, 
+    simulationState,
     animationState, 
     dataState, 
     initializeArrays,
@@ -74,10 +75,10 @@ const stateActions = {
  */
 const simulationActions = {
     setSignalValue: (value) => {
-        sceneState.bacteriumSystem.setSignalValue(value);
+        simulationState.bacteriumSystem.setSignalValue(value);
     },
     setAlphaValue: (value) => {
-        sceneState.bacteriumSystem.setAlphaValue(value);
+        simulationState.bacteriumSystem.setAlphaValue(value);
     }
 };
 
@@ -90,9 +91,10 @@ const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
     cleanupResources();
 
-    const newSceneState = setupNewScene(createBacteriumSystem, appConfig);
+    const newSceneState = setupNewScene( appConfig);
     Object.assign(sceneState, newSceneState);
-      
+    simulationState.bacteriumSystem = createBacteriumSystem( appConfig)
+
     sceneState.historyManager = new HistoryManager();
     
     initializeArrays(appConfig);    
@@ -164,9 +166,9 @@ const updateBacteriaPositions = (currentBacteria) => {
    
 
     // Get metric values from bacterium system
-    const magentaCount = sceneState.bacteriumSystem.getMagentaCount();
-    const cyanCount = sceneState.bacteriumSystem.getCyanCount();
-    const averageSimilarity = sceneState.bacteriumSystem.getAverageSimilarityWithNeighbors()
+    const magentaCount = simulationState.bacteriumSystem.getMagentaCount();
+    const cyanCount = simulationState.bacteriumSystem.getCyanCount();
+    const averageSimilarity = simulationState.bacteriumSystem.getAverageSimilarityWithNeighbors()
     const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
     
     // Update our local history manager
@@ -187,7 +189,7 @@ const updateBacteriaPositions = (currentBacteria) => {
  */
 const updateSourcesAndSinks = (currentBacteria) => {
     // Get the IDs of currently active Magenta and Cyan bacteria
-    const [magentaIDsRaw, cyanIDsRaw] = sceneState.bacteriumSystem.getPositions();
+    const [magentaIDsRaw, cyanIDsRaw] = simulationState.bacteriumSystem.getPositions();
     const MagentaIDs = new Set(magentaIDsRaw);
     const CyanIDs = new Set(cyanIDsRaw);
 
@@ -234,7 +236,7 @@ const animate = () => {
 
         updateSimulation(currentBacteria); // Advance the simulation by one step
         updateScene( sceneState,dataState,appConfig,animationState);
-        bacteriaData = sceneState.bacteriumSystem.updateBacteria(
+        bacteriaData = simulationState.bacteriumSystem.updateBacteria(
             animationState.currentTimeStep,
             dataState.bacteriaData,
             sceneState.visibleBacteria,

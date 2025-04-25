@@ -6,12 +6,14 @@ export const sceneState = {
     /** @type {THREE.PerspectiveCamera | null} */ camera: null,
     /** @type {THREE.WebGLRenderer | null} */ renderer: null,
     /** @type {THREE.Mesh | null} */ surfaceMesh: null, // The mesh representing the concentration surface
-    /** @type {object | null} */ bacteriumSystem: null, // Holds bacteria instances and related methods
     /** @type {object | null} */ bacteriumRenderer: null, // New renderer component for bacteria
     /** @type {boolean} */ visibleBacteria: true, // Toggles visibility of bacteria meshes
 };
 
 /** @type {object} animationState - Manages animation loop, timing, and playback state. */
+export const simulationState = {
+    bacteriumSystem: null,
+};
 export const animationState = {
     /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
     /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
@@ -62,9 +64,9 @@ export const cleanupResources = () => {
     }
 
     // Dispose bacterium system if it exists
-    if (sceneState.bacteriumSystem) {
-        sceneState.bacteriumSystem.dispose();
-        sceneState.bacteriumSystem = null;
+    if (simulationState.bacteriumSystem) {
+        simulationState.bacteriumSystem.dispose();
+        simulationState.bacteriumSystem = null;
         console.log("Bacterium system disposed.");
     }
 
@@ -183,5 +185,3 @@ export class HistoryManager {
         this.averageSimilarityHistory = [];
     }
 }
-
-
