@@ -11,7 +11,6 @@ let plotRendererInstance = null;
 let mesh = null;
 let stage = {};
 let capsules = [];  
-let activeCount = 0;
 const capsuleGeometryCache = new Map();
 const edgesGeometryCache = new Map();
 
@@ -67,34 +66,36 @@ function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
 
 function renderBacteria(bacteriaData, config, THREE) {
    // Reset active count and hide all capsules
-   activeCount = 0;
+   let activeCount = 0;
    capsules.forEach(capsule => {
         capsule.visible = false;
    });
    
-   // Render each bacterium
-   bacteriaData.forEach(data => {
-       const bacterium = capsules[activeCount++]
+   // Render each capsule
+   bacteriaData.forEach(bacterium => {
+       const capsule = capsules[activeCount++]
    
-       const { position, angle, longAxis, phenotype, magentaProportion, cyanProportion, visible = true } = data;
+       const { position, angle, longAxis, phenotype, similarity } = bacterium;
    
        const threePosition = new THREE.Vector3(position.x, position.y, 0);
+
        
-       bacterium.position.set(threePosition.x, threePosition.y, 0);
-       bacterium.rotation.z = angle * Math.PI;  
+       
+       capsule.position.set(threePosition.x, threePosition.y, 0);
+       capsule.rotation.z = angle * Math.PI;  
 
        // Update geometry using the new function
-       updateCapsuleGeometry(bacterium, longAxis, config.BACTERIUM, THREE);
+       updateCapsuleGeometry(capsule, longAxis, config.BACTERIUM, THREE);
        
        // Update color
-       updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, config, THREE);
+       updateBacteriumColor(capsule, phenotype,  config, THREE,similarity);
        
        // Set visibility
-       bacterium.visible = visible;
+       capsule.visible = true;
    });
 }
 
-function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, config, THREE) {
+function updateBacteriumColor(bacterium, phenotype,  config, THREE,similarity) {
     // Convert string phenotype to THREE.Color
     const threeColor = new THREE.Color(config.COLORS[phenotype]);
 
@@ -107,10 +108,7 @@ function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanPropo
             
         case false:
             // Color by similarity
-            const isMagenta = phenotype === config.PHENOTYPES.MAGENTA;
-            const scalar = isMagenta
-                ? Math.round(magentaProportion * 255) 
-                : Math.round(cyanProportion * 255);
+            const scalar = Math.round(similarity * 255);
                 
             const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
             bacterium.material.color.set(similarityColor);
@@ -122,23 +120,25 @@ function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanPropo
 /**
  * Updates a capsule's geometry based on the specified length
  * @param {THREE.Mesh} capsule - The capsule mesh to update
- * @param {number} adjustedLength - The new length for the capsule
+ * @param {number} longAxis - The new length for the capsule
  */
-function updateCapsuleGeometry(capsule, adjustedLength, BACTERIUM, THREE) {
+function updateCapsuleGeometry(capsule, longAxis, BACTERIUM, THREE) {
     // Get or create geometry for this length
-    let newGeometry = capsuleGeometryCache.get(adjustedLength);
-    let newWireframeGeometry = edgesGeometryCache.get(adjustedLength);
+    let newGeometry = capsuleGeometryCache.get(longAxis);
+    let newWireframeGeometry = edgesGeometryCache.get(longAxis);
 
     if (!newGeometry) {
         newGeometry = new THREE.CapsuleGeometry(
             0.5,
-            adjustedLength,
+            longAxis,
             BACTERIUM.CAP_SEGMENTS,
             BACTERIUM.RADIAL_SEGMENTS
         );
-        capsuleGeometryCache.set(adjustedLength, newGeometry);
+        console.log("Creating new capsule geometry for length:", longAxis)
+
+        capsuleGeometryCache.set(longAxis, newGeometry);
         newWireframeGeometry = new THREE.EdgesGeometry(newGeometry);
-        edgesGeometryCache.set(adjustedLength, newWireframeGeometry);
+        edgesGeometryCache.set(longAxis, newWireframeGeometry);
     }
 
     // Update geometry if different from current

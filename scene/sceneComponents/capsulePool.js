@@ -18,13 +18,6 @@
     return capsules;
 }
 
-function createCapsule(config, THREE) {
-
-
-    
-    return capsule;
-}
-
 export function setupBacteriaPool(stage, size, THREE, capsules) {
     
     // Expand the pool to the initial size
