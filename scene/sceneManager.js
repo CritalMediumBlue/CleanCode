@@ -83,7 +83,7 @@ const phenotypeColors = {
     'MAGENTA': new THREE.Color(0xFF00FF),
     'CYAN': new THREE.Color(0x00FFFF)
 };
-
+ 
 
 function renderBacteria(bacteriaData, config, THREE) {
    // Reset active count and hide all capsules
