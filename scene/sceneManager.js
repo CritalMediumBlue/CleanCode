@@ -13,7 +13,7 @@ let mesh = null;
 
 export function setupNewScene(config) {
     console.log("Setting up new scene...");
-    const stage = setupStage(config, THREE, OrbitControls);
+    const stage = setupStage(config.SCENE, THREE, OrbitControls);
 
     
     // Initialize the bacterium visualization system
@@ -40,7 +40,6 @@ export function renderScene(sceneState,bacteriaData, dataState, appConfig,animat
         bacteriumRendererInstance.renderBacteria(bacteriaData);
     }
 }
-
 
 
 function updateScene(sceneState, dataState, appConfig, animationState, mesh) {

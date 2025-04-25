@@ -9,46 +9,44 @@
  * @param {Object} THREE - Three.js library
  * @returns {Object} - Configured Three.js camera
  */
-export function createCamera(config, THREE) {
+export function createCamera(SCENE, THREE, OrbitControlsClass, domElement) {
     const camera = new THREE.PerspectiveCamera(
-        config.SCENE.CAMERA_FOV,
+        SCENE.CAMERA_FOV,
         window.innerWidth / window.innerHeight,
-        config.SCENE.CAMERA_NEAR,
-        config.SCENE.CAMERA_FAR
+        SCENE.CAMERA_NEAR,
+        SCENE.CAMERA_FAR
     );
     camera.position.set(
-        config.SCENE.CAMERA_POSITION.x,
-        config.SCENE.CAMERA_POSITION.y,
-        config.SCENE.CAMERA_POSITION.z
+        SCENE.CAMERA_POSITION.x,
+        SCENE.CAMERA_POSITION.y,
+        SCENE.CAMERA_POSITION.z
     );
     camera.lookAt(
-        config.SCENE.CAMERA_LOOKAT.x,
-        config.SCENE.CAMERA_LOOKAT.y,
-        config.SCENE.CAMERA_LOOKAT.z
+        SCENE.CAMERA_LOOKAT.x,
+        SCENE.CAMERA_LOOKAT.y,
+        SCENE.CAMERA_LOOKAT.z
     );
+
+    createControls(camera, domElement, SCENE, OrbitControlsClass);
+
     return camera;
 }
 
-/**
- * Creates and configures orbit controls for the camera
- * @param {Object} camera - Three.js camera
- * @param {HTMLElement} domElement - DOM element to attach controls to
- * @param {Object} config - Configuration object containing control settings
- * @param {Object} OrbitControls - Three.js OrbitControls
- * @returns {Object} - Configured orbit controls
- */
-export function createControls(camera, domElement, config, OrbitControlsClass) {
+function createControls(camera, domElement, SCENE, OrbitControlsClass) {
+    if (!(domElement instanceof HTMLElement)) {
+        console.error("Invalid domElement passed to OrbitControls. Ensure it is a valid DOM element.");
+        return;
+    }
+
     const controls = new OrbitControlsClass(camera, domElement);
     controls.enableDamping = false;
     controls.autoRotate = false;
     controls.screenSpacePanning = true;
-    controls.maxDistance = config.SCENE.CONTROLS_MAX_DISTANCE;
-    controls.minDistance = config.SCENE.CONTROLS_MIN_DISTANCE;
+    controls.maxDistance = SCENE.CONTROLS_MAX_DISTANCE;
+    controls.minDistance = SCENE.CONTROLS_MIN_DISTANCE;
     controls.target.set(
-        config.SCENE.CAMERA_LOOKAT.x,
-        config.SCENE.CAMERA_LOOKAT.y,
-        config.SCENE.CAMERA_LOOKAT.z
+        SCENE.CAMERA_LOOKAT.x,
+        SCENE.CAMERA_LOOKAT.y,
+        SCENE.CAMERA_LOOKAT.z
     );
-    
-    return controls;
 }

@@ -80,7 +80,7 @@ const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
     cleanupResources();
 
-    const newSceneState = setupNewScene( appConfig);
+    const newSceneState = setupNewScene(appConfig);
     Object.assign(sceneState, newSceneState);
     simulationState.bacteriumSystem = createBacteriumSystem( appConfig)
 

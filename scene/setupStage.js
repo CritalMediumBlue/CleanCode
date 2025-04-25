@@ -3,7 +3,7 @@
  */
 
 import { createScene } from './stageComponetns/scene.js';
-import { createCamera, createControls } from './stageComponetns/camera.js';
+import { createCamera } from './stageComponetns/camera.js';
 import { createRenderer } from './stageComponetns/renderer.js';
 
 /**
@@ -13,13 +13,12 @@ import { createRenderer } from './stageComponetns/renderer.js';
  * @param {Object} OrbitControls - Three.js OrbitControls class
  * @returns {Object} - Object containing scene, camera, and renderer
  */
-export function setupStage(config, THREE, OrbitControls) {
-    const scene = createScene(config, THREE);
-    const camera = createCamera(config, THREE);
+export function setupStage(SCENE, THREE, OrbitControls) {
+    const scene = createScene(SCENE, THREE);
     const renderer = createRenderer(THREE);
-    const controls = createControls(camera, renderer.domElement, config, OrbitControls);
+    const camera = createCamera(SCENE, THREE, OrbitControls, renderer.domElement);
 
     document.body.appendChild(renderer.domElement);
 
-    return { scene, camera, renderer, controls };
+    return { scene, camera, renderer };
 }

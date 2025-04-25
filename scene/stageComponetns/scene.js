@@ -8,8 +8,8 @@
  * @param {Object} THREE - Three.js library
  * @returns {Object} - Configured Three.js scene
  */
-export function createScene(config, THREE) {
+export function createScene(SCENE, THREE) {
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(config.SCENE.FOG_COLOR, config.SCENE.FOG_NEAR, config.SCENE.FOG_FAR);
+    scene.fog = new THREE.Fog(SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR);
     return scene;
 }
