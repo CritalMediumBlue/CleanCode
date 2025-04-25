@@ -1,4 +1,3 @@
-
 /**
  * Creates and returns a surface mesh for the scene.
  * @param {THREE.Scene} scene - The scene to add the mesh to.
@@ -43,5 +42,62 @@ export function setupMesh(stage,THREE, config) {
 
     return surfaceMesh;
     
-    console.log("Surface mesh created (wireframe) and added to scene with color attribute.");
+}
+
+export const calculateColor = (concentration) => {
+    // Normalize concentration value
+    const normalizedConcentration = concentration;
+
+    // Calculate the phase for the sine wave
+    const phase = normalizedConcentration * 2 * Math.PI;
+
+    // Calculate RGB components using sine waves with phase shifts, scaled to [0, 1]
+    const red = (Math.sin(phase) + 1) / 2;
+    const green = (Math.sin(phase - (2 * Math.PI / 3)) + 1) / 2;
+    const blue = (Math.sin(phase - (4 * Math.PI / 3)) + 1) / 2;
+
+    // Return RGB values, ensuring they are not NaN
+    return {
+        r: isNaN(red) ? 0 : red,
+        g: isNaN(green) ? 0 : green,
+        b: isNaN(blue) ? 0 : blue
+    };
+};
+
+export function updateSurfaceMesh(surfaceMesh, dataState, grid, heightMultiplier = 10) {
+    const concentrationData = dataState.currentConcentrationData;
+    if (!surfaceMesh) {
+        console.warn("updateSurfaceMesh called before surfaceMesh is initialized.");
+        return;
+    }
+
+    // Get direct access to the position and color buffer arrays
+    const positions = surfaceMesh.geometry.attributes.position.array; // x, y, z for each vertex
+    const colorsAttribute = surfaceMesh.geometry.attributes.color; // r, g, b for each vertex
+
+    // Iterate through each point in the grid
+    for (let y = 0; y < grid.HEIGHT; y++) {
+        for (let x = 0; x < grid.WIDTH; x++) {
+            const idx = y * grid.WIDTH + x; // Calculate 1D index
+            const bufferIndex = 3 * idx; // Base index for position and color arrays
+
+            // --- Update Height (Z-position) ---
+            let concentration = concentrationData[idx];
+            if (isNaN(concentration)) {
+                concentration = 0.0;
+            }
+            const height = concentration; // Direct mapping
+            positions[bufferIndex + 2] = isNaN(height) ? 0 : height * heightMultiplier; // Set Z value
+
+            // --- Update Color ---
+            const color = calculateColor(concentration);
+            colorsAttribute.array[bufferIndex] = color.r;
+            colorsAttribute.array[bufferIndex + 1] = color.g;
+            colorsAttribute.array[bufferIndex + 2] = color.b;
+        }
+    }
+
+    // Mark attributes as needing update for Three.js
+    surfaceMesh.geometry.attributes.position.needsUpdate = true;
+    surfaceMesh.geometry.attributes.color.needsUpdate = true;
 }

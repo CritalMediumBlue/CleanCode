@@ -4,7 +4,7 @@
 
 import { createScene } from './stageComponetns/scene.js';
 import { createCamera, createControls } from './stageComponetns/camera.js';
-import { createRenderer, handleWindowResize } from './stageComponetns/renderer.js';
+import { createRenderer } from './stageComponetns/renderer.js';
 
 /**
  * Sets up a complete Three.js stage with scene, camera, and renderer
@@ -19,8 +19,7 @@ export function setupStage(config, THREE, OrbitControls) {
     const renderer = createRenderer(THREE);
     const controls = createControls(camera, renderer.domElement, config, OrbitControls);
 
-    // Handle window resize to match viewport dimensions
-    window.addEventListener('resize', () => handleWindowResize(renderer, camera));
+    document.body.appendChild(renderer.domElement);
 
     return { scene, camera, renderer, controls };
 }
