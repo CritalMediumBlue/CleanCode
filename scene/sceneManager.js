@@ -99,10 +99,10 @@ function renderBacteria(bacteriaData, config, THREE) {
    
        const { position, angle, longAxis, phenotype, magentaProportion, cyanProportion, visible = true } = data;
    
-       const threePosition = new THREE.Vector3(position.x, position.y, position.z || 0);
+       const threePosition = new THREE.Vector3(position.x, position.y, 0);
        
        // Set position and rotation
-       setBacteriumTransform(bacterium, threePosition, angle, position.z || 0);
+       setBacteriumTransform(bacterium, threePosition, angle, 0);
        
        // Update geometry using the new function
        updateCapsuleGeometry(bacterium, longAxis, config, THREE);
@@ -119,21 +119,25 @@ function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanPropo
     // Convert string phenotype to THREE.Color
     const threeColor = phenotypeColors[phenotype];
 
-    if (config.BACTERIUM.COLOR_BY_INHERITANCE) {
-        // Color by phenotype
-        bacterium.material.color.copy(threeColor);
-        bacterium.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.5));
-    } else {
-        // Color by similarity
-        const isMagenta = phenotype === config.PHENOTYPES.MAGENTA;
-        const scalar = isMagenta
-            ? Math.round(magentaProportion * 255) 
-            : Math.round(cyanProportion * 255);
+    switch (config.BACTERIUM.COLOR_BY_INHERITANCE) {
+        case true:
+            // Color by phenotype
+            bacterium.material.color.copy(threeColor);
+            bacterium.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.5));
+            break;
             
-        const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
-        bacterium.material.color.set(similarityColor);
-        bacterium.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.5));
-    }
+        case false:
+            // Color by similarity
+            const isMagenta = phenotype === config.PHENOTYPES.MAGENTA;
+            const scalar = isMagenta
+                ? Math.round(magentaProportion * 255) 
+                : Math.round(cyanProportion * 255);
+                
+            const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
+            bacterium.material.color.set(similarityColor);
+            bacterium.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.5));
+            break;
+        }
 }
 
 /**
