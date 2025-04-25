@@ -2,14 +2,17 @@ import {THREE, OrbitControls} from './threeImports.js';
 import { setupMesh } from './sceneComponents/mesh.js';
 import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
-import { BacteriaPool} from './sceneComponents/bacteriaPool.js';
 import { setupStage } from './setupStage.js';
 import { updateSurfaceMesh } from './sceneComponents/mesh.js';
+
 
 let plotRendererInstance = null;
 let mesh = null;
 let stage = {};
-let bacteriaPool = null;
+let capsules = [];  
+let activeCount = 0;
+const capsuleGeometryCache = new Map();
+const edgesGeometryCache = new Map();
 
 
 
@@ -23,7 +26,7 @@ export function setupNewScene(config) {
 
     // Setup the concentration visualization mesh
     mesh = setupMesh(stage, THREE,config);
-    bacteriaPool = setupBacteriaPool(stage, config, THREE);
+    capsules = setupBacteriaPool(stage, config, THREE,capsules);
 
         
 }
@@ -36,7 +39,7 @@ export function renderScene(sceneState, bacteriaData, dataState, appConfig, anim
     }
     stage.renderer.render(stage.scene, stage.camera);
     if (bacteriaData) {
-        renderBacteria(bacteriaData, appConfig);
+        renderBacteria(bacteriaData, appConfig, THREE);
     }
     
 }
@@ -57,8 +60,69 @@ function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
 
 
 
-function setupBacteriaPool(stage, config, THREE) {
-    return new BacteriaPool(stage.scene, config.BACTERIUM.INITIAL_POOL_SIZE, config, THREE);
+function   expandPool(Size,config, THREE, capsules) {
+        while (capsules.length < Size) {
+            const capsule = createCapsule(config, THREE);
+            capsules.push(capsule);
+        }
+        return capsules;
+}
+
+function createCapsule(config, THREE) {
+        const capsuleGeometry = new THREE.CapsuleGeometry(
+            0.4,
+            1,
+            config.BACTERIUM.CAP_SEGMENTS,
+            config.BACTERIUM.RADIAL_SEGMENTS
+        );
+        const capsuleMaterial = new THREE.MeshBasicMaterial({ 
+            color: new THREE.Color(0xffffff),
+            transparent: true,
+            opacity: 1
+        });
+        
+        const capsule = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
+        
+        // Add wireframe
+        const wireframeGeometry = new THREE.EdgesGeometry(capsuleGeometry);
+        const wireframeMaterial = new THREE.LineBasicMaterial({ 
+            color: new THREE.Color(config.BACTERIUM.WIREFRAME_COLOR) 
+        });
+        const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+        
+        capsule.add(wireframe);
+        
+        return capsule;
+    }
+
+
+
+function getCapsule(config, THREE) {
+    if (activeCount >= capsules.length) {
+        const newSize = Math.ceil(capsules.length * config.BACTERIUM.POOL_GROWTH_FACTOR);
+        console.log(`Expanding pool from ${capsules.length} to ${newSize}`);
+        capsules = expandPool(newSize, config, THREE, capsules);
+    }
+    return capsules[activeCount++];
+}
+
+
+
+
+
+
+
+function setupBacteriaPool(stage, config, THREE, capsules) {
+    const initialSize = config.BACTERIUM.INITIAL_POOL_SIZE;
+    
+    // Expand the pool to the initial size
+    capsules = expandPool(initialSize, config, THREE, capsules);
+
+    // Add all capsules to the scene
+    capsules.forEach(capsule => {
+        stage.scene.add(capsule);
+    });
+    return capsules;
 
 }
 
@@ -79,26 +143,26 @@ const phenotypeColors = {
 };
 
 
-function renderBacteria(bacteriaData, config) {
-
-
-   // Reset the pool for new render
-   bacteriaPool.reset();
+function renderBacteria(bacteriaData, config, THREE) {
+   // Reset active count and hide all capsules
+   activeCount = 0;
+   capsules.forEach(capsule => {
+        capsule.visible = false;
+   });
    
    // Render each bacterium
    bacteriaData.forEach(data => {
-       const bacterium = bacteriaPool.getCapsule(); //returns a THREE.CapsuleGeometry
+       const bacterium = getCapsule(config, THREE); // Get a capsule from the pool
    
-       const { position, angle, longAxis, phenotype, magentaProportion, cyanProportion, visible } = data;
+       const { position, angle, longAxis, phenotype, magentaProportion, cyanProportion, visible = true } = data;
    
-       // Convert plain position to THREE.Vector3
        const threePosition = new THREE.Vector3(position.x, position.y, position.z || 0);
        
        // Set position and rotation
        setBacteriumTransform(bacterium, threePosition, angle, position.z || 0);
        
-       // Update geometry using THREE
-       bacteriaPool.updateGeometry(bacterium, longAxis);
+       // Update geometry using the new function
+       updateCapsuleGeometry(bacterium, longAxis, config, THREE);
        
        // Update color
        updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanProportion, phenotypeColors, config, THREE);
@@ -126,5 +190,43 @@ function updateBacteriumColor(bacterium, phenotype, magentaProportion, cyanPropo
         const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
         bacterium.material.color.set(similarityColor);
         bacterium.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.5));
+    }
+}
+
+/**
+ * Updates a capsule's geometry based on the specified length
+ * @param {THREE.Mesh} capsule - The capsule mesh to update
+ * @param {number} adjustedLength - The new length for the capsule
+ */
+function updateCapsuleGeometry(capsule, adjustedLength, config, THREE) {
+    // Get or create geometry for this length
+    let newGeometry = capsuleGeometryCache.get(adjustedLength);
+    let newWireframeGeometry = edgesGeometryCache.get(adjustedLength);
+
+    if (!newGeometry) {
+        newGeometry = new THREE.CapsuleGeometry(
+            0.4,
+            adjustedLength,
+            config.BACTERIUM.CAP_SEGMENTS,
+            config.BACTERIUM.RADIAL_SEGMENTS
+        );
+        capsuleGeometryCache.set(adjustedLength, newGeometry);
+        newWireframeGeometry = new THREE.EdgesGeometry(newGeometry);
+        edgesGeometryCache.set(adjustedLength, newWireframeGeometry);
+    }
+
+    // Update geometry if different from current
+    if (capsule.geometry !== newGeometry) {
+        capsule.geometry.dispose();
+        capsule.geometry = newGeometry;
+
+        const wireframe = capsule.children[0];
+        wireframe.geometry.dispose();
+        wireframe.geometry = newWireframeGeometry;
+        wireframe.scale.set(
+            config.BACTERIUM.WIREFRAME_SCALE, 
+            config.BACTERIUM.WIREFRAME_SCALE, 
+            config.BACTERIUM.WIREFRAME_SCALE
+        );
     }
 }
