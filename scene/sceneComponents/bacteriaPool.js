@@ -7,7 +7,6 @@ export class BacteriaPool {
         this.config = config;
         this.capsules = []; 
         this.activeCount = 0;
-        this.growthFactor = this.config.BACTERIUM.POOL_GROWTH_FACTOR;
         this.capsuleGeometryCache = new Map();
         this.edgesGeometryCache = new Map();
         this.THREE = THREE; // Store THREE as instance property
@@ -62,7 +61,7 @@ export class BacteriaPool {
     /**
      * Get a bacterium from the pool, expanding if necessary
      */
-    getBacterium() {
+    getCapsule() {
         // Handle the case where the pool might be empty initially
         if (this.capsules.length === 0) {
             // Use the INITIAL_POOL_SIZE from config if available, otherwise use a default of 100
@@ -72,7 +71,7 @@ export class BacteriaPool {
         }
         
         if (this.activeCount >= this.capsules.length) {
-            const newSize = Math.ceil(this.capsules.length * this.growthFactor);
+            const newSize = Math.ceil(this.capsules.length * 1.1);
             console.log(`Expanding pool from ${this.capsules.length} to ${newSize}`);
             this.expandPool(newSize);
       

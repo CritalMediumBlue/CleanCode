@@ -84,7 +84,7 @@ export class PlotRenderer {
     }
 
     updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
-        const updateGeometry = (geometry, history) => {
+        const updatePlotGeometry = (geometry, history) => {
             const positions = geometry.attributes.position.array;
             const xStep = 4 / this.config.PLOT_RENDERER.MAX_POINTS;
             
@@ -102,10 +102,10 @@ export class PlotRenderer {
             geometry.setDrawRange(0, Math.min(this.currentIndex, this.config.PLOT_RENDERER.MAX_POINTS));
         };
         
-        updateGeometry(this.totalPlotPoints.geometry, totalHistory);
-        updateGeometry(this.magentaPlotPoints.geometry, magentaHistory);
-        updateGeometry(this.cyanPlotPoints.geometry, cyanHistory);
-        updateGeometry(this.similarityPlotPoints.geometry, similarityHistory);
+        updatePlotGeometry(this.totalPlotPoints.geometry, totalHistory);
+        updatePlotGeometry(this.magentaPlotPoints.geometry, magentaHistory);
+        updatePlotGeometry(this.cyanPlotPoints.geometry, cyanHistory);
+        updatePlotGeometry(this.similarityPlotPoints.geometry, similarityHistory);
         
         this.currentIndex++;
         if (this.currentIndex > this.config.PLOT_RENDERER.MAX_POINTS) {

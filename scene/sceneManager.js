@@ -25,14 +25,12 @@ export function setupNewScene(config) {
     mesh = setupMesh(stage, THREE,config);
     bacteriaPool = setupBacteriaPool(stage, config, THREE);
 
-
-
         
 }
 
 
 export function renderScene(sceneState, bacteriaData, dataState, appConfig, animationState) {
-    updateScene(sceneState, dataState, appConfig, animationState, mesh)
+    updateScene(sceneState, dataState, appConfig, animationState, mesh);
     if (plotRendererInstance.render) {
     plotRendererInstance.render();
     }
@@ -61,6 +59,7 @@ function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
 
 function setupBacteriaPool(stage, config, THREE) {
     return new BacteriaPool(stage.scene, config.BACTERIUM.INITIAL_POOL_SIZE, config, THREE);
+
 }
 
 
@@ -88,7 +87,7 @@ function renderBacteria(bacteriaData, config) {
    
    // Render each bacterium
    bacteriaData.forEach(data => {
-       const bacterium = bacteriaPool.getBacterium();
+       const bacterium = bacteriaPool.getCapsule(); //returns a THREE.CapsuleGeometry
    
        const { position, angle, longAxis, phenotype, magentaProportion, cyanProportion, visible } = data;
    
