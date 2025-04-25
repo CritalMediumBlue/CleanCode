@@ -1,5 +1,6 @@
 /**
  * Camera creation and configuration module for Three.js
+ * Responsible for creating a perspective camera and attaching orbit controls to it.
  */
 
 /**
@@ -8,8 +9,16 @@
  * @param {number} SCENE.CAMERA_FOV - Field of view in degrees
  * @param {number} SCENE.CAMERA_NEAR - Near clipping plane distance
  * @param {number} SCENE.CAMERA_FAR - Far clipping plane distance
- * @param {Object} SCENE.CAMERA_POSITION - Initial camera position {x, y, z}
- * @param {Object} SCENE.CAMERA_LOOKAT - Target point for camera to look at {x, y, z}
+ * @param {Object} SCENE.CAMERA_POSITION - Initial camera position
+ * @param {number} SCENE.CAMERA_POSITION.x - X coordinate of camera position
+ * @param {number} SCENE.CAMERA_POSITION.y - Y coordinate of camera position
+ * @param {number} SCENE.CAMERA_POSITION.z - Z coordinate of camera position
+ * @param {Object} SCENE.CAMERA_LOOKAT - Target point for camera to look at
+ * @param {number} SCENE.CAMERA_LOOKAT.x - X coordinate of look-at point
+ * @param {number} SCENE.CAMERA_LOOKAT.y - Y coordinate of look-at point
+ * @param {number} SCENE.CAMERA_LOOKAT.z - Z coordinate of look-at point
+ * @param {number} SCENE.CONTROLS_MAX_DISTANCE - Maximum distance for orbit controls
+ * @param {number} SCENE.CONTROLS_MIN_DISTANCE - Minimum distance for orbit controls
  * @param {Object} THREE - Three.js library instance
  * @param {Function} OrbitControlsClass - Three.js OrbitControls class constructor
  * @param {HTMLElement} domElement - DOM element to bind controls to (typically the renderer's DOM element)
@@ -33,7 +42,8 @@ export function createCamera(SCENE, THREE, OrbitControlsClass, domElement) {
         SCENE.CAMERA_LOOKAT.z
     );
 
-    createControls(camera, domElement, SCENE, OrbitControlsClass);
+    // Attach orbit controls to the camera
+    camera.controls = createControls(camera, domElement, SCENE, OrbitControlsClass);
 
     return camera;
 }
@@ -45,9 +55,12 @@ export function createCamera(SCENE, THREE, OrbitControlsClass, domElement) {
  * @param {Object} SCENE - Configuration object containing control settings
  * @param {number} SCENE.CONTROLS_MAX_DISTANCE - Maximum distance for orbit controls
  * @param {number} SCENE.CONTROLS_MIN_DISTANCE - Minimum distance for orbit controls
- * @param {Object} SCENE.CAMERA_LOOKAT - Target point for camera to look at {x, y, z}
+ * @param {Object} SCENE.CAMERA_LOOKAT - Target point for camera to look at
+ * @param {number} SCENE.CAMERA_LOOKAT.x - X coordinate of orbit controls target
+ * @param {number} SCENE.CAMERA_LOOKAT.y - Y coordinate of orbit controls target
+ * @param {number} SCENE.CAMERA_LOOKAT.z - Z coordinate of orbit controls target
  * @param {Function} OrbitControlsClass - Three.js OrbitControls class constructor
- * @returns {void}
+ * @returns {Object} - The configured orbit controls object
  */
 function createControls(camera, domElement, SCENE, OrbitControlsClass) {
     const controls = new OrbitControlsClass(camera, domElement);
@@ -61,4 +74,6 @@ function createControls(camera, domElement, SCENE, OrbitControlsClass) {
         SCENE.CAMERA_LOOKAT.y,
         SCENE.CAMERA_LOOKAT.z
     );
+    
+    return controls;
 }
