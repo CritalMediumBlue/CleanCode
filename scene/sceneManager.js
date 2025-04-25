@@ -1,27 +1,30 @@
 import {THREE, OrbitControls} from './threeImports.js';
-import { createMesh } from './sceneComponents/mesh.js';
+import { setupMesh } from './sceneComponents/mesh.js';
 import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { BacteriumRenderer } from './sceneComponents/bacteria.js';
 
 // Removed local GRID constant as it will now be passed to functions
 let plotRendererInstance = null;
- 
-function setupScene(config) {
-    const scene = createScene(config);
-    const camera = createCamera(config);
-    const renderer = createRenderer();
-    createControls(camera, renderer, config);
 
-    // Handle window resize to match viewport dimensions
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+export function renderScene(sceneState,bacteriaData, dataState, appConfig,animationState) {
+    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
+    updateOverlay( animationState,dataState);
+    const histories = Object.values(sceneState.historyManager.getHistories());
+    plotRendererInstance.updatePlot(...histories)
 
-    return { scene, camera, renderer };
+
+    if (plotRendererInstance.render) {
+    plotRendererInstance.render();
+    }
+    if (sceneState.renderer && sceneState.scene && sceneState.camera) {
+        sceneState.renderer.render(sceneState.scene, sceneState.camera);
+    }
+     if (sceneState.bacteriumRenderer && bacteriaData) {
+        sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
+    }
 }
+
 
 
 
@@ -41,7 +44,7 @@ export function setupNewScene(config) {
     sceneState.bacteriumRenderer = createBacteriumRenderer(sceneState.scene, config);
 
     // Setup the concentration visualization mesh
-    setupMesh(sceneState, config);
+    setupMesh(sceneState, THREE,config);
     
     // Setup the plot renderer
     setupPlot(config);
@@ -49,16 +52,23 @@ export function setupNewScene(config) {
     return sceneState;
 }
 
+ 
+function setupScene(config) {
+    const scene = createScene(config);
+    const camera = createCamera(config);
+    const renderer = createRenderer();
+    createControls(camera, renderer, config);
 
-function setupMesh(sceneState, config) {
-    
-    // Create and position the surface mesh
-    sceneState.surfaceMesh = createMesh(sceneState.scene, THREE, config);
-    sceneState.surfaceMesh.rotation.x = Math.PI;
-    sceneState.scene.add(sceneState.surfaceMesh);
-    
-    console.log("Surface mesh created (wireframe) and added to scene with color attribute.");
+    // Handle window resize to match viewport dimensions
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    return { scene, camera, renderer };
 }
+
 
 function setupPlot(config) {
     plotRendererInstance = new PlotRenderer(config);
@@ -66,44 +76,15 @@ function setupPlot(config) {
     console.log("Plot renderer initialized.");
 }
 
-export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
-    plotRendererInstance.updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory);
-}
-
-export function renderScene(sceneState,bacteriaData, dataState, appConfig,animationState) {
-    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
-    updateOverlay( 
-        animationState,
-        dataState
-    );
-    plotRendererInstance.render();
-    if (sceneState.renderer && sceneState.scene && sceneState.camera) {
-        sceneState.renderer.render(sceneState.scene, sceneState.camera);
-    }
-     // Render bacteria using the dedicated renderer
-     if (sceneState.bacteriumRenderer && bacteriaData) {
-        sceneState.bacteriumRenderer.renderBacteria(bacteriaData);
-    }
-}
 
 
 
-/**
- * Creates and returns a new THREE.Scene object.
- * @param {Object} config - Configuration object
- * @returns {THREE.Scene} The created scene.
- */
 function createScene(config) {
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(config.SCENE.FOG_COLOR, config.SCENE.FOG_NEAR, config.SCENE.FOG_FAR);
     return scene;
 }
 
-/**
- * Creates and returns a new THREE.PerspectiveCamera object.
- * @param {Object} config - Configuration object
- * @returns {THREE.PerspectiveCamera} The created camera.
- */
 function createCamera(config) {
     const camera = new THREE.PerspectiveCamera(
         config.SCENE.CAMERA_FOV,
@@ -125,11 +106,6 @@ function createCamera(config) {
 }
 
 
-
-/**
- * Creates and returns a new THREE.WebGLRenderer object.
- * @returns {THREE.WebGLRenderer} The created renderer.
- */
 function createRenderer() {
     const renderer = new THREE.WebGLRenderer( {antialias: false});
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -137,13 +113,7 @@ function createRenderer() {
     return renderer;
 }
 
-/**
- * Creates and returns a new OrbitControls object.
- * @param {THREE.Camera} camera - The camera to control.
- * @param {THREE.WebGLRenderer} renderer - The renderer to control.
- * @param {Object} config - Configuration object
- * @returns {OrbitControls} The created controls.
- */
+
 function createControls(camera, renderer, config) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = false;
@@ -180,21 +150,8 @@ const calculateColor = (concentration) => {
     };
 };
 
-/**
- * Updates the geometry (vertex heights) and color attributes of the surface mesh
- * based on the given concentration data.
- * 
- * @param {THREE.Mesh} surfaceMesh - The mesh representing the concentration surface
- * @param {Float32Array} concentrationData - Array of concentration values
- * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties
- * @param {number} heightMultiplier - Optional multiplier for height values (default: 5)
- */
-export function updateSurfaceMesh(sceneState, dataState, grid, heightMultiplier = 10) {
-    const histories = Object.values(sceneState.historyManager.getHistories());
-
-
-
-    plotRendererInstance.updatePlot(...histories)
+function updateSurfaceMesh(sceneState, dataState, grid, heightMultiplier = 10) {
+  
 
     const surfaceMesh = sceneState.surfaceMesh;
     const concentrationData = dataState.currentConcentrationData;
@@ -236,16 +193,9 @@ export function updateSurfaceMesh(sceneState, dataState, grid, heightMultiplier 
     surfaceMesh.geometry.attributes.color.needsUpdate = true;
 }
 
-/**
- * Creates and returns a new BacteriumRenderer instance
- * @param {THREE.Scene} scene - The scene to add bacteria to
- * @param {Object} config - Configuration object containing BACTERIUM and PHENOTYPES values
- * @returns {BacteriumRenderer} The created bacterium renderer
- */
-export function createBacteriumRenderer(scene, config) {
+function createBacteriumRenderer(scene, config) {
     // Pass THREE to BacteriumRenderer to implement dependency injection
     return new BacteriumRenderer(scene, config, THREE);
 }
 
-export { updateOverlay };
 
