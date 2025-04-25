@@ -80,9 +80,6 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
     const toggleButtons = [
         { id: 'playButton', event: 'click', handler: () => stateActions.setPlayState(true) },
         { id: 'pauseButton', event: 'click', handler: () => stateActions.setPlayState(false) },
-    
-        { id: 'visibleMesh', event: 'click', handler: () => stateActions.toggleMeshVisibility() },
-
         // Select/dropdown controls
         {
             id: 'toggleColorButton', event: 'change', handler: (event) => {

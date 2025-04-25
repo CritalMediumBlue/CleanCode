@@ -37,9 +37,11 @@ export function createMesh(scene,THREE, config) {
 export function setupMesh(stage,THREE, config) {
     
     // Create and position the surface mesh
-    stage.surfaceMesh = createMesh(stage.scene, THREE, config);
-    stage.surfaceMesh.rotation.x = Math.PI;
-    stage.scene.add(stage.surfaceMesh);
+    const surfaceMesh = createMesh(stage.scene, THREE, config);
+    surfaceMesh.rotation.x = Math.PI;
+    stage.scene.add(surfaceMesh);
+
+    return surfaceMesh;
     
     console.log("Surface mesh created (wireframe) and added to scene with color attribute.");
 }

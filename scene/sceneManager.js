@@ -3,13 +3,14 @@ import { setupMesh } from './sceneComponents/mesh.js';
 import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { BacteriumRenderer } from './sceneComponents/bacteria.js';
-import { setupScene } from './scene.js';
+import { setupScene } from './stage.js';
 
 let plotRendererInstance = null;
 let bacteriumRendererInstance = null;
+let mesh = null;
 
 export function renderScene(sceneState,bacteriaData, dataState, appConfig,animationState) {
-    updateScene(sceneState, dataState, appConfig, animationState)
+    updateScene(sceneState, dataState, appConfig, animationState, mesh)
     if (plotRendererInstance.render) {
     plotRendererInstance.render();
     }
@@ -40,17 +41,15 @@ export function setupNewScene(config) {
     plotRendererInstance.init(THREE);
 
     // Setup the concentration visualization mesh
-    setupMesh(stage, THREE,config);
-    
-    // Setup the plot renderer
-    
+    mesh = setupMesh(stage, THREE,config);
+        
     return stage;
 }
 
 
 
-function updateScene(sceneState, dataState, appConfig, animationState) {
-    updateSurfaceMesh(sceneState, dataState, appConfig.GRID);
+function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
+    updateSurfaceMesh(mesh, dataState, appConfig.GRID);
     updateOverlay( animationState,dataState);
     const histories = Object.values(sceneState.historyManager.getHistories());
     plotRendererInstance.updatePlot(...histories)
@@ -80,10 +79,9 @@ const calculateColor = (concentration) => {
     };
 };
 
-function updateSurfaceMesh(sceneState, dataState, grid, heightMultiplier = 10) {
+function updateSurfaceMesh(surfaceMesh, dataState, grid, heightMultiplier = 10) {
   
 
-    const surfaceMesh = sceneState.surfaceMesh;
     const concentrationData = dataState.currentConcentrationData;
     if (!surfaceMesh) {
         console.warn(" called before surfaceMesh is initialized.");
@@ -122,10 +120,3 @@ function updateSurfaceMesh(sceneState, dataState, grid, heightMultiplier = 10) {
     surfaceMesh.geometry.attributes.position.needsUpdate = true;
     surfaceMesh.geometry.attributes.color.needsUpdate = true;
 }
-
-function createBacteriumRenderer(scene, config) {
-    // Pass THREE to BacteriumRenderer to implement dependency injection
-    return new BacteriumRenderer(scene, config, THREE);
-}
-
-

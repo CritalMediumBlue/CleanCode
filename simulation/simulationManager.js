@@ -166,7 +166,7 @@ export class BacteriumSystem {
      * @param {Float32Array} concentrations - Concentration values across the grid
      * @returns {BacteriumData} Processed bacterium data ready for rendering
      */
-    processBacterium(bacteriumData, visible, concentrations) {
+    processBacterium(bacteriumData, concentrations) {
         const { x, y, longAxis, angle, ID, parent } = bacteriumData;
         const WIDTH = 100, HEIGHT = 60;
         
@@ -195,7 +195,7 @@ export class BacteriumSystem {
             phenotypeInfo.magentaProportion,
             phenotypeInfo.cyanProportion,
             phenotypeInfo.similarity,
-            visible
+            
         );
     }
 

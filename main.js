@@ -34,8 +34,6 @@ let appConfig;
 /**
  * @typedef {Object} StateActions
  * @property {function(boolean): void} setPlayState - Sets the animation playback state
- * @property {function(): void} toggleBacteriaVisibility - Toggles bacteria visibility
- * @property {function(): void} toggleMeshVisibility - Toggles surface mesh visibility
  * @property {function(): void} renderScene - Renders the scene manually
  */
 
@@ -47,14 +45,6 @@ let appConfig;
 const stateActions = {
     setPlayState: (isPlaying) => {
         animationState.play = isPlaying;
-    },
-    toggleBacteriaVisibility: () => {
-        sceneState.visibleBacteria = !sceneState.visibleBacteria;
-    },
-    toggleMeshVisibility: () => {
-        if (sceneState.surfaceMesh) {
-            sceneState.surfaceMesh.visible = !sceneState.surfaceMesh.visible;
-        }
     },
     renderScene: () => {
         renderScene(sceneState);
@@ -237,7 +227,6 @@ const animate = () => {
         bacteriaData = simulationState.bacteriumSystem.updateBacteria(
             animationState.currentTimeStep,
             dataState.bacteriaData,
-            sceneState.visibleBacteria,
             dataState.currentConcentrationData
         );
     }
