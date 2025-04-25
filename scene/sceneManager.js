@@ -7,17 +7,11 @@ import { BacteriumRenderer } from './sceneComponents/bacteria.js';
 // Removed local GRID constant as it will now be passed to functions
 let plotRendererInstance = null;
  
-/**
- * Sets up the scene, camera, renderer, and controls.
- * @param {Object} config - Configuration object
- * @returns {Object} An object containing the scene, camera, renderer, and controls.
- */
-export function setupScene(config) {
+function setupScene(config) {
     const scene = createScene(config);
     const camera = createCamera(config);
     const renderer = createRenderer();
     createControls(camera, renderer, config);
-    const surfaceMesh = createMesh(scene, THREE, config);
 
     // Handle window resize to match viewport dimensions
     window.addEventListener('resize', () => {
@@ -26,7 +20,7 @@ export function setupScene(config) {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    return { scene, camera, renderer, surfaceMesh };
+    return { scene, camera, renderer };
 }
 
 
@@ -57,26 +51,9 @@ export function setupNewScene(config) {
 
 
 function setupMesh(sceneState, config) {
-    const grid = config.GRID;
-    
-    // Create the surface mesh geometry specifically for concentration visualization
-    const geometry = new THREE.PlaneGeometry(grid.WIDTH, grid.HEIGHT, grid.WIDTH - 1, grid.HEIGHT - 1);
- 
-    // Initialize the color attribute buffer before creating the mesh
-    // The size is num_vertices * 3 (r, g, b per vertex)
-    const numVertices = geometry.attributes.position.count;
-    const initialColors = new Float32Array(numVertices * 3); // Initialize with zeros
-    geometry.setAttribute('color', new THREE.BufferAttribute(initialColors, 3)); // Add color attribute
-
-    // Create material with wireframe enabled
-    const material = new THREE.MeshBasicMaterial({
-        vertexColors: true,
-        side: THREE.DoubleSide,
-        wireframe: true // Render as wireframe
-    });
     
     // Create and position the surface mesh
-    sceneState.surfaceMesh = new THREE.Mesh(geometry, material);
+    sceneState.surfaceMesh = createMesh(sceneState.scene, THREE, config);
     sceneState.surfaceMesh.rotation.x = Math.PI;
     sceneState.scene.add(sceneState.surfaceMesh);
     
