@@ -1,133 +1,176 @@
+let scene2D = null;
+let camera2D = null;
+let renderer2D = null;
+let totalPlotPoints = null;
+let magentaPlotPoints = null;
+let cyanPlotPoints = null;
+let similarityPlotPoints = null;
+let yTicks = null;
+let needsRender = false;
+let currentIndex = 0;
+let offset = 0;
 
-class PlotRenderer {
-    constructor(config = null) {
-        // Use injected config if provided, otherwise fall back to imported CONFIG
-        this.config = config ;
-        this.scene2D = null;
-        this.camera2D = null;
-        this.renderer2D = null;
-        this.totalPlotPoints = null;
-        this.magentaPlotPoints = null;
-        this.cyanPlotPoints = null;
-        this.similarityPlotPoints = null;
-        this.yTicks = null;
-        this.needsRender = false;
-        this.currentIndex = 0;
-        this.offset = 0;
-        this.loadedFont = null; // Cache the font
-        this.textMesh = null;   // Hold the current text mesh
-    }
+let PLOT = null
 
-    init(THREE) {
-        const plot = document.getElementById('plot-overlay');
-        plot.innerHTML = '';
-        this.scene2D = new THREE.Scene();
-        this.camera2D = new THREE.OrthographicCamera(-2, 2, 1, -1, 0.1, 100);
-        this.camera2D.position.z = 1;
-        this.renderer2D = new THREE.WebGLRenderer({ alpha: true, antialias: false });
-        this.renderer2D.setSize(window.innerWidth * this.config.PLOT_RENDERER.PLOT_WIDTH_RATIO, window.innerHeight * this.config.PLOT_RENDERER.PLOT_HEIGHT_RATIO);
-        this.renderer2D.domElement.style.position = 'absolute';
-        document.getElementById('plot-overlay').appendChild(this.renderer2D.domElement);
+
+// Private geometries and materials
+let totalGeometry, magentaGeometry, cyanGeometry, similarityGeometry;
+let totalMaterial, magentaMaterial, cyanMaterial, similarityMaterial;
+
+/**
+ * Initializes the plot visualization
+ * @param {Object} THREE - Three.js library
+ * @param {Object} userConfig - Configuration object
+ * @returns {Object} - Functions for interacting with the plot
+ */
+export function setupPlot(THREE, config) {
+    PLOT = config;
+    const plot = document.getElementById('plot-overlay');
+    plot.innerHTML = '';
+    
+    scene2D = new THREE.Scene();
+    camera2D = new THREE.OrthographicCamera(-2, 2, 1, -1, 0.1, 100);
+    camera2D.position.z = 1;
+    renderer2D = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+    renderer2D.setSize(
+        window.innerWidth * PLOT.PLOT_WIDTH_RATIO, 
+        window.innerHeight * PLOT.PLOT_HEIGHT_RATIO
+    );
+    renderer2D.domElement.style.position = 'absolute';
+    document.getElementById('plot-overlay').appendChild(renderer2D.domElement);
    
-        this.createPlot(THREE);
-    }
+    createPlot(THREE);
+    
+    return {
+        updatePlot,
+        render
+    };
+}
 
-    createPlot(THREE) {
-        this.createPlotGeometries(THREE);
-        this.createPlotMaterials(THREE);
-        this.createPlotPoints(THREE);
-        this.createTicks(THREE);
-    }
+/**
+ * Create all plot components
+ * @param {Object} THREE - Three.js library
+ */
+function createPlot(THREE) {
+    createPlotGeometries(THREE);
+    createPlotMaterials(THREE);
+    createPlotPoints(THREE);
+    createTicks(THREE);
+}
 
-    createPlotGeometries(THREE) {
-        const positions = new Float32Array(this.config.PLOT_RENDERER.MAX_POINTS * 3);
-        const createGeometry = () => {
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions.slice(), 3));
-            return geometry;
-        };
+/**
+ * Create geometries for plot lines
+ * @param {Object} THREE - Three.js library
+ */
+function createPlotGeometries(THREE) {
+    const positions = new Float32Array(PLOT.MAX_POINTS * 3);
+    const createGeometry = () => {
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions.slice(), 3));
+        return geometry;
+    };
+    
+    totalGeometry = createGeometry();
+    magentaGeometry = createGeometry();
+    cyanGeometry = createGeometry();
+    similarityGeometry = createGeometry();
+}
+
+/**
+ * Create materials for plot lines
+ * @param {Object} THREE - Three.js library
+ */
+function createPlotMaterials(THREE) {
+    totalMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 2 });
+    magentaMaterial = new THREE.PointsMaterial({ color: 0xff00ff, size: 2 });
+    cyanMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: 2 });
+    similarityMaterial = new THREE.PointsMaterial({ color: 0xffff00, size: 2 });
+}
+
+/**
+ * Create point objects for plot visualization
+ * @param {Object} THREE - Three.js library
+ */
+function createPlotPoints(THREE) {
+    totalPlotPoints = new THREE.Points(totalGeometry, totalMaterial);
+    magentaPlotPoints = new THREE.Points(magentaGeometry, magentaMaterial);
+    cyanPlotPoints = new THREE.Points(cyanGeometry, cyanMaterial);
+    similarityPlotPoints = new THREE.Points(similarityGeometry, similarityMaterial);
+
+    scene2D.add(totalPlotPoints, magentaPlotPoints, cyanPlotPoints, similarityPlotPoints);
+}
+
+/**
+ * Create tick marks for the plot axes
+ * @param {Object} THREE - Three.js library
+ */
+function createTicks(THREE) {
+    const tickMaterial = new THREE.LineBasicMaterial({ color: PLOT.AXIS_COLOR });
+    yTicks = new THREE.Group();
+    const points = [];
+    for (let i = 0; i <= PLOT.MAX_Y_VALUE; i += PLOT.Y_TICK_STEP) {
+        const y = (i / PLOT.MAX_Y_VALUE) * 2 - 0.999;
+        points.push(new THREE.Vector3(-2, y, 0), new THREE.Vector3(2, y, 0));
+    }
+    const tickGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    const ticks = new THREE.LineSegments(tickGeometry, tickMaterial);
+    yTicks.add(ticks);
+    scene2D.add(yTicks);
+}
+
+/**
+ * Updates plot data with new history values
+ * @param {Array} totalHistory - History of total bacteria counts
+ * @param {Array} magentaHistory - History of magenta bacteria counts
+ * @param {Array} cyanHistory - History of cyan bacteria counts
+ * @param {Array} similarityHistory - History of similarity values
+ */
+function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
+   
+    
+    const updatePlotGeometry = (geometry, history) => {
+        const positions = geometry.attributes.position.array;
+        const xStep = 4 / PLOT.MAX_POINTS;
         
-        this.totalGeometry = createGeometry();
-        this.magentaGeometry = createGeometry();
-        this.cyanGeometry = createGeometry();
-        this.similarityGeometry = createGeometry();
-    }
-
-    createPlotMaterials(THREE) {
-        this.totalMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: this.config.PLOT_RENDERER.POINT_SIZE });
-        this.magentaMaterial = new THREE.PointsMaterial({ color: 0xff00ff, size: this.config.PLOT_RENDERER.POINT_SIZE });
-        this.cyanMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: this.config.PLOT_RENDERER.POINT_SIZE });
-        this.similarityMaterial = new THREE.PointsMaterial({ color: 0xffff00, size: this.config.PLOT_RENDERER.POINT_SIZE });
-    }
-
-    createPlotPoints(THREE) {
-        this.totalPlotPoints = new THREE.Points(this.totalGeometry, this.totalMaterial);
-        this.magentaPlotPoints = new THREE.Points(this.magentaGeometry, this.magentaMaterial);
-        this.cyanPlotPoints = new THREE.Points(this.cyanGeometry, this.cyanMaterial);
-        this.similarityPlotPoints = new THREE.Points(this.similarityGeometry, this.similarityMaterial);
-
-        this.scene2D.add(this.totalPlotPoints, this.magentaPlotPoints, this.cyanPlotPoints, this.similarityPlotPoints);
-    }
-
-    createTicks(THREE) {
-        const tickMaterial = new THREE.LineBasicMaterial({ color: this.config.PLOT_RENDERER.AXIS_COLOR });
-        this.yTicks = new THREE.Group();
-        const points = [];
-        for (let i = 0; i <= this.config.PLOT_RENDERER.MAX_Y_VALUE; i += this.config.PLOT_RENDERER.Y_TICK_STEP) {
-            const y = (i / this.config.PLOT_RENDERER.MAX_Y_VALUE) * 2 - 0.999;
-            points.push(new THREE.Vector3(-2, y, 0), new THREE.Vector3(2, y, 0));
+        for (let i = 0; i < PLOT.MAX_POINTS; i++) {
+            const historyIndex = offset + i;
+            const x = -2 + i * xStep;
+            const y = historyIndex < history.length ? 
+                (history[historyIndex] / PLOT.MAX_Y_VALUE) * 2 - 0.999 : -1;
+            const index = i * 3;
+            positions[index] = x;
+            positions[index + 1] = y;
+            positions[index + 2] = 0;
         }
-        const tickGeometry = new THREE.BufferGeometry().setFromPoints(points);
-        const ticks = new THREE.LineSegments(tickGeometry, tickMaterial);
-        this.yTicks.add(ticks);
-        this.scene2D.add(this.yTicks);
-    }
-
-    updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
-        const updatePlotGeometry = (geometry, history) => {
-            const positions = geometry.attributes.position.array;
-            const xStep = 4 / this.config.PLOT_RENDERER.MAX_POINTS;
-            
-            for (let i = 0; i < this.config.PLOT_RENDERER.MAX_POINTS; i++) {
-                const historyIndex = this.offset + i;
-                const x = -2 + i * xStep;
-                const y = historyIndex < history.length ? (history[historyIndex] / this.config.PLOT_RENDERER.MAX_Y_VALUE) * 2 - 0.999 : -1;
-                const index = i * 3;
-                positions[index] = x;
-                positions[index + 1] = y;
-                positions[index + 2] = 0;
-            }
-            
-            geometry.attributes.position.needsUpdate = true;
-            geometry.setDrawRange(0, Math.min(this.currentIndex, this.config.PLOT_RENDERER.MAX_POINTS));
-        };
         
-        updatePlotGeometry(this.totalPlotPoints.geometry, totalHistory);
-        updatePlotGeometry(this.magentaPlotPoints.geometry, magentaHistory);
-        updatePlotGeometry(this.cyanPlotPoints.geometry, cyanHistory);
-        updatePlotGeometry(this.similarityPlotPoints.geometry, similarityHistory);
-        
-        this.currentIndex++;
-        if (this.currentIndex > this.config.PLOT_RENDERER.MAX_POINTS) {
-            this.offset++;
-        }
-        this.needsRender = true;
-
+        geometry.attributes.position.needsUpdate = true;
+        geometry.setDrawRange(0, Math.min(currentIndex, PLOT.MAX_POINTS));
+    };
+    
+    updatePlotGeometry(totalPlotPoints.geometry, totalHistory);
+    updatePlotGeometry(magentaPlotPoints.geometry, magentaHistory);
+    updatePlotGeometry(cyanPlotPoints.geometry, cyanHistory);
+    updatePlotGeometry(similarityPlotPoints.geometry, similarityHistory);
+    
+    currentIndex++;
+    if (currentIndex > PLOT.MAX_POINTS) {
+        offset++;
     }
+    needsRender = true;
+}
 
-    render() {
-        if (this.needsRender) {
-            this.renderer2D.render(this.scene2D, this.camera2D);
-            this.needsRender = false;
-        }
+/**
+ * Renders the plot if needed
+ */
+function render() {
+   
+    
+    if (needsRender) {
+        renderer2D.render(scene2D, camera2D);
+        needsRender = false;
     }
 }
 
-export const setupPlot = (THREE, config) => {
-    const plotRendererInstance = new PlotRenderer(config);
-    plotRendererInstance.init(THREE);
-    return plotRendererInstance;
-};
 
 
 

@@ -200,6 +200,7 @@ const updateSourcesAndSinks = (currentBacteria) => {
         }
     }
 };
+let bacteriaData = null;
 
 // --- Rendering and Animation ---
 
@@ -212,7 +213,6 @@ const updateSourcesAndSinks = (currentBacteria) => {
 const animate = () => {
     // Schedule the next frame
     animationState.animationFrameId = requestAnimationFrame(animate);
-    let bacteriaData = null; // Initialize bacteriaData to null
     // Update simulation logic only if in 'play' state
     if (animationState.play) {
           // 1. Get bacteria data for the current time step

@@ -3,7 +3,6 @@
  * Manages the lifecycle of Three.js components including creation, configuration, and disposal.
  */
 
-import { createScene } from './stageComponetns/scene.js';
 import { createCamera } from './stageComponetns/camera.js';
 import { createRenderer } from './stageComponetns/renderer.js';
 
@@ -24,7 +23,7 @@ export function setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules) {
     }
 
     // Create and configure core Three.js components
-    stage.scene = createScene(SCENE, THREE);
+    stage.scene = new THREE.Scene();
     stage.renderer = createRenderer(THREE);
     stage.camera = createCamera(SCENE, THREE, OrbitControls, stage.renderer.domElement);
 
