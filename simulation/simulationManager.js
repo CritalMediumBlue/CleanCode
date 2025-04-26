@@ -124,11 +124,10 @@ export class BacteriumSystem {
      * Update bacteria for current time step and return data for rendering
      * @param {number} timeStep - The current simulation time step
      * @param {Map<number, Array<Object>>} bacteriumData - Map of bacteria data keyed by time step
-     * @param {boolean} visible - Whether bacteria should be visible
      * @param {Float32Array} concentrations - Concentration values across the grid
      * @returns {Array<BacteriumData>} Array of bacterium data objects for rendering
      */
-    updateBacteria(timeStep, bacteriumData, visible, concentrations) {
+    updateBacteria(timeStep, bacteriumData, concentrations) {
         const layer = bacteriumData.get(timeStep) || [];
         
         // Reset state for new time step
@@ -139,7 +138,7 @@ export class BacteriumSystem {
         // Process each bacterium
         const bacteriaData = [];
         layer.forEach((data) => {
-            const bacteriumData = this.processBacterium(data, visible, concentrations);
+            const bacteriumData = this.processBacterium(data, concentrations);
             bacteriaData.push(bacteriumData);
             this.currentTimestepBacteria.add(data.ID);
             this.averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
@@ -162,7 +161,6 @@ export class BacteriumSystem {
      * @param {number} bacteriumData.angle - Rotation angle of the bacterium
      * @param {bigint} bacteriumData.ID - Unique identifier for the bacterium
      * @param {bigint} [bacteriumData.parent] - ID of the parent bacterium if available
-     * @param {boolean} visible - Whether the bacterium should be visible
      * @param {Float32Array} concentrations - Concentration values across the grid
      * @returns {BacteriumData} Processed bacterium data ready for rendering
      */

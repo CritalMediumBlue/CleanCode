@@ -1,11 +1,8 @@
-/**
- * Creates and returns a surface mesh for the scene.
- * @param {THREE.Scene} scene - The scene to add the mesh to.
- * @returns {THREE.Mesh} The created surface mesh.
- */
-export function createMesh(scene,THREE, config) {
-    const WIDTH = config.GRID.WIDTH;
-    const HEIGHT = config.GRID.HEIGHT;
+let WIDTH = 0;
+let HEIGHT = 0;
+function createMesh(scene,THREE, config) {
+    WIDTH = config.GRID.WIDTH;
+    HEIGHT = config.GRID.HEIGHT;
 
     const geometry = new THREE.PlaneGeometry(WIDTH-1, HEIGHT-1, WIDTH -1, HEIGHT-1 ); // width, height, widthSegments, heightSegments
     
@@ -44,7 +41,7 @@ export function setupMesh(stage,THREE, config) {
     
 }
 
-export const calculateColor = (concentration) => {
+const calculateColor = (concentration) => {
     // Normalize concentration value
     const normalizedConcentration = concentration;
 
@@ -64,7 +61,7 @@ export const calculateColor = (concentration) => {
     };
 };
 
-export function updateSurfaceMesh(surfaceMesh, dataState, grid, heightMultiplier = 10) {
+export function updateSurfaceMesh(surfaceMesh, dataState, heightMultiplier ) {
     const concentrationData = dataState.currentConcentrationData;
     if (!surfaceMesh) {
         console.warn("updateSurfaceMesh called before surfaceMesh is initialized.");
@@ -76,9 +73,9 @@ export function updateSurfaceMesh(surfaceMesh, dataState, grid, heightMultiplier
     const colorsAttribute = surfaceMesh.geometry.attributes.color; // r, g, b for each vertex
 
     // Iterate through each point in the grid
-    for (let y = 0; y < grid.HEIGHT; y++) {
-        for (let x = 0; x < grid.WIDTH; x++) {
-            const idx = y * grid.WIDTH + x; // Calculate 1D index
+    for (let y = 0; y < HEIGHT; y++) {
+        for (let x = 0; x < WIDTH; x++) {
+            const idx = y * WIDTH + x; // Calculate 1D index
             const bufferIndex = 3 * idx; // Base index for position and color arrays
 
             // --- Update Height (Z-position) ---

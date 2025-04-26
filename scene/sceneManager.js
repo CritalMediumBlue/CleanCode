@@ -1,9 +1,8 @@
 import {THREE, OrbitControls} from './threeImports.js';
-import { setupMesh } from './sceneComponents/mesh.js';
+import { setupMesh,updateSurfaceMesh } from './sceneComponents/mesh.js';
 import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { setupStage } from './sceneComponents/stage.js';
-import { updateSurfaceMesh } from './sceneComponents/mesh.js';
 import { setupCapsulePool } from './sceneComponents/capsulePool.js';
 
 
@@ -35,21 +34,21 @@ export function setupNewScene(config) {
 }
 
 
-export function renderScene(histories, bacteriaData, dataState, appConfig, animationState) {
-    updateScene(histories, dataState, appConfig, animationState, mesh);
+export function renderScene(histories, bacteriaData, dataState, BACTERIUM, animationState) {
+    updateScene(histories, dataState, animationState, mesh);
     if (plotRendererInstance.render) {
     plotRendererInstance.render();
     }
     stage.renderer.render(stage.scene, stage.camera);
     if (bacteriaData) {
-        renderBacteria(bacteriaData, appConfig, THREE);
+        renderBacteria(bacteriaData, BACTERIUM, THREE);
     }
     
 }
 
 
-function updateScene(histories, dataState, appConfig, animationState, mesh) {
-    updateSurfaceMesh(mesh, dataState, appConfig.GRID);
+function updateScene(histories, dataState, animationState, mesh) {
+    updateSurfaceMesh(mesh, dataState, 10);
     updateOverlay(animationState,dataState);
 
     plotRendererInstance.updatePlot(...histories)
@@ -65,7 +64,7 @@ function updateScene(histories, dataState, appConfig, animationState, mesh) {
 
 
 
-function renderBacteria(bacteriaData, config, THREE) {
+function renderBacteria(bacteriaData, BACTERIUM, THREE) {
    // Reset active count and hide all capsules
    let activeCount = 0;
    capsules.forEach(capsule => {
@@ -86,21 +85,24 @@ function renderBacteria(bacteriaData, config, THREE) {
        capsule.rotation.z = angle * Math.PI;  
 
        // Update geometry using the new function
-       updateCapsuleGeometry(capsule, longAxis, config.BACTERIUM, THREE);
+       updateCapsuleGeometry(capsule, longAxis, BACTERIUM, THREE);
        
        // Update color
-       updateBacteriumColor(capsule, phenotype,  config, THREE,similarity);
+       updateBacteriumColor(capsule, phenotype,  BACTERIUM, THREE,similarity);
        
        // Set visibility
        capsule.visible = true;
    });
 }
 
-function updateBacteriumColor(bacterium, phenotype,  config, THREE,similarity) {
+function updateBacteriumColor(bacterium, phenotype, BACTERIUM, THREE,similarity) {
     // Convert string phenotype to THREE.Color
-    const threeColor = new THREE.Color(config.COLORS[phenotype]);
+    const color = phenotype === 'MAGENTA' ? 0xFF00FF : 0x00FFFF;
 
-    switch (config.BACTERIUM.COLOR_BY_INHERITANCE) {
+
+    const threeColor = new THREE.Color(color);
+
+    switch (BACTERIUM.COLOR_BY_INHERITANCE) {
         case true:
             // Color by phenotype
             bacterium.material.color.copy(threeColor);

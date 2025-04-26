@@ -227,7 +227,7 @@ const animate = () => {
     }
     const histories = Object.values(sceneState.historyManager.getHistories());
 
-    renderScene(histories,bacteriaData, dataState, appConfig, animationState);
+    renderScene(histories,bacteriaData, dataState, appConfig.BACTERIUM, animationState);
 };
 
 
