@@ -1,5 +1,5 @@
 
-export class PlotRenderer {
+class PlotRenderer {
     constructor(config = null) {
         // Use injected config if provided, otherwise fall back to imported CONFIG
         this.config = config ;
@@ -122,6 +122,12 @@ export class PlotRenderer {
         }
     }
 }
+
+export const setupPlot = (THREE, config) => {
+    const plotRendererInstance = new PlotRenderer(config);
+    plotRendererInstance.init(THREE);
+    return plotRendererInstance;
+};
 
 
 

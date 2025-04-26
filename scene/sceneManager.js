@@ -1,17 +1,17 @@
 import {THREE, OrbitControls} from './threeImports.js';
 import { setupMesh,updateSurfaceMesh } from './sceneComponents/mesh.js';
-import { PlotRenderer } from './sceneComponents/plot.js';
+import { setupPlot } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { setupStage } from './sceneComponents/stage.js';
 import { setupCapsulePool } from './sceneComponents/capsulePool.js';
 
 
-let plotRendererInstance = null;
 let mesh = null;
 let stage = {};
 let capsules = [];  
 const capsuleGeometryCache = new Map();
 const edgesGeometryCache = new Map();
+let plot = null;
 
 
 
@@ -25,36 +25,30 @@ export function setupNewScene(config) {
     stage = setupStage(SCENE, THREE, OrbitControls, stage , mesh, capsules);
     capsules = setupCapsulePool(stage, SIZE, THREE, capsules);
     mesh = setupMesh(stage, THREE,config);
+    plot = setupPlot(THREE, config);
 
 
-
-    plotRendererInstance = new PlotRenderer(config);
-    plotRendererInstance.init(THREE);
         
 }
 
 
 export function renderScene(histories, bacteriaData, dataState, BACTERIUM, animationState) {
-    updateScene(histories, dataState, animationState, mesh);
-    if (plotRendererInstance.render) {
-    plotRendererInstance.render();
-    }
-    if (bacteriaData) {
-        updateCapsules(bacteriaData, BACTERIUM, THREE);
-    }
+    updateScene(histories, dataState, animationState, mesh, bacteriaData, BACTERIUM, THREE);
+
+
+    plot.render();
     stage.renderer.render(stage.scene, stage.camera);
-    
     
 }
 
 
-function updateScene(histories, dataState, animationState, mesh) {
+function updateScene(histories, dataState, animationState, mesh, bacteriaData, BACTERIUM, THREE) {
     const concentration = dataState.currentConcentrationData;
     updateSurfaceMesh(mesh, concentration, 10);
     updateOverlay(animationState,dataState);
-    
+    updateCapsules(bacteriaData, BACTERIUM, THREE);
 
-    plotRendererInstance.updatePlot(...histories)
+    plot.updatePlot(...histories)
 
 }
 
@@ -68,6 +62,9 @@ function updateScene(histories, dataState, animationState, mesh) {
 
 
 function updateCapsules(bacteriaData, BACTERIUM, THREE) {
+    if (!bacteriaData || bacteriaData.length === 0) {
+        return;
+    }
    // Reset active count and hide all capsules
    let activeCount = 0;
    capsules.forEach(capsule => {
@@ -100,8 +97,18 @@ function updateCapsules(bacteriaData, BACTERIUM, THREE) {
 
 function updateBacteriumColor(bacterium, phenotype, BACTERIUM, THREE,similarity) {
     // Convert string phenotype to THREE.Color
-    const color = phenotype === 'MAGENTA' ? 0xFF00FF : 0x00FFFF;
-
+    let color;
+    
+    switch (phenotype) {
+        case 'MAGENTA':
+            color = 0xFF00FF;
+            break;
+        case 'CYAN':
+            color = 0x00FFFF;
+            break;
+        default:
+            color = 0xFFFFFF; 
+    }
 
     const threeColor = new THREE.Color(color);
 
