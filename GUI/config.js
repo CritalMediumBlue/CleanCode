@@ -17,7 +17,7 @@ export const CONFIG = {
         RADIAL_SEGMENTS: 6,
         INITIAL_POOL_SIZE: 2000,
         POOL_GROWTH_FACTOR: 1.1,
-        WIREFRAME_SCALE: 1.005,
+        WIREFRAME_SCALE: 1.05,
         WIREFRAME_COLOR: 'rgb(100, 100, 100)',
         NEIGHBOR_RADIUS: 7,
         MAX_NEIGHBORS: 60,

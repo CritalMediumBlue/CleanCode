@@ -1,53 +1,78 @@
+/**
+ * @module geometries
+ * @description Handles the creation and management of geometries and related visual aspects
+ * for bacteria representation in the 3D scene.
+ */
+
+/**
+ * Populates geometry caches for different capsule lengths to avoid recreating geometries
+ * 
+ * @param {Object} BACTERIUM - Configuration object with bacterial parameters
+ * @param {Object} THREE - The Three.js library object
+ * @param {Map} capsuleGeometryCache - Cache for storing capsule geometries
+ * @param {Map} edgesGeometryCache - Cache for storing edge geometries for wireframes
+ */
 export function populateMapCaches(BACTERIUM, THREE, capsuleGeometryCache, edgesGeometryCache) {
     const capSeg = BACTERIUM.CAP_SEGMENTS;
     const radialSeg = BACTERIUM.RADIAL_SEGMENTS;
+    
+    // Pre-generate geometries for different bacterial lengths
     for (let length = 1; length < 30; length++) {
-        const geometry = new THREE.CapsuleGeometry(0.5,length,capSeg,radialSeg);
+        // Create main capsule geometry
+        const geometry = new THREE.CapsuleGeometry(0.5, length, capSeg, radialSeg);
         capsuleGeometryCache.set(length, geometry);
 
+        // Create scaled geometry for wireframe
         const scaledGeometry = geometry.clone();
-        scaledGeometry.scale(BACTERIUM.WIREFRAME_SCALE, BACTERIUM.WIREFRAME_SCALE, BACTERIUM.WIREFRAME_SCALE);
+        scaledGeometry.scale(
+            BACTERIUM.WIREFRAME_SCALE, 
+            BACTERIUM.WIREFRAME_SCALE, 
+            BACTERIUM.WIREFRAME_SCALE
+        );
         
         const wireframeGeometry = new THREE.EdgesGeometry(scaledGeometry);
         edgesGeometryCache.set(length, wireframeGeometry);
     }
 }
 
-export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE,similarity) {
-   
-
-    switch (BACTERIUM.COLOR_BY_INHERITANCE) {
-        case true:
-            
-
-            let color;
+/**
+ * Updates the color of a capsule based on either phenotype or similarity value
+ * 
+ * @param {THREE.Mesh} capsule - The capsule mesh to update
+ * @param {string} phenotype - The phenotype category of the bacterium
+ * @param {Object} BACTERIUM - Configuration object with bacterial parameters
+ * @param {Object} THREE - The Three.js library object
+ * @param {number} similarity - A value representing similarity (used for color gradient)
+ */
+export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity) {
+    if (BACTERIUM.COLOR_BY_INHERITANCE) {
+        // Color based on phenotype categories
+        let color;
         
-            switch (phenotype) {
-                case 'MAGENTA':
-                    color = 0xFF00FF;
-                    break;
-                case 'CYAN':
-                    color = 0x00FFFF;
-                    break;
-                default:
-                    color = 0xFFFFFF; 
-            }
-        
-            const threeColor = new THREE.Color(color);
-
-            capsule.material.color.copy(threeColor);
-            capsule.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
-            break;
-            
-        case false:
-            // Color by similarity
-            const scalar = Math.round(similarity * 255);
-                
-            const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
-            capsule.material.color.set(similarityColor);
-            capsule.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.3));
-            break;
+        switch (phenotype) {
+            case 'MAGENTA':
+                color = 0xFF00FF; // Magenta color
+                break;
+            case 'CYAN':
+                color = 0x00FFFF; // Cyan color
+                break;
+            default:
+                color = 0xFFFFFF; // White color (default)
         }
+        
+        const threeColor = new THREE.Color(color);
+
+        // Apply colors to the capsule and its wireframe
+        capsule.material.color.copy(threeColor);
+        capsule.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
+    } else {
+        // Color based on similarity gradient (blue to red)
+        const scalar = Math.round(similarity * 255);
+        const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
+        
+        capsule.material.color.set(similarityColor);
+        capsule.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.3));
+    }
 }
 
 
