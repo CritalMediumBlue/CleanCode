@@ -61,8 +61,7 @@ const calculateColor = (concentration) => {
     };
 };
 
-export function updateSurfaceMesh(surfaceMesh, dataState, heightMultiplier ) {
-    const concentrationData = dataState.currentConcentrationData;
+export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultiplier ) {
     if (!surfaceMesh) {
         console.warn("updateSurfaceMesh called before surfaceMesh is initialized.");
         return;

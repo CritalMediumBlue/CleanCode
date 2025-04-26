@@ -39,17 +39,20 @@ export function renderScene(histories, bacteriaData, dataState, BACTERIUM, anima
     if (plotRendererInstance.render) {
     plotRendererInstance.render();
     }
-    stage.renderer.render(stage.scene, stage.camera);
     if (bacteriaData) {
-        renderBacteria(bacteriaData, BACTERIUM, THREE);
+        updateCapsules(bacteriaData, BACTERIUM, THREE);
     }
+    stage.renderer.render(stage.scene, stage.camera);
+    
     
 }
 
 
 function updateScene(histories, dataState, animationState, mesh) {
-    updateSurfaceMesh(mesh, dataState, 10);
+    const concentration = dataState.currentConcentrationData;
+    updateSurfaceMesh(mesh, concentration, 10);
     updateOverlay(animationState,dataState);
+    
 
     plotRendererInstance.updatePlot(...histories)
 
@@ -64,7 +67,7 @@ function updateScene(histories, dataState, animationState, mesh) {
 
 
 
-function renderBacteria(bacteriaData, BACTERIUM, THREE) {
+function updateCapsules(bacteriaData, BACTERIUM, THREE) {
    // Reset active count and hide all capsules
    let activeCount = 0;
    capsules.forEach(capsule => {
