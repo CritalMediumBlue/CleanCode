@@ -225,8 +225,9 @@ const animate = () => {
             dataState.currentConcentrationData
         );
     }
-    
-    renderScene(sceneState,bacteriaData, dataState, appConfig, animationState);
+    const histories = Object.values(sceneState.historyManager.getHistories());
+
+    renderScene(histories,bacteriaData, dataState, appConfig, animationState);
 };
 
 

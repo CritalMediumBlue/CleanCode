@@ -35,8 +35,8 @@ export function setupNewScene(config) {
 }
 
 
-export function renderScene(sceneState, bacteriaData, dataState, appConfig, animationState) {
-    updateScene(sceneState, dataState, appConfig, animationState, mesh);
+export function renderScene(histories, bacteriaData, dataState, appConfig, animationState) {
+    updateScene(histories, dataState, appConfig, animationState, mesh);
     if (plotRendererInstance.render) {
     plotRendererInstance.render();
     }
@@ -48,10 +48,9 @@ export function renderScene(sceneState, bacteriaData, dataState, appConfig, anim
 }
 
 
-function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
+function updateScene(histories, dataState, appConfig, animationState, mesh) {
     updateSurfaceMesh(mesh, dataState, appConfig.GRID);
     updateOverlay(animationState,dataState);
-    const histories = sceneState.historyManager.getHistories();
 
     plotRendererInstance.updatePlot(...histories)
 
