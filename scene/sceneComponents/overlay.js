@@ -5,21 +5,19 @@
 
 /**
  * Updates the text overlay element with current simulation statistics
- * like time step, simulated time, and bacteria counts.
+ * including time step, simulated time, and bacteria count.
+ * 
+ * @param {Object} animationState - Object containing simulation state information.
+ * @param {number} animationState.currentTimeStep - The current simulation time step.
+ * @param {number} animationState.numberOfTimeSteps - The total number of time steps in the simulation.
+ * @param {number} animationState.fromStepToMinutes - Conversion factor from simulation step to minutes.
  * @param {number} bacteriaCount - The number of bacteria in the current time step.
- * @param {number} currentTimeStep - The current simulation time step.
- * @param {number} numberOfTimeSteps - The total number of time steps in the simulation.
- * @param {number} fromStepToMinutes - Conversion factor from simulation step to minutes.
- * @param {Set<number> | null} allUniqueIDs - Set of all unique bacteria IDs across the simulation.
  */
-export function updateOverlay(animationState, dataState) {
-    const bacteria = dataState.bacteriaData.get(animationState.currentTimeStep)
-    const allUniqueIDs = dataState.AllUniqueIDs; // Get all unique IDs from dataState
-    const overlay = document.getElementById("text-overlay");
+export function updateOverlay(animationState, bacteriaCount) {
+    const overlay = document.getElementById("dynamic-text-overlay");
     const currentTimeStep = animationState.currentTimeStep;
     const numberOfTimeSteps = animationState.numberOfTimeSteps;
     const fromStepToMinutes = animationState.fromStepToMinutes;
-    if (!overlay) return; // Exit if overlay element not found
 
     // Calculate simulated time
     const timeInMinutes = currentTimeStep * fromStepToMinutes;
@@ -28,12 +26,12 @@ export function updateOverlay(animationState, dataState) {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
-    // Format time string
+    // Format time string as HH:MM:SS
     const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    const bacteriaCount = bacteria.length; // Get the number of bacteria in the current time step
-    // Update overlay text content
+    
+    // Update overlay text content with current simulation stats
     overlay.innerText = `Step: ${currentTimeStep} / ${numberOfTimeSteps}
-Time: ${timeString}
-Bacteria Count: ${bacteriaCount}
-Total Unique Bacteria: ${allUniqueIDs ? allUniqueIDs.size : 'N/A'}`;
+    Time: ${timeString}
+    Bacteria Count: ${bacteriaCount}`;
 }
+

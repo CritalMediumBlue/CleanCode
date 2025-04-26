@@ -40,9 +40,10 @@ export function renderScene(histories, bacteriaData, dataState, BACTERIUM, anima
 function updateScene(histories, dataState, animationState, bacteriaData, BACTERIUM) {
 
     const concentration = dataState.currentConcentrationData;
+    const bacteriaCount = bacteriaData ? bacteriaData.length : 0;
 
     updateSurfaceMesh(mesh, concentration, 10);
-    updateOverlay(animationState,dataState);
+    updateOverlay(animationState,bacteriaCount);
     updateCapsules(bacteriaData, BACTERIUM, THREE, capsules);
 
     plot.updatePlot(...histories)
