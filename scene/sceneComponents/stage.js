@@ -44,13 +44,6 @@ function clearStage(stage, mesh, capsules) {
         mesh.material.dispose(); // Ensure material is disposed too
         mesh = null; // Nullify the reference
     }
-
-    if (stage.renderer && stage.renderer.domElement && stage.renderer.domElement.parentNode) {
-        stage.renderer.domElement.parentNode.removeChild(stage.renderer.domElement);
-        stage.renderer.dispose();
-    }
-
-    // Clear the capsules from the scene
     if (capsules) {
         capsules.forEach(capsule => {
             stage.scene.remove(capsule);
@@ -59,6 +52,13 @@ function clearStage(stage, mesh, capsules) {
         });
         capsules = []; // Clear the capsules array
     }
+
+    if (stage.renderer && stage.renderer.domElement && stage.renderer.domElement.parentNode) {
+        stage.renderer.domElement.parentNode.removeChild(stage.renderer.domElement);
+        stage.renderer.dispose();
+    }
+
+
 
     // Clear the stage properties but don't set stage itself to null
     stage.camera = null;

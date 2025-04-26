@@ -27,7 +27,6 @@ export function setupNewScene(config) {
     mesh = setupMesh(stage, THREE,config);
     plot = setupPlot(THREE, config);
 
-
         
 }
 
@@ -38,12 +37,13 @@ export function renderScene(histories, bacteriaData, dataState, BACTERIUM, anima
 
     plot.render();
     stage.renderer.render(stage.scene, stage.camera);
-    
 }
 
 
 function updateScene(histories, dataState, animationState, mesh, bacteriaData, BACTERIUM, THREE) {
+
     const concentration = dataState.currentConcentrationData;
+
     updateSurfaceMesh(mesh, concentration, 10);
     updateOverlay(animationState,dataState);
     updateCapsules(bacteriaData, BACTERIUM, THREE);
@@ -84,13 +84,11 @@ function updateCapsules(bacteriaData, BACTERIUM, THREE) {
        capsule.position.set(threePosition.x, threePosition.y, 0);
        capsule.rotation.z = angle * Math.PI;  
 
-       // Update geometry using the new function
        updateCapsuleGeometry(capsule, longAxis, BACTERIUM, THREE);
        
        // Update color
        updateBacteriumColor(capsule, phenotype,  BACTERIUM, THREE,similarity);
        
-       // Set visibility
        capsule.visible = true;
    });
 }
