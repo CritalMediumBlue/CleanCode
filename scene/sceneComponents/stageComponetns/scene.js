@@ -13,7 +13,11 @@
  * @returns {THREE.Scene} - Configured Three.js scene object with fog
  */
 export function createScene(SCENE, THREE) {
+    // Create a new scene instance
     const scene = new THREE.Scene();
+    
+    // Apply fog effect using provided configuration
     scene.fog = new THREE.Fog(SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR);
+    
     return scene;
 }

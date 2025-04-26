@@ -44,10 +44,6 @@ export function setupCapsulePool(stage, BACTERIUM, THREE, capsules) {
 }
 
 
-
-
-
-
 export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules) {
     if (!bacteriaData || bacteriaData.length === 0) {
         return;
@@ -70,23 +66,7 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules) {
        
        capsule.position.set(threePosition.x, threePosition.y, 0);
        capsule.rotation.z = angle * Math.PI;  
-
-       const option = 2
-
-       switch (option) {
-           case 1:
-                updateCapsuleGeometry(capsule, longAxis);
-                break;
-           case 2:
-                capsule.geometry.dispose();
-                capsule.children[0].geometry.dispose();
-                capsule.geometry = capsuleGeometryCache.get(longAxis);
-                capsule.children[0].geometry = edgesGeometryCache.get(longAxis);
-                break;
-        }
-
-
-       
+       updateCapsuleGeometry(capsule, longAxis);
        updateCapsuleColor(capsule, phenotype,  BACTERIUM, THREE,similarity);
        
        capsule.visible = true;

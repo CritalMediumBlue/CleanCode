@@ -28,7 +28,7 @@ export function setupNewScene(config) {
 
 
 export function renderScene(histories, bacteriaData, dataState, BACTERIUM, animationState) {
-    updateScene(histories, dataState, animationState, mesh, bacteriaData, BACTERIUM, THREE);
+    updateScene(histories, dataState, animationState, bacteriaData, BACTERIUM);
 
 
     plot.render();
@@ -37,7 +37,7 @@ export function renderScene(histories, bacteriaData, dataState, BACTERIUM, anima
 
 
 
-function updateScene(histories, dataState, animationState, mesh, bacteriaData, BACTERIUM, THREE) {
+function updateScene(histories, dataState, animationState, bacteriaData, BACTERIUM) {
 
     const concentration = dataState.currentConcentrationData;
 
