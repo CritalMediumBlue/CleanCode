@@ -23,7 +23,7 @@ export function setupNewScene(config) {
     const SIZE = BACTERIUM.INITIAL_POOL_SIZE;
 
 
-    stage = setupStage(SCENE, THREE, OrbitControls,stage,mesh);
+    stage = setupStage(SCENE, THREE, OrbitControls, stage , mesh, capsules);
     capsules = setupCapsulePool(stage, SIZE, THREE, capsules);
     mesh = setupMesh(stage, THREE,config);
 
