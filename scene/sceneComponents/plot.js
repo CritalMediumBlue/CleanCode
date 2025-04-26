@@ -5,17 +5,16 @@ let totalPlotPoints = null;
 let magentaPlotPoints = null;
 let cyanPlotPoints = null;
 let similarityPlotPoints = null;
-let yTicks = null;
 let needsRender = false;
 let currentIndex = 0;
 let offset = 0;
 
 let PLOT = null
 
+import { createPlot } from './plotMaterials.js';
 
-// Private geometries and materials
-let totalGeometry, magentaGeometry, cyanGeometry, similarityGeometry;
-let totalMaterial, magentaMaterial, cyanMaterial, similarityMaterial;
+
+
 
 /**
  * Initializes the plot visualization
@@ -25,6 +24,7 @@ let totalMaterial, magentaMaterial, cyanMaterial, similarityMaterial;
  */
 export function setupPlot(THREE, config) {
     PLOT = config;
+    const SIZE = PLOT.SIZE_RATIO;
     const plot = document.getElementById('plot-overlay');
     plot.innerHTML = '';
     
@@ -32,14 +32,16 @@ export function setupPlot(THREE, config) {
     camera2D = new THREE.OrthographicCamera(-2, 2, 1, -1, 0.1, 100);
     camera2D.position.z = 1;
     renderer2D = new THREE.WebGLRenderer({ alpha: true, antialias: false });
-    renderer2D.setSize(
-        window.innerWidth * PLOT.PLOT_WIDTH_RATIO, 
-        window.innerHeight * PLOT.PLOT_HEIGHT_RATIO
-    );
+    renderer2D.setSize(window.innerWidth * SIZE, window.innerHeight * SIZE);
     renderer2D.domElement.style.position = 'absolute';
     document.getElementById('plot-overlay').appendChild(renderer2D.domElement);
    
-    createPlot(THREE);
+    // Call createPlot with scene2D and assign the returned plot points
+    const plotPoints = createPlot(THREE, PLOT, scene2D);
+    totalPlotPoints = plotPoints.totalPlotPoints;
+    magentaPlotPoints = plotPoints.magentaPlotPoints;
+    cyanPlotPoints = plotPoints.cyanPlotPoints;
+    similarityPlotPoints = plotPoints.similarityPlotPoints;
     
     return {
         updatePlot,
@@ -47,76 +49,9 @@ export function setupPlot(THREE, config) {
     };
 }
 
-/**
- * Create all plot components
- * @param {Object} THREE - Three.js library
- */
-function createPlot(THREE) {
-    createPlotGeometries(THREE);
-    createPlotMaterials(THREE);
-    createPlotPoints(THREE);
-    createTicks(THREE);
-}
 
-/**
- * Create geometries for plot lines
- * @param {Object} THREE - Three.js library
- */
-function createPlotGeometries(THREE) {
-    const positions = new Float32Array(PLOT.MAX_POINTS * 3);
-    const createGeometry = () => {
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions.slice(), 3));
-        return geometry;
-    };
-    
-    totalGeometry = createGeometry();
-    magentaGeometry = createGeometry();
-    cyanGeometry = createGeometry();
-    similarityGeometry = createGeometry();
-}
 
-/**
- * Create materials for plot lines
- * @param {Object} THREE - Three.js library
- */
-function createPlotMaterials(THREE) {
-    totalMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 2 });
-    magentaMaterial = new THREE.PointsMaterial({ color: 0xff00ff, size: 2 });
-    cyanMaterial = new THREE.PointsMaterial({ color: 0x00ffff, size: 2 });
-    similarityMaterial = new THREE.PointsMaterial({ color: 0xffff00, size: 2 });
-}
 
-/**
- * Create point objects for plot visualization
- * @param {Object} THREE - Three.js library
- */
-function createPlotPoints(THREE) {
-    totalPlotPoints = new THREE.Points(totalGeometry, totalMaterial);
-    magentaPlotPoints = new THREE.Points(magentaGeometry, magentaMaterial);
-    cyanPlotPoints = new THREE.Points(cyanGeometry, cyanMaterial);
-    similarityPlotPoints = new THREE.Points(similarityGeometry, similarityMaterial);
-
-    scene2D.add(totalPlotPoints, magentaPlotPoints, cyanPlotPoints, similarityPlotPoints);
-}
-
-/**
- * Create tick marks for the plot axes
- * @param {Object} THREE - Three.js library
- */
-function createTicks(THREE) {
-    const tickMaterial = new THREE.LineBasicMaterial({ color: PLOT.AXIS_COLOR });
-    yTicks = new THREE.Group();
-    const points = [];
-    for (let i = 0; i <= PLOT.MAX_Y_VALUE; i += PLOT.Y_TICK_STEP) {
-        const y = (i / PLOT.MAX_Y_VALUE) * 2 - 0.999;
-        points.push(new THREE.Vector3(-2, y, 0), new THREE.Vector3(2, y, 0));
-    }
-    const tickGeometry = new THREE.BufferGeometry().setFromPoints(points);
-    const ticks = new THREE.LineSegments(tickGeometry, tickMaterial);
-    yTicks.add(ticks);
-    scene2D.add(yTicks);
-}
 
 /**
  * Updates plot data with new history values

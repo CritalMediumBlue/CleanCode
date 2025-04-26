@@ -45,8 +45,7 @@ export const CONFIG = {
     PLOT: {
         MAX_POINTS: 1000,
         AXIS_COLOR: 0x808080,
-        PLOT_WIDTH_RATIO: 1/4,
-        PLOT_HEIGHT_RATIO: 1/4,
+        SIZE_RATIO: 1/4,
         MAX_Y_VALUE: 1600,
         Y_TICK_STEP: 200,
         UPDATE_PLOT_INTERVAL: 10,

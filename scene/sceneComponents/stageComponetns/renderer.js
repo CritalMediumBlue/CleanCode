@@ -6,21 +6,16 @@
 /**
  * Creates and configures a Three.js WebGL renderer
  * @param {Object} THREE - Three.js library instance
- * @param {Object} [options] - Optional rendering configuration options
- * @param {boolean} [options.antialias=false] - Whether to enable antialiasing
  * @returns {THREE.WebGLRenderer} - Configured Three.js WebGL renderer
  */
-export function createRenderer(THREE, options = {}) {
+export function createRenderer(THREE, ratio=1) {
     // Create renderer with specified antialiasing option (default: false)
     const renderer = new THREE.WebGLRenderer({
-        antialias: options.antialias || false
+        antialias: false
     });
     
-    // Configure renderer display properties
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth*ratio, window.innerHeight*ratio);
     
-    // Add renderer canvas to the DOM
     document.body.appendChild(renderer.domElement);
 
     return renderer;
