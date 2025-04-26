@@ -88,3 +88,26 @@ function createTicks(THREE,PLOT, scene2D) {
     yTicks.add(ticks);
     scene2D.add(yTicks);
 }
+
+
+export function setup2DStage(THREE, SIZE) {
+    const stage2D = {};
+
+    // Create and configure core Three.js components
+    stage2D.scene = new THREE.Scene();
+    stage2D.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+    stage2D.camera = new THREE.OrthographicCamera(-2, 2, 1, -1, 0.1, 100);
+
+    // Position camera to see the scene
+    stage2D.camera.position.z = 10;
+
+    stage2D.renderer.setSize(window.innerWidth * SIZE, window.innerHeight * SIZE);
+    stage2D.renderer.domElement.style.position = 'absolute';
+    document.getElementById('plot-overlay').appendChild(stage2D.renderer.domElement);
+
+    // Prevent adding or modifying stage properties after initialization
+    Object.seal(stage2D);
+    Object.preventExtensions(stage2D);
+
+    return stage2D;
+}
