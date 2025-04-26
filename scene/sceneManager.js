@@ -1,9 +1,9 @@
 import {THREE, OrbitControls} from './threeImports.js';
 import { setupMesh,updateSurfaceMesh } from './sceneComponents/mesh.js';
+import { setupCapsulePool, updateCapsules } from './sceneComponents/capsulePool.js';
 import { setupPlot } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { setupStage } from './sceneComponents/stage.js';
-import { setupCapsulePool, updateCapsules } from './sceneComponents/capsulePool.js';
 
 
 let mesh = null;
@@ -17,15 +17,13 @@ export function setupNewScene(config) {
 
     const SCENE = config.SCENE;
     const BACTERIUM = config.BACTERIUM;
-    const SIZE = BACTERIUM.INITIAL_POOL_SIZE;
 
 
     stage = setupStage(SCENE, THREE, OrbitControls, stage , mesh, capsules);
-    capsules = setupCapsulePool(stage, SIZE, THREE, capsules);
+    capsules = setupCapsulePool(stage, BACTERIUM, THREE, capsules);
     mesh = setupMesh(stage, THREE,config);
     plot = setupPlot(THREE, config);
 
-        
 }
 
 
@@ -36,6 +34,7 @@ export function renderScene(histories, bacteriaData, dataState, BACTERIUM, anima
     plot.render();
     stage.renderer.render(stage.scene, stage.camera);
 }
+
 
 
 function updateScene(histories, dataState, animationState, mesh, bacteriaData, BACTERIUM, THREE) {

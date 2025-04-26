@@ -1,4 +1,4 @@
-
+import { populateMapCaches, updateCapsuleColor } from './geometries.js';
 /**
  * @module capsulePool
  * @description Manages the creation and initialization of a pool of 3D capsule objects 
@@ -16,9 +16,9 @@ const edgesGeometryCache = new Map();
  * @param {Array<THREE.Mesh>} capsules - Existing array of capsule objects to be populated
  * @returns {Array<THREE.Mesh>} The array of capsule meshes that was populated
  */
-export function setupCapsulePool(stage, size, THREE, capsules) {
-    
-    while (capsules.length < size) {
+export function setupCapsulePool(stage, BACTERIUM, THREE, capsules) {
+    const poolSize = BACTERIUM.INITIAL_POOL_SIZE;
+    while (capsules.length < poolSize) {
 
         const capsuleGeometry = new THREE.CapsuleGeometry();
         const capsuleMaterial = new THREE.MeshBasicMaterial({ });
@@ -37,11 +37,11 @@ export function setupCapsulePool(stage, size, THREE, capsules) {
     capsules.forEach(capsule => {
         stage.scene.add(capsule);
     });
+
+    populateMapCaches(BACTERIUM, THREE, capsuleGeometryCache, edgesGeometryCache);
     
     return capsules;
 }
-
-
 
 
 
@@ -71,69 +71,34 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules) {
        capsule.position.set(threePosition.x, threePosition.y, 0);
        capsule.rotation.z = angle * Math.PI;  
 
-       updateCapsuleGeometry(capsule, longAxis, BACTERIUM, THREE);
+       const option = 2
+
+       switch (option) {
+           case 1:
+                updateCapsuleGeometry(capsule, longAxis);
+                break;
+           case 2:
+                capsule.geometry.dispose();
+                capsule.children[0].geometry.dispose();
+                capsule.geometry = capsuleGeometryCache.get(longAxis);
+                capsule.children[0].geometry = edgesGeometryCache.get(longAxis);
+                break;
+        }
+
+
        
-       // Update color
-       updateBacteriumColor(capsule, phenotype,  BACTERIUM, THREE,similarity);
+       updateCapsuleColor(capsule, phenotype,  BACTERIUM, THREE,similarity);
        
        capsule.visible = true;
    });
 }
 
-function updateBacteriumColor(bacterium, phenotype, BACTERIUM, THREE,similarity) {
-    // Convert string phenotype to THREE.Color
-    let color;
-    
-    switch (phenotype) {
-        case 'MAGENTA':
-            color = 0xFF00FF;
-            break;
-        case 'CYAN':
-            color = 0x00FFFF;
-            break;
-        default:
-            color = 0xFFFFFF; 
-    }
-
-    const threeColor = new THREE.Color(color);
-
-    switch (BACTERIUM.COLOR_BY_INHERITANCE) {
-        case true:
-            // Color by phenotype
-            bacterium.material.color.copy(threeColor);
-            bacterium.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
-            break;
-            
-        case false:
-            // Color by similarity
-            const scalar = Math.round(similarity * 255);
-                
-            const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
-            bacterium.material.color.set(similarityColor);
-            bacterium.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.3));
-            break;
-        }
-}
 
 
-function updateCapsuleGeometry(capsule, longAxis, BACTERIUM, THREE) {
+function updateCapsuleGeometry(capsule, longAxis) {
     // Get or create geometry for this length
     let newGeometry = capsuleGeometryCache.get(longAxis);
     let newWireframeGeometry = edgesGeometryCache.get(longAxis);
-
-    if (!newGeometry) {
-        newGeometry = new THREE.CapsuleGeometry(
-            0.5,
-            longAxis,
-            BACTERIUM.CAP_SEGMENTS,
-            BACTERIUM.RADIAL_SEGMENTS
-        );
-        console.log("Creating new capsule geometry for length:", longAxis)
-
-        capsuleGeometryCache.set(longAxis, newGeometry);
-        newWireframeGeometry = new THREE.EdgesGeometry(newGeometry);
-        edgesGeometryCache.set(longAxis, newWireframeGeometry);
-    }
 
     // Update geometry if different from current
     if (capsule.geometry !== newGeometry) {
@@ -143,10 +108,5 @@ function updateCapsuleGeometry(capsule, longAxis, BACTERIUM, THREE) {
         const wireframe = capsule.children[0];
         wireframe.geometry.dispose();
         wireframe.geometry = newWireframeGeometry;
-        wireframe.scale.set(
-            BACTERIUM.WIREFRAME_SCALE, 
-            BACTERIUM.WIREFRAME_SCALE, 
-            BACTERIUM.WIREFRAME_SCALE
-        );
     }
 }
