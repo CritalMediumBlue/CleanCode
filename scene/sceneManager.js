@@ -2,7 +2,7 @@ import {THREE, OrbitControls} from './threeImports.js';
 import { setupMesh } from './sceneComponents/mesh.js';
 import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
-import { setupStage } from './setupStage.js';
+import { setupStage } from './sceneComponents/stage.js';
 import { updateSurfaceMesh } from './sceneComponents/mesh.js';
 import { setupBacteriaPool } from './sceneComponents/capsulePool.js';
 
@@ -18,16 +18,22 @@ const edgesGeometryCache = new Map();
 
 export function setupNewScene(config) {
 
-    stage = setupStage(config.SCENE, THREE, OrbitControls,stage,mesh);
+    const SCENE = config.SCENE;
+    const BACTERIUM = config.BACTERIUM;
+
+    stage = setupStage(SCENE, THREE, OrbitControls,stage,mesh);
+
+
+
+    const size = BACTERIUM.INITIAL_POOL_SIZE;
+
+    capsules = setupBacteriaPool(stage, size, THREE, capsules);
+    mesh = setupMesh(stage, THREE,config);
+
 
 
     plotRendererInstance = new PlotRenderer(config);
     plotRendererInstance.init(THREE);
-
-    const size = config.BACTERIUM.INITIAL_POOL_SIZE;
-
-    mesh = setupMesh(stage, THREE,config);
-    capsules = setupBacteriaPool(stage, size, THREE,capsules);
 
         
 }
