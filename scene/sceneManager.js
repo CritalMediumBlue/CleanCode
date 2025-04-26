@@ -1,7 +1,7 @@
 import {THREE, OrbitControls} from './threeImports.js';
-import { setupMesh,updateSurfaceMesh } from './sceneComponents/mesh.js';
+import { setupMesh, updateSurfaceMesh } from './sceneComponents/mesh.js';
 import { setupCapsulePool, updateCapsules } from './sceneComponents/capsulePool.js';
-import { setupPlot } from './sceneComponents/plot.js';
+import { setupPlot, updatePlot, renderPlot } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { setupStage } from './sceneComponents/stage.js';
 
@@ -9,7 +9,6 @@ import { setupStage } from './sceneComponents/stage.js';
 let mesh = null;
 let stage = {};
 let capsules = [];  
-let plotFunctions = null;
 
 
 
@@ -24,7 +23,8 @@ export function setupNewScene(config) {
     stage = setupStage(SCENE, THREE, OrbitControls, stage , mesh, capsules);
     capsules = setupCapsulePool(stage, BACTERIUM, THREE, capsules);
     mesh = setupMesh(stage, THREE, GRID);
-    plotFunctions = setupPlot(THREE, PLOT);
+    setupPlot(THREE, PLOT);
+
 
     stage.scene.add(new THREE.AxesHelper(10));
     stage.scene.fog = new THREE.Fog(SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR);
@@ -37,7 +37,7 @@ export function renderScene(histories, bacteriaData, dataState, BACTERIUM, anima
     updateScene(histories, dataState, animationState, bacteriaData, BACTERIUM);
 
 
-    plotFunctions.render();
+    renderPlot();
     stage.renderer.render(stage.scene, stage.camera);
 }
 
@@ -51,8 +51,8 @@ function updateScene(histories, dataState, animationState, bacteriaData, BACTERI
     updateSurfaceMesh(mesh, concentration, 10);
     updateOverlay(animationState,bacteriaCount);
     updateCapsules(bacteriaData, BACTERIUM, THREE, capsules);
+    updatePlot(...histories);
 
-    plotFunctions.updatePlot(...histories)
 
 }
 

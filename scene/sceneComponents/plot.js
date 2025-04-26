@@ -5,7 +5,6 @@ let totalPlotPoints = null;
 let magentaPlotPoints = null;
 let cyanPlotPoints = null;
 let similarityPlotPoints = null;
-let needsRender = false;
 let currentIndex = 0;
 let offset = 0;
 
@@ -43,10 +42,10 @@ export function setupPlot(THREE, config) {
     cyanPlotPoints = plotPoints.cyanPlotPoints;
     similarityPlotPoints = plotPoints.similarityPlotPoints;
     
-    return {
+/*     return {
         updatePlot,
         render
-    };
+    }; */
 }
 
 
@@ -60,27 +59,7 @@ export function setupPlot(THREE, config) {
  * @param {Array} cyanHistory - History of cyan bacteria counts
  * @param {Array} similarityHistory - History of similarity values
  */
-function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
-   
-    
-    const updatePlotGeometry = (geometry, history) => {
-        const positions = geometry.attributes.position.array;
-        const xStep = 4 / PLOT.MAX_POINTS;
-        
-        for (let i = 0; i < PLOT.MAX_POINTS; i++) {
-            const historyIndex = offset + i;
-            const x = -2 + i * xStep;
-            const y = historyIndex < history.length ? 
-                (history[historyIndex] / PLOT.MAX_Y_VALUE) * 2 - 0.999 : -1;
-            const index = i * 3;
-            positions[index] = x;
-            positions[index + 1] = y;
-            positions[index + 2] = 0;
-        }
-        
-        geometry.attributes.position.needsUpdate = true;
-        geometry.setDrawRange(0, Math.min(currentIndex, PLOT.MAX_POINTS));
-    };
+export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
     
     updatePlotGeometry(totalPlotPoints.geometry, totalHistory);
     updatePlotGeometry(magentaPlotPoints.geometry, magentaHistory);
@@ -91,19 +70,34 @@ function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory
     if (currentIndex > PLOT.MAX_POINTS) {
         offset++;
     }
-    needsRender = true;
 }
+
+const updatePlotGeometry = (geometry, history) => {
+    const positions = geometry.attributes.position.array;
+    const xStep = 4 / PLOT.MAX_POINTS;
+    
+    for (let i = 0; i < PLOT.MAX_POINTS; i++) {
+        const historyIndex = offset + i;
+        const x = -2 + i * xStep;
+        const y = historyIndex < history.length ? 
+            (history[historyIndex] / PLOT.MAX_Y_VALUE) * 2 - 0.999 : -1;
+        const index = i * 3;
+        positions[index] = x;
+        positions[index + 1] = y;
+        positions[index + 2] = 0;
+    }
+    
+    geometry.attributes.position.needsUpdate = true;
+    geometry.setDrawRange(0, Math.min(currentIndex, PLOT.MAX_POINTS));
+};
 
 /**
  * Renders the plot if needed
  */
-function render() {
+export function renderPlot() {
    
+    renderer2D.render(scene2D, camera2D);
     
-    if (needsRender) {
-        renderer2D.render(scene2D, camera2D);
-        needsRender = false;
-    }
 }
 
 
