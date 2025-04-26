@@ -15,7 +15,7 @@
  * @param {Array<THREE.Mesh>} capsules - Existing array of capsule objects to be populated
  * @returns {Array<THREE.Mesh>} The array of capsule meshes that was populated
  */
-export function setupBacteriaPool(stage, size, THREE, capsules) {
+export function setupCapsulePool(stage, size, THREE, capsules) {
     
     while (capsules.length < size) {
 

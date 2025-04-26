@@ -4,7 +4,7 @@ import { PlotRenderer } from './sceneComponents/plot.js';
 import { updateOverlay } from './sceneComponents/overlay.js';
 import { setupStage } from './sceneComponents/stage.js';
 import { updateSurfaceMesh } from './sceneComponents/mesh.js';
-import { setupBacteriaPool } from './sceneComponents/capsulePool.js';
+import { setupCapsulePool } from './sceneComponents/capsulePool.js';
 
 
 let plotRendererInstance = null;
@@ -20,21 +20,17 @@ export function setupNewScene(config) {
 
     const SCENE = config.SCENE;
     const BACTERIUM = config.BACTERIUM;
+    const SIZE = BACTERIUM.INITIAL_POOL_SIZE;
+
 
     stage = setupStage(SCENE, THREE, OrbitControls,stage,mesh);
-
-
-
-    const size = BACTERIUM.INITIAL_POOL_SIZE;
-
-    capsules = setupBacteriaPool(stage, size, THREE, capsules);
+    capsules = setupCapsulePool(stage, SIZE, THREE, capsules);
     mesh = setupMesh(stage, THREE,config);
 
 
 
     plotRendererInstance = new PlotRenderer(config);
     plotRendererInstance.init(THREE);
-
         
 }
 
@@ -55,8 +51,8 @@ export function renderScene(sceneState, bacteriaData, dataState, appConfig, anim
 function updateScene(sceneState, dataState, appConfig, animationState, mesh) {
     updateSurfaceMesh(mesh, dataState, appConfig.GRID);
     updateOverlay(animationState,dataState);
+    const histories = sceneState.historyManager.getHistories();
 
-    const histories = Object.values(sceneState.historyManager.getHistories());
     plotRendererInstance.updatePlot(...histories)
 
 }

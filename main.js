@@ -45,9 +45,6 @@ let appConfig;
 const stateActions = {
     setPlayState: (isPlaying) => {
         animationState.play = isPlaying;
-    },
-    renderScene: () => {
-        renderScene(sceneState);
     }
 };
 
@@ -228,8 +225,7 @@ const animate = () => {
             dataState.currentConcentrationData
         );
     }
-     
-
+    
     renderScene(sceneState,bacteriaData, dataState, appConfig, animationState);
 };
 
