@@ -1,4 +1,5 @@
 import uPlot from 'uplot';
+import { createPlotOptions } from './plotConfig.js';
 
 /**
  * PlotManager - Handles the creation, updating and rendering of plot visualizations
@@ -15,20 +16,17 @@ export class PlotManager {
         this.magentaData = [];  // Magenta bacteria data
         this.cyanData = [];     // Cyan bacteria data
         this.similarityData = []; // Similarity data
-        this.config = null;
        
     }
 
     /**
      * Initializes the plot visualization
      * @param {Object} _ - Unused parameter (was THREE library)
-     * @param {Object} config - Configuration object for the plot
      * @returns {PlotManager} - This instance for method chaining
      */
-    initialize(_, config) {
+    initialize(_) {
       
 
-        this.config = config;
         
         const plotContainer = document.getElementById('plot-overlay');
      
@@ -47,92 +45,14 @@ export class PlotManager {
         this.cyanData = [0];
         this.similarityData = [0];
         
-        // Define text color for axis labels and values
-        const axisTextColor = "rgb(255, 255, 255)"; // White with slight transparency
-        
-        // Configure uPlot options
-        const opts = {
+        const plotOptions = createPlotOptions({
             width,
             height,
-            // Prevent uPlot from growing with each update by setting fixed size
-            autoSize: false,
-            scales: {
-                x: {
-                    time: false,
-                    auto: false,
-                    // Fix x-axis range to prevent expanding
-                    range: (self, min, max) => {
-                        const buffer = 500;
-                        // Keep a fixed width of points
-                        return [0, buffer];
-                    }
-                },
-                y: {
-                    auto: true,
-                    range: [0, this.config?.MAX_Y_VALUE || 100]
-                }
-            },
-            axes: [
-                {
-                    // X-axis styling
-                    stroke: "rgb(255, 255, 255)", // Axis line color
-                    grid: {
-                        show: true,
-                        stroke: 'rgba(255, 255, 255,0.5)', // Grid line color
-                    },
-                    ticks: {
-                        show: true,
-                        stroke: "rgb(255, 255, 255)", // Tick color
-                    },
-                    font: "12px Arial",
-                    color: axisTextColor, // X-axis label text color
-                },
-                {
-                    // Y-axis styling
-                    stroke: "rgb(255, 255, 255)", // Axis line color
-                    grid: {
-                        show: true,
-                        stroke: 'rgba(255, 255, 255,0.5)', // Grid line color
-                    },
-                    ticks: {
-                        show: true,
-                        stroke: "rgb(255, 255, 255)", // Tick color
-                    },
-                    font: "12px Arial",
-                    color: axisTextColor, // Y-axis label text color
-                }
-            ],
-            legend: {
-                show: true
-            },
-            padding: [10, 10, 10, 10], // [top, right, bottom, left]
-            series: [
-                {}, // X values (time/iterations)
-                {
-                    label: "Total",
-                    stroke: "white",
-                    width: 2,
-                },
-                {
-                    label: "Magenta",
-                    stroke: "magenta",
-                    width: 2,
-                },
-                {
-                    label: "Cyan",
-                    stroke: "cyan",
-                    width: 2,
-                },
-                {
-                    label: "Similarity",
-                    stroke: "yellow",
-                    width: 2,
-                }
-            ]
-        };
+            maxYValue: 1600
+        });
         
         // Create the uPlot chart with initial empty data
-        this.chart = new uPlot(opts, [
+        this.chart = new uPlot(plotOptions, [
             this.xData,          // X values
             this.totalData,      // Total bacteria
             this.magentaData,    // Magenta bacteria
