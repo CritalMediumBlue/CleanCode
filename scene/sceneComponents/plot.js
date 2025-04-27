@@ -26,9 +26,7 @@ export class PlotManager {
      * @returns {PlotManager} - This instance for method chaining
      */
     initialize(_, config) {
-        if (this.isInitialized) {
-            this.dispose();
-        }
+      
 
         this.config = config;
         
@@ -50,7 +48,7 @@ export class PlotManager {
         this.similarityData = [0];
         
         // Define text color for axis labels and values
-        const axisTextColor = "rgba(255, 255, 255, 0.8)"; // White with slight transparency
+        const axisTextColor = "rgb(255, 255, 255)"; // White with slight transparency
         
         // Configure uPlot options
         const opts = {
@@ -64,7 +62,7 @@ export class PlotManager {
                     auto: false,
                     // Fix x-axis range to prevent expanding
                     range: (self, min, max) => {
-                        const buffer = Math.max(50, this.config.MAX_POINTS || 100);
+                        const buffer = 500;
                         // Keep a fixed width of points
                         return [0, buffer];
                     }
@@ -77,28 +75,28 @@ export class PlotManager {
             axes: [
                 {
                     // X-axis styling
-                    stroke: "rgba(120, 120, 120, 0.8)", // Axis line color
+                    stroke: "rgb(255, 255, 255)", // Axis line color
                     grid: {
                         show: true,
-                        stroke: "rgba(80, 80, 80, 0.3)", // Grid line color
+                        stroke: 'rgba(255, 255, 255,0.5)', // Grid line color
                     },
                     ticks: {
                         show: true,
-                        stroke: "rgba(120, 120, 120, 0.8)", // Tick color
+                        stroke: "rgb(255, 255, 255)", // Tick color
                     },
                     font: "12px Arial",
                     color: axisTextColor, // X-axis label text color
                 },
                 {
                     // Y-axis styling
-                    stroke: "rgba(120, 120, 120, 0.8)", // Axis line color
+                    stroke: "rgb(255, 255, 255)", // Axis line color
                     grid: {
                         show: true,
-                        stroke: "rgba(80, 80, 80, 0.3)", // Grid line color
+                        stroke: 'rgba(255, 255, 255,0.5)', // Grid line color
                     },
                     ticks: {
                         show: true,
-                        stroke: "rgba(120, 120, 120, 0.8)", // Tick color
+                        stroke: "rgb(255, 255, 255)", // Tick color
                     },
                     font: "12px Arial",
                     color: axisTextColor, // Y-axis label text color
@@ -156,17 +154,21 @@ export class PlotManager {
     update(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
     
         
-        // Create sequential x-axis points (0, 1, 2, ...) matching history length
-        const historyLength = totalHistory.length;
-        this.xData = Array.from({ length: historyLength }, (_, i) => i);
+        const maxHistoryLength = Math.min(totalHistory.length, 490); // Limit to max points
+        this.xData = Array.from({ length: maxHistoryLength }, (_, i) => i); // Create x-axis points
+        this.totalData = totalHistory.slice(-maxHistoryLength); // Get last 500 data points
+        this.magentaData = magentaHistory.slice(-maxHistoryLength); // Get last 500 data points
+        this.cyanData = cyanHistory.slice(-maxHistoryLength); // Get last 500 data points
+        this.similarityData = similarityHistory.slice(-maxHistoryLength); // Get last 500 data points
+        // Update the x-axis data to match the length of the history
         
         // Prepare data in the format uPlot expects
         const data = [
-            this.xData,         // X values
-            totalHistory,       // Y values for total bacteria
-            magentaHistory,     // Y values for magenta bacteria
-            cyanHistory,        // Y values for cyan bacteria
-            similarityHistory   // Y values for similarity
+            this.xData,
+            this.totalData,
+            this.magentaData,
+            this.cyanData,
+            this.similarityData
         ];
         
         // Update the chart with new data

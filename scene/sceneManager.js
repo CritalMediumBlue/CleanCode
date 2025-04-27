@@ -50,7 +50,8 @@ function updateScene(histories, dataState, animationState, bacteriaData, BACTERI
     updateSurfaceMesh(mesh, concentration, 10);
     updateOverlay(animationState,bacteriaCount);
     updateCapsules(bacteriaData, BACTERIUM, THREE, capsules);
-    plot.update(...histories);
+    
+    plot.update(...histories)
 }
 
 

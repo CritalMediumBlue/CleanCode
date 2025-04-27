@@ -63,11 +63,11 @@ canvas {
 /* Plot overlay container styling */
 #plot-overlay {
     position: fixed;
-    top: 40px;
+    top: 50px;
     left: 10px;
     width: 30%;
     height: 30%;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0,0);
     z-index: 100;
     overflow: hidden;
 }
