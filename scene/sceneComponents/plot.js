@@ -1,4 +1,4 @@
-import { createPlot, setup2DStage } from './plotUtils.js';
+import uPlot from 'uplot';
 
 /**
  * PlotManager - Handles the creation, updating and rendering of plot visualizations
@@ -9,41 +9,113 @@ export class PlotManager {
      * Create a new PlotManager
      */
     constructor() {
-        this.stage2D = {};
-        this.currentIndex = 0;
-        this.offset = 0;
-        this.plotPoints = null;
+        this.chart = null;
+        this.xData = [];        // Time/iterations data
+        this.totalData = [];    // Total bacteria data
+        this.magentaData = [];  // Magenta bacteria data
+        this.cyanData = [];     // Cyan bacteria data
+        this.similarityData = []; // Similarity data
         this.config = null;
         this.isInitialized = false;
+        this.resizeObserver = null;
     }
 
     /**
      * Initializes the plot visualization
-     * @param {Object} THREE - Three.js library
+     * @param {Object} _ - Unused parameter (was THREE library)
      * @param {Object} config - Configuration object for the plot
      * @returns {PlotManager} - This instance for method chaining
      */
-    initialize(THREE, config) {
-        if (this.isInitialized) {
-            this.dispose();
-        }
+    initialize(_, config) {
+    
 
         this.config = config;
-        this.currentIndex = 0;
-        this.offset = 0;
-
-        const plot = document.getElementById('plot-overlay');
-      
         
-        plot.innerHTML = '';
+        // Get the container element
+        const plotContainer = document.getElementById('plot-overlay');
+        if (!plotContainer) {
+            console.error("Plot container not found!");
+            return this;
+        }
         
-        // Set up the 2D stage and create plot components
-        this.stage2D = setup2DStage(THREE, this.config.SIZE_RATIO);
-        this.plotPoints = createPlot(THREE, this.config, this.stage2D.scene);
+        // Clear previous content
+        plotContainer.innerHTML = '';
+        
+        // Calculate fixed dimensions (using container size)
+        const width = plotContainer.clientWidth;
+        const height = plotContainer.clientHeight;
+        
+        // Initialize empty data arrays with zero values
+        this.xData = [0];
+        this.totalData = [0];
+        this.magentaData = [0];
+        this.cyanData = [0];
+        this.similarityData = [0];
+        
+        // Configure uPlot options
+        const opts = {
+            width,
+            height,
+            // Prevent uPlot from growing with each update by setting fixed size
+            autoSize: false,
+            scales: {
+                x: {
+                    time: false,
+                    auto: false,
+                    // Fix x-axis range to prevent expanding
+                    range: (self, min, max) => {
+                        const buffer = Math.max(50, this.config.MAX_POINTS || 100);
+                        // Keep a fixed width of points
+                        return [0, buffer];
+                    }
+                },
+                y: {
+                    auto: true,
+                    range: [0, this.config?.MAX_Y_VALUE || 100]
+                }
+            },
+            legend: {
+                show: true
+            },
+            padding: [10, 10, 10, 10], // [top, right, bottom, left]
+            series: [
+                {}, // X values (time/iterations)
+                {
+                    label: "Total",
+                    stroke: "white",
+                    width: 2,
+                },
+                {
+                    label: "Magenta",
+                    stroke: "magenta",
+                    width: 2,
+                },
+                {
+                    label: "Cyan",
+                    stroke: "cyan",
+                    width: 2,
+                },
+                {
+                    label: "Similarity",
+                    stroke: "yellow",
+                    width: 2,
+                }
+            ]
+        };
+        
+        // Create the uPlot chart with initial empty data
+        this.chart = new uPlot(opts, [
+            this.xData,          // X values
+            this.totalData,      // Total bacteria
+            this.magentaData,    // Magenta bacteria
+            this.cyanData,       // Cyan bacteria
+            this.similarityData  // Similarity
+        ], plotContainer);
         
         this.isInitialized = true;
         return this;
     }
+   
 
     /**
      * Updates plot data with new history values
@@ -54,92 +126,30 @@ export class PlotManager {
      * @returns {PlotManager} - This instance for method chaining
      */
     update(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
-        if (!this.isInitialized) {
-            console.warn("Plot not initialized. Call initialize() first.");
-            return this;
-        }
+      
         
-        // Update each plot point geometry with its corresponding history
-        this._updateGeometry(this.plotPoints.totalPlotPoints.geometry, totalHistory);
-        this._updateGeometry(this.plotPoints.magentaPlotPoints.geometry, magentaHistory);
-        this._updateGeometry(this.plotPoints.cyanPlotPoints.geometry, cyanHistory);
-        this._updateGeometry(this.plotPoints.similarityPlotPoints.geometry, similarityHistory);
+        // Create sequential x-axis points (0, 1, 2, ...) matching history length
+        const historyLength = totalHistory.length;
+        this.xData = Array.from({ length: historyLength }, (_, i) => i);
         
-        this.currentIndex++;
-        if (this.currentIndex > this.config.MAX_POINTS) {
-            this.offset++;
-        }
+        // Prepare data in the format uPlot expects
+        const data = [
+            this.xData,         // X values
+            totalHistory,       // Y values for total bacteria
+            magentaHistory,     // Y values for magenta bacteria
+            cyanHistory,        // Y values for cyan bacteria
+            similarityHistory   // Y values for similarity
+        ];
+        
+        // Update the chart with new data
+        this.chart.setData(data);
         
         return this;
     }
 
-    /**
-     * Updates a single plot geometry with history data
-     * @private
-     * @param {Object} geometry - Three.js geometry to update
-     * @param {Array} history - History data array
-     */
-    _updateGeometry(geometry, history) {
-        const positions = geometry.attributes.position.array;
-        const xStep = 4 / this.config.MAX_POINTS;
-        
-        for (let i = 0; i < this.config.MAX_POINTS; i++) {
-            const historyIndex = this.offset + i;
-            const x = -2 + i * xStep;
-            const y = historyIndex < history.length ? 
-                (history[historyIndex] / this.config.MAX_Y_VALUE) * 2 - 0.999 : -1;
-            const index = i * 3;
-            positions[index] = x;
-            positions[index + 1] = y;
-            positions[index + 2] = 0;
-        }
-        
-        geometry.attributes.position.needsUpdate = true;
-        const drawRange = Math.min(this.currentIndex, this.config.MAX_POINTS);
-        geometry.setDrawRange(0, drawRange);
-    }
-
-    /**
-     * Renders the plot
-     * @returns {PlotManager} - This instance for method chaining
-     */
-    render() {
-        if (!this.isInitialized || !this.stage2D.renderer) {
-            console.warn("Plot not initialized or missing renderer.");
-            return this;
-        }
-        
-        this.stage2D.renderer.render(this.stage2D.scene, this.stage2D.camera);
-        return this;
-    }
+ 
     
-    /**
-     * Cleans up resources used by the plot
-     */
-    dispose() {
-        if (!this.isInitialized) return;
-        
-        // Clean up Three.js resources
-        if (this.plotPoints) {
-            Object.values(this.plotPoints).forEach(points => {
-                if (points.geometry) points.geometry.dispose();
-                if (points.material) points.material.dispose();
-            });
-            this.plotPoints = null;
-        }
-        
-        // Clean up renderer if it exists
-        if (this.stage2D.renderer) {
-            const domElement = this.stage2D.renderer.domElement;
-            if (domElement && domElement.parentNode) {
-                domElement.parentNode.removeChild(domElement);
-            }
-            this.stage2D.renderer.dispose();
-        }
-        
-        this.stage2D = {};
-        this.isInitialized = false;
-    }
+
 }
 
 
