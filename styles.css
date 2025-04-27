@@ -63,8 +63,8 @@ canvas {
 /* Plot overlay container styling */
 #plot-overlay {
     position: fixed;
-    bottom: 10px;
-    right: 10px;
+    top: 40px;
+    left: 10px;
     width: 30%;
     height: 30%;
     background-color: rgba(0, 0, 0, 0.2);
@@ -75,5 +75,21 @@ canvas {
 #plot-overlay .uplot {
     width: 100% !important;
     height: 100% !important;
+}
+
+/* uPlot styling */
+#plot-overlay .uplot .u-legend {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+#plot-overlay .uplot .u-select {
+    background-color: rgba(100, 100, 100, 0.3);
+}
+
+/* Style axis numbers and text */
+#plot-overlay .uplot .u-axis .u-label,
+#plot-overlay .uplot .u-axis .u-value {
+    color: rgba(255, 255, 255, 0.8);
+    fill: rgba(255, 255, 255, 0.8);
 }
 

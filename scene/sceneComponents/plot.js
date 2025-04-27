@@ -16,8 +16,7 @@ export class PlotManager {
         this.cyanData = [];     // Cyan bacteria data
         this.similarityData = []; // Similarity data
         this.config = null;
-        this.isInitialized = false;
-        this.resizeObserver = null;
+       
     }
 
     /**
@@ -27,16 +26,14 @@ export class PlotManager {
      * @returns {PlotManager} - This instance for method chaining
      */
     initialize(_, config) {
-    
+        if (this.isInitialized) {
+            this.dispose();
+        }
 
         this.config = config;
         
-        // Get the container element
         const plotContainer = document.getElementById('plot-overlay');
-        if (!plotContainer) {
-            console.error("Plot container not found!");
-            return this;
-        }
+     
         
         // Clear previous content
         plotContainer.innerHTML = '';
@@ -51,6 +48,9 @@ export class PlotManager {
         this.magentaData = [0];
         this.cyanData = [0];
         this.similarityData = [0];
+        
+        // Define text color for axis labels and values
+        const axisTextColor = "rgba(255, 255, 255, 0.8)"; // White with slight transparency
         
         // Configure uPlot options
         const opts = {
@@ -74,6 +74,36 @@ export class PlotManager {
                     range: [0, this.config?.MAX_Y_VALUE || 100]
                 }
             },
+            axes: [
+                {
+                    // X-axis styling
+                    stroke: "rgba(120, 120, 120, 0.8)", // Axis line color
+                    grid: {
+                        show: true,
+                        stroke: "rgba(80, 80, 80, 0.3)", // Grid line color
+                    },
+                    ticks: {
+                        show: true,
+                        stroke: "rgba(120, 120, 120, 0.8)", // Tick color
+                    },
+                    font: "12px Arial",
+                    color: axisTextColor, // X-axis label text color
+                },
+                {
+                    // Y-axis styling
+                    stroke: "rgba(120, 120, 120, 0.8)", // Axis line color
+                    grid: {
+                        show: true,
+                        stroke: "rgba(80, 80, 80, 0.3)", // Grid line color
+                    },
+                    ticks: {
+                        show: true,
+                        stroke: "rgba(120, 120, 120, 0.8)", // Tick color
+                    },
+                    font: "12px Arial",
+                    color: axisTextColor, // Y-axis label text color
+                }
+            ],
             legend: {
                 show: true
             },
@@ -112,11 +142,9 @@ export class PlotManager {
             this.similarityData  // Similarity
         ], plotContainer);
         
-        this.isInitialized = true;
-        return this;
-    }
-   
 
+    }
+    
     /**
      * Updates plot data with new history values
      * @param {Array} totalHistory - History of total bacteria counts
@@ -126,7 +154,7 @@ export class PlotManager {
      * @returns {PlotManager} - This instance for method chaining
      */
     update(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
-      
+    
         
         // Create sequential x-axis points (0, 1, 2, ...) matching history length
         const historyLength = totalHistory.length;
@@ -144,11 +172,9 @@ export class PlotManager {
         // Update the chart with new data
         this.chart.setData(data);
         
-        return this;
     }
 
- 
-    
+  
 
 }
 
