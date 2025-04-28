@@ -1,4 +1,4 @@
-import {THREE, OrbitControls} from './threeImports.js';
+import {THREE, OrbitControls, uPlot} from './graphycLibrariesImports.js';
 import { setupMesh, updateSurfaceMesh } from './sceneComponents/mesh.js';
 import { setupCapsulePool, updateCapsules } from './sceneComponents/capsulePool.js';
 import { setupPlot, updatePlot } from './sceneComponents/plot.js';
@@ -24,7 +24,7 @@ export function setupNewScene(config) {
     stage = setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules);
     capsules = setupCapsulePool(stage, BACTERIUM, THREE, capsules);
     mesh = setupMesh(stage, THREE, GRID);
-    plot = setupPlot(PLOT);
+    plot = setupPlot( uPlot);
 
     stage.scene.add(new THREE.AxesHelper(10));
     stage.scene.fog = new THREE.Fog(SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR);

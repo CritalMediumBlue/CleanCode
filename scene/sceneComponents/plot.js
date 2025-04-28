@@ -1,4 +1,3 @@
-import uPlot from 'uplot';
 
 
 /**
@@ -7,7 +6,7 @@ import uPlot from 'uplot';
  * @param {Object} config - Configuration options for the plot
  * @returns {Object} - Reference to the created plot
  */
-export function setupPlot() {
+export function setupPlot(uPlot) {
     const plotContainer = document.getElementById('plot-overlay');
     
     // Clear previous content
