@@ -65,7 +65,7 @@ canvas {
     position: fixed;
     top: 50px;
     left: 10px;
-    width: 30%;
+    width: 50%;
     height: 30%;
     background-color: rgba(0, 0, 0,0);
     z-index: 100;
@@ -83,13 +83,13 @@ canvas {
 }
 
 #plot-overlay .uplot .u-select {
-    background-color: rgba(100, 100, 100, 0.3);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 /* Style axis numbers and text */
 #plot-overlay .uplot .u-axis .u-label,
 #plot-overlay .uplot .u-axis .u-value {
-    color: rgba(255, 255, 255, 0.8);
-    fill: rgba(255, 255, 255, 0.8);
+    color: rgb(255, 255, 255);
+    fill: rgb(255, 255, 255);
 }
 

@@ -1,5 +1,4 @@
 import uPlot from 'uplot';
-import {createPlotOptions} from './options.js';
 
 
 /**
@@ -50,4 +49,108 @@ function sliceData(start, end, data) {
       d.push(data[i].slice(start, end));
 
   return d;
+}
+
+
+function createPlotOptions({ width, height }) {
+  // Define text color for axis labels and values
+  const axisTextColor = "rgb(255, 255, 255)";
+  const strokeColor = "rgba(255, 255, 255, 0.5)"; 
+  let makeFmt = (suffix) => (u, v, sidx) => {
+   
+      let d = u.data[sidx];
+      if (d && d.length > 0) {
+        v = d[d.length - 1];
+        if (suffix == '%') {
+          v = v.toFixed(2);
+        }
+      }
+      
+    
+    return v == null ? null : v + suffix;
+  };
+  return {
+    width,
+    height,
+    cursor: {
+      focus: { prox: 10, }
+    },
+    series: [
+      {
+          label: "Time step",
+          value: (u, v, sidx, didx) => {
+              if (didx == null) {
+                  let d = u.data[sidx];
+                  v = d[d.length - 1];
+              }
+
+              return v;
+          }
+      },
+      {
+          label: "Total",
+          scale: "count",
+          value: makeFmt(" Bacteria"),
+          stroke: "white",
+          width: 2,
+          fill: "rgba(255, 255, 255, 0.2)",
+      },
+      {
+          label: "Magenta",
+          scale: "%",
+          value: makeFmt('%'),
+          stroke: "magenta",
+          width: 2,
+      },
+      {
+          label: "Cyan",
+          scale: "%",
+          value: makeFmt('%'),
+          stroke: "cyan",
+          width: 2,
+      },
+      {
+          label: "Similarity",
+          scale: "%",
+          value: makeFmt('%'),
+          stroke: "yellow",
+          width: 2,
+      }
+      
+  ],
+    scales: {
+      x: {
+        time: false, 
+      }
+    }, 
+    axes: [
+      {
+        stroke: axisTextColor, // Axis line color
+        grid: {
+          show: true,
+          stroke: strokeColor, // Grid line color
+        },
+        font: "12px Arial",
+      },
+      {
+        stroke: axisTextColor, // Axis line color
+        grid: {
+          stroke: strokeColor, // Grid line color
+        },
+        scale: 'count',
+        font: "12px Arial"
+      },
+      { 
+        side: 1,
+        stroke: axisTextColor, // Axis line color
+        grid: {
+          show: false,
+          stroke: strokeColor, // Grid line color
+        },
+        font: "12px Arial",
+        color: axisTextColor, // Y-axis label text color
+        scale: '%'
+      }
+    ]
+  };
 }
