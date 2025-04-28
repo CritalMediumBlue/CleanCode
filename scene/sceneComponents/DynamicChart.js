@@ -1,38 +1,16 @@
 export function makeChart(data,uPlot) {
-    console.time('chart');
 
-    function sliceData(start, end, data) {
-        let d = [];
-
-        for (let i = 0; i < data.length; i++)
-            d.push(data[i].slice(start, end));
-
-        return d;
-    }
-
-    let interval = 100;
-
-    let makeFmt = suffix => (u, v, sidx, didx) => {
-        if (didx == null) {
+    let makeFmt = suffix => (u, v, sidx) => {
+        
             let d = u.data[sidx];
             v = d[d.length - 1];
-        }
-
+        
         return v == null ? null : v.toFixed(1) + suffix;
     };
 
     const opts = {
-        title: "Fixed length / sliding data slices",
-        width: 1600,
-        height: 600,
-        cursor: {
-            drag: {
-                setScale: false,
-            }
-        },
-        select: {
-            show: false,
-        },
+        width: 1100,
+        height: 500,
         series: [
             {
                 value: (u, v, sidx, didx) => {
@@ -79,15 +57,27 @@ export function makeChart(data,uPlot) {
     };
 
     let start1 = 0;
-    let len1 = 3000;
+    const len1 = 3000;
 
     let data1 = sliceData(start1, start1 + len1,data);
     let uplot1 = new uPlot(opts, data1, document.body);
 
     setInterval(function() {
         start1 += 10;
-        let data1 = sliceData(start1, start1 + len1,data);
+        data1 = sliceData(start1, start1 + len1,data);
         uplot1.setData(data1);
-    }, interval);
+    }, 100);
 
+}
+
+
+
+
+function sliceData(start, end, data) {
+    let d = [];
+
+    for (let i = 0; i < data.length; i++)
+        d.push(data[i].slice(start, end));
+
+    return d;
 }

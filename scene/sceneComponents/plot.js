@@ -18,13 +18,12 @@ export function setupPlot() {
     const width = plotContainer.clientWidth;
     const height = plotContainer.clientHeight*0.7;
     
-    const plotOptions = createPlotOptions({
+    const options = createPlotOptions({
         width,
-        height,
-        maxYValue: 1600
+        height
     });
     
-    return new uPlot(plotOptions, [], plotContainer);
+    return new uPlot(options, [0,0,0,0,0], plotContainer);
 }
 
 /**
@@ -35,54 +34,12 @@ export function setupPlot() {
  * @param {Array} similarityHistory - History of similarity values
  */
 export function updatePlot(data, plot) {
-    // Validate input data
-    if (!data || !Array.isArray(data) || data.length === 0) {
-        console.warn('Invalid data provided to updatePlot');
-        return;
-    }
-    
-    // Ensure plot is defined
-    if (!plot) {
-        console.warn('Plot reference is undefined in updatePlot');
-        return;
-    }
-    
-    // Create a new array with time series as the first element
-    let processedData = [];
-    
-    // First determine the length of the data arrays
-    let dataLength = 0;
-    
-    // Find the first valid data array and get its length
-    for (let i = 0; i < data.length; i++) {
-        if (Array.isArray(data[i]) && data[i].length > 0) {
-            dataLength = data[i].length;
-            break;
-        }
-    }
-    
-    if (dataLength === 0) {
-        console.warn('No valid data arrays found');
-        return;
-    }
-    
-    // Generate time series (0, 1, 2, ...) for x-axis
-    const timeSeriesData = Array.from({ length: dataLength }, (_, index) => index);
-    processedData.push(timeSeriesData);
-    
-    // Add the rest of the data arrays
-    for (let i = 0; i < data.length; i++) {
-        if (Array.isArray(data[i])) {
-            processedData.push(data[i]);
-        }
-    }
-    
-    const totalHistoryLength = processedData[0].length;
-    const start = Math.max(0, totalHistoryLength - 500);
+  
+    const end = data[0].length;
+    const start = Math.max(2, end - 500);
 
-    const slicedData = sliceData(start, totalHistoryLength, processedData);
+    const slicedData = sliceData(start, end, data);
     
-    // Use setData to update the chart
     plot.setData(slicedData);
 }
 

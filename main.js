@@ -153,7 +153,7 @@ const updateBacteriaPositions = (currentBacteria) => {
     const magentaCount = simulationState.bacteriumSystem.getMagentaCount();
     const cyanCount = simulationState.bacteriumSystem.getCyanCount();
     const averageSimilarity = simulationState.bacteriumSystem.getAverageSimilarityWithNeighbors()
-    const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
+    const scaledSimilarity = (averageSimilarity - 0.5)*2;
     
     // Update our local history manager
     sceneState.historyManager.update(

@@ -139,8 +139,8 @@ export class HistoryManager {
      */
     update(totalCount, magentaCount, cyanCount, averageSimilarity) {
         this.totalBacteriaCountHistory.push(totalCount);
-        this.magentaBacteriaCountHistory.push(magentaCount);
-        this.cyanBacteriaCountHistory.push(cyanCount);
+        this.magentaBacteriaCountHistory.push(magentaCount/totalCount);
+        this.cyanBacteriaCountHistory.push(cyanCount/totalCount);
         this.averageSimilarityHistory.push(averageSimilarity);
     }
 
@@ -149,9 +149,10 @@ export class HistoryManager {
      * @returns {Object} Object containing all history arrays
      */
     getHistories() {
-        
 
+        const dataLength = this.totalBacteriaCountHistory.length;
         const data = [
+            Array.from({ length: dataLength }, (_, index) => index),
             this.totalBacteriaCountHistory,
             this.magentaBacteriaCountHistory,
             this.cyanBacteriaCountHistory,
