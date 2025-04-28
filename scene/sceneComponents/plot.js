@@ -93,7 +93,6 @@ function createPlotOptions({ width, height }) {
           value: makeFmt(" Bacteria"),
           stroke: "white",
           width: 2,
-          fill: "rgba(255, 255, 255, 0.2)",
       },
       {
           label: "Magenta",
