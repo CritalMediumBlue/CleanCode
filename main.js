@@ -13,9 +13,10 @@ import {
     dataState, 
     initializeArrays,
     getAdjustedCoordinates,
-    cleanupResources, 
+    cleanupResources,
+    updateHistory,
+    getHistories
 } from './state/stateManager.js';
-import * as historyManager from './state/historyManager.js';
 
 /**
  * Configuration object injected from guiManager
@@ -115,8 +116,8 @@ const updateBacteriaPositions = (currentBacteria) => {
     const averageSimilarity = simulationState.bacteriumSystem.getAverageSimilarityWithNeighbors()
     const scaledSimilarity = (averageSimilarity - 0.5)*2;
     
-    // Update using the new historyManager module
-    historyManager.update(
+    // Update history using the function exported from stateManager.js
+    updateHistory(
         currentBacteria.length,
         magentaCount,
         cyanCount,
@@ -185,7 +186,7 @@ const animate = () => {
             dataState.currentConcentrationData
         );
     }
-    const histories = historyManager.getHistories();
+    const histories = getHistories();
 
     renderScene(histories,bacteriaData, dataState, appConfig.BACTERIUM, animationState);
 };

@@ -62,11 +62,14 @@ function createPlotOptions({ width, height }) {
         v = d[d.length - 1];
         if (suffix == '%') {
           v = v.toFixed(2);
+          return v == null ? null : v + suffix;
+        }
+        else {
+          return v == null ? null : v;
         }
       }
       
     
-    return v == null ? null : v + suffix;
   };
   return {
     width,
@@ -89,7 +92,7 @@ function createPlotOptions({ width, height }) {
       {
           label: "Total",
           scale: "count",
-          value: makeFmt(" Bacteria"),
+          value: makeFmt(""),
           stroke: "white",
           width: 2,
       },

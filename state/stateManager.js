@@ -1,3 +1,10 @@
+// Import and re-export historyManager functions
+import * as historyManagerModule from './historyManager.js';
+
+// Re-export the history manager functions
+export const updateHistory = historyManagerModule.update;
+export const getHistories = historyManagerModule.getHistories;
+
 // --- State Objects ---
 
 /** @type {object} sceneState - Manages Three.js scene components and related states. */
@@ -45,11 +52,9 @@ export const cleanupResources = () => {
         animationState.animationFrameId = null;
     }
 
-    // Import and use the clear function from historyManager
-    import('./historyManager.js').then(historyManager => {
-        historyManager.clear();
-        console.log("History manager cleared.");
-    });
+    // Clear history data
+    historyManagerModule.clear();
+    console.log("History manager cleared.");
 
     // Dispose bacterium system if it exists
     if (simulationState.bacteriumSystem) {
