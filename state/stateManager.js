@@ -7,6 +7,7 @@ export const sceneState = {
     /** @type {THREE.WebGLRenderer | null} */ renderer: null,
     /** @type {THREE.Mesh | null} */ surfaceMesh: null, // The mesh representing the concentration surface
     /** @type {object | null} */ bacteriumRenderer: null, // New renderer component for bacteria
+    /** @type {boolean} */ visibleBacteria: true, // Whether bacteria are visible
 };
 
 /** @type {object} animationState - Manages animation loop, timing, and playback state. */
@@ -38,19 +39,17 @@ export const dataState = {
 export const cleanupResources = () => {
     console.log("Cleaning up resources...");
  
-
     // Cancel animation frame
     if (animationState.animationFrameId) {
         cancelAnimationFrame(animationState.animationFrameId);
         animationState.animationFrameId = null;
     }
 
-
-    // Clear historyManager if it exists
-    if (sceneState.historyManager) {
-        sceneState.historyManager.clear();
+    // Import and use the clear function from historyManager
+    import('./historyManager.js').then(historyManager => {
+        historyManager.clear();
         console.log("History manager cleared.");
-    }
+    });
 
     // Dispose bacterium system if it exists
     if (simulationState.bacteriumSystem) {
@@ -58,7 +57,6 @@ export const cleanupResources = () => {
         simulationState.bacteriumSystem = null;
         console.log("Bacterium system disposed.");
     }
-
 
     animationState.currentTimeStep = 1;
     animationState.numberOfTimeSteps = 0;
@@ -84,8 +82,6 @@ export const initializeArrays = (appConfig) => {
     dataState.sources = new Float32Array(gridSize).fill(0);
     dataState.sinks = new Float32Array(gridSize).fill(0);
 };
-
-
 
 
 /**
@@ -114,62 +110,3 @@ export const getAdjustedCoordinates = (x, y, grid) => {
 
     return { x: adjustedX, y: adjustedY, idx };
 };
-
-
-
-/**
- * Manages history tracking for bacteria simulation
- * @class
- * @classdesc Tracks and stores historical data for the bacteria simulation
- */
-export class HistoryManager {
-    constructor() {
-        this.totalBacteriaCountHistory = [];
-        this.magentaBacteriaCountHistory = [];
-        this.cyanBacteriaCountHistory = [];
-        this.averageSimilarityHistory = [];
-    }
-
-    /**
-     * Update history arrays with new data
-     * @param {number} totalCount - Total bacteria count
-     * @param {number} magentaCount - Magenta bacteria count
-     * @param {number} cyanCount - Cyan bacteria count
-     * @param {number} averageSimilarity - Average similarity value
-     */
-    update(totalCount, magentaCount, cyanCount, averageSimilarity) {
-        this.totalBacteriaCountHistory.push(totalCount);
-        this.magentaBacteriaCountHistory.push(magentaCount/totalCount);
-        this.cyanBacteriaCountHistory.push(cyanCount/totalCount);
-        this.averageSimilarityHistory.push(averageSimilarity);
-    }
-
-    /**
-     * Get all history arrays
-     * @returns {Object} Object containing all history arrays
-     */
-    getHistories() {
-
-        const dataLength = this.totalBacteriaCountHistory.length;
-        const data = [
-            Array.from({ length: dataLength }, (_, index) => index),
-            this.totalBacteriaCountHistory,
-            this.magentaBacteriaCountHistory,
-            this.cyanBacteriaCountHistory,
-            this.averageSimilarityHistory
-        ];
-
-
-        return data;
-    }
-
-    /**
-     * Clear all history arrays
-     */
-    clear() {
-        this.totalBacteriaCountHistory = [];
-        this.magentaBacteriaCountHistory = [];
-        this.cyanBacteriaCountHistory = [];
-        this.averageSimilarityHistory = [];
-    }
-}

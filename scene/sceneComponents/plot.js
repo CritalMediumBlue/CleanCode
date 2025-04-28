@@ -14,7 +14,7 @@ export function setupPlot(uPlot) {
     
     // Calculate fixed dimensions (using container size)
     const width = plotContainer.clientWidth;
-    const height = plotContainer.clientHeight*0.7;
+    const height = plotContainer.clientHeight*0.9;
     
     const options = createPlotOptions({
         width,

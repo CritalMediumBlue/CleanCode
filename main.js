@@ -3,14 +3,8 @@
  * Manages the core simulation loop, scene updates, and integrates components.
  */
 
-import {
-     setupNewScene, 
-     renderScene,
-    } from './scene/graphicsManager.js';
-import {
-    createBacteriumSystem,
-    diffuse,
-} from './simulation/simulationManager.js';
+import {setupNewScene, renderScene} from './scene/graphicsManager.js';
+import {createBacteriumSystem,diffuse} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     sceneState, 
@@ -19,9 +13,9 @@ import {
     dataState, 
     initializeArrays,
     getAdjustedCoordinates,
-    HistoryManager,
     cleanupResources, 
 } from './state/stateManager.js';
+import * as historyManager from './state/historyManager.js';
 
 /**
  * Configuration object injected from guiManager
@@ -29,43 +23,11 @@ import {
  */
 let appConfig;
 
-// --- State Action Interfaces ---
 
-/**
- * @typedef {Object} StateActions
- * @property {function(boolean): void} setPlayState - Sets the animation playback state
- * @property {function(): void} renderScene - Renders the scene manually
- */
-
-/**
- * Interface for state-related actions to be used by guiManager.
- * This decouples guiManager.js from direct dependence on stateManager.js
- * @type {StateActions}
- */
-const stateActions = {
-    setPlayState: (isPlaying) => {
-        animationState.play = isPlaying;
-    }
-};
-
-/**
- * @typedef {Object} SimulationActions
- * @property {function(number): void} setSignalValue - Updates the signal value in the simulation
- * @property {function(number): void} setAlphaValue - Updates the alpha/temperature value in the simulation
- */
-
-/**
- * Interface for simulation-related actions to be used by guiManager.
- * This decouples guiManager.js from direct dependence on simulationManager.js
- * @type {SimulationActions}
- */
-const simulationActions = {
-    setSignalValue: (value) => {
-        simulationState.bacteriumSystem.setSignalValue(value);
-    },
-    setAlphaValue: (value) => {
-        simulationState.bacteriumSystem.setAlphaValue(value);
-    }
+const guiActions = {
+    setSignalValue: (value) => {simulationState.bacteriumSystem.setSignalValue(value);},
+    setAlphaValue: (value) => {simulationState.bacteriumSystem.setAlphaValue(value);},
+    setPlayState: (isPlaying) => {animationState.play = isPlaying;}
 };
 
 
@@ -78,9 +40,7 @@ const resetAllData = () => {
     cleanupResources();
 
     setupNewScene(appConfig);
-    simulationState.bacteriumSystem = createBacteriumSystem( appConfig)
-
-    sceneState.historyManager = new HistoryManager();
+    simulationState.bacteriumSystem = createBacteriumSystem(appConfig);
     
     initializeArrays(appConfig);    
 };
@@ -155,8 +115,8 @@ const updateBacteriaPositions = (currentBacteria) => {
     const averageSimilarity = simulationState.bacteriumSystem.getAverageSimilarityWithNeighbors()
     const scaledSimilarity = (averageSimilarity - 0.5)*2;
     
-    // Update our local history manager
-    sceneState.historyManager.update(
+    // Update using the new historyManager module
+    historyManager.update(
         currentBacteria.length,
         magentaCount,
         cyanCount,
@@ -225,7 +185,7 @@ const animate = () => {
             dataState.currentConcentrationData
         );
     }
-    const histories = sceneState.historyManager.getHistories();
+    const histories = historyManager.getHistories();
 
     renderScene(histories,bacteriaData, dataState, appConfig.BACTERIUM, animationState);
 };
@@ -240,8 +200,7 @@ appConfig = addEventListeners(
     animate, 
     resetAllData, 
     setBacteriaData,
-    stateActions,  // Pass state actions for GUI to use
-    simulationActions  // Pass simulation actions for GUI to use
+    guiActions  // Pass simulation actions for GUI to use
 );
 
 

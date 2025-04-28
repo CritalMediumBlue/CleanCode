@@ -18,7 +18,6 @@ export function setupNewScene(config) {
     const SCENE = config.SCENE;
     const BACTERIUM = config.BACTERIUM;
     const GRID = config.GRID;
-    const PLOT = config.PLOT;
 
 
     stage = setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules);

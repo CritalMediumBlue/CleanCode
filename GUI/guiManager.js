@@ -4,7 +4,7 @@
  */
 
 import { CONFIG } from './config.js';
-import { handleFileInput as processFileInput, setBacteriaData as setProcessedBacteriaData } from './dataProcessor.js';
+import { handleFileInput as processFileInput } from './dataProcessor.js';
 // Removed direct imports from stateManager.js
 // Removed direct import from simulationManager.js
 // These will now be provided via callbacks from main.js
@@ -66,11 +66,10 @@ const setBacteriaData = (data, processedData) => {
  * @param {Function} resetAllData - Function to reset all data 
  * @param {Function} externalSetBacteriaData - Function to set the bacteria data
  * @param {Function} renderPlot - Function to render the plot from sceneManager
- * @param {Object} stateActions - Object containing functions to manipulate state
- * @param {Object} simulationActions - Object containing functions for simulation operations
+ * @param {Object} guiActions - Object containing functions for simulation operations
  * @returns {Object} The configuration object for dependency injection
  */
-export const addEventListeners = ( animate, resetAllData, externalSetBacteriaData, stateActions, simulationActions) => {
+export const addEventListeners = ( animate, resetAllData, externalSetBacteriaData, guiActions) => {
     console.log("Adding event listeners...");
     
     // Store the callback for setting bacteria data
@@ -78,8 +77,8 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
     
     // Simple toggle buttons with declarative configuration
     const toggleButtons = [
-        { id: 'playButton', event: 'click', handler: () => stateActions.setPlayState(true) },
-        { id: 'pauseButton', event: 'click', handler: () => stateActions.setPlayState(false) },
+        { id: 'playButton', event: 'click', handler: () => guiActions.setPlayState(true) },
+        { id: 'pauseButton', event: 'click', handler: () => guiActions.setPlayState(false) },
         // Select/dropdown controls
         {
             id: 'toggleColorButton', event: 'change', handler: (event) => {
@@ -101,7 +100,7 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
                 const value = parseFloat(event.target.value);
                 const valueElement = document.getElementById('signalValue');
                 if (valueElement) valueElement.textContent = value.toFixed(2);
-                simulationActions.setSignalValue(value);
+                guiActions.setSignalValue(value);
             }
         },
 
@@ -110,7 +109,7 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
                 const value = parseFloat(event.target.value);
                 const valueElement = document.getElementById('alphaValue');
                 if (valueElement) valueElement.textContent = value.toFixed(5);
-                simulationActions.setAlphaValue(value);
+                guiActions.setAlphaValue(value);
             }
         },
 
