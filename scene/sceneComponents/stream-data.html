@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Data Stream</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="importmap">
+            {
+                "imports": {
+                    "uplot": "https://unpkg.com/uplot/dist/uPlot.esm.js"
+                                    }
+              }
+        </script>
+        <link rel="stylesheet" href="https://unpkg.com/uplot@1.6.32/dist/uPlot.min.css">
+    </head>
+    <body>
+        <h2 id="wait">Loading lib....</h2>
+
+        <script type="module">
+            import uPlot from "uplot";
+			import { makeChart } from "./DynamicChart.js";
+
+            function round2(val) {
+                return Math.round(val * 100) / 100;
+            }
+
+			function round3(val) {
+				return Math.round(val * 1000) / 1000;
+			}
+
+			function prepData(packed) {
+				console.time('prep');
+
+				// epoch,idl,recv,send,read,writ,used,free
+
+				const numFields = packed[0];
+
+				packed = packed.slice(numFields + 1);
+
+				// 55,550 data points x 3 series = 166,650
+				let data = [
+					Array(packed.length/numFields),
+					Array(packed.length/numFields),
+					Array(packed.length/numFields),
+					Array(packed.length/numFields),
+				];
+
+				for (let i = 0, j = 0; i < packed.length; i += numFields, j++) {
+					data[0][j] = packed[i] * 60;
+					data[1][j] = round3(100 - packed[i+1]);
+					data[2][j] = round2(100 * packed[i+5] / (packed[i+5] + packed[i+6]));
+					data[3][j] = packed[i+3];
+				}
+
+				console.timeEnd('prep');
+
+				return data;
+			}
+
+
+
+			let wait = document.getElementById("wait");
+			wait.textContent = "Generating sample data...";
+
+			// Generate synthetic data instead of fetching external file
+			function generateSampleData() {
+				console.time('data-generation');
+				
+				const dataPoints = 50000;
+				const timeStep = 60; // seconds
+				const startTime = 1566453600; // arbitrary epoch time
+				
+				// Initialize data arrays for 4 series (time + 3 metrics)
+				let data = [
+					Array(dataPoints), // timestamps
+					Array(dataPoints), // CPU - sine wave
+					Array(dataPoints), // RAM - random walk
+					Array(dataPoints)  // TCP Out - cosine with noise
+				];
+				
+				// Random walk starting point
+				let randomWalk = 50;
+				
+				// Generate data points
+				for (let i = 0; i < dataPoints; i++) {
+					// Time axis (seconds)
+					data[0][i] = startTime + (i * timeStep);
+					
+					// CPU: Sine wave between 0-100%
+					data[1][i] = round3(50 + 40 * Math.sin(i / 100));
+					
+					// RAM: Random walk between 0-100%
+					randomWalk += (Math.random() * 4 - 2);
+					randomWalk = Math.min(Math.max(randomWalk, 10), 90); // Keep between 10-90%
+					data[2][i] = round2(randomWalk);
+					
+					// TCP Out: Cosine with random noise (0-60 MB)
+					data[3][i] = round2(30 + 25 * Math.cos(i / 50) + (Math.random() * 5));
+				}
+				
+				console.timeEnd('data-generation');
+				return data;
+			}
+			
+			// Generate sample data and render charts
+			wait.textContent = "Rendering...";
+			let data = generateSampleData();
+			makeChart(data,uPlot);
+		</script>
+	</body>
+</html>

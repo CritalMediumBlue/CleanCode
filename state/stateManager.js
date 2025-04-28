@@ -149,12 +149,16 @@ export class HistoryManager {
      * @returns {Object} Object containing all history arrays
      */
     getHistories() {
-        return {
-            totalBacteriaCountHistory: this.totalBacteriaCountHistory,
-            magentaBacteriaCountHistory: this.magentaBacteriaCountHistory,
-            cyanBacteriaCountHistory: this.cyanBacteriaCountHistory,
-            averageSimilarityHistory: this.averageSimilarityHistory
-        };
+
+        const data = [
+            this.totalBacteriaCountHistory,
+            this.magentaBacteriaCountHistory,
+            this.cyanBacteriaCountHistory,
+            this.averageSimilarityHistory
+        ];
+
+
+        return data;
     }
 
     /**
