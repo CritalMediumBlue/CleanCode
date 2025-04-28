@@ -149,6 +149,7 @@ export class HistoryManager {
      * @returns {Object} Object containing all history arrays
      */
     getHistories() {
+        
 
         const data = [
             this.totalBacteriaCountHistory,

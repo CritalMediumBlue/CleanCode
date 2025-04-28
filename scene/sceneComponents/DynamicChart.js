@@ -90,9 +90,4 @@ export function makeChart(data,uPlot) {
         uplot1.setData(data1);
     }, interval);
 
-
-
-
-    wait.textContent = "Done!!";
-    console.timeEnd('chart');
 }

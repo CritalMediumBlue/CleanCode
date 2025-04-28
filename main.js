@@ -225,7 +225,7 @@ const animate = () => {
             dataState.currentConcentrationData
         );
     }
-    const histories = Object.values(sceneState.historyManager.getHistories());
+    const histories = sceneState.historyManager.getHistories();
 
     renderScene(histories,bacteriaData, dataState, appConfig.BACTERIUM, animationState);
 };

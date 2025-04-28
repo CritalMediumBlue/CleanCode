@@ -1,8 +1,6 @@
 import uPlot from 'uplot';
 import {createPlotOptions} from './options.js';
 
-// Maintain a reference to the chart instance
-let chart = null;
 
 /**
  * Initializes the plot visualization
@@ -10,7 +8,7 @@ let chart = null;
  * @param {Object} config - Configuration options for the plot
  * @returns {Object} - Reference to the created plot
  */
-export function setupPlot(_, config) {
+export function setupPlot() {
     const plotContainer = document.getElementById('plot-overlay');
     
     // Clear previous content
@@ -18,7 +16,7 @@ export function setupPlot(_, config) {
     
     // Calculate fixed dimensions (using container size)
     const width = plotContainer.clientWidth;
-    const height = plotContainer.clientHeight;
+    const height = plotContainer.clientHeight*0.7;
     
     const plotOptions = createPlotOptions({
         width,
@@ -26,10 +24,7 @@ export function setupPlot(_, config) {
         maxYValue: 1600
     });
     
-    // Create the uPlot chart with initial empty data
-    chart = new uPlot(plotOptions, [], plotContainer);
-    
-    return chart;
+    return new uPlot(plotOptions, [], plotContainer);
 }
 
 /**
@@ -39,38 +34,63 @@ export function setupPlot(_, config) {
  * @param {Array} cyanHistory - History of cyan bacteria counts
  * @param {Array} similarityHistory - History of similarity values
  */
-export function updatePlot(totalHistory, magentaHistory, cyanHistory, similarityHistory) {
-    if (!chart) return;
-    
-    const totalHistoryLength = totalHistory.length;
-    const maxHistoryLength = Math.min(totalHistoryLength, 490);
-    const difference = totalHistoryLength - maxHistoryLength;
-    
-    // Create data arrays directly without storing as properties
-    const xData = Array.from({ length: maxHistoryLength }, (_, i) => i + difference);
-    const totalData = totalHistory.slice(-maxHistoryLength);
-    const magentaData = magentaHistory.slice(-maxHistoryLength);
-    const cyanData = cyanHistory.slice(-maxHistoryLength);
-    const similarityData = similarityHistory.slice(-maxHistoryLength);
-    
-    // Use setData to update the chart - uPlot doesn't have an addData method
-    chart.setData([
-        xData,
-        totalData,
-        magentaData,
-        cyanData,
-        similarityData
-    ]);
-}
-
-/**
- * Cleans up plot resources
- */
-export function disposePlot() {
-    if (chart) {
-        chart.destroy();
-        chart = null;
+export function updatePlot(data, plot) {
+    // Validate input data
+    if (!data || !Array.isArray(data) || data.length === 0) {
+        console.warn('Invalid data provided to updatePlot');
+        return;
     }
+    
+    // Ensure plot is defined
+    if (!plot) {
+        console.warn('Plot reference is undefined in updatePlot');
+        return;
+    }
+    
+    // Create a new array with time series as the first element
+    let processedData = [];
+    
+    // First determine the length of the data arrays
+    let dataLength = 0;
+    
+    // Find the first valid data array and get its length
+    for (let i = 0; i < data.length; i++) {
+        if (Array.isArray(data[i]) && data[i].length > 0) {
+            dataLength = data[i].length;
+            break;
+        }
+    }
+    
+    if (dataLength === 0) {
+        console.warn('No valid data arrays found');
+        return;
+    }
+    
+    // Generate time series (0, 1, 2, ...) for x-axis
+    const timeSeriesData = Array.from({ length: dataLength }, (_, index) => index);
+    processedData.push(timeSeriesData);
+    
+    // Add the rest of the data arrays
+    for (let i = 0; i < data.length; i++) {
+        if (Array.isArray(data[i])) {
+            processedData.push(data[i]);
+        }
+    }
+    
+    const totalHistoryLength = processedData[0].length;
+    const start = Math.max(0, totalHistoryLength - 500);
+
+    const slicedData = sliceData(start, totalHistoryLength, processedData);
+    
+    // Use setData to update the chart
+    plot.setData(slicedData);
 }
 
+function sliceData(start, end, data) {
+  let d = [];
 
+  for (let i = 0; i < data.length; i++)
+      d.push(data[i].slice(start, end));
+
+  return d;
+}

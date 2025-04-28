@@ -1,7 +1,7 @@
-export  function createPlotOptions({ width, height }) {
+export function createPlotOptions({ width, height }) {
     // Define text color for axis labels and values
     const axisTextColor = "rgb(255, 255, 255)";
-    const strokeColor = "rgba(255, 255, 255, 0.5)"; // Color for grid lines and ticks
+    const strokeColor = "rgba(255, 255, 255, 0.5)"; 
     let makeFmt = () => (u, v, sidx, didx) => {
       if (didx == null) {
         // Safe check if data exists and has elements
@@ -33,12 +33,15 @@ export  function createPlotOptions({ width, height }) {
       series: [
         {
           value: (u, v, sidx, didx) => {
-            if (didx == null) {
-              let d = u.data[sidx];
-              v = d[d.length - 1];
+            // Ensure data exists before accessing
+            if (u && u.data && Array.isArray(u.data) && u.data[sidx]) {
+              if (didx == null) {
+                let d = u.data[sidx];
+                v = d[d.length - 1];
+              }
             }
   
-            return v;
+            return v == null ? 0 : v;
           }
         },
         {
@@ -66,10 +69,29 @@ export  function createPlotOptions({ width, height }) {
           width: 2,
           value: makeFmt(),
         }
-      ] ,
-       scales: {
+      ],
+      scales: {
         x: {
           time: false,
+        },
+        // Ensure default scale exists for the main Y axis
+        count: {
+          auto: true,
+          range: (u, min, max) => {
+            if (min === undefined || max === undefined) {
+              return [0, 1600]; // Default range if data is missing
+            }
+            return [0, max * 1.1]; // Add 10% padding at top
+          }
+        },
+        '%': {
+          auto: true,
+          range: (u, min, max) => {
+            if (min === undefined || max === undefined) {
+              return [0, 100]; // Default range if data is missing
+            }
+            return [0, Math.max(100, max * 1.1)]; // Max between 100 and 10% above max
+          }
         }
       }, 
       axes: [
@@ -93,7 +115,13 @@ export  function createPlotOptions({ width, height }) {
           scale: 'count',
           font: "12px Arial",
           color: axisTextColor, // Y-axis label text color
-          values: (u, vals) => vals.map(v => +v.toFixed(1)),
+          values: (u, vals) => {
+            // Check if vals is defined
+            if (!vals || !Array.isArray(vals)) {
+              return [0, 400, 800, 1200, 1600]; // Default values
+            }
+            return vals.map(v => +v.toFixed(1));
+          },
         },
         { 
           side: 1,
@@ -105,9 +133,14 @@ export  function createPlotOptions({ width, height }) {
           font: "12px Arial",
           color: axisTextColor, // Y-axis label text color
           scale: '%',
-          values: (u, vals) => vals.map(v => +v.toFixed(1)),
+          values: (u, vals) => {
+            // Check if vals is defined
+            if (!vals || !Array.isArray(vals)) {
+              return [0, 25, 50, 75, 100]; // Default values
+            }
+            return vals.map(v => +v.toFixed(1));
+          },
         }
-  
       ],
       legend: {
         show: true,
@@ -121,12 +154,18 @@ export  function createPlotOptions({ width, height }) {
         // Add label formatter to include values in legend
         labels: {
           text: (u, i) => {
-            const label = u.series[i].label;
+            // Validate u has required properties
+            if (!u || !u.series || !u.series[i] || !u.data) {
+              return i === 0 ? "Time" : "N/A";
+            }
+            
+            const label = u.series[i].label || `Series ${i}`;
             if (i === 0) return label; // Skip the first series (x-values)
             
-            // Get the last value for this series
+            // Get the last value for this series with validation
             const data = u.data[i];
-            const lastValue = data && data.length > 0 ? data[data.length - 1] : null;
+            const lastValue = data && Array.isArray(data) && data.length > 0 ? 
+              data[data.length - 1] : null;
             
             // Format the value to 1 decimal place
             const formattedValue = lastValue != null ? lastValue.toFixed(1) : "N/A";
@@ -137,6 +176,5 @@ export  function createPlotOptions({ width, height }) {
         }
       },
       padding: [10, 10, 10, 10], // [top, right, bottom, left]
-   
     };
-  }
+}
