@@ -183,27 +183,36 @@ class BacteriumSystem {
 
 
 
-export function setValue(value,param){
+export function setValue(value, param) {
+    // Check if phenotypeManager is initialized
+    if (!phenotypeManager || !phenotypeManager.config) {
+        console.error('phenotypeManager is not initialized');
+        return;
+    }
     
-    const clamp=(value, min, max) => {Math.max(min, Math.min(max, value));}
+    // Ensure value is a number
+    const numValue = Number(value);
+    if (isNaN(numValue)) {
+        console.error(`Invalid value: ${value} is not a number`);
+        return;
+    }
+    
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
     
     if (param === 'signal') {
         const minSignal = phenotypeManager.config.BACTERIUM.SIGNAL.MIN;
         const maxSignal = phenotypeManager.config.BACTERIUM.SIGNAL.MAX;
-        phenotypeManager.signal = clamp(value, minSignal, maxSignal) / 100;
-
+        phenotypeManager.signal = clamp(numValue, minSignal, maxSignal) / 100;
+        console.log('Signal set to:', phenotypeManager.signal);
     } else if (param === 'alpha') {
         const minAlpha = phenotypeManager.config.BACTERIUM.ALPHA.MIN;
         const maxAlpha = phenotypeManager.config.BACTERIUM.ALPHA.MAX;
-        phenotypeManager.alpha = clamp(value, minAlpha, maxAlpha);
-        
+        phenotypeManager.alpha = clamp(numValue, minAlpha, maxAlpha);
+        console.log('Alpha set to:', phenotypeManager.alpha);
+    } else {
+        console.error(`Unknown parameter: ${param}`);
     }
 }
-
-
-
-
-
 
 export function diffuse(
     appConfig,

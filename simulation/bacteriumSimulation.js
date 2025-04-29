@@ -1,12 +1,6 @@
 
-/**
- * Get phenotype for a bacterium based on inheritance from parent
- * @param {Object} state - Phenotype state object
- * @param {bigint} ID - Bacterium ID
- * @param {bigint} parentID - Parent bacterium ID
- * @returns {string} Phenotype value
- */
-export function simplifiedInheritancePhenotype(state,phenotypes,phenotypeMemo, ID, parentID) {
+
+function simplifiedInheritancePhenotype(state,phenotypes,phenotypeMemo, ID, parentID) {
     // Check if phenotype is already determined for this ID
     if (phenotypeMemo.has(ID)) {
         return phenotypeMemo.get(ID);
@@ -25,15 +19,8 @@ export function simplifiedInheritancePhenotype(state,phenotypes,phenotypeMemo, I
     return phenotype;
 }
 
-/**
- * Determine phenotype based on neighbors and local concentration
- * @param {Object} state - Phenotype state object
- * @param {bigint} ID - Bacterium ID
- * @param {Array} neighbors - Count of [total, magenta, cyan] neighbors
- * @param {number} localConcentration - Local concentration value
- * @returns {string} Phenotype value
- */
-export function inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, neighbors, localConcentration) {
+
+function inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, neighbors, localConcentration) {
     // If phenotype already determined, use transition rules
     if (phenotypeMemo.has(ID)) {
         return determineTransitionPhenotype(state, phenotypes, phenotypeMemo, ID, neighbors, localConcentration);
@@ -60,15 +47,8 @@ export function inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, neighbo
     return null;
 }
 
-/**
- * Determine phenotype transition based on current phenotype and environment
- * @param {Object} state - Phenotype state object
- * @param {bigint} ID - Bacterium ID
- * @param {Array} neighbors - Count of [total, magenta, cyan] neighbors
- * @param {number} localConcentration - Local concentration value
- * @returns {string} Phenotype value after potential transition
- */
-export function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID, neighbors, localConcentration) {
+
+function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID, neighbors, localConcentration) {
     const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
     const proportionCyan = cyanNeighbors / totalNeighbors;
     const originalPhenotype = phenotypeMemo.get(ID);
@@ -98,16 +78,7 @@ export function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID,
     return phenotype;
 }
 
-/**
- * Determine phenotype and calculate similarity with neighbors
- * 
- * @param {Object} state - Phenotype state object
- * @param {bigint} ID - Bacterium ID
- * @param {Array} neighbors - Count of [total, magenta, cyan] neighbors
- * @param {bigint} parentID - Parent bacterium ID
- * @param {number} localConcentration - Local concentration value
- * @returns {Object} Object containing phenotype and similarity information
- */
+
 export function determinePhenotypeAndSimilarity(state,phenotypes,phenotypeMemo, ID, neighbors, parentID, localConcentration) {
     // Determine phenotype based on inheritance or neighbors
      
