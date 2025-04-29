@@ -12,7 +12,6 @@ import {
     determinePhenotypeAndSimilarity,
 } from './bacteriumSimulation.js';
 
-import { BacteriumData } from './bacteriumData.js';
 import {ADI} from './diffusion.js';
 
 let phenotypeManager = null;
@@ -133,17 +132,18 @@ class BacteriumSystem {
         );
         
         // Return data object for rendering
-        return new BacteriumData(
-            ID,
-            position,
-            angle,
-            longAxis,
-            phenotypeInfo.phenotype,
-            phenotypeInfo.magentaProportion,
-            phenotypeInfo.cyanProportion,
-            phenotypeInfo.similarity,
+        return {
+            id:ID,
+            position:position,
+            angle:angle,
+            longAxis:longAxis,
+            phenotype:phenotypeInfo[0],
+            magentaProportion:phenotypeInfo[1],
+            cyanProportion:phenotypeInfo[2],
+            similarity:phenotypeInfo[3],
+        };
             
-        );
+      
     }
 
     getGlobalParams() {
@@ -192,10 +192,7 @@ export function setValue(value, param) {
     
     // Ensure value is a number
     const numValue = Number(value);
-    if (isNaN(numValue)) {
-        console.error(`Invalid value: ${value} is not a number`);
-        return;
-    }
+
     
     const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
     

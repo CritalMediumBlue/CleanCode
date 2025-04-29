@@ -124,7 +124,7 @@ const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
         const coords = getAdjustedCoordinates(bacterium.x, bacterium.y, appConfig.GRID);
 
         // Skip if the bacterium is outside the valid grid area
-        if (!coords) continue;
+        if (!coords) console.warn(`Bacterium ${bacterium.ID} is out of bounds `)
 
         // Increment source count if the bacterium is Magenta
         if (MagentaIDs.has(bacterium.ID)) {

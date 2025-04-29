@@ -1,6 +1,6 @@
 
 
-function simplifiedInheritancePhenotype(state,phenotypes,phenotypeMemo, ID, parentID) {
+function simplifiedInheritancePhenotype(phenotypes,phenotypeMemo, ID, parentID) {
     // Check if phenotype is already determined for this ID
     if (phenotypeMemo.has(ID)) {
         return phenotypeMemo.get(ID);
@@ -84,7 +84,7 @@ export function determinePhenotypeAndSimilarity(state,phenotypes,phenotypeMemo, 
      
     const phenotype = parentID === undefined 
         ? inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, neighbors, localConcentration) 
-        : simplifiedInheritancePhenotype(state, phenotypes, phenotypeMemo,ID, parentID);
+        : simplifiedInheritancePhenotype( phenotypes, phenotypeMemo,ID, parentID);
     
     // Calculate similarity with neighbors
     const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
@@ -95,12 +95,11 @@ export function determinePhenotypeAndSimilarity(state,phenotypes,phenotypeMemo, 
         ? magentaProportion 
         : cyanProportion;
     
-    return {
+    return [
         phenotype, 
-        similarity, 
         magentaProportion, 
-        cyanProportion
-    };
+        cyanProportion,
+        similarity];
 }
 
 
