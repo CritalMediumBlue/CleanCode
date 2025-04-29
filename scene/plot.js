@@ -34,7 +34,7 @@ export function setupPlot(uPlot) {
 export function updatePlot(data, plot) {
   
     const end = data[0].length;
-    const start = Math.max(2, end - 500);
+    const start = Math.max(0, end - 500);
 
     const slicedData = sliceData(start, end, data);
     

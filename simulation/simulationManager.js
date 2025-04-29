@@ -27,15 +27,8 @@ import {ADI} from './diffusion.js';
  * @classdesc Manages the simulation of bacterial colony behavior, including spatial relationships
  * and phenotype determination. Acts as the core simulation engine independent from rendering.
  */
-export class BacteriumSystem {
-    /**
-     * Creates a new bacterium system with the provided configuration
-     * @param {Object} config - Configuration object containing simulation parameters
-     * @param {Object} config.PHENOTYPES - Phenotype definitions (MAGENTA, CYAN)
-     * @param {Object} config.BACTERIUM - Bacterium-related configuration parameters
-     * @param {number} config.BACTERIUM.NEIGHBOR_RADIUS - Radius for neighbor detection
-     * @param {Object} phenotypeManager - Pre-created phenotype manager object with state information
-     */
+class BacteriumSystem {
+   
     constructor(config, phenotypeManager) {
         this.config = config;
         this.phenotypes = config.PHENOTYPES; // Extract phenotypes from config
@@ -120,13 +113,7 @@ export class BacteriumSystem {
         return [totalCount, magentaCount, cyanCount];
     }
 
-    /**
-     * Update bacteria for current time step and return data for rendering
-     * @param {number} timeStep - The current simulation time step
-     * @param {Map<number, Array<Object>>} bacteriumData - Map of bacteria data keyed by time step
-     * @param {Float32Array} concentrations - Concentration values across the grid
-     * @returns {Array<BacteriumData>} Array of bacterium data objects for rendering
-     */
+
     updateBacteria(timeStep, bacteriumData, concentrations) {
         const layer = bacteriumData.get(timeStep) || [];
         
@@ -152,18 +139,7 @@ export class BacteriumSystem {
         return bacteriaData;
     }
 
-    /**
-     * Process a single bacterium and return data for rendering
-     * @param {Object} bacteriumData - Raw bacterium data from the input dataset
-     * @param {number} bacteriumData.x - X position of the bacterium
-     * @param {number} bacteriumData.y - Y position of the bacterium
-     * @param {number} bacteriumData.longAxis - Length of the bacterium's long axis
-     * @param {number} bacteriumData.angle - Rotation angle of the bacterium
-     * @param {bigint} bacteriumData.ID - Unique identifier for the bacterium
-     * @param {bigint} [bacteriumData.parent] - ID of the parent bacterium if available
-     * @param {Float32Array} concentrations - Concentration values across the grid
-     * @returns {BacteriumData} Processed bacterium data ready for rendering
-     */
+  
     processBacterium(bacteriumData, concentrations) {
         const { x, y, longAxis, angle, ID, parent } = bacteriumData;
         const WIDTH = 100, HEIGHT = 60;
@@ -255,21 +231,7 @@ export class BacteriumSystem {
 
 }
 
-/**
- * Performs diffusion calculation using the Alternating Direction Implicit (ADI) method.
- * This function delegates the actual calculation to the ADI function from diffusion.js.
- * 
- * @param {number} WIDTH - The width of the simulation grid
- * @param {number} HEIGHT - The height of the simulation grid
- * @param {Float32Array} currentConcentrationData - Array of current concentration values
- * @param {Float32Array} nextConcentrationData - Array to store the next concentration values
- * @param {Float32Array} sources - Array of diffusion source values
- * @param {Float32Array} sinks - Array of diffusion sink values
- * @param {number} DIFFUSION_RATE - Coefficient that determines the diffusion speed
- * @param {number} timeStep - Time step duration in minutes
- * @param {number} subSteps - Number of ADI iterations to perform per step
- * @returns {Array<Float32Array>} Updated concentration arrays [currentData, nextData]
- */
+
 export function diffuse(
     appConfig,
     dataState,
@@ -295,13 +257,8 @@ export function diffuse(
     
 }
 
-// Export functions for external use - these maintain the same API as before
 
-/**
- * Creates a new bacterium system instance
- * @param {Object} config - Configuration object for the bacterium system
- * @returns {BacteriumSystem} A new bacterium system instance
- */
+
 export function createBacteriumSystem(config) {
     // Create phenotype state internally
     const phenotypeState = {
@@ -315,29 +272,4 @@ export function createBacteriumSystem(config) {
     return new BacteriumSystem(config, phenotypeState);
 }
 
-/**
- * Updates historical tracking data with current bacteria metrics and returns the metrics.
- * Consolidates multiple related metrics into a single function call.
- * 
- * @param {BacteriumSystem} bacteriumSystem - The bacterium system instance
- * @param {number} totalCount - Total bacteria count
- * @returns {Object} Object containing the calculated metrics
- */
-export function updateBacteriumMetrics(bacteriumSystem, totalCount) {
-    // Get counts internally rather than requiring them as parameters
-    const magentaCount = bacteriumSystem.getMagentaCount();
-    const cyanCount = bacteriumSystem.getCyanCount();
-    
-    // Calculate similarity internally
-    const averageSimilarity = bacteriumSystem.getAverageSimilarityWithNeighbors();
-    const scaledSimilarity = (averageSimilarity - 0.5) * 2800;
-    
-    // Return the calculated values if needed elsewhere
-    return {
-        magentaCount,
-        cyanCount,
-        averageSimilarity,
-        scaledSimilarity
-    };
-}
 

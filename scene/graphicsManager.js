@@ -30,8 +30,8 @@ export function setupNewScene(config) {
 }
 
 
-export function renderScene(histories, bacteriaData, dataState, BACTERIUM, animationState) {
-    updateScene( dataState, bacteriaData, BACTERIUM);
+export function renderScene(histories, bacteriaData, concentration, BACTERIUM, animationState) {
+    updateScene( concentration, bacteriaData, BACTERIUM);
     updatePlot(histories, plot);
     updateOverlay(animationState, bacteriaData);
 
@@ -40,9 +40,8 @@ export function renderScene(histories, bacteriaData, dataState, BACTERIUM, anima
 }
 
 
-function updateScene(dataState, bacteriaData, BACTERIUM) {
+function updateScene(concentration, bacteriaData, BACTERIUM) {
 
-    const concentration = dataState.currentConcentrationData;
 
     updateSurfaceMesh(mesh, concentration, 10);
     updateCapsules(bacteriaData, BACTERIUM, THREE, capsules);

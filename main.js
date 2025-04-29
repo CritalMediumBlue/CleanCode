@@ -7,7 +7,6 @@ import {setupNewScene, renderScene} from './scene/graphicsManager.js';
 import {createBacteriumSystem,diffuse} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
-    sceneState, 
     simulationState,
     animationState, 
     dataState, 
@@ -73,7 +72,7 @@ const setBacteriaData = (data, processedData) => {
 const updateSimulation = (currentBacteria) => {
   
   
-    updateBacteriaPositions(currentBacteria);
+    updateBacteriaHistories(currentBacteria);
 
     updateSourcesAndSinks(currentBacteria);
 
@@ -88,12 +87,7 @@ const updateSimulation = (currentBacteria) => {
     
     animationState.currentTimeStep++;
 
-    // 9. Check if the simulation reached the end
-    if (animationState.currentTimeStep > animationState.numberOfTimeSteps) {
-        console.log('Simulation finished.');
-        animationState.currentTimeStep = 1;
-        animationState.play = false;
-    }
+
 };
 
 
@@ -105,11 +99,9 @@ const updateSimulation = (currentBacteria) => {
  * 
  * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
  */
-const updateBacteriaPositions = (currentBacteria) => {
+const updateBacteriaHistories = (currentBacteria) => {
   
     
-   
-
     // Get metric values from bacterium system
     const magentaCount = simulationState.bacteriumSystem.getMagentaCount();
     const cyanCount = simulationState.bacteriumSystem.getCyanCount();
@@ -185,10 +177,18 @@ const animate = () => {
             dataState.bacteriaData,
             dataState.currentConcentrationData
         );
+     
     }
     const histories = getHistories();
+    const concentration = dataState.currentConcentrationData;
 
-    renderScene(histories,bacteriaData, dataState, appConfig.BACTERIUM, animationState);
+    renderScene(histories,bacteriaData, concentration, appConfig.BACTERIUM, animationState);
+
+    if (animationState.currentTimeStep > animationState.numberOfTimeSteps) {
+        console.log('Simulation finished.');
+        animationState.currentTimeStep = 1;
+        animationState.play = false;
+    }
 };
 
 

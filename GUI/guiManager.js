@@ -5,9 +5,7 @@
 
 import { CONFIG } from './config.js';
 import { handleFileInput as processFileInput } from './dataProcessor.js';
-// Removed direct imports from stateManager.js
-// Removed direct import from simulationManager.js
-// These will now be provided via callbacks from main.js
+
 
 /**
  * Safely adds an event listener to a DOM element identified by its ID.

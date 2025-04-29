@@ -1,17 +1,4 @@
-/**
- * Phenotype determination, tracking, and related operations
- */
-
-
-
-/**
- * Clamp a value between min and max
- * @param {number} value - Value to clamp
- * @param {number} min - Minimum value
- * @param {number} max - Maximum value
- * @returns {number} Clamped value
- */
-export function clamp(value, min, max) {
+function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
 }
 
