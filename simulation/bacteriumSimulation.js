@@ -162,7 +162,7 @@ export function getMagentaCount(state, currentTimestepBacteria) {
     return getPhenotypeCount(state, currentTimestepBacteria, state.phenotypes.MAGENTA);
 }  //this seems wrong
 
-/**
+/** 
  * Get count of bacteria with cyan phenotype
  * @param {Object} state - Phenotype state object
  * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep

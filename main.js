@@ -23,10 +23,11 @@ import {
  */
 let appConfig;
 
+let bacteriumSystem = null; 
+
 
 const guiActions = {
-    setSignalValue: (value) => {simulationState.bacteriumSystem.setSignalValue(value);},
-    setAlphaValue: (value) => {simulationState.bacteriumSystem.setAlphaValue(value);},
+    setValue: (value,param) => {bacteriumSystem.setValue(value,param);},
     setPlayState: (isPlaying) => {animationState.play = isPlaying;}
 };
 
@@ -40,7 +41,7 @@ const resetAllData = () => {
     cleanupResources();
 
     setupNewScene(appConfig);
-    simulationState.bacteriumSystem = createBacteriumSystem(appConfig);
+    bacteriumSystem = createBacteriumSystem(appConfig);
     
     initializeArrays(appConfig);    
 };
@@ -71,10 +72,21 @@ const setBacteriaData = (data, processedData) => {
 
 const updateSimulation = (currentBacteria) => {
   
-  
-    updateBacteriaHistories(currentBacteria);
+    const globalParams = bacteriumSystem.getGlobalParams();
 
-    updateSourcesAndSinks(currentBacteria);
+    const positions = bacteriumSystem.getPositions();
+
+    const bacData= bacteriumSystem.updateBacteria(
+        animationState.currentTimeStep,
+        dataState.bacteriaData,
+        dataState.currentConcentrationData
+    );
+
+
+
+    updateBacteriaHistories(currentBacteria,...globalParams);
+
+    updateSourcesAndSinks(currentBacteria,...positions);
 
   
     [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
@@ -86,7 +98,7 @@ const updateSimulation = (currentBacteria) => {
 
     
     animationState.currentTimeStep++;
-
+    return bacData;
 
 };
 
@@ -99,14 +111,9 @@ const updateSimulation = (currentBacteria) => {
  * 
  * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
  */
-const updateBacteriaHistories = (currentBacteria) => {
+const updateBacteriaHistories = (currentBacteria,magentaCount,cyanCount,scaledSimilarity) => {
   
     
-    // Get metric values from bacterium system
-    const magentaCount = simulationState.bacteriumSystem.getMagentaCount();
-    const cyanCount = simulationState.bacteriumSystem.getCyanCount();
-    const averageSimilarity = simulationState.bacteriumSystem.getAverageSimilarityWithNeighbors()
-    const scaledSimilarity = (averageSimilarity - 0.5)*2;
     
     // Update history using the function exported from stateManager.js
     updateHistory(
@@ -124,9 +131,8 @@ const updateBacteriaHistories = (currentBacteria) => {
  * 
  * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
  */
-const updateSourcesAndSinks = (currentBacteria) => {
+const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
     // Get the IDs of currently active Magenta and Cyan bacteria
-    const [magentaIDsRaw, cyanIDsRaw] = simulationState.bacteriumSystem.getPositions();
     const MagentaIDs = new Set(magentaIDsRaw);
     const CyanIDs = new Set(cyanIDsRaw);
 
@@ -171,12 +177,8 @@ const animate = () => {
           // 1. Get bacteria data for the current time step
         const currentBacteria = dataState.bacteriaData.get(animationState.currentTimeStep);
 
-        updateSimulation(currentBacteria); // Advance the simulation by one step
-        bacteriaData = simulationState.bacteriumSystem.updateBacteria(
-            animationState.currentTimeStep,
-            dataState.bacteriaData,
-            dataState.currentConcentrationData
-        );
+        bacteriaData = updateSimulation(currentBacteria); // Advance the simulation by one step
+        
      
     }
     const histories = getHistories();

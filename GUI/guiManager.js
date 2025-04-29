@@ -98,7 +98,7 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
                 const value = parseFloat(event.target.value);
                 const valueElement = document.getElementById('signalValue');
                 if (valueElement) valueElement.textContent = value.toFixed(2);
-                guiActions.setSignalValue(value);
+                guiActions.setValue(value, 'signal');
             }
         },
 
@@ -107,7 +107,7 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
                 const value = parseFloat(event.target.value);
                 const valueElement = document.getElementById('alphaValue');
                 if (valueElement) valueElement.textContent = value.toFixed(5);
-                guiActions.setAlphaValue(value);
+                guiActions.setValue(value, 'alpha');
             }
         },
 

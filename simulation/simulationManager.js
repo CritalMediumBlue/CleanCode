@@ -82,7 +82,7 @@ class BacteriumSystem {
                 x2 < x - neighborRadius || 
                 y1 > y + neighborRadius || 
                 y2 < y - neighborRadius) {
-                return true;
+                return true; 
             }
             
             // Process leaf node
@@ -133,7 +133,7 @@ class BacteriumSystem {
 
         // Calculate average similarity
         this.averageSimilarityWithNeighbors = layer.length > 0 
-            ? this.averageSimilarityWithNeighbors / layer.length 
+            ? (this.averageSimilarityWithNeighbors / layer.length-0.5)*2 
             : 0;
             
         return bacteriaData;
@@ -173,21 +173,16 @@ class BacteriumSystem {
         );
     }
 
-    /**
-     * Gets the count of bacteria with magenta phenotype
-     * @returns {number} Count of bacteria with magenta phenotype
-     */
-    getMagentaCount() {
-        return getMagentaCountFn(this.phenotypeManager, this.currentTimestepBacteria);
+    getGlobalParams() {
+        const  magCount = getMagentaCountFn(this.phenotypeManager, this.currentTimestepBacteria);
+        const  cyanCount = getCyanCountFn(this.phenotypeManager, this.currentTimestepBacteria);
+        const  averageSimilarity = isNaN(this.averageSimilarityWithNeighbors) ? 0 : this.averageSimilarityWithNeighbors;
+        return [magCount, cyanCount, averageSimilarity];
     }
 
-    /**
-     * Gets the count of bacteria with cyan phenotype
-     * @returns {number} Count of bacteria with cyan phenotype
-     */
-    getCyanCount() {
-        return getCyanCountFn(this.phenotypeManager, this.currentTimestepBacteria);
-    }
+ 
+
+  
 
     /**
      * Gets the positions of bacteria by phenotype
@@ -212,6 +207,14 @@ class BacteriumSystem {
         setSignalValueFn(this.phenotypeManager, value);
     }
 
+    setValue(value,param){
+        if (param === 'signal') {
+            setSignalValueFn(this.phenotypeManager, value);
+        } else if (param === 'alpha') {
+            setAlphaValueFn(this.phenotypeManager, value);
+        }
+    }
+
     /**
      * Sets the alpha (temperature) value used in phenotype determination
      * @param {number} value - The new alpha value (typically small, e.g., 0.0001)
@@ -220,14 +223,6 @@ class BacteriumSystem {
         setAlphaValueFn(this.phenotypeManager, value);
     }
 
-
-    /**
-     * Gets the average similarity value among neighboring bacteria
-     * @returns {number} The average similarity value (0-1 range)
-     */
-    getAverageSimilarityWithNeighbors() {
-        return isNaN(this.averageSimilarityWithNeighbors) ? 0 : this.averageSimilarityWithNeighbors;
-    }
 
 }
 
