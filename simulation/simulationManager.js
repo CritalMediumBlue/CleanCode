@@ -38,17 +38,6 @@ class BacteriumSystem {
         this.averageSimilarityWithNeighbors = 0;
     }
 
-    /**
-     * Clean up resources and reset internal state
-     * @method
-     */
-    dispose() {
-        // Reset all state
-        clearPhenotypeMemoFn(this.phenotypeManager);
-        this.quadtree = null;
-        this.currentTimestepBacteria.clear();
-        this.averageSimilarityWithNeighbors = 0;
-    }
 
     /**
      * Build quadtree for efficient spatial queries of bacteria positions

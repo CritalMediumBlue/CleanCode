@@ -17,10 +17,7 @@ export const sceneState = {
     /** @type {boolean} */ visibleBacteria: true, // Whether bacteria are visible
 };
 
-/** @type {object} animationState - Manages animation loop, timing, and playback state. */
-export const simulationState = {
-    bacteriumSystem: null,
-};
+
 export const animationState = {
     /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
     /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
@@ -56,12 +53,7 @@ export const cleanupResources = () => {
     historyManagerModule.clear();
     console.log("History manager cleared.");
 
-    // Dispose bacterium system if it exists
-    if (simulationState.bacteriumSystem) {
-        simulationState.bacteriumSystem.dispose();
-        simulationState.bacteriumSystem = null;
-        console.log("Bacterium system disposed.");
-    }
+
 
     animationState.currentTimeStep = 1;
     animationState.numberOfTimeSteps = 0;

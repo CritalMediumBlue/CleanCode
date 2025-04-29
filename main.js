@@ -7,7 +7,6 @@ import {setupNewScene, renderScene} from './scene/graphicsManager.js';
 import {createBacteriumSystem,diffuse} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
-    simulationState,
     animationState, 
     dataState, 
     initializeArrays,
