@@ -163,16 +163,19 @@ class BacteriumSystem {
     }
 
 
-    setValue(value,param){
-        if (param === 'signal') {
-            setSignalValueFn(phenotypeManager, value);
-        } else if (param === 'alpha') {
-            setAlphaValueFn(phenotypeManager, value);
-        }
-    }
+
 
 }
 
+
+
+export function setValue(value,param){
+    if (param === 'signal') {
+        setSignalValueFn(phenotypeManager, value);
+    } else if (param === 'alpha') {
+        setAlphaValueFn(phenotypeManager, value);
+    }
+}
 
 
 

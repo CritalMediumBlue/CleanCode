@@ -4,7 +4,7 @@
  */
 
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
-import {createBacteriumSystem,diffuse} from './simulation/simulationManager.js';
+import {createBacteriumSystem,diffuse,setValue} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     animationState, 
@@ -26,7 +26,7 @@ let bacteriumSystem = null;
 
 
 const guiActions = {
-    setValue: (value,param) => {bacteriumSystem.setValue(value,param);},
+    setValue: (value,param) => {setValue(value,param);},
     setPlayState: (isPlaying) => {animationState.play = isPlaying;}
 };
 
