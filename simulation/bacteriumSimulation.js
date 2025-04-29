@@ -1,24 +1,3 @@
-function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-}
-
-/**
- * Set the signal value used in phenotype determination
- * @param {Object} state - Phenotype state object
- * @param {number} value - Signal value to set
- */
-export function setSignalValue(state, value) {
-    state.signal = clamp(value, state.config.BACTERIUM.SIGNAL.MIN, state.config.BACTERIUM.SIGNAL.MAX) / 100;
-}
-
-/**
- * Set the alpha value used in phenotype determination
- * @param {Object} state - Phenotype state object
- * @param {number} value - Alpha value to set
- */
-export function setAlphaValue(state, value) {
-    state.alpha = clamp(value, state.config.BACTERIUM.ALPHA.MIN, state.config.BACTERIUM.ALPHA.MAX);
-}
 
 /**
  * Get phenotype for a bacterium based on inheritance from parent

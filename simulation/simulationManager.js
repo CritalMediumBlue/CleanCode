@@ -8,9 +8,7 @@
  */
 import { quadtree } from 'd3-quadtree';
 
-import { 
-    setSignalValue as setSignalValueFn,
-    setAlphaValue as setAlphaValueFn,
+import {
     determinePhenotypeAndSimilarity,
     getMagentaCount as getMagentaCountFn,
     getCyanCount as getCyanCountFn,
@@ -170,10 +168,21 @@ class BacteriumSystem {
 
 
 export function setValue(value,param){
+    
+    function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+    }
+    
     if (param === 'signal') {
-        setSignalValueFn(phenotypeManager, value);
+        const minSignal = phenotypeManager.config.BACTERIUM.SIGNAL.MIN;
+        const maxSignal = phenotypeManager.config.BACTERIUM.SIGNAL.MAX;
+        phenotypeManager.signal = clamp(value, minSignal, maxSignal) / 100;
+
     } else if (param === 'alpha') {
-        setAlphaValueFn(phenotypeManager, value);
+        const minAlpha = phenotypeManager.config.BACTERIUM.ALPHA.MIN;
+        const maxAlpha = phenotypeManager.config.BACTERIUM.ALPHA.MAX;
+        phenotypeManager.alpha = clamp(value, minAlpha, maxAlpha);
+        
     }
 }
 
