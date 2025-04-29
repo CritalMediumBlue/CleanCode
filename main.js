@@ -4,7 +4,8 @@
  */
 
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
-import {createBacteriumSystem,diffuse,setValue} from './simulation/simulationManager.js';
+import {createBacteriumSystem,diffuse,setValue,
+    getGlobalParams,getPositions} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     animationState, 
@@ -71,9 +72,9 @@ const setBacteriaData = (data, processedData) => {
 
 const updateSimulation = (currentBacteria) => {
   
-    const globalParams = bacteriumSystem.getGlobalParams();
+    const globalParams = getGlobalParams();
 
-    const positions = bacteriumSystem.getPositions();
+    const positions = getPositions();
 
 
     const bacData= bacteriumSystem.updateBacteria(

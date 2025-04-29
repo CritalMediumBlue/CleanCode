@@ -10,23 +10,22 @@ import { quadtree } from 'd3-quadtree';
 
 import {
     determinePhenotypeAndSimilarity,
-} from './bacteriumSimulation.js';
+} from './phenotypeSimulation.js';
 
 import {ADI} from './diffusion.js';
 
 let phenotypeManager = null;
 let phenotypes = null;
 let phenotypeMemo =null;
+const currentBacteria = new Set();
+let averageSimilarityWithNeighbors = 0;
 
 
 class BacteriumSystem {
    
     constructor(config) {
         this.config = config;
-        this.phenotypes = config.PHENOTYPES; // Extract phenotypes from config
         this.quadtree = null;
-        this.currentTimestepBacteria = new Set();
-        this.averageSimilarityWithNeighbors = 0;
     }
 
 
@@ -69,9 +68,9 @@ class BacteriumSystem {
                             totalCount++;
                             const phenotype = phenotypeMemo.get(node.data.ID);
                             
-                            if (phenotype && phenotype === this.phenotypes.MAGENTA) {
+                            if (phenotype && phenotype === phenotypes.MAGENTA) {
                                 magentaCount++;
-                            } else if (phenotype && phenotype === this.phenotypes.CYAN) {
+                            } else if (phenotype && phenotype === phenotypes.CYAN) {
                                 cyanCount++;
                             }
                         }
@@ -91,21 +90,21 @@ class BacteriumSystem {
         
         // Reset state for new time step
         this.buildQuadtree(layer);
-        this.currentTimestepBacteria.clear();
-        this.averageSimilarityWithNeighbors = 0;
+        currentBacteria.clear();
+        averageSimilarityWithNeighbors = 0;
         
         // Process each bacterium
         const bacteriaData = [];
         layer.forEach((data) => {
             const bacteriumData = this.processBacterium(data, concentrations);
             bacteriaData.push(bacteriumData);
-            this.currentTimestepBacteria.add(data.ID);
-            this.averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
+            currentBacteria.add(data.ID);
+            averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
         });
 
         // Calculate average similarity
-        this.averageSimilarityWithNeighbors = layer.length > 0 
-            ? (this.averageSimilarityWithNeighbors / layer.length-0.5)*2 
+        averageSimilarityWithNeighbors = layer.length > 0 
+            ? (averageSimilarityWithNeighbors / layer.length-0.5)*2 
             : 0;
             
         return bacteriaData;
@@ -146,41 +145,38 @@ class BacteriumSystem {
       
     }
 
-    getGlobalParams() {
-        let magCount = 0;
-        let cyanCount = 0;
-        for (const ID of this.currentTimestepBacteria) {
-            const phenotype = phenotypeMemo.get(ID);
-            if (phenotype === phenotypes.MAGENTA) {magCount++;} 
-            else if (phenotype === phenotypes.CYAN) { cyanCount++;}
-        }
-        const averageSimilarity = isNaN(this.averageSimilarityWithNeighbors) ? 0 : this.averageSimilarityWithNeighbors;
-        return [magCount, cyanCount, averageSimilarity];
-    }
- 
-    getPositions() {
-        const magentaPositions = [];
-        const cyanPositions = [];
-
-    Array.from(this.currentTimestepBacteria).forEach((ID) => {
-        const phenotype =phenotypeMemo.get(ID);
-        if (!phenotype) return;
-        
-        if (phenotype === phenotypes.MAGENTA) {
-            magentaPositions.push(ID);
-        } else if (phenotype === phenotypes.CYAN) {
-            cyanPositions.push(ID);
-        }
-    });
-
-    return [magentaPositions, cyanPositions];
-    }
-
-
-
 
 }
 
+export  function   getGlobalParams() {
+    let magCount = 0;
+    let cyanCount = 0;
+    for (const ID of currentBacteria) {
+        const phenotype = phenotypeMemo.get(ID);
+        if (phenotype === phenotypes.MAGENTA) {magCount++;} 
+        else if (phenotype === phenotypes.CYAN) { cyanCount++;}
+    }
+    const averageSimilarity = isNaN(averageSimilarityWithNeighbors) ? 0 : averageSimilarityWithNeighbors;
+    return [magCount, cyanCount, averageSimilarity];
+}
+
+export function getPositions() {
+    const magentaPositions = [];
+    const cyanPositions = [];
+
+Array.from(currentBacteria).forEach((ID) => {
+    const phenotype =phenotypeMemo.get(ID);
+    if (!phenotype) return;
+    
+    if (phenotype === phenotypes.MAGENTA) {
+        magentaPositions.push(ID);
+    } else if (phenotype === phenotypes.CYAN) {
+        cyanPositions.push(ID);
+    }
+});
+
+return [magentaPositions, cyanPositions];
+}
 
 
 export function setValue(value, param) {
