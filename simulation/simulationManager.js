@@ -10,9 +10,6 @@ import { quadtree } from 'd3-quadtree';
 
 import {
     determinePhenotypeAndSimilarity,
-    getMagentaCount as getMagentaCountFn,
-    getCyanCount as getCyanCountFn,
-    getPositions as getPositionsFn,
 } from './bacteriumSimulation.js';
 
 import { BacteriumData } from './bacteriumData.js';
@@ -20,6 +17,7 @@ import {ADI} from './diffusion.js';
 
 let phenotypeManager = null;
 let phenotypes = null;
+let phenotypeMemo =null;
 
 
 class BacteriumSystem {
@@ -70,7 +68,7 @@ class BacteriumSystem {
                         
                         if (distSquared < neighborRadius * neighborRadius) {
                             totalCount++;
-                            const phenotype = phenotypeManager.phenotypeMemo.get(node.data.ID);
+                            const phenotype = phenotypeMemo.get(node.data.ID);
                             
                             if (phenotype && phenotype === this.phenotypes.MAGENTA) {
                                 magentaCount++;
@@ -131,7 +129,7 @@ class BacteriumSystem {
         
         // Determine phenotype and calculate similarity
         const phenotypeInfo = determinePhenotypeAndSimilarity(
-            phenotypeManager,phenotypes, ID, neighbors, parent, localConcentration
+            phenotypeManager,phenotypes,phenotypeMemo, ID, neighbors, parent, localConcentration
         );
         
         // Return data object for rendering
@@ -149,15 +147,33 @@ class BacteriumSystem {
     }
 
     getGlobalParams() {
-        const  magCount = getMagentaCountFn(phenotypeManager,phenotypes, this.currentTimestepBacteria);
-        const  cyanCount = getCyanCountFn(phenotypeManager,phenotypes, this.currentTimestepBacteria);
-        const  averageSimilarity = isNaN(this.averageSimilarityWithNeighbors) ? 0 : this.averageSimilarityWithNeighbors;
+        let magCount = 0;
+        let cyanCount = 0;
+        for (const ID of this.currentTimestepBacteria) {
+            const phenotype = phenotypeMemo.get(ID);
+            if (phenotype === phenotypes.MAGENTA) {magCount++;} 
+            else if (phenotype === phenotypes.CYAN) { cyanCount++;}
+        }
+        const averageSimilarity = isNaN(this.averageSimilarityWithNeighbors) ? 0 : this.averageSimilarityWithNeighbors;
         return [magCount, cyanCount, averageSimilarity];
     }
-
  
     getPositions() {
-        return getPositionsFn(phenotypeManager, phenotypes, this.currentTimestepBacteria);
+        const magentaPositions = [];
+        const cyanPositions = [];
+
+    Array.from(this.currentTimestepBacteria).forEach((ID) => {
+        const phenotype =phenotypeMemo.get(ID);
+        if (!phenotype) return;
+        
+        if (phenotype === phenotypes.MAGENTA) {
+            magentaPositions.push(ID);
+        } else if (phenotype === phenotypes.CYAN) {
+            cyanPositions.push(ID);
+        }
+    });
+
+    return [magentaPositions, cyanPositions];
     }
 
 
@@ -169,9 +185,7 @@ class BacteriumSystem {
 
 export function setValue(value,param){
     
-    function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, value));
-    }
+    const clamp=(value, min, max) => {Math.max(min, Math.min(max, value));}
     
     if (param === 'signal') {
         const minSignal = phenotypeManager.config.BACTERIUM.SIGNAL.MIN;
@@ -220,9 +234,9 @@ export function diffuse(
 
 export function createBacteriumSystem(config) {
     phenotypes = config.PHENOTYPES;
+    phenotypeMemo = new Map();
     phenotypeManager = {
         config,
-        phenotypeMemo: new Map(),
         signal: config.BACTERIUM.SIGNAL.DEFAULT / 100,
         alpha: config.BACTERIUM.ALPHA.DEFAULT
     };
