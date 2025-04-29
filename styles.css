@@ -65,8 +65,8 @@ canvas {
     position: fixed;
     top: 50px;
     left: 10px;
-    width: 50%;
-    height: 30%;
+    width: 35%;
+    height: 35%;
     background-color: rgba(0, 0, 0,0);
     z-index: 100;
     overflow: hidden;
@@ -79,7 +79,20 @@ canvas {
 
 /* uPlot styling */
 #plot-overlay .uplot .u-legend {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 1);
+    background: rgba(0, 0, 0, 0);
+    padding: 4px 8px;
+    border-radius: 3px;
+}
+
+/* Style for right-positioned legend */
+#plot-overlay .uplot .u-legend.u-inline {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    right: 0;
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 #plot-overlay .uplot .u-select {

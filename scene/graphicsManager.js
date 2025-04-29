@@ -1,8 +1,8 @@
 import {THREE, OrbitControls, uPlot} from './graphycLibrariesImports.js';
 import { setupMesh, updateSurfaceMesh } from './sceneComponents/mesh.js';
 import { setupCapsulePool, updateCapsules } from './sceneComponents/capsulePool.js';
-import { setupPlot, updatePlot } from './sceneComponents/plot.js';
-import { updateOverlay } from './sceneComponents/overlay.js';
+import { setupPlot, updatePlot } from './plot.js';
+import { updateOverlay } from './overlay.js';
 import { setupStage } from './sceneComponents/stage.js';
 
 
@@ -31,20 +31,20 @@ export function setupNewScene(config) {
 
 
 export function renderScene(histories, bacteriaData, dataState, BACTERIUM, animationState) {
-    updateScene( dataState, animationState, bacteriaData, BACTERIUM);
+    updateScene( dataState, bacteriaData, BACTERIUM);
     updatePlot(histories, plot);
+    updateOverlay(animationState, bacteriaData);
+
     
     stage.renderer.render(stage.scene, stage.camera);
 }
 
 
-function updateScene(dataState, animationState, bacteriaData, BACTERIUM) {
+function updateScene(dataState, bacteriaData, BACTERIUM) {
 
     const concentration = dataState.currentConcentrationData;
-    const bacteriaCount = bacteriaData ? bacteriaData.length : 0;
 
     updateSurfaceMesh(mesh, concentration, 10);
-    updateOverlay(animationState, bacteriaCount);
     updateCapsules(bacteriaData, BACTERIUM, THREE, capsules);
 }
 
