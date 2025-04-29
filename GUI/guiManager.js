@@ -31,30 +31,15 @@ const addSafeEventListener = (id, event, handler) => {
  * @param {Function} resetCallback - Function to reset all data
  * @param {Function} animateCallback - Function to start animation
  */
-const handleFileInput = (event, resetCallback, animateCallback) => {
+const handleFileInput = (event, resetCallback, animateCallback,setBacteriaDataCallback) => {
     // Forward to the dataProcessor's handleFileInput but intercept the data callback
     processFileInput(event, resetCallback, animateCallback, (data, processedData) => {
         // Process the data through our internal function before sending to main
-        setBacteriaData(data, processedData);
+        setBacteriaDataCallback(data, processedData);
     });
 };
 
-/**
- * Centralized function to set bacteria data, abstracting the direct dependency on dataProcessor
- * @param {Map<number, Array<object>>} data - Map where keys are time steps and values are arrays of bacteria objects
- * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime
- */
-let setBacteriaDataCallback = null;
 
-const setBacteriaData = (data, processedData) => {
-    // Use the registered callback if available
-    if (setBacteriaDataCallback) {
-        setBacteriaDataCallback(data, processedData);
-    } else {
-        console.warn("setBacteriaDataCallback not registered");
-        // No fallback to direct processing - this maintains proper decoupling
-    }
-};
 
 /**
  * Attaches event listeners to various UI controls (buttons, sliders, dropdowns, file input)
@@ -70,8 +55,6 @@ const setBacteriaData = (data, processedData) => {
 export const addEventListeners = ( animate, resetAllData, externalSetBacteriaData, guiActions) => {
     console.log("Adding event listeners...");
     
-    // Store the callback for setting bacteria data
-    setBacteriaDataCallback = externalSetBacteriaData;
     
     // Simple toggle buttons with declarative configuration
     const toggleButtons = [
@@ -115,7 +98,7 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
         {
             id: 'fileInput', event: 'change', handler: (event) => {
                 // Use our own handleFileInput which wraps dataProcessor's function
-                handleFileInput(event, resetAllData, animate);
+                handleFileInput(event, resetAllData, animate,externalSetBacteriaData);
             }
         }
     ];

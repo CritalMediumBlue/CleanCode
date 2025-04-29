@@ -15,34 +15,27 @@ import {
     getMagentaCount as getMagentaCountFn,
     getCyanCount as getCyanCountFn,
     getPositions as getPositionsFn,
-    clearPhenotypeMemo as clearPhenotypeMemoFn
 } from './bacteriumSimulation.js';
 
 import { BacteriumData } from './bacteriumData.js';
 import {ADI} from './diffusion.js';
 
-/**
- * Main bacterium system class that handles simulation logic only
- * @class
- * @classdesc Manages the simulation of bacterial colony behavior, including spatial relationships
- * and phenotype determination. Acts as the core simulation engine independent from rendering.
- */
+let phenotypeManager = null;
+let phenotypes = null;
+
+
 class BacteriumSystem {
    
-    constructor(config, phenotypeManager) {
+    constructor(config) {
         this.config = config;
         this.phenotypes = config.PHENOTYPES; // Extract phenotypes from config
         this.quadtree = null;
         this.currentTimestepBacteria = new Set();
-        this.phenotypeManager = phenotypeManager;
         this.averageSimilarityWithNeighbors = 0;
     }
 
 
-    /**
-     * Build quadtree for efficient spatial queries of bacteria positions
-     * @param {Array<Object>} layer - Array of bacteria objects for the current time step
-     */
+ 
     buildQuadtree(layer) {
         this.quadtree = quadtree()
             .x(d => d.x)
@@ -53,12 +46,7 @@ class BacteriumSystem {
         });
     }
 
-    /**
-     * Count neighbors by phenotype within the configured radius
-     * @param {number} x - X coordinate to search from
-     * @param {number} y - Y coordinate to search from
-     * @returns {Array<number>} Array containing [totalCount, magentaCount, cyanCount]
-     */
+ 
     countNeighbors(x, y) {
         const neighborRadius = this.config.BACTERIUM.NEIGHBOR_RADIUS;
         let totalCount = 0;
@@ -84,7 +72,7 @@ class BacteriumSystem {
                         
                         if (distSquared < neighborRadius * neighborRadius) {
                             totalCount++;
-                            const phenotype = this.phenotypeManager.phenotypeMemo.get(node.data.ID);
+                            const phenotype = phenotypeManager.phenotypeMemo.get(node.data.ID);
                             
                             if (phenotype && phenotype === this.phenotypes.MAGENTA) {
                                 magentaCount++;
@@ -145,7 +133,7 @@ class BacteriumSystem {
         
         // Determine phenotype and calculate similarity
         const phenotypeInfo = determinePhenotypeAndSimilarity(
-            this.phenotypeManager, ID, neighbors, parent, localConcentration
+            phenotypeManager,phenotypes, ID, neighbors, parent, localConcentration
         );
         
         // Return data object for rendering
@@ -163,57 +151,32 @@ class BacteriumSystem {
     }
 
     getGlobalParams() {
-        const  magCount = getMagentaCountFn(this.phenotypeManager, this.currentTimestepBacteria);
-        const  cyanCount = getCyanCountFn(this.phenotypeManager, this.currentTimestepBacteria);
+        const  magCount = getMagentaCountFn(phenotypeManager,phenotypes, this.currentTimestepBacteria);
+        const  cyanCount = getCyanCountFn(phenotypeManager,phenotypes, this.currentTimestepBacteria);
         const  averageSimilarity = isNaN(this.averageSimilarityWithNeighbors) ? 0 : this.averageSimilarityWithNeighbors;
         return [magCount, cyanCount, averageSimilarity];
     }
 
  
-
-  
-
-    /**
-     * Gets the positions of bacteria by phenotype
-     * @returns {Array<Array<bigint>>} Array containing [magentaPositions, cyanPositions]
-     */
     getPositions() {
-        return getPositionsFn(this.phenotypeManager, this.currentTimestepBacteria);
+        return getPositionsFn(phenotypeManager, phenotypes, this.currentTimestepBacteria);
     }
 
-    /**
-     * Clears the phenotype memoization cache
-     */
-    clearPhenotypeMemo() {
-        clearPhenotypeMemoFn(this.phenotypeManager);
-    }
-
-    /**
-     * Sets the signal value used in phenotype determination
-     * @param {number} value - The new signal value (typically 0-1 range)
-     */
-    setSignalValue(value) {
-        setSignalValueFn(this.phenotypeManager, value);
-    }
 
     setValue(value,param){
         if (param === 'signal') {
-            setSignalValueFn(this.phenotypeManager, value);
+            setSignalValueFn(phenotypeManager, value);
         } else if (param === 'alpha') {
-            setAlphaValueFn(this.phenotypeManager, value);
+            setAlphaValueFn(phenotypeManager, value);
         }
     }
 
-    /**
-     * Sets the alpha (temperature) value used in phenotype determination
-     * @param {number} value - The new alpha value (typically small, e.g., 0.0001)
-     */
-    setAlphaValue(value) {
-        setAlphaValueFn(this.phenotypeManager, value);
-    }
-
-
 }
+
+
+
+
+
 
 
 export function diffuse(
@@ -244,16 +207,15 @@ export function diffuse(
 
 
 export function createBacteriumSystem(config) {
-    // Create phenotype state internally
-    const phenotypeState = {
+    phenotypes = config.PHENOTYPES;
+    phenotypeManager = {
         config,
-        phenotypes: config.PHENOTYPES,
         phenotypeMemo: new Map(),
         signal: config.BACTERIUM.SIGNAL.DEFAULT / 100,
         alpha: config.BACTERIUM.ALPHA.DEFAULT
     };
     
-    return new BacteriumSystem(config, phenotypeState);
+    return new BacteriumSystem(config);
 }
 
 

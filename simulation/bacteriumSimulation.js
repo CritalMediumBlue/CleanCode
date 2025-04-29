@@ -27,7 +27,7 @@ export function setAlphaValue(state, value) {
  * @param {bigint} parentID - Parent bacterium ID
  * @returns {string} Phenotype value
  */
-export function simplifiedInheritancePhenotype(state, ID, parentID) {
+export function simplifiedInheritancePhenotype(state,phenotypes, ID, parentID) {
     // Check if phenotype is already determined for this ID
     if (state.phenotypeMemo.has(ID)) {
         return state.phenotypeMemo.get(ID);
@@ -41,7 +41,7 @@ export function simplifiedInheritancePhenotype(state, ID, parentID) {
     }
     
     // Assign random phenotype if no inheritance information
-    const phenotype = Math.random() < 0.5 ? state.phenotypes.MAGENTA : state.phenotypes.CYAN;
+    const phenotype = Math.random() < 0.5 ? phenotypes.MAGENTA : phenotypes.CYAN;
     state.phenotypeMemo.set(ID, phenotype);
     return phenotype;
 }
@@ -54,10 +54,10 @@ export function simplifiedInheritancePhenotype(state, ID, parentID) {
  * @param {number} localConcentration - Local concentration value
  * @returns {string} Phenotype value
  */
-export function inheritancePhenotype(state, ID, neighbors, localConcentration) {
+export function inheritancePhenotype(state, phenotypes,ID, neighbors, localConcentration) {
     // If phenotype already determined, use transition rules
     if (state.phenotypeMemo.has(ID)) {
-        return determineTransitionPhenotype(state, ID, neighbors, localConcentration);
+        return determineTransitionPhenotype(state, phenotypes,ID, neighbors, localConcentration);
     }
     
     // Handle parent inheritance for IDs > 2000
@@ -72,7 +72,7 @@ export function inheritancePhenotype(state, ID, neighbors, localConcentration) {
     
     // Handle initial bacteria (IDs 1000-2000)
     if (ID >= 1000n && ID <= 2000n) {
-        const phenotype = Math.random() < 0.5 ? state.phenotypes.MAGENTA : state.phenotypes.CYAN;
+        const phenotype = Math.random() < 0.5 ? phenotypes.MAGENTA : phenotypes.CYAN;
         state.phenotypeMemo.set(ID, phenotype);
         return phenotype;
     }
@@ -89,7 +89,7 @@ export function inheritancePhenotype(state, ID, neighbors, localConcentration) {
  * @param {number} localConcentration - Local concentration value
  * @returns {string} Phenotype value after potential transition
  */
-export function determineTransitionPhenotype(state, ID, neighbors, localConcentration) {
+export function determineTransitionPhenotype(state,phenotypes, ID, neighbors, localConcentration) {
     const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
     const proportionCyan = cyanNeighbors / totalNeighbors;
     const originalPhenotype = state.phenotypeMemo.get(ID);
@@ -109,10 +109,10 @@ export function determineTransitionPhenotype(state, ID, neighbors, localConcentr
     const rand = Math.random();
     let phenotype;
     
-    if (originalPhenotype === state.phenotypes.MAGENTA) {
-        phenotype = rand < K_m2c ? state.phenotypes.CYAN : state.phenotypes.MAGENTA;
+    if (originalPhenotype === phenotypes.MAGENTA) {
+        phenotype = rand < K_m2c ? phenotypes.CYAN : phenotypes.MAGENTA;
     } else {
-        phenotype = rand < K_c2m ? state.phenotypes.MAGENTA : state.phenotypes.CYAN;
+        phenotype = rand < K_c2m ? phenotypes.MAGENTA : phenotypes.CYAN;
     }
     
     state.phenotypeMemo.set(ID, phenotype);
@@ -129,18 +129,19 @@ export function determineTransitionPhenotype(state, ID, neighbors, localConcentr
  * @param {number} localConcentration - Local concentration value
  * @returns {Object} Object containing phenotype and similarity information
  */
-export function determinePhenotypeAndSimilarity(state, ID, neighbors, parentID, localConcentration) {
+export function determinePhenotypeAndSimilarity(state,phenotypes, ID, neighbors, parentID, localConcentration) {
     // Determine phenotype based on inheritance or neighbors
+     
     const phenotype = parentID === undefined 
-        ? inheritancePhenotype(state, ID, neighbors, localConcentration) 
-        : simplifiedInheritancePhenotype(state, ID, parentID);
+        ? inheritancePhenotype(state, phenotypes,ID, neighbors, localConcentration) 
+        : simplifiedInheritancePhenotype(state, phenotypes, ID, parentID);
     
     // Calculate similarity with neighbors
     const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
     const magentaProportion = magentaNeighbors / totalNeighbors;
     const cyanProportion = cyanNeighbors / totalNeighbors;
     
-    const similarity = phenotype === state.phenotypes.MAGENTA 
+    const similarity = phenotype === phenotypes.MAGENTA 
         ? magentaProportion 
         : cyanProportion;
     
@@ -158,8 +159,8 @@ export function determinePhenotypeAndSimilarity(state, ID, neighbors, parentID, 
  * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep
  * @returns {number} Count of magenta bacteria
  */
-export function getMagentaCount(state, currentTimestepBacteria) {
-    return getPhenotypeCount(state, currentTimestepBacteria, state.phenotypes.MAGENTA);
+export function getMagentaCount(state,phenotypes, currentTimestepBacteria) {
+    return getPhenotypeCount(state, currentTimestepBacteria, phenotypes.MAGENTA);
 }  //this seems wrong
 
 /** 
@@ -168,8 +169,8 @@ export function getMagentaCount(state, currentTimestepBacteria) {
  * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep
  * @returns {number} Count of cyan bacteria
  */
-export function getCyanCount(state, currentTimestepBacteria) {
-    return getPhenotypeCount(state, currentTimestepBacteria, state.phenotypes.CYAN);
+export function getCyanCount(state,phenotypes, currentTimestepBacteria) {
+    return getPhenotypeCount(state, currentTimestepBacteria, phenotypes.CYAN);
 }
 
 /**
@@ -178,7 +179,7 @@ export function getCyanCount(state, currentTimestepBacteria) {
  * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep
  * @returns {Array} Array of [magentaPositions, cyanPositions]
  */
-export function getPositions(state, currentTimestepBacteria) {
+export function getPositions(state,phenotypes, currentTimestepBacteria) {
     const magentaPositions = [];
     const cyanPositions = [];
 
@@ -186,9 +187,9 @@ export function getPositions(state, currentTimestepBacteria) {
         const phenotype = state.phenotypeMemo.get(ID);
         if (!phenotype) return;
         
-        if (phenotype === state.phenotypes.MAGENTA) {
+        if (phenotype === phenotypes.MAGENTA) {
             magentaPositions.push(ID);
-        } else if (phenotype === state.phenotypes.CYAN) {
+        } else if (phenotype === phenotypes.CYAN) {
             cyanPositions.push(ID);
         }
     });
@@ -196,24 +197,9 @@ export function getPositions(state, currentTimestepBacteria) {
     return [magentaPositions, cyanPositions];
 }
 
-/**
- * Count bacteria with a specific phenotype
- * @param {Object} state - Phenotype state object
- * @param {Set} currentTimestepBacteria - Set of bacteria IDs in the current timestep
- * @param {string} targetPhenotype - Target phenotype to count
- * @returns {number} Count of bacteria with the specified phenotype
- */
-export function getPhenotypeCount(state, currentTimestepBacteria, targetPhenotype) {
+function getPhenotypeCount(state, currentTimestepBacteria, targetPhenotype) {
     return Array.from(currentTimestepBacteria).reduce((count, ID) => {
         const phenotype = state.phenotypeMemo.get(ID);
         return phenotype && phenotype === targetPhenotype ? count + 1 : count;
     }, 0);
-}
-
-/**
- * Clear phenotype memoization cache
- * @param {Object} state - Phenotype state object
- */
-export function clearPhenotypeMemo(state) {
-    state.phenotypeMemo.clear();
 }

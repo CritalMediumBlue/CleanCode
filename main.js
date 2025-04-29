@@ -75,6 +75,7 @@ const updateSimulation = (currentBacteria) => {
 
     const positions = bacteriumSystem.getPositions();
 
+
     const bacData= bacteriumSystem.updateBacteria(
         animationState.currentTimeStep,
         dataState.bacteriaData,
@@ -82,8 +83,7 @@ const updateSimulation = (currentBacteria) => {
     );
 
 
-
-    updateBacteriaHistories(currentBacteria,...globalParams);
+    updateHistory(currentBacteria.length,...globalParams);
 
     updateSourcesAndSinks(currentBacteria,...positions);
 
@@ -101,27 +101,6 @@ const updateSimulation = (currentBacteria) => {
 
 };
 
-
-
-
-/**
- * Updates the positions, visibility, and properties of bacteria for the current time step.
- * This function handles both the simulation logic via updateBacteria and the visualization
- * 
- * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
- */
-const updateBacteriaHistories = (currentBacteria,magentaCount,cyanCount,scaledSimilarity) => {
-  
-    
-    
-    // Update history using the function exported from stateManager.js
-    updateHistory(
-        currentBacteria.length,
-        magentaCount,
-        cyanCount,
-        scaledSimilarity
-    );
-};
 
 /**
  * Updates the diffusion sources and sinks based on bacteria positions and phenotypes.
