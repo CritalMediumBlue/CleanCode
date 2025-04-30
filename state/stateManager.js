@@ -18,14 +18,19 @@ export const sceneState = {
 };
 
 
-export const animationState = {
+const animationState = {
     /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
     /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
     /** @type {number} */ numberOfTimeSteps: 0, // Total number of steps in the loaded data
     /** @type {boolean} */ play: false, // Controls whether the animation is running
-    /** @type {number} */ AverageLifetime: 0, // Average lifespan of bacteria in steps
     /** @type {number} */ fromStepToMinutes: 0, // Conversion factor from simulation steps to real-time minutes
 };
+
+export const createAnimationState = () => {    
+  Object.seal(animationState);
+  Object.preventExtensions(animationState);
+    return animationState;
+}
 
 /** @type {object} dataState - Manages simulation data arrays and parameters. */
 export const dataState = {

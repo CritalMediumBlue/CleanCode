@@ -18,8 +18,6 @@ let phenotypes = null;
 let phenotypeMemo =null;
 const currentBacteria = new Set();
 
-let totalTime =0;
-let counter =0;
 
 
 
@@ -31,10 +29,8 @@ export  function   getGlobalParams(layer,currentConcentrationData) {
         if (phenotype === phenotypes.MAGENTA) {magCount++;} 
         else if (phenotype === phenotypes.CYAN) { cyanCount++;}
     }
-    let time=performance.now();
     const { bacteriaData, averageSimilarity } = updateBacteria(layer, currentConcentrationData, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
-    totalTime+=performance.now()-time;
-    console.log("Time taken to updateBacteria: ", totalTime/++counter);
+  
 
     // Use the averageSimilarity directly from updateBacteria's return value
     const globalParams = {

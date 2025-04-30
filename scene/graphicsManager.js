@@ -33,7 +33,7 @@ export function setupNewScene(config) {
 export function renderScene(histories, bacteriaData, concentration, BACTERIUM, animationState) {
     updateScene( concentration, bacteriaData, BACTERIUM);
     updatePlot(histories, plot);
-    updateOverlay(animationState, bacteriaData);
+    updateOverlay(animationState);
 
     
     stage.renderer.render(stage.scene, stage.camera);

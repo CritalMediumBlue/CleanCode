@@ -4,11 +4,13 @@
  */
 
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
+
+
 import {createBacteriumSystem,diffuse,setValue,
     getGlobalParams,getPositions} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
-    animationState, 
+    createAnimationState, 
     dataState, 
     initializeArrays,
     getAdjustedCoordinates,
@@ -22,6 +24,7 @@ import {
  * @type {Object}
  */
 let appConfig;
+let animationState = null;
 
 
 
@@ -53,16 +56,16 @@ const resetAllData = () => {
  * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime.
  */
 const setBacteriaData = (data, processedData) => {
+    animationState = createAnimationState();
     console.log("Setting bacteria data from main.js...");
     dataState.bacteriaData = data;
     animationState.numberOfTimeSteps = data.size;
     dataState.AllUniqueIDs = processedData.totalUniqueIDs;
-    animationState.AverageLifetime = processedData.averageLifetime;
-    animationState.fromStepToMinutes = dataState.doublingTime / processedData.averageLifetime;
-
-    console.log('Total time (h)', data.size * animationState.fromStepToMinutes / 60);
-    console.log('Every time step is ', Math.floor(animationState.fromStepToMinutes), 'minutes',
-        'and', Math.round(animationState.fromStepToMinutes % 1 * 60), 'seconds');
+    const fromStepToMinutes = dataState.doublingTime / processedData.averageLifetime;
+    animationState.fromStepToMinutes = fromStepToMinutes;
+    console.log('Total time (h)', data.size * fromStepToMinutes / 60);
+    console.log('Every time step is ', Math.floor(fromStepToMinutes), 'minutes',
+        'and', Math.round(fromStepToMinutes % 1 * 60), 'seconds');
 };
 
 

@@ -13,8 +13,7 @@
  * @param {number} animationState.fromStepToMinutes - Conversion factor from simulation step to minutes.
  * @param {number} bacteriaCount - The number of bacteria in the current time step.
  */
-export function updateOverlay(animationState, bacteriaData) {
-    const bacteriaCount = bacteriaData ? bacteriaData.length : 0;
+export function updateOverlay(animationState) {
 
     const overlay = document.getElementById("dynamic-text-overlay");
     const currentTimeStep = animationState.currentTimeStep;
@@ -33,7 +32,6 @@ export function updateOverlay(animationState, bacteriaData) {
     
     // Update overlay text content with current simulation stats
     overlay.innerText = `Step: ${currentTimeStep} / ${numberOfTimeSteps}
-    Time: ${timeString}
-    Bacteria Count: ${bacteriaCount}`;
+    Time: ${timeString}`
 }
 

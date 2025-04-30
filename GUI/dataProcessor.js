@@ -18,7 +18,6 @@ export const setBacteriaData = (dataState, animationState, data, processedData) 
     dataState.bacteriaData = data;
     animationState.numberOfTimeSteps = data.size;
     dataState.AllUniqueIDs = processedData.totalUniqueIDs;
-    animationState.AverageLifetime = processedData.averageLifetime;
     animationState.fromStepToMinutes = dataState.doublingTime / processedData.averageLifetime;
 
     console.log('Total time (h)', data.size * animationState.fromStepToMinutes / 60);
@@ -45,13 +44,7 @@ export const handleFileInput = (event, resetCallback, animateCallback, setBacter
         const processedData = processFileData(e.target.result);
         console.log('Number of time steps:', processedData.numberOfTimeSteps);
         
-        // Initialize bacteria data via callback
-        if (setBacteriaDataCallback) {
-            setBacteriaDataCallback(bacteriaData, processedData);
-            console.log('Bacteria data passed to callback');
-        }
-        
-        // Start animation with the processed data
+        setBacteriaDataCallback(bacteriaData, processedData);
         animateCallback();
     };
     reader.readAsText(event.target.files[0]);

@@ -4,16 +4,9 @@
  */
 
 import { CONFIG } from './config.js';
-import { handleFileInput as processFileInput } from './dataProcessor.js';
+import { handleFileInput } from './dataProcessor.js';
 
 
-/**
- * Safely adds an event listener to a DOM element identified by its ID.
- * Logs a warning if the element is not found.
- * @param {string} id - The ID of the DOM element.
- * @param {string} event - The name of the event to listen for (e.g., 'click', 'input').
- * @param {Function} handler - The function to execute when the event occurs.
- */
 const addSafeEventListener = (id, event, handler) => {
     const element = document.getElementById(id);
     if (element) {
@@ -25,33 +18,7 @@ const addSafeEventListener = (id, event, handler) => {
 
 
 
-/**
- * Handles file input processing, decoupling main.js from dataProcessor.js
- * @param {Event} event - The file input event
- * @param {Function} resetCallback - Function to reset all data
- * @param {Function} animateCallback - Function to start animation
- */
-const handleFileInput = (event, resetCallback, animateCallback,setBacteriaDataCallback) => {
-    // Forward to the dataProcessor's handleFileInput but intercept the data callback
-    processFileInput(event, resetCallback, animateCallback, (data, processedData) => {
-        // Process the data through our internal function before sending to main
-        setBacteriaDataCallback(data, processedData);
-    });
-};
 
-
-
-/**
- * Attaches event listeners to various UI controls (buttons, sliders, dropdowns, file input)
- * to manage simulation playback, parameter adjustments, and data loading.
- * 
- * @param {Function} animate - Function to start the animation loop
- * @param {Function} resetAllData - Function to reset all data 
- * @param {Function} externalSetBacteriaData - Function to set the bacteria data
- * @param {Function} renderPlot - Function to render the plot from sceneManager
- * @param {Object} guiActions - Object containing functions for simulation operations
- * @returns {Object} The configuration object for dependency injection
- */
 export const addEventListeners = ( animate, resetAllData, externalSetBacteriaData, guiActions) => {
     console.log("Adding event listeners...");
     
@@ -98,7 +65,10 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
         {
             id: 'fileInput', event: 'change', handler: (event) => {
                 // Use our own handleFileInput which wraps dataProcessor's function
-                handleFileInput(event, resetAllData, animate,externalSetBacteriaData);
+                handleFileInput(event, resetAllData, animate,externalSetBacteriaData,
+                    (data, processedData) => {
+                        setBacteriaDataCallback(data, processedData)}
+                );
             }
         }
     ];
