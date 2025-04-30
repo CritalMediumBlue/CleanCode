@@ -6,7 +6,6 @@
 import { CONFIG } from './config.js';
 import { handleFileInput } from './dataProcessor.js';
 
-
 const addSafeEventListener = (id, event, handler) => {
     const element = document.getElementById(id);
     if (element) {
@@ -16,10 +15,7 @@ const addSafeEventListener = (id, event, handler) => {
     }
 };
 
-
-
-
-export const addEventListeners = ( animate, resetAllData, externalSetBacteriaData, guiActions) => {
+export const addEventListeners = (  resetAllData, externalSetBacteriaData, guiActions) => {
     console.log("Adding event listeners...");
     
     
@@ -65,7 +61,7 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
         {
             id: 'fileInput', event: 'change', handler: (event) => {
                 // Use our own handleFileInput which wraps dataProcessor's function
-                handleFileInput(event, resetAllData, animate, externalSetBacteriaData );
+                handleFileInput(event, resetAllData, externalSetBacteriaData );
             }
         }
     ];

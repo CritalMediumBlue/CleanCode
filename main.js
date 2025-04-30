@@ -5,29 +5,23 @@
 
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
 
-
 import {createBacteriumSystem,diffuse,setValue,
     getGlobalParams,getPositions} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
-    createAnimationState, 
+    createStates,
     createConstants,
-    createConcentrationState,
-    initializeArrays,
     getAdjustedCoordinates,
-    cleanupResources,
     updateHistory,
     getHistories
 } from './state/stateManager.js';
 
 
 let appConfig;
-let animationState = null;
-let constants = null;
-let concentrationState = null;
-let bacteriaData = null;
-
-
+let animationState;
+let constants;
+let concentrationState;
+let bacteriaData;
 
 
 const guiActions = {
@@ -41,17 +35,15 @@ const guiActions = {
  * Called when new data is loaded.
  */
 const resetAllData = () => {
-    console.log("Resetting all data and initializing new simulation...");
-    animationState = createAnimationState();
+    if (animationState&&animationState.animationFrameId) { 
+        cancelAnimationFrame(animationState.animationFrameId);
+    }
+    const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
+    ({animationState,concentrationState} = createStates(gridSize));
     constants = createConstants();
-    concentrationState = createConcentrationState();
-
-    cleanupResources(animationState);
 
     setupNewScene(appConfig);
     createBacteriumSystem(appConfig);
-    
-    initializeArrays(appConfig, concentrationState);  
 };
 
 
@@ -72,6 +64,8 @@ const setBacteriaData = (data, processedData) => {
     console.log('Total time (h)', data.size * constants.fromStepToMinutes / 60);
     console.log('Every time step is ', Math.floor(constants.fromStepToMinutes), 'minutes',
         'and', Math.round(constants.fromStepToMinutes % 1 * 60), 'seconds');
+
+    animate();
 };
 
 
@@ -185,7 +179,6 @@ const animate = () => {
 // Pass required functions as parameters for proper GUI-Simulation integration
 // Get configuration object via dependency injection
 appConfig = addEventListeners(
-    animate, 
     resetAllData, 
     setBacteriaData,
     guiActions  // Pass simulation actions for GUI to use
