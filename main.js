@@ -6,13 +6,12 @@
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
 
 import {createBacteriumSystem,diffuse,setValue,
-    getGlobalParams,getPositions} from './simulation/simulationManager.js';
+    getGlobalParams,getPositions,getAdjustedCoordinates} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     createStates,
     createConstants,
-    getAdjustedCoordinates,
-    updateHistory,
+    updateHistories,
     getHistories
 } from './state/stateManager.js';
 
@@ -33,15 +32,8 @@ const guiActions = {
 const init = (data, processedData) => {
 
     erraseAllData(); 
-    initiateAllData(data);
- 
 
-    constants.numberOfTimeSteps = data.size;
-    constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
-    Object.freeze(constants);
-    console.log('Total time (h)', data.size * constants.fromStepToMinutes / 60);
-    console.log('Every time step is ', Math.floor(constants.fromStepToMinutes), 'minutes',
-        'and', Math.round(constants.fromStepToMinutes % 1 * 60), 'seconds');
+    initiateAllData(data,processedData);
 
     animate();
 };
@@ -56,7 +48,7 @@ const erraseAllData = () => {
    
 };
 
-const initiateAllData = (data) => {
+const initiateAllData = (data,processedData) => {
     const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
 
     ({animationState,concentrationState} = createStates(gridSize));
@@ -65,6 +57,9 @@ const initiateAllData = (data) => {
     setupNewScene(appConfig);
     createBacteriumSystem(appConfig);
     bacteriaData = data;
+    constants.numberOfTimeSteps = data.size;
+    constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
+    Object.freeze(constants);
 }
 
 
@@ -84,7 +79,7 @@ const updateSimulation = (currentBacteria) => {
     const { magCount, cyanCount, averageSimilarity } = globalParams;
 
     // Pass the individual values to updateHistory
-    updateHistory(currentBacteria.length, magCount, cyanCount, averageSimilarity);
+    updateHistories(currentBacteria.length, magCount, cyanCount, averageSimilarity);
 
     updateSourcesAndSinks(currentBacteria,...positions);
 
@@ -139,31 +134,24 @@ const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
     }
 };
 
-let bacteriaDataTotal = null;
+let bacteriaDataUpdated = null;
 // --- Rendering and Animation ---
 
-/**
- * The main animation loop function that drives the simulation.
- * Called recursively via requestAnimationFrame to maintain smooth animation.
- * Updates the simulation state when in play mode and renders both the 3D scene
- * and 2D plot visualization in every frame.
- */
+
 const animate = () => {
-    // Schedule the next frame
     animationState.animationFrameId = requestAnimationFrame(animate);
-    // Update simulation logic only if in 'play' state
+
     if (animationState.play) {
           // 1. Get bacteria data for the current time step
         const currentBacteria = bacteriaData.get(animationState.currentTimeStep);
 
-        bacteriaDataTotal = updateSimulation(currentBacteria); // Advance the simulation by one step
+        bacteriaDataUpdated = updateSimulation(currentBacteria); // Advance the simulation by one step
         
-     
     }
     const histories = getHistories();
     const concentration = concentrationState.concentrationField;
 
-    renderScene(histories,bacteriaDataTotal, concentration, appConfig.BACTERIUM, animationState, constants);
+    renderScene(histories,bacteriaDataUpdated, concentration, appConfig.BACTERIUM, animationState, constants);
 
     if (animationState.currentTimeStep > constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
@@ -173,11 +161,6 @@ const animate = () => {
 };
 
 
-// --- Initial Setup ---
-
-// Set up initial event listeners when the script loads
-// Pass required functions as parameters for proper GUI-Simulation integration
-// Get configuration object via dependency injection
 appConfig = addEventListeners(
     init,
     guiActions  // Pass simulation actions for GUI to use

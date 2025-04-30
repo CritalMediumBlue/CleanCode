@@ -132,3 +132,23 @@ export function createBacteriumSystem(config) {
 }
 
 
+export const getAdjustedCoordinates = (x, y, grid) => {
+    // Translate coordinates so (0,0) is the bottom-left corner of the grid, then round.
+    let adjustedX = Math.round(x + grid.WIDTH / 2);
+    let adjustedY = Math.round(y + grid.HEIGHT / 2);
+
+    // Skip bacteria below the grid's bottom edge.
+    if (adjustedY <= 0) {
+        return null;
+    }
+
+    // Clamp coordinates to valid grid boundaries (leaving a 1-cell border).
+    adjustedY = Math.min(adjustedY, grid.HEIGHT - 2); 
+    adjustedX = Math.max(1, Math.min(adjustedX, grid.WIDTH - 2));
+
+    // Calculate the 1D index corresponding to the 2D grid coordinates.
+    const idx = adjustedY * grid.WIDTH + adjustedX;
+
+    return { x: adjustedX, y: adjustedY, idx };
+};
+
