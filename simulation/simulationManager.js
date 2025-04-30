@@ -18,7 +18,6 @@ let phenotypeManager = null;
 let phenotypes = null;
 let phenotypeMemo =null;
 const currentBacteria = new Set();
-let averageSimilarityWithNeighbors = 0;
 
 
 
