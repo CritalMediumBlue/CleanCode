@@ -30,34 +30,12 @@ const guiActions = {
 };
 
 
-/**
- * Resets all simulation data, cleans up resources, and initializes a new simulation environment.
- * Called when new data is loaded.
- */
-const resetAllData = () => {
-    if (animationState&&animationState.animationFrameId) { 
-        cancelAnimationFrame(animationState.animationFrameId);
-    }
-    const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
-    ({animationState,concentrationState} = createStates(gridSize));
-    constants = createConstants();
+const init = (data, processedData) => {
 
-    setupNewScene(appConfig);
-    createBacteriumSystem(appConfig);
-};
-
-
-/**
- * Callback function that sets bacteria data in the appropriate state objects.
- * This is called by guiManager.js after data processing.
- * @param {Map<number, Array<object>>} data - Map where keys are time steps and values are arrays of bacteria objects for that step.
- * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime.
- */
-const setBacteriaData = (data, processedData) => {
+    erraseAllData(); 
+    initiateAllData(data);
  
 
-    console.log("Setting bacteria data from main.js...");
-    bacteriaData = data;
     constants.numberOfTimeSteps = data.size;
     constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
     Object.freeze(constants);
@@ -67,6 +45,28 @@ const setBacteriaData = (data, processedData) => {
 
     animate();
 };
+
+
+const erraseAllData = () => {
+    if (animationState) { 
+        cancelAnimationFrame(animationState.animationFrameId);
+    }
+    
+ 
+   
+};
+
+const initiateAllData = (data) => {
+    const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
+
+    ({animationState,concentrationState} = createStates(gridSize));
+    constants = createConstants();
+
+    setupNewScene(appConfig);
+    createBacteriumSystem(appConfig);
+    bacteriaData = data;
+}
+
 
 
 
@@ -179,8 +179,7 @@ const animate = () => {
 // Pass required functions as parameters for proper GUI-Simulation integration
 // Get configuration object via dependency injection
 appConfig = addEventListeners(
-    resetAllData, 
-    setBacteriaData,
+    init,
     guiActions  // Pass simulation actions for GUI to use
 );
 

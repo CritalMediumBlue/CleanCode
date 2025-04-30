@@ -15,7 +15,7 @@ const addSafeEventListener = (id, event, handler) => {
     }
 };
 
-export const addEventListeners = (  resetAllData, externalSetBacteriaData, guiActions) => {
+export const addEventListeners = ( init, guiActions) => {
     console.log("Adding event listeners...");
     
     
@@ -61,7 +61,7 @@ export const addEventListeners = (  resetAllData, externalSetBacteriaData, guiAc
         {
             id: 'fileInput', event: 'change', handler: (event) => {
                 // Use our own handleFileInput which wraps dataProcessor's function
-                handleFileInput(event, resetAllData, externalSetBacteriaData );
+                handleFileInput( init , event);
             }
         }
     ];

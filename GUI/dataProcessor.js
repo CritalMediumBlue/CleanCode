@@ -5,9 +5,8 @@ let bacteriaData = new Map();
 let numberOfTimeSteps = 0;
 
 
-export const handleFileInput = (event, resetCallback, setBacteriaDataCallback) => {
-    // Set play to false and reset the scene
-    resetCallback();
+export const handleFileInput = (init,event) => {
+   
     
     // Read the file
     const reader = new FileReader();
@@ -16,7 +15,7 @@ export const handleFileInput = (event, resetCallback, setBacteriaDataCallback) =
         const processedData = processFileData(e.target.result);
         console.log('Number of time steps:', processedData.numberOfTimeSteps);
         
-        setBacteriaDataCallback(bacteriaData, processedData);
+        init(bacteriaData, processedData);
     };
     reader.readAsText(event.target.files[0]);
 };
