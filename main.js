@@ -12,6 +12,7 @@ import { addEventListeners } from './GUI/guiManager.js';
 import { 
     createAnimationState, 
     createConstants,
+    createConcentrationState,
     dataState, 
     initializeArrays,
     getAdjustedCoordinates,
@@ -24,6 +25,7 @@ import {
 let appConfig;
 let animationState = null;
 let constants = null;
+let concentrationState = null;
 
 
 
@@ -40,12 +42,16 @@ const guiActions = {
  */
 const resetAllData = () => {
     console.log("Resetting all data and initializing new simulation...");
+    animationState = createAnimationState();
+    constants = createConstants();
+    concentrationState = createConcentrationState();
+
     cleanupResources(animationState);
 
     setupNewScene(appConfig);
     createBacteriumSystem(appConfig);
     
-    initializeArrays(appConfig);    
+    initializeArrays(appConfig, concentrationState);  
 };
 
 
@@ -56,14 +62,13 @@ const resetAllData = () => {
  * @param {object} processedData - Object containing statistics like totalUniqueIDs and averageLifetime.
  */
 const setBacteriaData = (data, processedData) => {
-    animationState = createAnimationState();
-    constants = createConstants();
+ 
 
     console.log("Setting bacteria data from main.js...");
     dataState.bacteriaData = data;
     constants.numberOfTimeSteps = data.size;
-    dataState.AllUniqueIDs = processedData.totalUniqueIDs;
-    constants.fromStepToMinutes = dataState.doublingTime / processedData.averageLifetime;
+    constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
+    Object.freeze(constants);
     console.log('Total time (h)', data.size * constants.fromStepToMinutes / 60);
     console.log('Every time step is ', Math.floor(constants.fromStepToMinutes), 'minutes',
         'and', Math.round(constants.fromStepToMinutes % 1 * 60), 'seconds');
@@ -77,7 +82,7 @@ const updateSimulation = (currentBacteria) => {
     const layer = dataState.bacteriaData.get(animationState.currentTimeStep) || [];
 
   
-    const {globalParams, bacData} = getGlobalParams(layer,dataState.currentConcentrationData);
+    const {globalParams, bacData} = getGlobalParams(layer,concentrationState.concentrationField);
 
     const positions = getPositions();
 
@@ -90,9 +95,9 @@ const updateSimulation = (currentBacteria) => {
     updateSourcesAndSinks(currentBacteria,...positions);
 
   
-    [dataState.currentConcentrationData, dataState.nextConcentrationData] = diffuse(
+    [concentrationState.concentrationField] = diffuse(
         appConfig,
-        dataState,
+        concentrationState,
         1, // Time step duration in minutes (dt)
         1 // Number of substeps for ADI
     ); 
@@ -117,8 +122,8 @@ const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
     const CyanIDs = new Set(cyanIDsRaw);
 
     // Reset source and sink arrays for the current step
-    dataState.sources.fill(0);
-    dataState.sinks.fill(0);
+    concentrationState.sources.fill(0);
+    concentrationState.sinks.fill(0);
 
     // Iterate through each bacterium in the current time step
     for (const bacterium of currentBacteria) {
@@ -130,12 +135,12 @@ const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
 
         // Increment source count if the bacterium is Magenta
         if (MagentaIDs.has(bacterium.ID)) {
-            dataState.sources[coords.idx] += 1; // Simple count for now
+            concentrationState.sources[coords.idx] += 1; // Simple count for now
         }
 
         // Increment sink count if the bacterium is Cyan
         if (CyanIDs.has(bacterium.ID)) {
-            dataState.sinks[coords.idx] += 1; // Simple count for now
+            concentrationState.sinks[coords.idx] += 1; // Simple count for now
         }
     }
 };
@@ -162,7 +167,7 @@ const animate = () => {
      
     }
     const histories = getHistories();
-    const concentration = dataState.currentConcentrationData;
+    const concentration = concentrationState.concentrationField;
 
     renderScene(histories,bacteriaData, concentration, appConfig.BACTERIUM, animationState, constants);
 

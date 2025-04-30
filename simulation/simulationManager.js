@@ -94,7 +94,7 @@ export function setValue(value, param) {
 
 export function diffuse(
     appConfig,
-    dataState,
+    concentrationState,
         timeStep, // Time step duration in minutes (dt)
         subSteps // Number of substeps for ADI
     ) 
@@ -102,10 +102,10 @@ export function diffuse(
     const WIDTH = appConfig.GRID.WIDTH;
     const HEIGHT = appConfig.GRID.HEIGHT;
     const DIFFUSION_RATE = appConfig.GRID.DIFFUSION_RATE;
-    const currentConcentrationData = dataState.currentConcentrationData;
-    const nextConcentrationData = dataState.nextConcentrationData;
-    const sources = dataState.sources;
-    const sinks = dataState.sinks;
+    const currentConcentrationData = concentrationState.concentrationField
+    const nextConcentrationData = concentrationState.concentrationField
+    const sources = concentrationState.sources;
+    const sinks = concentrationState.sinks;
         return ADI(
                 WIDTH, HEIGHT,
                 currentConcentrationData, nextConcentrationData, // Input concentration arrays

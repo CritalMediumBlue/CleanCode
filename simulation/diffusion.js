@@ -247,6 +247,6 @@ export const ADI = (WIDTH, HEIGHT,
     
     // Update the current concentration data with the new values
     [currentConcentrationData, nextConcentrationData] = [nextConcentrationData, currentConcentrationData];
-    return [currentConcentrationData, nextConcentrationData];
+    return [currentConcentrationData];
 };
 

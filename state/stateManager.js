@@ -21,23 +21,26 @@ export const createConstants = () => {
     const constants = {
         numberOfTimeSteps: 0, // Total number of time steps in the simulation
         fromStepToMinutes: 0, // Conversion factor from simulation steps to minutes
+        doublingTime: 45
     };
     Object.seal(constants);
     Object.preventExtensions(constants);
     return constants;
 }
 
-// --- State Objects ---
+export const createConcentrationState = () => {
+    const concentrationState = {
+        concentrationField: null, // Current concentration data
+        sources: null, // Sources of diffusion
+        sinks: null, // Sinks of diffusion
+    }
+    Object.seal(concentrationState);
+    Object.preventExtensions(concentrationState);
 
-/** @type {object} sceneState - Manages Three.js scene components and related states. */
-export const sceneState = {
-    /** @type {THREE.Scene | null} */ scene: null,
-    /** @type {THREE.PerspectiveCamera | null} */ camera: null,
-    /** @type {THREE.WebGLRenderer | null} */ renderer: null,
-    /** @type {THREE.Mesh | null} */ surfaceMesh: null, // The mesh representing the concentration surface
-    /** @type {object | null} */ bacteriumRenderer: null, // New renderer component for bacteria
-    /** @type {boolean} */ visibleBacteria: true, // Whether bacteria are visible
-};
+    return concentrationState;
+
+
+}
 
 
 
@@ -50,8 +53,6 @@ export const dataState = {
     /** @type {Float32Array | null} */ sources: null, // Diffusion sources grid
     /** @type {Float32Array | null} */ sinks: null, // Diffusion sinks grid
     /** @type {Map<number, Array<object>> | null} */ bacteriaData: null, // Stores all bacteria data keyed by time step
-    /** @type {Set<number> | null} */ AllUniqueIDs: null, // Set of all unique bacteria IDs across the simulation
-    /** @type {number} */ doublingTime: 45, // Assumed doubling time for bacteria in minutes
 };
 
 
@@ -71,7 +72,6 @@ export const cleanupResources = (animationState) => {
 
     animationState.currentTimeStep = 1;
     animationState.play = false;
-    sceneState.visibleBacteria = true;
 };
 
 // --- State Initialization Functions ---
@@ -81,16 +81,14 @@ export const cleanupResources = (animationState) => {
  * Creates empty Float32Arrays for concentration data, colors, sources, and sinks.
  * @param {Object} grid - Grid dimensions object with WIDTH and HEIGHT properties (optional, uses default GRID if not provided)
  */
-export const initializeArrays = (appConfig) => {
+export const initializeArrays = (appConfig,concentrationState) => {
     const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
     console.log(`Initializing arrays for grid size: ${gridSize}`);
 
     // Initialize data arrays with grid dimensions
-    dataState.currentConcentrationData = new Float32Array(gridSize).fill(0);
-    dataState.nextConcentrationData = new Float32Array(gridSize).fill(0);
-    dataState.colors = new Float32Array(gridSize * 3).fill(0);
-    dataState.sources = new Float32Array(gridSize).fill(0);
-    dataState.sinks = new Float32Array(gridSize).fill(0);
+    concentrationState.concentrationField = new Float32Array(gridSize).fill(0);
+    concentrationState.sources = new Float32Array(gridSize).fill(0);
+    concentrationState.sinks = new Float32Array(gridSize).fill(0);
 };
 
 
