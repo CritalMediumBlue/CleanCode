@@ -5,6 +5,28 @@ import * as historyManagerModule from './historyManager.js';
 export const updateHistory = historyManagerModule.update;
 export const getHistories = historyManagerModule.getHistories;
 
+
+export const createAnimationState = () => {   
+    const animationState = {
+        /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
+        /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
+        /** @type {boolean} */ play: false, // Controls whether the animation is running
+    }; 
+  Object.seal(animationState);
+  Object.preventExtensions(animationState);
+    return animationState;
+}
+
+export const createConstants = () => {
+    const constants = {
+        numberOfTimeSteps: 0, // Total number of time steps in the simulation
+        fromStepToMinutes: 0, // Conversion factor from simulation steps to minutes
+    };
+    Object.seal(constants);
+    Object.preventExtensions(constants);
+    return constants;
+}
+
 // --- State Objects ---
 
 /** @type {object} sceneState - Manages Three.js scene components and related states. */
@@ -18,19 +40,7 @@ export const sceneState = {
 };
 
 
-const animationState = {
-    /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
-    /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
-    /** @type {number} */ numberOfTimeSteps: 0, // Total number of steps in the loaded data
-    /** @type {boolean} */ play: false, // Controls whether the animation is running
-    /** @type {number} */ fromStepToMinutes: 0, // Conversion factor from simulation steps to real-time minutes
-};
 
-export const createAnimationState = () => {    
-  Object.seal(animationState);
-  Object.preventExtensions(animationState);
-    return animationState;
-}
 
 /** @type {object} dataState - Manages simulation data arrays and parameters. */
 export const dataState = {
@@ -45,10 +55,9 @@ export const dataState = {
 };
 
 
-export const cleanupResources = () => {
+export const cleanupResources = (animationState) => {
     console.log("Cleaning up resources...");
- 
-    // Cancel animation frame
+    if (animationState === null) return;
     if (animationState.animationFrameId) {
         cancelAnimationFrame(animationState.animationFrameId);
         animationState.animationFrameId = null;
@@ -61,7 +70,6 @@ export const cleanupResources = () => {
 
 
     animationState.currentTimeStep = 1;
-    animationState.numberOfTimeSteps = 0;
     animationState.play = false;
     sceneState.visibleBacteria = true;
 };

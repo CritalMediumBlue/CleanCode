@@ -3,22 +3,13 @@
  * Responsible for updating text information and other UI overlays
  */
 
-/**
- * Updates the text overlay element with current simulation statistics
- * including time step, simulated time, and bacteria count.
- * 
- * @param {Object} animationState - Object containing simulation state information.
- * @param {number} animationState.currentTimeStep - The current simulation time step.
- * @param {number} animationState.numberOfTimeSteps - The total number of time steps in the simulation.
- * @param {number} animationState.fromStepToMinutes - Conversion factor from simulation step to minutes.
- * @param {number} bacteriaCount - The number of bacteria in the current time step.
- */
-export function updateOverlay(animationState) {
+
+export function updateOverlay(animationState,constants) {
 
     const overlay = document.getElementById("dynamic-text-overlay");
     const currentTimeStep = animationState.currentTimeStep;
-    const numberOfTimeSteps = animationState.numberOfTimeSteps;
-    const fromStepToMinutes = animationState.fromStepToMinutes;
+    const numberOfTimeSteps = constants.numberOfTimeSteps;
+    const fromStepToMinutes = constants.fromStepToMinutes;
 
     // Calculate simulated time
     const timeInMinutes = currentTimeStep * fromStepToMinutes;

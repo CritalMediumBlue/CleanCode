@@ -65,10 +65,7 @@ export const addEventListeners = ( animate, resetAllData, externalSetBacteriaDat
         {
             id: 'fileInput', event: 'change', handler: (event) => {
                 // Use our own handleFileInput which wraps dataProcessor's function
-                handleFileInput(event, resetAllData, animate,externalSetBacteriaData,
-                    (data, processedData) => {
-                        setBacteriaDataCallback(data, processedData)}
-                );
+                handleFileInput(event, resetAllData, animate, externalSetBacteriaData );
             }
         }
     ];
