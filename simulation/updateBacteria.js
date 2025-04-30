@@ -1,7 +1,7 @@
 import {
     determinePhenotypeAndSimilarity,
 } from './phenotypeSimulation.js';
-import { countNeighbors,buildQuadtree } from './quadtree.js';
+import { countNeighbors, buildGrid } from './grid.js';
 let averageSimilarityWithNeighbors = 0;
 
 
@@ -20,7 +20,6 @@ function  processBacterium(bacteriumData, concentrations, phenotypeManager, phen
     // Create position as a plain object
     const position = { x, y, z: 0 };
     
-    // Get neighbors for this bacterium
     const neighbors = countNeighbors(x, y, phenotypeMemo, phenotypes);
     
     // Determine phenotype and calculate similarity
@@ -46,8 +45,8 @@ function  processBacterium(bacteriumData, concentrations, phenotypeManager, phen
 
 export function updateBacteria(layer, concentrations,currentBacteria,phenotypeManager,phenotypeMemo, phenotypes) {
         
-    // Reset state for new time step
-    buildQuadtree(layer);
+    buildGrid(layer);
+   
     currentBacteria.clear();
     averageSimilarityWithNeighbors = 0;
     
