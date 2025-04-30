@@ -9,11 +9,8 @@ import {createBacteriumSystem,diffuse,setValue,
     getGlobalParams,getPositions,getAdjustedCoordinates} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
-    createStates,
-    createConstants,
-    updateHistories,
-    getHistories
-} from './state/stateManager.js';
+    createStates,createConstants,
+    updateHistories,getHistories} from './state/stateManager.js';
 
 
 let appConfig;
