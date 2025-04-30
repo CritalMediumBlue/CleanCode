@@ -1,5 +1,17 @@
 let myQuadtree = null;
+import { quadtree } from 'd3-quadtree';
 
+
+
+export function buildQuadtree(layer) {
+    myQuadtree = quadtree()
+        .x(d => d.x)
+        .y(d => d.y);
+    
+    layer.forEach(data => {
+        myQuadtree.add(data);
+    });
+}
 export function countNeighbors(x, y, phenotypeMemo, phenotypes) {
     const neighborRadius = 7;
     let totalCount = 0;
@@ -41,15 +53,4 @@ export function countNeighbors(x, y, phenotypeMemo, phenotypes) {
     });
 
     return [totalCount, magentaCount, cyanCount];
-}
-
-
-export function buildQuadtree(layer,quadtree) {
-    myQuadtree = quadtree()
-        .x(d => d.x)
-        .y(d => d.y);
-    
-    layer.forEach(data => {
-        myQuadtree.add(data);
-    });
 }

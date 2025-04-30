@@ -6,7 +6,6 @@
  * This module serves as the primary interface between the rendering/UI layer and the
  * underlying simulation mechanisms, handling updates, state management, and data flow.
  */
-import { quadtree } from 'd3-quadtree';
 
 
 
@@ -33,7 +32,7 @@ export  function   getGlobalParams(layer,currentConcentrationData) {
     }
     
     // Call updateBacteria and extract both bacteriaData and averageSimilarity
-    const { bacteriaData, averageSimilarity } = updateBacteria(layer, currentConcentrationData, quadtree, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
+    const { bacteriaData, averageSimilarity } = updateBacteria(layer, currentConcentrationData, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
     
     // Use the averageSimilarity directly from updateBacteria's return value
     const globalParams = {

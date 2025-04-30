@@ -44,10 +44,10 @@ function  processBacterium(bacteriumData, concentrations, phenotypeManager, phen
 }
 
 
-export function updateBacteria(layer, concentrations,quadtree,currentBacteria,phenotypeManager,phenotypeMemo, phenotypes) {
+export function updateBacteria(layer, concentrations,currentBacteria,phenotypeManager,phenotypeMemo, phenotypes) {
         
     // Reset state for new time step
-    buildQuadtree(layer,quadtree);
+    buildQuadtree(layer);
     currentBacteria.clear();
     averageSimilarityWithNeighbors = 0;
     
