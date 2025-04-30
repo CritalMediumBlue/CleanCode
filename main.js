@@ -5,7 +5,7 @@
 
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
 import {createBacteriumSystem,diffuse,setValue,
-    getGlobalParams,getPositions, updateBacteria} from './simulation/simulationManager.js';
+    getGlobalParams,getPositions} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     animationState, 
@@ -46,7 +46,6 @@ const resetAllData = () => {
 };
 
 
-
 /**
  * Callback function that sets bacteria data in the appropriate state objects.
  * This is called by guiManager.js after data processing.
@@ -70,18 +69,19 @@ const setBacteriaData = (data, processedData) => {
 
 
 const updateSimulation = (currentBacteria) => {
-  
-    const globalParams = getGlobalParams();
-
-    const positions = getPositions();
 
     const layer = dataState.bacteriaData.get(animationState.currentTimeStep) || [];
 
+  
+    const {globalParams, bacData} = getGlobalParams(layer,dataState.currentConcentrationData);
 
-    const bacData= updateBacteria(layer,dataState.currentConcentrationData);
+    const positions = getPositions();
 
+    // Extract the individual values from globalParams instead of using Object.entries
+    const { magCount, cyanCount, averageSimilarity } = globalParams;
 
-    updateHistory(currentBacteria.length,...globalParams);
+    // Pass the individual values to updateHistory
+    updateHistory(currentBacteria.length, magCount, cyanCount, averageSimilarity);
 
     updateSourcesAndSinks(currentBacteria,...positions);
 
