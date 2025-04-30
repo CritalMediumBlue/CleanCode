@@ -19,150 +19,112 @@ let phenotypes = null;
 let phenotypeMemo =null;
 const currentBacteria = new Set();
 let averageSimilarityWithNeighbors = 0;
+let myQuadtree = null
 
+function countNeighbors(x, y) {
+    const neighborRadius = 7;
+    let totalCount = 0;
+    let magentaCount = 0;
+    let cyanCount = 0;
 
-class BacteriumSystem {
-   
-    constructor(config) {
-        this.config = config;
-        this.quadtree = null;
-    }
-
-
- 
-    buildQuadtree(layer) {
-        this.quadtree = quadtree()
-            .x(d => d.x)
-            .y(d => d.y);
+    myQuadtree.visit((node, x1, y1, x2, y2) => {
+        // Skip if node is outside search radius
+        if (x1 > x + neighborRadius || 
+            x2 < x - neighborRadius || 
+            y1 > y + neighborRadius || 
+            y2 < y - neighborRadius) {
+            return true; 
+        }
         
-        layer.forEach(data => {
-            this.quadtree.add(data);
-        });
-    }
-
- 
-    countNeighbors(x, y) {
-        const neighborRadius = this.config.BACTERIUM.NEIGHBOR_RADIUS;
-        let totalCount = 0;
-        let magentaCount = 0;
-        let cyanCount = 0;
-
-        this.quadtree.visit((node, x1, y1, x2, y2) => {
-            // Skip if node is outside search radius
-            if (x1 > x + neighborRadius || 
-                x2 < x - neighborRadius || 
-                y1 > y + neighborRadius || 
-                y2 < y - neighborRadius) {
-                return true; 
-            }
-            
-            // Process leaf node
-            if (!node.length) {
-                do {
-                    if (node.data) {
-                        const dx = node.data.x - x;
-                        const dy = node.data.y - y;
-                        const distSquared = dx * dx + dy * dy;
+        // Process leaf node
+        if (!node.length) {
+            do {
+                if (node.data) {
+                    const dx = node.data.x - x;
+                    const dy = node.data.y - y;
+                    const distSquared = dx * dx + dy * dy;
+                    
+                    if (distSquared < neighborRadius * neighborRadius) {
+                        totalCount++;
+                        const phenotype = phenotypeMemo.get(node.data.ID);
                         
-                        if (distSquared < neighborRadius * neighborRadius) {
-                            totalCount++;
-                            const phenotype = phenotypeMemo.get(node.data.ID);
-                            
-                            if (phenotype && phenotype === phenotypes.MAGENTA) {
-                                magentaCount++;
-                            } else if (phenotype && phenotype === phenotypes.CYAN) {
-                                cyanCount++;
-                            }
+                        if (phenotype && phenotype === phenotypes.MAGENTA) {
+                            magentaCount++;
+                        } else if (phenotype && phenotype === phenotypes.CYAN) {
+                            cyanCount++;
                         }
                     }
-                } while (node = node.next);
-            }
-            
-            return false; // Continue traversal
-        });
-
-        return [totalCount, magentaCount, cyanCount];
-    }
-
-
-    updateBacteria(layer, concentrations) {
+                }
+            } while (node = node.next);
+        }
         
-        // Reset state for new time step
-        this.buildQuadtree(layer);
-        currentBacteria.clear();
-        averageSimilarityWithNeighbors = 0;
-        
-        // Process each bacterium
-        const bacteriaData = [];
-        layer.forEach((data) => {
-            const singlebacteriumData = this.processBacterium(data, concentrations);
-            bacteriaData.push(singlebacteriumData);
-            currentBacteria.add(data.ID);
-            averageSimilarityWithNeighbors += singlebacteriumData.similarity || 0;
-        });
+        return false; // Continue traversal
+    });
 
-        // Calculate average similarity
-        averageSimilarityWithNeighbors = layer.length > 0 
-            ? (averageSimilarityWithNeighbors / layer.length-0.5)*2 
-            : 0;
-            
-        return bacteriaData;
-    }
-
-  
-    processBacterium(bacteriumData, concentrations) {
-        const { x, y, longAxis, angle, ID, parent } = bacteriumData;
-        const WIDTH = 100, HEIGHT = 60;
-        
-        // Get local concentration at bacterium position
-        const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
-        const localConcentration = concentrations[idx] || 0;
-        
-        // Create position as a plain object
-        const position = { x, y, z: 0 };
-        
-        // Get neighbors for this bacterium
-        const neighbors = this.countNeighbors(x, y);
-        
-        // Determine phenotype and calculate similarity
-        const phenotypeInfo = determinePhenotypeAndSimilarity(
-            phenotypeManager,phenotypes,phenotypeMemo, ID, neighbors, parent, localConcentration
-        );
-        
-        // Return data object for rendering
-        return {
-            id:ID,
-            position:position,
-            angle:angle,
-            longAxis:longAxis,
-            phenotype:phenotypeInfo[0],
-            magentaProportion:phenotypeInfo[1],
-            cyanProportion:phenotypeInfo[2],
-            similarity:phenotypeInfo[3],
-        };
-            
-      
-    }
-
-
+    return [totalCount, magentaCount, cyanCount];
 }
 
 
-export function updateBacteria(timeStep, bacteriumData, concentrations) {
-    const layer = bacteriumData.get(timeStep) || [];
+
+function buildQuadtree(layer) {
+    myQuadtree = quadtree()
+        .x(d => d.x)
+        .y(d => d.y);
     
+    layer.forEach(data => {
+        myQuadtree.add(data);
+    });
+}
+
+function  processBacterium(bacteriumData, concentrations) {
+    const { x, y, longAxis, angle, ID, parent } = bacteriumData;
+    const WIDTH = 100, HEIGHT = 60;
+    
+    // Get local concentration at bacterium position
+    const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
+    const localConcentration = concentrations[idx] || 0;
+    
+    // Create position as a plain object
+    const position = { x, y, z: 0 };
+    
+    // Get neighbors for this bacterium
+    const neighbors = countNeighbors(x, y);
+    
+    // Determine phenotype and calculate similarity
+    const phenotypeInfo = determinePhenotypeAndSimilarity(
+        phenotypeManager,phenotypes,phenotypeMemo, ID, neighbors, parent, localConcentration
+    );
+    
+    // Return data object for rendering
+    return {
+        id:ID,
+        position:position,
+        angle:angle,
+        longAxis:longAxis,
+        phenotype:phenotypeInfo[0],
+        magentaProportion:phenotypeInfo[1],
+        cyanProportion:phenotypeInfo[2],
+        similarity:phenotypeInfo[3],
+    };
+        
+  
+}
+
+
+export function updateBacteria(layer, concentrations) {
+        
     // Reset state for new time step
-    this.buildQuadtree(layer);
+    buildQuadtree(layer);
     currentBacteria.clear();
     averageSimilarityWithNeighbors = 0;
     
     // Process each bacterium
     const bacteriaData = [];
     layer.forEach((data) => {
-        const bacteriumData = this.processBacterium(data, concentrations);
-        bacteriaData.push(bacteriumData);
+        const singlebacteriumData = processBacterium(data, concentrations);
+        bacteriaData.push(singlebacteriumData);
         currentBacteria.add(data.ID);
-        averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
+        averageSimilarityWithNeighbors += singlebacteriumData.similarity || 0;
     });
 
     // Calculate average similarity
@@ -172,7 +134,6 @@ export function updateBacteria(timeStep, bacteriumData, concentrations) {
         
     return bacteriaData;
 }
-
 
 
 
@@ -271,7 +232,7 @@ export function createBacteriumSystem(config) {
         alpha: config.BACTERIUM.ALPHA.DEFAULT
     };
     
-    return new BacteriumSystem(config);
+    
 }
 
 

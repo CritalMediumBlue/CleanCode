@@ -5,7 +5,7 @@
 
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
 import {createBacteriumSystem,diffuse,setValue,
-    getGlobalParams,getPositions} from './simulation/simulationManager.js';
+    getGlobalParams,getPositions, updateBacteria} from './simulation/simulationManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import { 
     animationState, 
@@ -23,7 +23,6 @@ import {
  */
 let appConfig;
 
-let bacteriumSystem = null; 
 
 
 const guiActions = {
@@ -41,7 +40,7 @@ const resetAllData = () => {
     cleanupResources();
 
     setupNewScene(appConfig);
-    bacteriumSystem = createBacteriumSystem(appConfig);
+    createBacteriumSystem(appConfig);
     
     initializeArrays(appConfig);    
 };
@@ -79,10 +78,7 @@ const updateSimulation = (currentBacteria) => {
     const layer = dataState.bacteriaData.get(animationState.currentTimeStep) || [];
 
 
-    const bacData= bacteriumSystem.updateBacteria(
-        layer,
-        dataState.currentConcentrationData
-    );
+    const bacData= updateBacteria(layer,dataState.currentConcentrationData);
 
 
     updateHistory(currentBacteria.length,...globalParams);
