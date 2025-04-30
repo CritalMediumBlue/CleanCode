@@ -32,16 +32,20 @@ export  function   getGlobalParams(layer,currentConcentrationData) {
         if (phenotype === phenotypes.MAGENTA) {magCount++;} 
         else if (phenotype === phenotypes.CYAN) { cyanCount++;}
     }
-    const averageSimilarity = isNaN(averageSimilarityWithNeighbors) ? 0 : averageSimilarityWithNeighbors;
-    const bacData = updateBacteria(layer, currentConcentrationData, quadtree, currentBacteria,phenotypeManager, phenotypeMemo,phenotypes);
+    
+    // Call updateBacteria and extract both bacteriaData and averageSimilarity
+    const { bacteriaData, averageSimilarity } = updateBacteria(layer, currentConcentrationData, quadtree, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
+    
+    // Use the averageSimilarity directly from updateBacteria's return value
     const globalParams = {
         magCount,
         cyanCount,
         averageSimilarity,
     };
     
-    return {globalParams,
-        bacData
+    return {
+        globalParams,
+        bacData: bacteriaData
     };
 }
 

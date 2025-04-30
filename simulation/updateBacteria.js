@@ -115,5 +115,9 @@ export function updateBacteria(layer, concentrations,quadtree,currentBacteria,ph
         ? (averageSimilarityWithNeighbors / layer.length-0.5)*2 
         : 0;
         
-    return bacteriaData;
+    // Return both the bacteria data and the calculated average similarity value
+    return {
+        bacteriaData,
+        averageSimilarity: averageSimilarityWithNeighbors
+    };
 }
