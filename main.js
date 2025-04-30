@@ -76,10 +76,11 @@ const updateSimulation = (currentBacteria) => {
 
     const positions = getPositions();
 
+    const layer = dataState.bacteriaData.get(animationState.currentTimeStep) || [];
+
 
     const bacData= bacteriumSystem.updateBacteria(
-        animationState.currentTimeStep,
-        dataState.bacteriaData,
+        layer,
         dataState.currentConcentrationData
     );
 

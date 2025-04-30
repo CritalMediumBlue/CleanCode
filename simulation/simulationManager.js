@@ -85,8 +85,7 @@ class BacteriumSystem {
     }
 
 
-    updateBacteria(timeStep, bacteriumData, concentrations) {
-        const layer = bacteriumData.get(timeStep) || [];
+    updateBacteria(layer, concentrations) {
         
         // Reset state for new time step
         this.buildQuadtree(layer);
@@ -96,10 +95,10 @@ class BacteriumSystem {
         // Process each bacterium
         const bacteriaData = [];
         layer.forEach((data) => {
-            const bacteriumData = this.processBacterium(data, concentrations);
-            bacteriaData.push(bacteriumData);
+            const singlebacteriumData = this.processBacterium(data, concentrations);
+            bacteriaData.push(singlebacteriumData);
             currentBacteria.add(data.ID);
-            averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
+            averageSimilarityWithNeighbors += singlebacteriumData.similarity || 0;
         });
 
         // Calculate average similarity
@@ -147,6 +146,35 @@ class BacteriumSystem {
 
 
 }
+
+
+export function updateBacteria(timeStep, bacteriumData, concentrations) {
+    const layer = bacteriumData.get(timeStep) || [];
+    
+    // Reset state for new time step
+    this.buildQuadtree(layer);
+    currentBacteria.clear();
+    averageSimilarityWithNeighbors = 0;
+    
+    // Process each bacterium
+    const bacteriaData = [];
+    layer.forEach((data) => {
+        const bacteriumData = this.processBacterium(data, concentrations);
+        bacteriaData.push(bacteriumData);
+        currentBacteria.add(data.ID);
+        averageSimilarityWithNeighbors += bacteriumData.similarity || 0;
+    });
+
+    // Calculate average similarity
+    averageSimilarityWithNeighbors = layer.length > 0 
+        ? (averageSimilarityWithNeighbors / layer.length-0.5)*2 
+        : 0;
+        
+    return bacteriaData;
+}
+
+
+
 
 export  function   getGlobalParams() {
     let magCount = 0;
