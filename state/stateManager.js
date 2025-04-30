@@ -12,9 +12,7 @@ export const createAnimationState = () => {
         /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
         /** @type {boolean} */ play: false, // Controls whether the animation is running
     }; 
-  Object.seal(animationState);
-  Object.preventExtensions(animationState);
-    return animationState;
+    return sealObject(animationState);
 }
 
 export const createConstants = () => {
@@ -23,10 +21,8 @@ export const createConstants = () => {
         fromStepToMinutes: 0, // Conversion factor from simulation steps to minutes
         doublingTime: 45
     };
-    Object.seal(constants);
-    Object.preventExtensions(constants);
-    return constants;
-}
+    return sealObject(constants);
+} 
 
 export const createConcentrationState = () => {
     const concentrationState = {
@@ -34,26 +30,14 @@ export const createConcentrationState = () => {
         sources: null, // Sources of diffusion
         sinks: null, // Sinks of diffusion
     }
-    Object.seal(concentrationState);
-    Object.preventExtensions(concentrationState);
-
-    return concentrationState;
-
-
+    return sealObject(concentrationState);
 }
 
-
-
-
-/** @type {object} dataState - Manages simulation data arrays and parameters. */
-export const dataState = {
-    /** @type {Float32Array | null} */ currentConcentrationData: null, // Concentration values for the current step
-    /** @type {Float32Array | null} */ nextConcentrationData: null, // Concentration values for the next step (used in ADI)
-    /** @type {Float32Array | null} */ colors: null, // Color data for the surface mesh vertices
-    /** @type {Float32Array | null} */ sources: null, // Diffusion sources grid
-    /** @type {Float32Array | null} */ sinks: null, // Diffusion sinks grid
-    /** @type {Map<number, Array<object>> | null} */ bacteriaData: null, // Stores all bacteria data keyed by time step
-};
+const sealObject = (obj) => {
+    Object.seal(obj);
+    Object.preventExtensions(obj);
+    return obj;
+}
 
 
 export const cleanupResources = (animationState) => {

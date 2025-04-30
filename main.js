@@ -13,7 +13,6 @@ import {
     createAnimationState, 
     createConstants,
     createConcentrationState,
-    dataState, 
     initializeArrays,
     getAdjustedCoordinates,
     cleanupResources,
@@ -26,6 +25,7 @@ let appConfig;
 let animationState = null;
 let constants = null;
 let concentrationState = null;
+let bacteriaData = null;
 
 
 
@@ -65,7 +65,7 @@ const setBacteriaData = (data, processedData) => {
  
 
     console.log("Setting bacteria data from main.js...");
-    dataState.bacteriaData = data;
+    bacteriaData = data;
     constants.numberOfTimeSteps = data.size;
     constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
     Object.freeze(constants);
@@ -79,7 +79,7 @@ const setBacteriaData = (data, processedData) => {
 
 const updateSimulation = (currentBacteria) => {
 
-    const layer = dataState.bacteriaData.get(animationState.currentTimeStep) || [];
+    const layer =bacteriaData.get(animationState.currentTimeStep) || [];
 
   
     const {globalParams, bacData} = getGlobalParams(layer,concentrationState.concentrationField);
@@ -144,8 +144,8 @@ const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
         }
     }
 };
-let bacteriaData = null;
 
+let bacteriaDataTotal = null;
 // --- Rendering and Animation ---
 
 /**
@@ -160,16 +160,16 @@ const animate = () => {
     // Update simulation logic only if in 'play' state
     if (animationState.play) {
           // 1. Get bacteria data for the current time step
-        const currentBacteria = dataState.bacteriaData.get(animationState.currentTimeStep);
+        const currentBacteria = bacteriaData.get(animationState.currentTimeStep);
 
-        bacteriaData = updateSimulation(currentBacteria); // Advance the simulation by one step
+        bacteriaDataTotal = updateSimulation(currentBacteria); // Advance the simulation by one step
         
      
     }
     const histories = getHistories();
     const concentration = concentrationState.concentrationField;
 
-    renderScene(histories,bacteriaData, concentration, appConfig.BACTERIUM, animationState, constants);
+    renderScene(histories,bacteriaDataTotal, concentration, appConfig.BACTERIUM, animationState, constants);
 
     if (animationState.currentTimeStep > constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
