@@ -31,24 +31,18 @@ function  processBacterium(bacteriumData, concentrations) {
    
     const { x, y, longAxis, angle, ID, parent } = bacteriumData;
     
-    // Get local concentration at bacterium position
     const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
     const localConcentration = concentrations[idx] || 0;
-    
-    // Create position as a plain object
-    const position = { x, y, z: 0 };
-    
+        
     const neighbors = countNeighbors(x, y, phenotypeMemo, phenotypes);
     
-    // Determine phenotype and calculate similarity
     const phenotypeInfo = determinePhenotypeAndSimilarity(
         phenotypeManager,phenotypes,phenotypeMemo, ID, neighbors, parent, localConcentration
     );
     
-    // Return data object for rendering
     return {
         id:ID,
-        position:position,
+        position:{ x, y },
         angle:angle,
         longAxis:longAxis,
         phenotype:phenotypeInfo[0],
@@ -57,7 +51,6 @@ function  processBacterium(bacteriumData, concentrations) {
         similarity:phenotypeInfo[3],
     };
         
-  
 }
 
 

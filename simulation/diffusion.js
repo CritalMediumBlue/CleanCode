@@ -245,8 +245,6 @@ export const ADI = (WIDTH, HEIGHT,
     // Check for NaN values in next concentration data and replace with safe values
     checkForUnexpectedValues(nextConcentrationData, 'nextConcentrationData');
     
-    // Update the current concentration data with the new values
-    [currentConcentrationData, nextConcentrationData] = [nextConcentrationData, currentConcentrationData];
-    return [currentConcentrationData];
+    return nextConcentrationData;
 };
 
