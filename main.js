@@ -54,7 +54,7 @@ const animate = () => {
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
         bacteriaDataUpdated = updateBacteriaManager(currentBacteria, concentrationState.concentrationField);
-        anotherFunction(bacteriaDataUpdated,currentBacteria);
+        updateHistories(...getGlobalParams(bacteriaDataUpdated));
         diffusionStep(currentBacteria,concentrationState);
         animationState.currentTimeStep++;
 
@@ -110,19 +110,6 @@ console.log("Initial setup complete. Waiting for data file...");
 
 
 
-
-
-
-
-const anotherFunction = (bacData,currentBacteria) => {
-    const globalParams = getGlobalParams(bacData);
-    
-
-
-    updateHistories(...globalParams);
-
-    
-}
 
 const diffusionStep = (currentBacteria,concentrationState) => {
     
