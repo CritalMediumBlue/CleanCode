@@ -52,7 +52,7 @@ function  processBacterium(bacteriumData, concentrations, phenotypeManager, phen
   
 }
 
-export function updateBacteria(layer, concentrations) {
+export function updateSimulation(layer, concentrationState,appConfig) {
     currentBacteria = new Set();
     // Build the grid for spatial partitioning
     buildGrid(layer);
@@ -61,12 +61,13 @@ export function updateBacteria(layer, concentrations) {
     // Process each bacterium
     const bacteriaData = [];
     layer.forEach((data) => {
-        const singlebacteriumData = processBacterium(data, concentrations, phenotypeManager, phenotypes, phenotypeMemo);
+        const singlebacteriumData = processBacterium(data, concentrationState.concentrationField, phenotypeManager, phenotypes, phenotypeMemo);
         bacteriaData.push(singlebacteriumData);
         currentBacteria.add(data.ID);
     });
 
-    
+    diffusionStep(layer,concentrationState,appConfig);
+
         
     // Return both the bacteria data and the calculated average similarity value
     return bacteriaData  
