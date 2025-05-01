@@ -59,18 +59,19 @@ export function updateSimulation(layer, concentrationState,appConfig) {
     currentBacteria.clear();
     
     // Process each bacterium
-    const bacteriaData = [];
+    const bacteriaDataUpdated = [];
     layer.forEach((data) => {
         const singlebacteriumData = processBacterium(data, concentrationState.concentrationField, phenotypeManager, phenotypes, phenotypeMemo);
-        bacteriaData.push(singlebacteriumData);
+        bacteriaDataUpdated.push(singlebacteriumData);
         currentBacteria.add(data.ID);
     });
 
     diffusionStep(layer,concentrationState,appConfig);
 
+    const globalParams = getGlobalParams(bacteriaDataUpdated);
+
         
-    // Return both the bacteria data and the calculated average similarity value
-    return bacteriaData  
+    return {bacteriaDataUpdated, globalParams};
 }
 
 

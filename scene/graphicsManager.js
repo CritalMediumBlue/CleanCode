@@ -30,8 +30,9 @@ export function setupNewScene(config) {
 }
 
 
-export function renderScene(histories, bacteriaData, concentration, BACTERIUM, animationState, constants) {
-    if(concentration && bacteriaData) {
+export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, animationState, constants) {
+    const concentration = concentrationState.concentrationField;
+    if(bacteriaData) {
     updateScene( concentration, bacteriaData, BACTERIUM);
     }
     if (histories) {

@@ -5,7 +5,7 @@ import { addEventListeners } from './GUI/guiManager.js';
 
 
 import {createBacteriumSystem,setValue,updateSimulation,
-getGlobalParams, diffusionStep
+getGlobalParams
 } from './simulation/simulationManager.js';
 import { 
     createStates,createConstants,
@@ -17,6 +17,12 @@ let animationState;
 let constants;
 let concentrationState;
 let bacteriaTimeSeries;
+
+let bacteriaDataUpdated;
+let histories;
+let globalParams
+
+
 
 
 const guiActions = {
@@ -46,23 +52,20 @@ const init = (processedData) => {
 
 const animate = () => {
     animationState.animationFrameId = requestAnimationFrame(animate);
-    let bacteriaDataUpdated = null;
 
     if (animationState.play) {
 
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
-        bacteriaDataUpdated = updateSimulation(currentBacteria, concentrationState,appConfig);
+        ({ bacteriaDataUpdated, globalParams } = updateSimulation(
+            currentBacteria, concentrationState, appConfig
+        ));
 
-        updateHistories(...getGlobalParams(bacteriaDataUpdated));
-
-        animationState.currentTimeStep++;
+        updateData();
 
     }
-    const histories = getHistories();
-    const concentration = concentrationState.concentrationField;
 
-    renderScene(histories,bacteriaDataUpdated, concentration, appConfig.BACTERIUM, animationState, constants);
+    renderScene(histories, bacteriaDataUpdated, concentrationState, appConfig.BACTERIUM, animationState, constants);
 
     if (animationState.currentTimeStep >= constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
@@ -70,6 +73,12 @@ const animate = () => {
         animationState.play = false;
     }
 };
+
+const updateData = () => {
+    updateHistories(...globalParams);
+    histories = getHistories();
+    animationState.currentTimeStep++;
+}
 
 appConfig = addEventListeners(
     init,
