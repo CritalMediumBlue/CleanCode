@@ -1,8 +1,6 @@
 // Data processing module for bacteria simulation
 
-// Global variables to store processed data
-let bacteriaData = new Map();
-let numberOfTimeSteps = 0;
+
 
 
 export const handleFileInput = (init,event) => {
@@ -16,31 +14,31 @@ export const handleFileInput = (init,event) => {
 };
 
 function processFileData(fileContent) {
-    // Clear previous data
-    bacteriaData.clear();
-    numberOfTimeSteps = 0;
+    let bacteriaData = new Map();
+    let numberOfTimeSteps = 0;
 
-    // Parse the JSON data
+   
     const data = JSON.parse(fileContent);
 
-    // Process bacteria data
+    // Process  data object
     Object.entries(data).forEach(([timeStep, bacteria]) => {
-        const timeStepInt = parseInt(timeStep, 10); // Convert to integer
-        if (timeStep === "time" || timeStepInt === 0) return; // Skip the first entries
+        if (timeStep === "time" ) return; // Skip the first entries
+        const timeStepInt = parseInt(timeStep, 10); 
+        if (timeStepInt === 0) return; // Skip the first time step  
         
-        // Transform bacteria data
-        bacteria = bacteria.map(bacterium => ({ 
-            ...bacterium, 
+     
+        const allBacteriaInTimeStep = bacteria.map(bacterium => ({ 
             ID: BigInt(bacterium.ID),
             y: Math.round((bacterium.y - 170)*10)/10,
             x: Math.round(bacterium.x*10)/10,
             angle: Math.round(bacterium.angle*50)/50,
             longAxis: Math.round(bacterium.length),
-
-            
+            parent: bacterium.parent ? bacterium.parent : null,
         }));
 
-        bacteriaData.set(timeStepInt, bacteria);
+        console.log('The type of allBacteriaInTimeStep is:', typeof allBacteriaInTimeStep);
+
+        bacteriaData.set(timeStepInt, allBacteriaInTimeStep);
     });
 
     // Analyze bacteria lineage and lifetime
