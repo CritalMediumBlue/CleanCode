@@ -1,7 +1,6 @@
 
 export function processFileData(fileContent) {
     let bacteriaTimeSeries = [];
-    let numberOfTimeSteps = 0;
 
    
     const data = JSON.parse(fileContent);
@@ -21,6 +20,7 @@ export function processFileData(fileContent) {
             angle: Math.round(bacterium.angle*50)/50,
             longAxis: Math.round(bacterium.length),
             parent: bacterium.parent ? bacterium.parent : undefined,
+            randomSwitch: Math.random() < 0.01 ? 1 : 0,
         }
     ));
 

@@ -15,10 +15,10 @@ function simplifiedInheritancePhenotype(phenotypes,phenotypeMemo, ID, parentID) 
 }
 
 
-function inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, neighbors, localConcentration) {
+function inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, localConcentration) {
     // If phenotype already determined, use transition rules
     if (phenotypeMemo.has(ID)) {
-        const phenotype = determineTransitionPhenotype(state, phenotypes, phenotypeMemo, ID, neighbors, localConcentration);
+        const phenotype = determineTransitionPhenotype(state, phenotypes, phenotypeMemo, ID, localConcentration);
         phenotypeMemo.set(ID, phenotype);
         return phenotype;
     } else if (ID > 2000n) {
@@ -33,9 +33,7 @@ function inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, neighbors, loc
 }
 
 
-function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID, neighbors, localConcentration) {
-    const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
-    const proportionCyan = cyanNeighbors / totalNeighbors;
+function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID, localConcentration) {
     
     
     // Calculate transition rates based on feedback type
@@ -43,9 +41,9 @@ function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID, neighb
     
     if (state.config.BACTERIUM.POSITIVE_FEEDBACK) {
         K_c2m = state.alpha + localConcentration * state.signal;
-        K_m2c = state.alpha + proportionCyan * state.signal;
+        K_m2c = state.alpha +  state.signal/(localConcentration+1);
     } else {
-        K_c2m = state.alpha + proportionCyan * state.signal;
+        K_c2m = state.alpha + state.signal/(localConcentration+1);
         K_m2c = state.alpha + localConcentration * state.signal;
     }
     
@@ -61,23 +59,13 @@ function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID, neighb
 }
 
 
-export function determinePhenotypeAndSimilarity(state,phenotypes,phenotypeMemo, ID, neighbors, parentID, localConcentration) {
-    // Determine phenotype based on inheritance or neighbors
+export function determinePhenotype(state,phenotypes,phenotypeMemo, ID, parentID, localConcentration) {
      
     const phenotype = parentID === undefined 
-        ? inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, neighbors, localConcentration) 
+        ? inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, localConcentration) 
         : simplifiedInheritancePhenotype( phenotypes, phenotypeMemo,ID, parentID);
     
-    // Calculate similarity with neighbors
-    const [totalNeighbors, magentaNeighbors, cyanNeighbors] = neighbors;
-    const magentaProportion = magentaNeighbors / totalNeighbors;
-    const cyanProportion = cyanNeighbors / totalNeighbors;
-    
-    const similarity = phenotype === phenotypes.MAGENTA 
-        ? magentaProportion 
-        : cyanProportion;
-    
-    return [phenotype, magentaProportion, cyanProportion, similarity];
+    return phenotype;
 }
 
 

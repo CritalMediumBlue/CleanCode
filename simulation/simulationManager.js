@@ -1,5 +1,5 @@
 
-import {determinePhenotypeAndSimilarity,} from './phenotypeSimulation.js';
+import {determinePhenotype,} from './phenotypeSimulation.js';
 import { countNeighbors, buildGrid } from './grid.js'; 
 import { diffusionStep } from './diffusionManager.js';
 
@@ -33,22 +33,27 @@ function  processBacterium(bacteriumData, concentrations) {
     
     const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
     const localConcentration = concentrations[idx] || 0;
-        
-    const neighbors = countNeighbors(x, y, phenotypeMemo, phenotypes);
-    
-    const phenotypeInfo = determinePhenotypeAndSimilarity(
-        phenotypeManager,phenotypes,phenotypeMemo, ID, neighbors, parent, localConcentration
+            
+    const phenotype = determinePhenotype(
+        phenotypeManager,phenotypes,phenotypeMemo, ID, parent, localConcentration
     );
+
+      const [totalNeighbors, magentaNeighbors, cyanNeighbors] = countNeighbors(x, y, phenotypeMemo, phenotypes);
+      const magentaProportion = magentaNeighbors / totalNeighbors;
+      const cyanProportion = cyanNeighbors / totalNeighbors;
+      const similarity = phenotype === phenotypes.MAGENTA 
+          ? magentaProportion 
+          : cyanProportion;
     
     return {
         id:ID,
         position:{ x, y },
         angle:angle,
         longAxis:longAxis,
-        phenotype:phenotypeInfo[0],
-        magentaProportion:phenotypeInfo[1],
-        cyanProportion:phenotypeInfo[2],
-        similarity:phenotypeInfo[3],
+        phenotype:phenotype,
+        magentaProportion,
+        cyanProportion,
+        similarity,
     };
         
 }
