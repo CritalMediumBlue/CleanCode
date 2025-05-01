@@ -22,17 +22,20 @@ const currentBacteria = new Set();
 
 
 export  function   getGlobalParams(layer,currentConcentrationData) {
+   
+    const { bacteriaData } = updateBacteria(layer, currentConcentrationData, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
     let magCount = 0;
     let cyanCount = 0;
-    for (const ID of currentBacteria) {
+    let averageSimilarity = 0;
+    bacteriaData.forEach((bacterium) => {
+        const  ID = bacterium.id;
         const phenotype = phenotypeMemo.get(ID);
         if (phenotype === phenotypes.MAGENTA) {magCount++;} 
         else if (phenotype === phenotypes.CYAN) { cyanCount++;}
-    }
-    const { bacteriaData, averageSimilarity } = updateBacteria(layer, currentConcentrationData, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
-  
+        averageSimilarity += bacterium.similarity || 0;
+    } );
+    averageSimilarity = (averageSimilarity / bacteriaData.length-0.5)*2 
 
-    // Use the averageSimilarity directly from updateBacteria's return value
     const globalParams = {
         magCount,
         cyanCount,

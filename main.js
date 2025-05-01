@@ -51,7 +51,7 @@ const animate = () => {
 
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
-        bacteriaDataUpdated = updateSimulation(currentBacteria); 
+        bacteriaDataUpdated = updateSimulation(currentBacteria, concentrationState); 
         
     }
     const histories = getHistories();
@@ -108,17 +108,15 @@ console.log("Initial setup complete. Waiting for data file...");
 
 
 
-const updateSimulation = (currentBacteria) => {
+const updateSimulation = (currentBacteria,concentrationState) => {
 
   
     const {globalParams, bacData} = getGlobalParams(currentBacteria,concentrationState.concentrationField);
 
     const positions = getPositions();
 
-    // Extract the individual values from globalParams instead of using Object.entries
     const { magCount, cyanCount, averageSimilarity } = globalParams;
 
-    // Pass the individual values to updateHistory
     updateHistories(currentBacteria.length, magCount, cyanCount, averageSimilarity);
 
     updateSourcesAndSinks(currentBacteria,...positions);
@@ -140,11 +138,9 @@ const updateSimulation = (currentBacteria) => {
 
 
 const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
-    // Get the IDs of currently active Magenta and Cyan bacteria
     const MagentaIDs = new Set(magentaIDsRaw);
     const CyanIDs = new Set(cyanIDsRaw);
 
-    // Reset source and sink arrays for the current step
     concentrationState.sources.fill(0);
     concentrationState.sinks.fill(0);
 

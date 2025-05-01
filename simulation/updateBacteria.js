@@ -66,7 +66,5 @@ export function updateBacteria(layer, concentrations,currentBacteria,phenotypeMa
         
     // Return both the bacteria data and the calculated average similarity value
     return {
-        bacteriaData,
-        averageSimilarity: averageSimilarityWithNeighbors
-    };
+        bacteriaData    };
 }

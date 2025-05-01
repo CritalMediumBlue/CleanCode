@@ -31,11 +31,13 @@ export function setupNewScene(config) {
 
 
 export function renderScene(histories, bacteriaData, concentration, BACTERIUM, animationState, constants) {
+    if(concentration && bacteriaData) {
     updateScene( concentration, bacteriaData, BACTERIUM);
-    updatePlot(histories, plot);
+    }
+    if (histories) {
+        updatePlot(histories, plot);
+    }
     updateOverlay(animationState, constants);
-
-    
     stage.renderer.render(stage.scene, stage.camera);
 }
 
