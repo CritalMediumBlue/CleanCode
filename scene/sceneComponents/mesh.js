@@ -6,8 +6,8 @@
  */
 
 // Grid dimensions, initialized when createMesh is called
-let WIDTH = 0;
-let HEIGHT = 0;
+let WIDTH;
+let HEIGHT; 
 
 /**
  * Creates a wireframe mesh for representing simulation data

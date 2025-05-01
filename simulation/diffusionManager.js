@@ -17,9 +17,9 @@ import { ADI } from './diffusion.js';
  * @param {Object} phenotypes - Object containing phenotype constants
  * @returns {Array} - Result of the diffusion calculation
  */
-export function diffusionStep(currentBacteria, concentrationState, appConfig, currentBacteriaIds, phenotypeMemo, phenotypes) {
+export function diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeMemo, phenotypes) {
     const GRID = appConfig.GRID;
-    const IDsByColor = getIDsByColor(currentBacteriaIds, phenotypeMemo, phenotypes);
+    const IDsByColor = getIDsByColor(currentBacteria, phenotypeMemo, phenotypes);
     updateSourcesAndSinks(currentBacteria, concentrationState, ...IDsByColor, GRID);
     
     const result = diffuse(
@@ -41,11 +41,12 @@ export function diffusionStep(currentBacteria, concentrationState, appConfig, cu
  * @param {Object} phenotypes - Object containing phenotype constants
  * @returns {Array} - Array containing arrays of magenta and cyan bacteria IDs
  */
-export function getIDsByColor(currentBacteriaIds, phenotypeMemo, phenotypes) {
+export function getIDsByColor(currentBacteria, phenotypeMemo, phenotypes) {
     const magentaIDs = [];
     const cyanIDs = [];
 
-    currentBacteriaIds.forEach((ID) => {
+    currentBacteria.forEach((bacterium) => {
+        const ID = bacterium.ID;
         const phenotype = phenotypeMemo.get(ID);
         
         if (phenotype === phenotypes.MAGENTA) {

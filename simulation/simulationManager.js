@@ -6,11 +6,30 @@ import { diffusionStep } from './diffusionManager.js';
 let phenotypeManager = null;
 let phenotypes = null;
 let phenotypeMemo =null;
+let WIDTH;
+let HEIGHT;
 
-function  processBacterium(bacteriumData, concentrations, phenotypeManager, phenotypes, phenotypeMemo) {
+
+
+export function updateSimulation(currentBacteria, concentrationState,appConfig) {
+    const bacteriaDataUpdated = [];
+    buildGrid(currentBacteria);
+    
+    currentBacteria.forEach((bacterium) => {
+        const updatedBacterium = processBacterium(bacterium, concentrationState.concentrationField);
+        bacteriaDataUpdated.push(updatedBacterium);
+    });
+
+    diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeMemo, phenotypes);
+
+    const globalParams = getGlobalParams(bacteriaDataUpdated);
+        
+    return {bacteriaDataUpdated, globalParams};
+}
+
+function  processBacterium(bacteriumData, concentrations) {
    
     const { x, y, longAxis, angle, ID, parent } = bacteriumData;
-    const WIDTH = 100, HEIGHT = 60;
     
     // Get local concentration at bacterium position
     const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
@@ -41,24 +60,6 @@ function  processBacterium(bacteriumData, concentrations, phenotypeManager, phen
   
 }
 
-export function updateSimulation(currentBacteria, concentrationState,appConfig) {
-    let currentBacteriaIds = [];
-    const bacteriaDataUpdated = [];
-    buildGrid(currentBacteria);
-    
-    currentBacteria.forEach((bacterium) => {
-        const singlebacteriumData = processBacterium(bacterium, concentrationState.concentrationField, phenotypeManager, phenotypes, phenotypeMemo);
-        bacteriaDataUpdated.push(singlebacteriumData);
-        currentBacteriaIds.push(bacterium.ID);
-    });
-
-    // Run diffusion step using the new module
-    diffusionStep(currentBacteria, concentrationState, appConfig, currentBacteriaIds, phenotypeMemo, phenotypes);
-
-    const globalParams = getGlobalParams(bacteriaDataUpdated);
-        
-    return {bacteriaDataUpdated, globalParams};
-}
 
 
 function getGlobalParams(bacteriaData) {
@@ -117,4 +118,6 @@ export function createBacteriumSystem(config) {
         signal: config.BACTERIUM.SIGNAL.DEFAULT / 100,
         alpha: config.BACTERIUM.ALPHA.DEFAULT
     };
+    WIDTH = config.GRID.WIDTH;
+    HEIGHT = config.GRID.HEIGHT;
 }
