@@ -45,12 +45,12 @@ export function getGlobalParams(bacteriaData) {
     } );
     averageSimilarity = (averageSimilarity / bacteriaData.length-0.5)*2 
 
-    const globalParams = {
+    const globalParams = [
         totalCount,
         magCount,
         cyanCount,
         averageSimilarity,
-    };
+    ];
     return globalParams;
 }
 

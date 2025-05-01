@@ -53,8 +53,9 @@ const animate = () => {
 
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
-        bacteriaDataUpdated = updateSimulation(currentBacteria, concentrationState); 
+        bacteriaDataUpdated = updateBacteriaManager(currentBacteria, concentrationState.concentrationField);
         anotherFunction(bacteriaDataUpdated,currentBacteria);
+        diffusionStep(currentBacteria,concentrationState);
         animationState.currentTimeStep++;
 
     }
@@ -112,27 +113,21 @@ console.log("Initial setup complete. Waiting for data file...");
 
 
 
-const updateSimulation = (currentBacteria,concentrationState) => {
-
-
-  
-    const bacData = updateBacteriaManager(currentBacteria,concentrationState.concentrationField);
-
-    return bacData;
-
-};
 
 const anotherFunction = (bacData,currentBacteria) => {
     const globalParams = getGlobalParams(bacData);
+    
+
+
+    updateHistories(...globalParams);
+
+    
+}
+
+const diffusionStep = (currentBacteria,concentrationState) => {
+    
     const positions = getPositions();
-
-    const { totalCount, magCount, cyanCount, averageSimilarity } = globalParams;
-
-    updateHistories(totalCount, magCount, cyanCount, averageSimilarity);
-
     updateSourcesAndSinks(currentBacteria,...positions);
-
-  
     [concentrationState.concentrationField] = diffuse(
         appConfig,
         concentrationState,
@@ -140,9 +135,7 @@ const anotherFunction = (bacData,currentBacteria) => {
         1 // Number of substeps for ADI
     ); 
 
-    
 }
-
 
 
 const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
