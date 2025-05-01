@@ -10,7 +10,7 @@
 
 
 import {determinePhenotypeAndSimilarity,} from './phenotypeSimulation.js';
-import { countNeighbors, buildGrid } from './grid.js';
+import { countNeighbors, buildGrid , getAdjustedCoordinates} from './grid.js'; 
 import {ADI} from './diffusion.js';
 
 let phenotypeManager = null;
@@ -75,7 +75,7 @@ export function updateSimulation(layer, concentrationState,appConfig) {
 }
 
 
-export function getGlobalParams(bacteriaData) {
+function getGlobalParams(bacteriaData) {
     let magCount = 0;
     let cyanCount = 0;
     let averageSimilarity = 0;
@@ -99,22 +99,22 @@ export function getGlobalParams(bacteriaData) {
     return globalParams;
 }
 
-export function getPositions() {
-    const magentaPositions = [];
-    const cyanPositions = [];
+function getIDsByColor() {
+    const magentaIDs = [];
+    const cyanIDs = [];
 
 Array.from(currentBacteria).forEach((ID) => {
     const phenotype =phenotypeMemo.get(ID);
     if (!phenotype) return;
     
     if (phenotype === phenotypes.MAGENTA) {
-        magentaPositions.push(ID);
+        magentaIDs.push(ID);
     } else if (phenotype === phenotypes.CYAN) {
-        cyanPositions.push(ID);
+        cyanIDs.push(ID);
     }
 });
 
-return [magentaPositions, cyanPositions];
+return [magentaIDs, cyanIDs];
 }
 
 
@@ -141,8 +141,7 @@ export function setValue(value, param) {
         console.error(`Unknown parameter: ${param}`);
     }
 }
-
-export function diffuse(
+function diffuse(
     appConfig,
     concentrationState,
         timeStep, // Time step duration in minutes (dt)
@@ -182,39 +181,10 @@ export function createBacteriumSystem(config) {
 }
 
 
-export const getAdjustedCoordinates = (x, y, grid) => {
-    // Translate coordinates so (0,0) is the bottom-left corner of the grid, then round.
-    let adjustedX = Math.round(x + grid.WIDTH / 2);
-    let adjustedY = Math.round(y + grid.HEIGHT / 2);
-
-    // Skip bacteria below the grid's bottom edge.
-    if (adjustedY <= 0) {
-        return null;
-    }
-
-    // Clamp coordinates to valid grid boundaries (leaving a 1-cell border).
-    adjustedY = Math.min(adjustedY, grid.HEIGHT - 2); 
-    adjustedX = Math.max(1, Math.min(adjustedX, grid.WIDTH - 2));
-
-    // Calculate the 1D index corresponding to the 2D grid coordinates.
-    const idx = adjustedY * grid.WIDTH + adjustedX;
-
-    return { x: adjustedX, y: adjustedY, idx };
-};
-
-
-
-
-
-
-
-
-
-
-export const diffusionStep = (currentBacteria,concentrationState,appConfig) => {
+const diffusionStep = (currentBacteria,concentrationState,appConfig) => {
     const GRID = appConfig.GRID;
-    const positions = getPositions();
-    updateSourcesAndSinks(currentBacteria,concentrationState,...positions,GRID);
+    const IDsByColor = getIDsByColor();
+    updateSourcesAndSinks(currentBacteria,concentrationState,...IDsByColor,GRID);
     [concentrationState.concentrationField] = diffuse(
         appConfig,
         concentrationState,

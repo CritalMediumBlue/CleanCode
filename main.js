@@ -4,9 +4,7 @@ import { addEventListeners } from './GUI/guiManager.js';
 
 
 
-import {createBacteriumSystem,setValue,updateSimulation,
-getGlobalParams
-} from './simulation/simulationManager.js';
+import {createBacteriumSystem,setValue,updateSimulation} from './simulation/simulationManager.js';
 import { 
     createStates,createConstants,
     updateHistories,getHistories} from './state/stateManager.js';
