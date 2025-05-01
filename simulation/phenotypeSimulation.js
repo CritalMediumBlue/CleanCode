@@ -41,9 +41,9 @@ function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID, localC
     
     if (state.config.BACTERIUM.POSITIVE_FEEDBACK) {
         K_c2m = state.alpha + localConcentration * state.signal;
-        K_m2c = state.alpha +  state.signal/(localConcentration+1);
+        K_m2c = state.alpha +  state.signal/(localConcentration+0.1);
     } else {
-        K_c2m = state.alpha + state.signal/(localConcentration+1);
+        K_c2m = state.alpha + state.signal/(localConcentration+0.1);
         K_m2c = state.alpha + localConcentration * state.signal;
     }
     
