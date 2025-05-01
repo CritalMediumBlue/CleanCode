@@ -9,11 +9,8 @@
 
 
 
-import {
-    determinePhenotypeAndSimilarity,
-} from './phenotypeSimulation.js';
+import {determinePhenotypeAndSimilarity,} from './phenotypeSimulation.js';
 import { countNeighbors, buildGrid } from './grid.js';
-
 import {ADI} from './diffusion.js';
 
 let phenotypeManager = null;
@@ -202,4 +199,58 @@ export const getAdjustedCoordinates = (x, y, grid) => {
 
     return { x: adjustedX, y: adjustedY, idx };
 };
+
+
+
+
+
+
+
+
+
+
+export const diffusionStep = (currentBacteria,concentrationState,appConfig) => {
+    const GRID = appConfig.GRID;
+    const positions = getPositions();
+    updateSourcesAndSinks(currentBacteria,concentrationState,...positions,GRID);
+    [concentrationState.concentrationField] = diffuse(
+        appConfig,
+        concentrationState,
+        1, // Time step duration in minutes (dt)
+        1 // Number of substeps for ADI
+    ); 
+
+}
+
+
+const updateSourcesAndSinks = (currentBacteria,concentrationState,magentaIDsRaw,cyanIDsRaw,GRID) => {
+    const MagentaIDs = new Set(magentaIDsRaw);
+    const CyanIDs = new Set(cyanIDsRaw);
+
+    concentrationState.sources.fill(0);
+    concentrationState.sinks.fill(0);
+
+    // Iterate through each bacterium in the current time step
+    for (const bacterium of currentBacteria) {
+        // Convert bacterium's position to grid coordinates and index using appConfig.GRID
+        const coords = getAdjustedCoordinates(bacterium.x, bacterium.y, GRID);
+
+        // Skip if the bacterium is outside the valid grid area
+        if (!coords) console.warn(`Bacterium ${bacterium.ID} is out of bounds `)
+
+        // Increment source count if the bacterium is Magenta
+        if (MagentaIDs.has(bacterium.ID)) {
+            concentrationState.sources[coords.idx] += 1; // Simple count for now
+        }
+
+        // Increment sink count if the bacterium is Cyan
+        if (CyanIDs.has(bacterium.ID)) {
+            concentrationState.sinks[coords.idx] += 1; // Simple count for now
+        }
+    }
+};
+
+
+
+
 

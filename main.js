@@ -4,9 +4,8 @@ import { addEventListeners } from './GUI/guiManager.js';
 
 
 
-import {createBacteriumSystem,diffuse,setValue,
-    updateBacteria,getPositions,getAdjustedCoordinates,
-getGlobalParams
+import {createBacteriumSystem,setValue,updateBacteria,
+getGlobalParams, diffusionStep
 } from './simulation/simulationManager.js';
 import { 
     createStates,createConstants,
@@ -55,7 +54,8 @@ const animate = () => {
 
         bacteriaDataUpdated = updateBacteria(currentBacteria, concentrationState.concentrationField);
         updateHistories(...getGlobalParams(bacteriaDataUpdated));
-        diffusionStep(currentBacteria,concentrationState);
+        diffusionStep(currentBacteria,concentrationState,appConfig);
+
         animationState.currentTimeStep++;
 
     }
@@ -99,58 +99,6 @@ console.log("Initial setup complete. Waiting for data file...");
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-const diffusionStep = (currentBacteria,concentrationState) => {
-    
-    const positions = getPositions();
-    updateSourcesAndSinks(currentBacteria,...positions);
-    [concentrationState.concentrationField] = diffuse(
-        appConfig,
-        concentrationState,
-        1, // Time step duration in minutes (dt)
-        1 // Number of substeps for ADI
-    ); 
-
-}
-
-
-const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
-    const MagentaIDs = new Set(magentaIDsRaw);
-    const CyanIDs = new Set(cyanIDsRaw);
-
-    concentrationState.sources.fill(0);
-    concentrationState.sinks.fill(0);
-
-    // Iterate through each bacterium in the current time step
-    for (const bacterium of currentBacteria) {
-        // Convert bacterium's position to grid coordinates and index using appConfig.GRID
-        const coords = getAdjustedCoordinates(bacterium.x, bacterium.y, appConfig.GRID);
-
-        // Skip if the bacterium is outside the valid grid area
-        if (!coords) console.warn(`Bacterium ${bacterium.ID} is out of bounds `)
-
-        // Increment source count if the bacterium is Magenta
-        if (MagentaIDs.has(bacterium.ID)) {
-            concentrationState.sources[coords.idx] += 1; // Simple count for now
-        }
-
-        // Increment sink count if the bacterium is Cyan
-        if (CyanIDs.has(bacterium.ID)) {
-            concentrationState.sinks[coords.idx] += 1; // Simple count for now
-        }
-    }
-};
 
 
 
