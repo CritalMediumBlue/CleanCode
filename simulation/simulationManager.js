@@ -21,9 +21,16 @@ const currentBacteria = new Set();
 
 
 
-export  function   getGlobalParams(layer,currentConcentrationData) {
+export  function   updateBacteriaManager(layer,currentConcentrationData) {
    
-    const { bacteriaData } = updateBacteria(layer, currentConcentrationData, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
+    const  bacteriaData  = updateBacteria(layer, currentConcentrationData, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
+    
+    
+    return bacteriaData
+    
+}
+
+export function getGlobalParams(bacteriaData) {
     let magCount = 0;
     let cyanCount = 0;
     let averageSimilarity = 0;
@@ -41,11 +48,7 @@ export  function   getGlobalParams(layer,currentConcentrationData) {
         cyanCount,
         averageSimilarity,
     };
-    
-    return {
-        globalParams,
-        bacData: bacteriaData
-    };
+    return globalParams;
 }
 
 export function getPositions() {

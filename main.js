@@ -5,7 +5,9 @@ import { addEventListeners } from './GUI/guiManager.js';
 
 
 import {createBacteriumSystem,diffuse,setValue,
-    getGlobalParams,getPositions,getAdjustedCoordinates} from './simulation/simulationManager.js';
+    updateBacteriaManager,getPositions,getAdjustedCoordinates,
+getGlobalParams
+} from './simulation/simulationManager.js';
 import { 
     createStates,createConstants,
     updateHistories,getHistories} from './state/stateManager.js';
@@ -110,9 +112,10 @@ console.log("Initial setup complete. Waiting for data file...");
 
 const updateSimulation = (currentBacteria,concentrationState) => {
 
-  
-    const {globalParams, bacData} = getGlobalParams(currentBacteria,concentrationState.concentrationField);
 
+  
+    const bacData = updateBacteriaManager(currentBacteria,concentrationState.concentrationField);
+    const globalParams = getGlobalParams(bacData);
     const positions = getPositions();
 
     const { magCount, cyanCount, averageSimilarity } = globalParams;
