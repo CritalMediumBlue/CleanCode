@@ -54,7 +54,9 @@ const animate = () => {
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
         bacteriaDataUpdated = updateSimulation(currentBacteria, concentrationState); 
-        
+        anotherFunction(bacteriaDataUpdated,currentBacteria);
+        animationState.currentTimeStep++;
+
     }
     const histories = getHistories();
     const concentration = concentrationState.concentrationField;
@@ -115,12 +117,18 @@ const updateSimulation = (currentBacteria,concentrationState) => {
 
   
     const bacData = updateBacteriaManager(currentBacteria,concentrationState.concentrationField);
+
+    return bacData;
+
+};
+
+const anotherFunction = (bacData,currentBacteria) => {
     const globalParams = getGlobalParams(bacData);
     const positions = getPositions();
 
-    const { magCount, cyanCount, averageSimilarity } = globalParams;
+    const { totalCount, magCount, cyanCount, averageSimilarity } = globalParams;
 
-    updateHistories(currentBacteria.length, magCount, cyanCount, averageSimilarity);
+    updateHistories(totalCount, magCount, cyanCount, averageSimilarity);
 
     updateSourcesAndSinks(currentBacteria,...positions);
 
@@ -133,10 +141,7 @@ const updateSimulation = (currentBacteria,concentrationState) => {
     ); 
 
     
-    animationState.currentTimeStep++;
-    return bacData;
-
-};
+}
 
 
 

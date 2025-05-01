@@ -65,5 +65,5 @@ export function updateBacteria(layer, concentrations,currentBacteria,phenotypeMa
         : 0;
         
     // Return both the bacteria data and the calculated average similarity value
-    return bacteriaData    ;
+    return bacteriaData  
 }

@@ -34,16 +34,19 @@ export function getGlobalParams(bacteriaData) {
     let magCount = 0;
     let cyanCount = 0;
     let averageSimilarity = 0;
+    let totalCount = 0;
     bacteriaData.forEach((bacterium) => {
         const  ID = bacterium.id;
         const phenotype = phenotypeMemo.get(ID);
         if (phenotype === phenotypes.MAGENTA) {magCount++;} 
         else if (phenotype === phenotypes.CYAN) { cyanCount++;}
         averageSimilarity += bacterium.similarity || 0;
+        totalCount++;
     } );
     averageSimilarity = (averageSimilarity / bacteriaData.length-0.5)*2 
 
     const globalParams = {
+        totalCount,
         magCount,
         cyanCount,
         averageSimilarity,
