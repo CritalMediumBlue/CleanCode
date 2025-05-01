@@ -9,26 +9,72 @@
 
 
 
-import {updateBacteria} from './updateBacteria.js';
+import {
+    determinePhenotypeAndSimilarity,
+} from './phenotypeSimulation.js';
+import { countNeighbors, buildGrid } from './grid.js';
 
 import {ADI} from './diffusion.js';
 
 let phenotypeManager = null;
 let phenotypes = null;
 let phenotypeMemo =null;
-const currentBacteria = new Set();
+let currentBacteria;
 
-
-
-
-export  function   updateBacteriaManager(layer,currentConcentrationData) {
+function  processBacterium(bacteriumData, concentrations, phenotypeManager, phenotypes, phenotypeMemo) {
    
-    const  bacteriaData  = updateBacteria(layer, currentConcentrationData, currentBacteria, phenotypeManager, phenotypeMemo, phenotypes);
+    const { x, y, longAxis, angle, ID, parent } = bacteriumData;
+    const WIDTH = 100, HEIGHT = 60;
     
+    // Get local concentration at bacterium position
+    const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
+    const localConcentration = concentrations[idx] || 0;
     
-    return bacteriaData
+    // Create position as a plain object
+    const position = { x, y, z: 0 };
     
+    const neighbors = countNeighbors(x, y, phenotypeMemo, phenotypes);
+    
+    // Determine phenotype and calculate similarity
+    const phenotypeInfo = determinePhenotypeAndSimilarity(
+        phenotypeManager,phenotypes,phenotypeMemo, ID, neighbors, parent, localConcentration
+    );
+    
+    // Return data object for rendering
+    return {
+        id:ID,
+        position:position,
+        angle:angle,
+        longAxis:longAxis,
+        phenotype:phenotypeInfo[0],
+        magentaProportion:phenotypeInfo[1],
+        cyanProportion:phenotypeInfo[2],
+        similarity:phenotypeInfo[3],
+    };
+        
+  
 }
+
+export function updateBacteria(layer, concentrations) {
+    currentBacteria = new Set();
+    // Build the grid for spatial partitioning
+    buildGrid(layer);
+    currentBacteria.clear();
+    
+    // Process each bacterium
+    const bacteriaData = [];
+    layer.forEach((data) => {
+        const singlebacteriumData = processBacterium(data, concentrations, phenotypeManager, phenotypes, phenotypeMemo);
+        bacteriaData.push(singlebacteriumData);
+        currentBacteria.add(data.ID);
+    });
+
+    
+        
+    // Return both the bacteria data and the calculated average similarity value
+    return bacteriaData  
+}
+
 
 export function getGlobalParams(bacteriaData) {
     let magCount = 0;

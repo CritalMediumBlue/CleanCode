@@ -5,7 +5,7 @@ import { addEventListeners } from './GUI/guiManager.js';
 
 
 import {createBacteriumSystem,diffuse,setValue,
-    updateBacteriaManager,getPositions,getAdjustedCoordinates,
+    updateBacteria,getPositions,getAdjustedCoordinates,
 getGlobalParams
 } from './simulation/simulationManager.js';
 import { 
@@ -53,7 +53,7 @@ const animate = () => {
 
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
-        bacteriaDataUpdated = updateBacteriaManager(currentBacteria, concentrationState.concentrationField);
+        bacteriaDataUpdated = updateBacteria(currentBacteria, concentrationState.concentrationField);
         updateHistories(...getGlobalParams(bacteriaDataUpdated));
         diffusionStep(currentBacteria,concentrationState);
         animationState.currentTimeStep++;
