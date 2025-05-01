@@ -45,8 +45,8 @@ const initiateAllData = (processedData) => {
 
     setupNewScene(appConfig);
     createBacteriumSystem(appConfig);
-    bacteriaData = processedData.bacteriaData;
-    constants.numberOfTimeSteps = bacteriaData.size;
+    bacteriaData = processedData.bacteriaTimeSeries;
+    constants.numberOfTimeSteps = bacteriaData.length;
     constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
     Object.freeze(constants); 
 }
@@ -57,7 +57,7 @@ const initiateAllData = (processedData) => {
 
 const updateSimulation = (currentBacteria) => {
 
-    const layer =bacteriaData.get(animationState.currentTimeStep) || [];
+    const layer =bacteriaData[animationState.currentTimeStep] || [];
 
   
     const {globalParams, bacData} = getGlobalParams(layer,concentrationState.concentrationField);
@@ -132,7 +132,7 @@ const animate = () => {
 
     if (animationState.play) {
           // 1. Get bacteria data for the current time step
-        const currentBacteria = bacteriaData.get(animationState.currentTimeStep);
+        const currentBacteria = bacteriaData[animationState.currentTimeStep];
 
         bacteriaDataUpdated = updateSimulation(currentBacteria); // Advance the simulation by one step
         
@@ -142,7 +142,7 @@ const animate = () => {
 
     renderScene(histories,bacteriaDataUpdated, concentration, appConfig.BACTERIUM, animationState, constants);
 
-    if (animationState.currentTimeStep > constants.numberOfTimeSteps) {
+    if (animationState.currentTimeStep >= constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
         animationState.currentTimeStep = 1;
         animationState.play = false;

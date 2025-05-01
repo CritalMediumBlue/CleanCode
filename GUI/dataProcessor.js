@@ -14,7 +14,7 @@ export const handleFileInput = (init,event) => {
 };
 
 function processFileData(fileContent) {
-    let bacteriaData = new Map();
+    let bacteriaTimeSeries = [];
     let numberOfTimeSteps = 0;
 
    
@@ -27,25 +27,24 @@ function processFileData(fileContent) {
         if (timeStepInt === 0) return; // Skip the first time step  
         
      
-        const allBacteriaInTimeStep = bacteria.map(bacterium => ({ 
+        const BacteriaTimeSlice= bacteria.map(bacterium => ({ 
             ID: BigInt(bacterium.ID),
             y: Math.round((bacterium.y - 170)*10)/10,
             x: Math.round(bacterium.x*10)/10,
             angle: Math.round(bacterium.angle*50)/50,
             longAxis: Math.round(bacterium.length),
-            parent: bacterium.parent ? bacterium.parent : null,
+            parent: bacterium.parent ? bacterium.parent : undefined,
         }));
 
-        console.log('The type of allBacteriaInTimeStep is:', typeof allBacteriaInTimeStep);
-
-        bacteriaData.set(timeStepInt, allBacteriaInTimeStep);
+        
+        bacteriaTimeSeries.push(BacteriaTimeSlice);
     });
 
     // Analyze bacteria lineage and lifetime
-    const analysisResults = analyzeBacteriaLineage(bacteriaData);
+    const analysisResults = analyzeBacteriaLineage(bacteriaTimeSeries);
 
     // Set number of time steps
-    numberOfTimeSteps = bacteriaData.size;
+    numberOfTimeSteps = bacteriaTimeSeries.length;
     console.log('1. Number of time steps:', numberOfTimeSteps);
 
     // Log analysis results
@@ -55,7 +54,7 @@ function processFileData(fileContent) {
     console.log('Ready');
 
     return {
-        bacteriaData,
+        bacteriaTimeSeries,
         numberOfTimeSteps,
         ...analysisResults
     };
@@ -80,22 +79,19 @@ function analyzeBacteriaLineage(bacteriaData) {
             }
         });
     });
-const sortedTimeSteps = [...bacteriaData.keys()].sort((a, b) => a - b);
 
-    // Calculate the lifetime of bacteria with parents and children
     const lifetimes = new Map();
-    sortedTimeSteps.forEach(time => {
-        const timeStep = bacteriaData.get(time);
+    bacteriaData.forEach((timeStep, timeIndex) => {
         timeStep.forEach((bacterium) => {
-
+    
             if (bacteriaWithParentsandChildren.has(bacterium.ID)) {
-
+    
                 if (!lifetimes.has(bacterium.ID)) {
-                    lifetimes.set(bacterium.ID, [time, time]);
+                    lifetimes.set(bacterium.ID, [timeIndex, timeIndex]);
                 } else {
-                    lifetimes.get(bacterium.ID)[1] = time;
+                    lifetimes.get(bacterium.ID)[1] = timeIndex;
                 }
-
+    
             }
         });
     });
