@@ -4,26 +4,19 @@
  */
 
 import { CONFIG } from './config.js';
-import { handleFileInput } from './dataProcessor.js';
+import { processFileData } from './dataProcessor.js';
 
 const addSafeEventListener = (id, event, handler) => {
-    const element = document.getElementById(id);
-    if (element) {
-        element.addEventListener(event, handler);
-    } else {
-        console.warn(`Element with id '${id}' not found`);
-    }
+  
+    document.getElementById(id).addEventListener(event, handler);
+    
 };
 
 export const addEventListeners = ( init, guiActions) => {
-    console.log("Adding event listeners...");
     
-    
-    // Simple toggle buttons with declarative configuration
     const toggleButtons = [
         { id: 'playButton', event: 'click', handler: () => guiActions.setPlayState(true) },
         { id: 'pauseButton', event: 'click', handler: () => guiActions.setPlayState(false) },
-        // Select/dropdown controls
         {
             id: 'toggleColorButton', event: 'change', handler: (event) => {
                 const selectedValue = event.target.value;
@@ -38,7 +31,6 @@ export const addEventListeners = ( init, guiActions) => {
             }
         },
 
-        // Slider controls
         {
             id: 'signalSlider', event: 'input', handler: (event) => {
                 const value = parseFloat(event.target.value);
@@ -57,21 +49,28 @@ export const addEventListeners = ( init, guiActions) => {
             }
         },
 
-        // File input
         {
             id: 'fileInput', event: 'change', handler: (event) => {
-                // Use our own handleFileInput which wraps dataProcessor's function
                 handleFileInput( init , event);
             }
         }
     ];
 
-    // Register all event listeners
     toggleButtons.forEach(({ id, event, handler }) => {
         addSafeEventListener(id, event, handler);
     });
     
-    // Return configuration for dependency injection
     return CONFIG;
 };
 
+
+
+const handleFileInput = (init,event) => {
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const processedData = processFileData(e.target.result);
+        init(processedData);
+    };
+    reader.readAsText(event.target.files[0]);
+};
