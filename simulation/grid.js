@@ -8,23 +8,14 @@
 let grid = null;
 let _cellSize = 7; // Default cell size, matching the neighbor search radius
 
-/**
- * Convert a point's coordinates to a cell key
- * @param {Number} x - X coordinate
- * @param {Number} y - Y coordinate
- * @returns {String} - String key in the format "cellX,cellY"
- */
+
 function getCellKey(x, y) {
   const cellX = Math.floor(x / _cellSize);
   const cellY = Math.floor(y / _cellSize);
   return `${cellX},${cellY}`;
 }
 
-/**
- * Builds a grid-based spatial partitioning structure
- * @param {Array} layer - Array of points to add to the grid
- * @param {Number} cellSize - Size of each grid cell (optional)
- */
+
 export function buildGrid(layer, cellSize = 7) {
   // Reset the grid
   grid = new Map();
@@ -42,14 +33,6 @@ export function buildGrid(layer, cellSize = 7) {
   });
 }
 
-/**
- * Count neighbors within a radius of a given point
- * @param {Number} x - X coordinate of the query point
- * @param {Number} y - Y coordinate of the query point
- * @param {Map} phenotypeMemo - Map of point IDs to phenotypes
- * @param {Object} phenotypes - Object containing phenotype constants
- * @returns {Array} - [totalCount, magentaCount, cyanCount]
- */
 export function countNeighbors(x, y, phenotypeMemo, phenotypes) {
   const neighborRadius = 7;
   const radiusSquared = neighborRadius * neighborRadius;
@@ -93,22 +76,3 @@ export function countNeighbors(x, y, phenotypeMemo, phenotypes) {
 }
 
 
-export const getAdjustedCoordinates = (x, y, grid) => {
-  // Translate coordinates so (0,0) is the bottom-left corner of the grid, then round.
-  let adjustedX = Math.round(x + grid.WIDTH / 2);
-  let adjustedY = Math.round(y + grid.HEIGHT / 2);
-
-  // Skip bacteria below the grid's bottom edge.
-  if (adjustedY <= 0) {
-      return null;
-  }
-
-  // Clamp coordinates to valid grid boundaries (leaving a 1-cell border).
-  adjustedY = Math.min(adjustedY, grid.HEIGHT - 2); 
-  adjustedX = Math.max(1, Math.min(adjustedX, grid.WIDTH - 2));
-
-  // Calculate the 1D index corresponding to the 2D grid coordinates.
-  const idx = adjustedY * grid.WIDTH + adjustedX;
-
-  return { x: adjustedX, y: adjustedY, idx };
-};
