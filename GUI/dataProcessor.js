@@ -13,14 +13,21 @@ export function processFileData(fileContent) {
         if (timeStepInt === 0) return; // Skip the first time step  
         
      
-        const bacteriaInTimeSlice= bacteria.map(bacterium => ({ 
+        const bacteriaInTimeSlice= bacteria.map(bacterium => (
+            { 
             ID: BigInt(bacterium.ID),
             y: Math.round((bacterium.y - 170)*10)/10,
             x: Math.round(bacterium.x*10)/10,
             angle: Math.round(bacterium.angle*50)/50,
             longAxis: Math.round(bacterium.length),
             parent: bacterium.parent ? bacterium.parent : undefined,
-        }));
+        }
+    ));
+
+        for (const bacterium of bacteriaInTimeSlice) {
+            Object.seal(bacterium);
+            Object.preventExtensions(bacterium);
+        }
 
         
         bacteriaTimeSeries.push(bacteriaInTimeSlice);

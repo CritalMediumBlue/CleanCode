@@ -15,7 +15,7 @@ let appConfig;
 let animationState;
 let constants;
 let concentrationState;
-let bacteriaData;
+let bacteriaTimeSeries;
 
 
 const guiActions = {
@@ -26,30 +26,83 @@ const guiActions = {
 
 const init = (processedData) => {
 
-    initiateAllData(processedData);
-
-    animate();
-};
-
-
-
-const initiateAllData = (processedData) => {
     if (animationState) { 
         cancelAnimationFrame(animationState.animationFrameId);
     }
     
-    const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
-
-    ({animationState,concentrationState} = createStates(gridSize));
+    ({animationState,concentrationState} = createStates(appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT));
     constants = createConstants();
 
     setupNewScene(appConfig);
     createBacteriumSystem(appConfig);
-    bacteriaData = processedData.bacteriaTimeSeries;
-    constants.numberOfTimeSteps = bacteriaData.length;
+    bacteriaTimeSeries = processedData.bacteriaTimeSeries;
+    constants.numberOfTimeSteps = bacteriaTimeSeries.length;
     constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
     Object.freeze(constants); 
-}
+    animate();
+};
+
+
+const animate = () => {
+    animationState.animationFrameId = requestAnimationFrame(animate);
+    let bacteriaDataUpdated = null;
+
+    if (animationState.play) {
+
+        const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
+
+        bacteriaDataUpdated = updateSimulation(currentBacteria); 
+        
+    }
+    const histories = getHistories();
+    const concentration = concentrationState.concentrationField;
+
+    renderScene(histories,bacteriaDataUpdated, concentration, appConfig.BACTERIUM, animationState, constants);
+
+    if (animationState.currentTimeStep >= constants.numberOfTimeSteps) {
+        console.log('Simulation finished.');
+        animationState.currentTimeStep = 1;
+        animationState.play = false;
+    }
+};
+
+appConfig = addEventListeners(
+    init,
+    guiActions  // Pass simulation actions for GUI to use
+);
+
+
+console.log("Initial setup complete. Waiting for data file...");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -57,10 +110,8 @@ const initiateAllData = (processedData) => {
 
 const updateSimulation = (currentBacteria) => {
 
-    const layer =bacteriaData[animationState.currentTimeStep] || [];
-
   
-    const {globalParams, bacData} = getGlobalParams(layer,concentrationState.concentrationField);
+    const {globalParams, bacData} = getGlobalParams(currentBacteria,concentrationState.concentrationField);
 
     const positions = getPositions();
 
@@ -87,13 +138,7 @@ const updateSimulation = (currentBacteria) => {
 };
 
 
-/**
- * Updates the diffusion sources and sinks based on bacteria positions and phenotypes.
- * Magenta bacteria act as signal sources while Cyan bacteria act as signal sinks.
- * The resulting arrays are used in the ADI diffusion simulation.
- * 
- * @param {Array<object>} currentBacteria - Array of bacteria objects for the current time step
- */
+
 const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
     // Get the IDs of currently active Magenta and Cyan bacteria
     const MagentaIDs = new Set(magentaIDsRaw);
@@ -123,37 +168,6 @@ const updateSourcesAndSinks = (currentBacteria,magentaIDsRaw,cyanIDsRaw) => {
     }
 };
 
-let bacteriaDataUpdated = null;
-// --- Rendering and Animation ---
 
 
-const animate = () => {
-    animationState.animationFrameId = requestAnimationFrame(animate);
 
-    if (animationState.play) {
-          // 1. Get bacteria data for the current time step
-        const currentBacteria = bacteriaData[animationState.currentTimeStep];
-
-        bacteriaDataUpdated = updateSimulation(currentBacteria); // Advance the simulation by one step
-        
-    }
-    const histories = getHistories();
-    const concentration = concentrationState.concentrationField;
-
-    renderScene(histories,bacteriaDataUpdated, concentration, appConfig.BACTERIUM, animationState, constants);
-
-    if (animationState.currentTimeStep >= constants.numberOfTimeSteps) {
-        console.log('Simulation finished.');
-        animationState.currentTimeStep = 1;
-        animationState.play = false;
-    }
-};
-
-
-appConfig = addEventListeners(
-    init,
-    guiActions  // Pass simulation actions for GUI to use
-);
-
-
-console.log("Initial setup complete. Waiting for data file...");
