@@ -26,12 +26,12 @@ export const CONFIG = {
         SIGNAL: {
             DEFAULT: 0.15,
             MIN: 0,
-            MAX: 0.3
+            MAX: 0.5
         },
         ALPHA: {
-            DEFAULT: 0.0001,
+            DEFAULT: 0.000,
             MIN: 0,
-            MAX: 0.001
+            MAX: 0.005
         }
     },
     COLORS: {

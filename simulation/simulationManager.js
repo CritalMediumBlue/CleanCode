@@ -29,14 +29,21 @@ export function updateSimulation(currentBacteria, concentrationState,appConfig) 
 
 function  processBacterium(bacteriumData, concentrations) {
    
-    const { x, y, longAxis, angle, ID, parent } = bacteriumData;
+    const { x, y, longAxis, angle, ID, parent, randomSwitch } = bacteriumData;
     
     const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
     const localConcentration = concentrations[idx] || 0;
-            
-    const phenotype = determinePhenotype(
+    let phenotype = phenotypeMemo.get(ID);
+    if (!randomSwitch) {
+    phenotype = determinePhenotype(
         phenotypeManager,phenotypes,phenotypeMemo, ID, parent, localConcentration
     );
+    phenotypeMemo.set(ID, phenotype);
+    } else if (randomSwitch) {
+        phenotype = phenotype === phenotypes.MAGENTA ? phenotypes.CYAN : phenotypes.MAGENTA;
+        phenotypeMemo.set(ID, phenotype);
+    }
+
 
       const [totalNeighbors, magentaNeighbors, cyanNeighbors] = countNeighbors(x, y, phenotypeMemo, phenotypes);
       const magentaProportion = magentaNeighbors / totalNeighbors;
