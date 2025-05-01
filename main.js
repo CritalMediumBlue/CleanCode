@@ -1,13 +1,11 @@
-/**
- * @fileoverview Main entry point for the bacteria simulation visualization.
- * Manages the core simulation loop, scene updates, and integrates components.
- */
 
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
+import { addEventListeners } from './GUI/guiManager.js';
+
+
 
 import {createBacteriumSystem,diffuse,setValue,
     getGlobalParams,getPositions,getAdjustedCoordinates} from './simulation/simulationManager.js';
-import { addEventListeners } from './GUI/guiManager.js';
 import { 
     createStates,createConstants,
     updateHistories,getHistories} from './state/stateManager.js';
@@ -26,26 +24,20 @@ const guiActions = {
 };
 
 
-const init = (data, processedData) => {
+const init = (processedData) => {
 
-    erraseAllData(); 
-
-    initiateAllData(data,processedData);
+    initiateAllData(processedData);
 
     animate();
 };
 
 
-const erraseAllData = () => {
+
+const initiateAllData = (processedData) => {
     if (animationState) { 
         cancelAnimationFrame(animationState.animationFrameId);
     }
     
- 
-   
-};
-
-const initiateAllData = (data,processedData) => {
     const gridSize = appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT;
 
     ({animationState,concentrationState} = createStates(gridSize));
@@ -53,10 +45,10 @@ const initiateAllData = (data,processedData) => {
 
     setupNewScene(appConfig);
     createBacteriumSystem(appConfig);
-    bacteriaData = data;
-    constants.numberOfTimeSteps = data.size;
+    bacteriaData = processedData.bacteriaData;
+    constants.numberOfTimeSteps = bacteriaData.size;
     constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
-    Object.freeze(constants);
+    Object.freeze(constants); 
 }
 
 

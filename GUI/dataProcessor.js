@@ -6,25 +6,16 @@ let numberOfTimeSteps = 0;
 
 
 export const handleFileInput = (init,event) => {
-   
     
-    // Read the file
     const reader = new FileReader();
     reader.onload = (e) => {
-        // Process the file data
         const processedData = processFileData(e.target.result);
-        console.log('Number of time steps:', processedData.numberOfTimeSteps);
-        
-        init(bacteriaData, processedData);
+        init(processedData);
     };
     reader.readAsText(event.target.files[0]);
 };
-/**
- * Process the input file data
- * @param {string} fileContent - JSON string content of the input file
- * @returns {Object} Processed data statistics
- */
-export function processFileData(fileContent) {
+
+function processFileData(fileContent) {
     // Clear previous data
     bacteriaData.clear();
     numberOfTimeSteps = 0;
@@ -72,11 +63,7 @@ export function processFileData(fileContent) {
     };
 }
 
-/**
- * Analyze bacteria lineage and calculate statistics
- * @param {Map} bacteriaData - Processed bacteria data
- * @returns {Object} Lineage analysis results
- */
+
 function analyzeBacteriaLineage(bacteriaData) {
     // Create a set with all the IDs
     const AllIDs = new Set();

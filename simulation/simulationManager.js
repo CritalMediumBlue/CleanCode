@@ -65,11 +65,7 @@ return [magentaPositions, cyanPositions];
 
 
 export function setValue(value, param) {
-    // Check if phenotypeManager is initialized
-    if (!phenotypeManager || !phenotypeManager.config) {
-        console.error('phenotypeManager is not initialized');
-        return;
-    }
+   
     
     // Ensure value is a number
     const numValue = Number(value);
