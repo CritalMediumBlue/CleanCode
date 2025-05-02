@@ -75,14 +75,14 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlic
     bacteriaData.forEach(bacterium => {
         const capsule = capsules[activeCount++];
    
-        const { x,y, angle, longAxis, phenotype, similarity } = bacterium;
+        const { x,y, angle, longAxis, phenotype, similarity, changed } = bacterium;
    
         const threePosition = new THREE.Vector3(x, y, 0);
        
         capsule.position.set(threePosition.x, threePosition.y, 0);
         capsule.rotation.z = angle * Math.PI;  
         updateCapsuleGeometry(capsule, longAxis);
-        updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity,1);
+        updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity,1, changed);
        
         capsule.visible = true;
     });

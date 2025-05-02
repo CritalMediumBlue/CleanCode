@@ -3,3 +3,6 @@ return currentBacteria
 
 
 }
+export const calculateCorrelations = (bacteriaWithPhenotypes,cytoplasmManager) => {
+    return 0
+}

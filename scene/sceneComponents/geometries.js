@@ -44,7 +44,7 @@ export function populateMapCaches(BACTERIUM, THREE, capsuleGeometryCache, edgesG
  * @param {Object} THREE - The Three.js library object
  * @param {number} similarity - A value representing similarity (used for color gradient)
  */
-export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity,opacity) {
+export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity,opacity, changed) {
     if (BACTERIUM.COLOR_BY_INHERITANCE) {
         // Color based on phenotype categories
         let color;
@@ -62,12 +62,17 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
                 color = 0xFFFF00; // Yellow color for switch
                 capsule.children[0].visible = false;
                 break;
+        } 
+        if (changed > 0.001) {
+            color = 0xFFFF00; // Yellow color for switch
+            capsule.children[0].visible = true;
         }
+
         
         const threeColor = new THREE.Color(color);
 
         capsule.material.color.copy(threeColor);
-        capsule.material.opacity = opacity;
+        capsule.material.opacity = changed > 0.001 ? 1-changed : opacity;
         capsule.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
       
     } else {

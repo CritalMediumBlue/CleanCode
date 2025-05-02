@@ -1,6 +1,6 @@
 import {updateBacteriaPhenotypes,calculateSimilarities} from './phenotypeSimulation.js';
 import { diffusionStep } from './diffusionManager.js';
-import { updateBacteriaCytoplasm } from './citoplasmSimulation.js';
+import { updateBacteriaCytoplasm, calculateCorrelations } from './citoplasmSimulation.js';
 
 
 let phenotypeManager = null;

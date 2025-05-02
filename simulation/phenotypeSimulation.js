@@ -1,6 +1,6 @@
 import { countNeighbors, buildGrid } from './grid.js'; 
 import {simplifiedInheritancePhenotype} from './phenotypeSimRealData.js';
-
+let changed = new Map();
 function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
     const { phenotypeMemo, phenotypes } = phenotypeManager;
     const originalPhenotype = phenotypeMemo.get(ID);
@@ -53,10 +53,9 @@ export function updateBacteriaPhenotypes(currentBacteria, concentrations, phenot
         if (!phenotypeManager.phenotypeMemo.has(ID)) {
             phenotypeManager.phenotypeMemo.set(ID, phenotypeManager.phenotypeMemo.get(ID/2n));
         }
-
         let phenotype = phenotypeManager.phenotypeMemo.get(ID); // this could be undefined
-        
-        // Determine phenotype based on rules
+        const originalPhenotype = phenotype;
+
         if (!randomSwitch) {
             phenotype = parent === undefined 
                 ? inheritancePhenotype(phenotypeManager, ID, localConcentration) 
@@ -68,6 +67,14 @@ export function updateBacteriaPhenotypes(currentBacteria, concentrations, phenot
                 phenotypeManager.phenotypes.MAGENTA;
             phenotypeManager.phenotypeMemo.set(ID, phenotype);
         }
+
+        if (phenotype !== originalPhenotype) {
+            changed.set(ID, 1);
+        } else if (changed.has(ID)) {
+            changed.set(ID, changed.get(ID) * 0.5);
+        } else {
+            changed.set(ID, 0);
+        }
         
         // Return bacterium with phenotype
         return {
@@ -76,7 +83,8 @@ export function updateBacteriaPhenotypes(currentBacteria, concentrations, phenot
             y: y,
             angle: angle,
             longAxis: longAxis,
-            phenotype: phenotype
+            phenotype: phenotype,
+            changed: changed.get(ID),
         };
     });
     
