@@ -1,70 +1,40 @@
-function simplifiedInheritancePhenotype(phenotypeManager, ID, parentID) {
-    const { phenotypeMemo, phenotypes } = phenotypeManager;
-    
-    if (phenotypeMemo.has(ID)) {
-        return phenotypeMemo.get(ID);
-    } else if (phenotypeMemo.has(parentID)) {
-        const phenotype = phenotypeMemo.get(parentID);
-        phenotypeMemo.set(ID, phenotype);
-        return phenotype;
-    }
-    // Assign random phenotype if no inheritance information
-    const phenotype = Math.random() < 0.5 ? phenotypes.MAGENTA : phenotypes.CYAN;
-    phenotypeMemo.set(ID, phenotype);
-    return phenotype;
-}
-
+import { countNeighbors, buildGrid } from './grid.js'; 
+import {simplifiedInheritancePhenotype} from './phenotypeSimRealData.js';
 
 function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
     const { phenotypeMemo, phenotypes } = phenotypeManager;
     
     // If phenotype already determined, use transition rules
     if (phenotypeMemo.get(ID) !== undefined) {
-        const phenotype = determineTransitionPhenotype(phenotypeManager, ID, localConcentration);
-        return phenotype;
+        const {config, signal } = phenotypeManager;
+        
+        // Calculate transition rates based on feedback type
+        let K_c2m, K_m2c; // Transition rates: cyan-to-magenta and magenta-to-cyan
+        
+        if (config.BACTERIUM.POSITIVE_FEEDBACK) {
+            K_c2m =  localConcentration * signal;
+            K_m2c =  signal/(localConcentration+1);
+        } else {
+            K_c2m = signal/(localConcentration+1);
+            K_m2c =  localConcentration * signal;
+        }
+        
+        const rand = Math.random();
+        const originalPhenotype = phenotypeMemo.get(ID);
+        if (originalPhenotype === phenotypes.MAGENTA) {
+            return rand < K_m2c ? phenotypes.CYAN : phenotypes.MAGENTA;
+        } else {
+            return rand < K_c2m ? phenotypes.MAGENTA : phenotypes.CYAN;
+        }
     }  else if (phenotypeMemo.get(ID) === undefined) {
-        const phenotype = Math.random() < 0.5 ? phenotypes.MAGENTA : phenotypes.CYAN;
-        return phenotype;
+        return Math.random() < 0.5 ? phenotypes.MAGENTA : phenotypes.CYAN;
     }
 }
 
 
-function determineTransitionPhenotype(phenotypeManager, ID, localConcentration) {
-    const { phenotypeMemo, phenotypes, config, signal } = phenotypeManager;
-    
-    // Calculate transition rates based on feedback type
-    let K_c2m, K_m2c; // Transition rates: cyan-to-magenta and magenta-to-cyan
-    
-    if (config.BACTERIUM.POSITIVE_FEEDBACK) {
-        K_c2m =  localConcentration * signal;
-        K_m2c =  signal/(localConcentration+1);
-    } else {
-        K_c2m = signal/(localConcentration+1);
-        K_m2c =  localConcentration * signal;
-    }
-    
-    const rand = Math.random();
-    let phenotype;
-    const originalPhenotype = phenotypeMemo.get(ID);
-    if (originalPhenotype === phenotypes.MAGENTA) {
-        phenotype = rand < K_m2c ? phenotypes.CYAN : phenotypes.MAGENTA;
-    } else {
-        phenotype = rand < K_c2m ? phenotypes.MAGENTA : phenotypes.CYAN;
-    }
-    return phenotype;
-}
+export function processBacteria(currentBacteria, concentrations,phenotypeManager,HEIGHT,WIDTH) {
+    buildGrid(currentBacteria);
 
-
-function determinePhenotype(phenotypeManager, ID, parentID, localConcentration) {
-    const phenotype = parentID === undefined 
-        ? inheritancePhenotype(phenotypeManager, ID, localConcentration) 
-        : simplifiedInheritancePhenotype(phenotypeManager, ID, parentID);
-    
-    return phenotype;
-}
-
-
-export function processBacteria(currentBacteria, concentrations,phenotypeManager,HEIGHT,WIDTH,countNeighbors) {
     const bacteriaDataUpdated = [];
     currentBacteria.forEach((bacterium) => {
             
@@ -77,12 +47,12 @@ export function processBacteria(currentBacteria, concentrations,phenotypeManager
             phenotypeManager.phenotypeMemo.set(ID, phenotypeManager.phenotypeMemo.get(ID/2n));
         }
 
-        let phenotype =  phenotypeManager.phenotypeMemo.get(ID);
+        let phenotype =  phenotypeManager.phenotypeMemo.get(ID); // this could be undefined
         if (!randomSwitch) {
-            phenotype = determinePhenotype(
-                phenotypeManager, ID, parent, localConcentration
-            );
-            phenotypeManager.phenotypeMemo.set(ID, phenotype);
+            phenotype = parent === undefined 
+                    ? inheritancePhenotype(phenotypeManager, ID, localConcentration) 
+                    : simplifiedInheritancePhenotype(phenotypeManager, ID, parent);
+            phenotypeManager.phenotypeMemo.set(ID, phenotype);  // This is not undefined
         } else if (randomSwitch) {
             phenotype = phenotype === phenotypeManager.phenotypes.MAGENTA ? phenotypeManager.phenotypes.CYAN : phenotypeManager.phenotypes.MAGENTA;
             phenotypeManager.phenotypeMemo.set(ID, phenotype);
@@ -102,8 +72,6 @@ export function processBacteria(currentBacteria, concentrations,phenotypeManager
             angle:angle,
             longAxis:longAxis,
             phenotype:phenotype,
-            magentaProportion,
-            cyanProportion,
             similarity,
         };
 
