@@ -1,6 +1,6 @@
 import { countNeighbors, buildGrid } from './grid.js'; 
 import {simplifiedInheritancePhenotype} from './phenotypeSimRealData.js';
-let changed = new Map();
+
 function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
     const { phenotypeMemo, phenotypes } = phenotypeManager;
     const originalPhenotype = phenotypeMemo.get(ID);
@@ -40,7 +40,7 @@ function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
  * @param {number} WIDTH - Width of the grid
  * @returns {Array} - Array of bacteria with updated phenotypes
  */
-export function updateBacteriaPhenotypes(currentBacteria, concentrations, phenotypeManager, HEIGHT, WIDTH) {
+export function updateBacteriaPhenotypes(currentBacteria, concentrations, phenotypeManager, HEIGHT, WIDTH,changed) {
     buildGrid(currentBacteria);
 
     const bacteriaWithPhenotypes = currentBacteria.map((bacterium) => {

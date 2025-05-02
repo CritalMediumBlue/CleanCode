@@ -4,6 +4,7 @@ import { updateBacteriaCytoplasm, calculateCorrelations } from './citoplasmSimul
 
 
 let phenotypeManager = null;
+let changed;
 let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
@@ -21,7 +22,7 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
             bacteriaDataUpdated = calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
             break;
         case 'discrete':
-            bacteriaWithInformation = updateBacteriaPhenotypes(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH);
+            bacteriaWithInformation = updateBacteriaPhenotypes(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH,changed);
             bacteriaDataUpdated = calculateSimilarities(bacteriaWithInformation,phenotypeManager);
             break;
     }   
@@ -76,6 +77,7 @@ export function createBacteriumSystem(config) {
         phenotypes: config.PHENOTYPES,
         phenotypeMemo: new Map()
     };
+    changed = new Map();
     Object.seal(phenotypeManager);
     Object.preventExtensions(phenotypeManager);
     WIDTH = config.GRID.WIDTH;
