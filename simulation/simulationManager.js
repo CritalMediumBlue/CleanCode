@@ -1,18 +1,33 @@
 import {updateBacteriaPhenotypes,calculateSimilarities} from './phenotypeSimulation.js';
 import { diffusionStep } from './diffusionManager.js';
+import { updateBacteriaCytoplasm } from './citoplasmSimulation.js';
 
 
 let phenotypeManager = null;
+let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
+const mode = 'discrete'; // or 'discrete'
 
 export function updateSimulation(currentBacteria, concentrationState, appConfig) {
 
     const concentration = concentrationState.concentrationField;
+    let bacteriaWithInformation;
+    let bacteriaDataUpdated;
+    
+    switch (mode) {
+        case 'continuous':
+            bacteriaWithInformation = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager);
+            bacteriaDataUpdated = calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
+            break;
+        case 'discrete':
+            bacteriaWithInformation = updateBacteriaPhenotypes(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH);
+            bacteriaDataUpdated = calculateSimilarities(bacteriaWithInformation,phenotypeManager);
+            break;
+    }   
 
-    const bacteriaWithPhenotypes = updateBacteriaPhenotypes(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH);
-    const bacteriaDataUpdated = calculateSimilarities(bacteriaWithPhenotypes,phenotypeManager);
-    diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
+
+    concentrationState.concentrationField = diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
     
     return bacteriaDataUpdated;
 

@@ -27,7 +27,7 @@ function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
             return rand < K_c2m ? phenotypes.MAGENTA : phenotypes.CYAN;
         }
     }  else if (phenotypeMemo.get(ID) === undefined) {
-        return Math.random() < 0.5 ? phenotypes.MAGENTA : phenotypes.CYAN;
+        return Math.random() < 0.0 ? phenotypes.MAGENTA : phenotypes.CYAN;
     }
 }
 

@@ -20,7 +20,6 @@ let constants;
 let concentrationState;
 let bacteriaTimeSeries;
 
-let bacteriaDataUpdated;
 let histories;
 let globalParams;
 const nextSlices = [];
@@ -57,6 +56,7 @@ const init = (processedData) => {
 const animate = () => {
 
     
+    let bacteriaDataUpdated;
 
     animationState.animationFrameId = requestAnimationFrame(animate);
 

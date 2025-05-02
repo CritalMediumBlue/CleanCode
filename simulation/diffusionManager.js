@@ -6,14 +6,12 @@ export function diffusionStep(currentBacteria, concentrationState, appConfig, ph
     const IDsByColor = getIDsByColor(currentBacteria, phenotypeManager);
     updateSourcesAndSinks(currentBacteria, concentrationState, ...IDsByColor, GRID);
     
-    const result = diffuse(
+    return diffuse(
         appConfig,
         concentrationState,
         1, // Time step duration in minutes (dt)
         1  // Number of substeps for ADI
-    );
-    
-    concentrationState.concentrationField = result;
+         );
 }
 
 
