@@ -68,7 +68,7 @@ const animate = () => {
         globalParams = getGlobalParams(bacteriaDataUpdated);
         updateData();
 
-        const stepsInTheFuture = 200;
+        const stepsInTheFuture = 100;
         nextSlices.length = 0;
         for (let i = 0; i < stepsInTheFuture; i++) {
             if (animationState.currentTimeStep + i < constants.numberOfTimeSteps) {
