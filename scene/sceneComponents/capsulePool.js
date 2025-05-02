@@ -21,12 +21,14 @@ const edgesGeometryCache = new Map();
  * @returns {Array<THREE.Mesh>} The array of capsule meshes that was populated
  */
 export function setupCapsulePool(stage, BACTERIUM, THREE, capsules) {
-    const poolSize = BACTERIUM.INITIAL_POOL_SIZE;
+    const poolSize = BACTERIUM.INITIAL_POOL_SIZE*2;
     
     // Create capsule objects until we reach the desired pool size
     while (capsules.length < poolSize) {
         const capsuleGeometry = new THREE.CapsuleGeometry();
-        const capsuleMaterial = new THREE.MeshBasicMaterial({});
+        const capsuleMaterial = new THREE.MeshBasicMaterial({
+            transparent: true,
+        });
         
         const capsule = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
         
@@ -58,7 +60,7 @@ export function setupCapsulePool(stage, BACTERIUM, THREE, capsules) {
  * @param {Object} THREE - The Three.js library object
  * @param {Array<THREE.Mesh>} capsules - Array of capsule mesh objects to update
  */
-export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules) {
+export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices) {
     if (!bacteriaData || bacteriaData.length === 0) {
         return;
     }
@@ -73,18 +75,35 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules) {
     bacteriaData.forEach(bacterium => {
         const capsule = capsules[activeCount++];
    
-        const { position, angle, longAxis, phenotype, similarity } = bacterium;
+        const { x,y, angle, longAxis, phenotype, similarity } = bacterium;
    
-        const threePosition = new THREE.Vector3(position.x, position.y, 0);
+        const threePosition = new THREE.Vector3(x, y, 0);
        
         capsule.position.set(threePosition.x, threePosition.y, 0);
         capsule.rotation.z = angle * Math.PI;  
         updateCapsuleGeometry(capsule, longAxis);
-        updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity);
+        updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity,1);
        
         capsule.visible = true;
     });
-}
+
+    nextSlices.forEach((slice, index) => {
+        slice.forEach(bacterium => {
+            const { x,y, angle, longAxis, randomSwitch } = bacterium;
+            if (randomSwitch) {
+                const capsule = capsules[activeCount++];
+                const threePosition = new THREE.Vector3(x, y, index*0.1);
+                capsule.position.set(threePosition.x, threePosition.y, threePosition.z);
+                capsule.rotation.z = angle * Math.PI;
+                updateCapsuleGeometry(capsule, longAxis);
+                updateCapsuleColor(capsule, "switch", BACTERIUM, THREE, 0, 1-0.005*index);
+                capsule.visible = true;
+            }
+        }); 
+    });
+
+} 
+
 
 /**
  * Updates the geometry of a capsule based on its required length

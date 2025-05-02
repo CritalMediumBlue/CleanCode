@@ -33,7 +33,12 @@ function  processBacterium(bacteriumData, concentrations) {
     
     const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
     const localConcentration = concentrations[idx] || 0;
-    let phenotype = phenotypeMemo.get(ID);
+
+    if (!phenotypeMemo.has(ID)) {
+        phenotypeMemo.set(ID, phenotypeMemo.get(ID/2n));
+    }
+
+    let phenotype =  phenotypeMemo.get(ID);
     if (!randomSwitch) {
     phenotype = determinePhenotype(
         phenotypeManager,phenotypes,phenotypeMemo, ID, parent, localConcentration
@@ -54,7 +59,8 @@ function  processBacterium(bacteriumData, concentrations) {
     
     return {
         id:ID,
-        position:{ x, y },
+        x:x,
+        y:y,
         angle:angle,
         longAxis:longAxis,
         phenotype:phenotype,
@@ -91,7 +97,7 @@ function getGlobalParams(bacteriaData) {
     return globalParams;
 }
 
-export function setValue(value, param) {
+export function setValue(value) {
    
     
     // Ensure value is a number
@@ -100,19 +106,11 @@ export function setValue(value, param) {
     
     const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
     
-    if (param === 'signal') {
         const minSignal = phenotypeManager.config.BACTERIUM.SIGNAL.MIN;
         const maxSignal = phenotypeManager.config.BACTERIUM.SIGNAL.MAX;
         phenotypeManager.signal = clamp(numValue, minSignal, maxSignal) / 100;
         console.log('Signal set to:', phenotypeManager.signal);
-    } else if (param === 'alpha') {
-        const minAlpha = phenotypeManager.config.BACTERIUM.ALPHA.MIN;
-        const maxAlpha = phenotypeManager.config.BACTERIUM.ALPHA.MAX;
-        phenotypeManager.alpha = clamp(numValue, minAlpha, maxAlpha);
-        console.log('Alpha set to:', phenotypeManager.alpha);
-    } else {
-        console.error(`Unknown parameter: ${param}`);
-    }
+   
 }
 
 export function createBacteriumSystem(config) {
@@ -121,8 +119,9 @@ export function createBacteriumSystem(config) {
     phenotypeManager = {
         config,
         signal: config.BACTERIUM.SIGNAL.DEFAULT / 100,
-        alpha: config.BACTERIUM.ALPHA.DEFAULT
     };
+    Object.seal(phenotypeManager);
+    Object.preventExtensions(phenotypeManager);
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
 }

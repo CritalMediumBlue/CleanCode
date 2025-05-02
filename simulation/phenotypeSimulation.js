@@ -17,13 +17,10 @@ function simplifiedInheritancePhenotype(phenotypes,phenotypeMemo, ID, parentID) 
 
 function inheritancePhenotype(state, phenotypes,phenotypeMemo,ID, localConcentration) {
     // If phenotype already determined, use transition rules
-    if (phenotypeMemo.has(ID)) {
+    if (phenotypeMemo.get(ID) !== undefined) {
         const phenotype = determineTransitionPhenotype(state, phenotypes, phenotypeMemo, ID, localConcentration);
         return phenotype;
-    } else if (ID > 2000n) {
-        const phenotype = phenotypeMemo.get(ID / 2n);
-        return phenotype;
-    } else if (ID <= 2000n) {
+    }  else if (phenotypeMemo.get(ID) === undefined) {
         const phenotype = Math.random() < 0.5 ? phenotypes.MAGENTA : phenotypes.CYAN;
         return phenotype;
     }
@@ -35,16 +32,13 @@ function determineTransitionPhenotype(state,phenotypes,phenotypeMemo, ID, localC
     
     // Calculate transition rates based on feedback type
     let K_c2m, K_m2c; // Transition rates: cyan-to-magenta and magenta-to-cyan
-
-    
-
     
     if (state.config.BACTERIUM.POSITIVE_FEEDBACK) {
-        K_c2m = state.alpha + localConcentration * state.signal;
-        K_m2c = state.alpha +  state.signal/(localConcentration+1);
+        K_c2m =  localConcentration * state.signal;
+        K_m2c =  state.signal/(localConcentration+1);
     } else {
-        K_c2m = state.alpha + state.signal/(localConcentration+1);
-        K_m2c = state.alpha + localConcentration * state.signal;
+        K_c2m = state.signal/(localConcentration+1);
+        K_m2c =  localConcentration * state.signal;
     }
     
     const rand = Math.random();

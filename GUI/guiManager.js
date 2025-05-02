@@ -36,18 +36,11 @@ export const addEventListeners = ( init, guiActions) => {
                 const value = parseFloat(event.target.value);
                 const valueElement = document.getElementById('signalValue');
                 if (valueElement) valueElement.textContent = value.toFixed(2);
-                guiActions.setValue(value, 'signal');
+                guiActions.setValue(value);
             }
         },
 
-        {
-            id: 'alphaSlider', event: 'input', handler: (event) => {
-                const value = parseFloat(event.target.value);
-                const valueElement = document.getElementById('alphaValue');
-                if (valueElement) valueElement.textContent = value.toFixed(5);
-                guiActions.setValue(value, 'alpha');
-            }
-        },
+     
 
         {
             id: 'fileInput', event: 'change', handler: (event) => {

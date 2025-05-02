@@ -44,7 +44,7 @@ export function populateMapCaches(BACTERIUM, THREE, capsuleGeometryCache, edgesG
  * @param {Object} THREE - The Three.js library object
  * @param {number} similarity - A value representing similarity (used for color gradient)
  */
-export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity) {
+export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity,opacity) {
     if (BACTERIUM.COLOR_BY_INHERITANCE) {
         // Color based on phenotype categories
         let color;
@@ -52,21 +52,30 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
         switch (phenotype) {
             case 'MAGENTA':
                 color = 0xFF00FF; // Magenta color
+                capsule.children[0].visible = true;
                 break;
             case 'CYAN':
                 color = 0x00FFFF; // Cyan color
+                capsule.children[0].visible = true;
                 break;
-            default:
-                color = 0xFFFFFF; // White color (default)
+            case 'switch':
+                color = 0xFFFF00; // Yellow color for switch
+                capsule.children[0].visible = false;
+                break;
         }
         
         const threeColor = new THREE.Color(color);
 
         // Apply colors to the capsule and its wireframe
         capsule.material.color.copy(threeColor);
+        capsule.material.opacity = opacity;
         capsule.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
+      
     } else {
         // Color based on similarity gradient (blue to red)
+        if (similarity === undefined || !similarity) {
+            similarity = 0;
+        }
         const scalar = Math.round(similarity * 255);
         const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
         

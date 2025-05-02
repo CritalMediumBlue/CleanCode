@@ -27,12 +27,8 @@ export const CONFIG = {
             DEFAULT: 0.15,
             MIN: 0,
             MAX: 0.5
-        },
-        ALPHA: {
-            DEFAULT: 0.000,
-            MIN: 0,
-            MAX: 0.005
         }
+      
     },
     COLORS: {
         MIN_COLOR: 0x0000FF,

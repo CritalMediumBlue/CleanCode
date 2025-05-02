@@ -24,7 +24,7 @@ let globalParams
 
 
 const guiActions = {
-    setValue: (value,param) => {setValue(value,param);},
+    setValue: (value) => {setValue(value);},
     setPlayState: (isPlaying) => {animationState.play = isPlaying;}
 };
 
@@ -47,6 +47,7 @@ const init = (processedData) => {
     animate();
 };
 
+const nextSlices = [];
 
 const animate = () => {
     animationState.animationFrameId = requestAnimationFrame(animate);
@@ -61,9 +62,20 @@ const animate = () => {
 
         updateData();
 
-    }
+        const stepsInTheFuture = 200;
+        nextSlices.length = 0;
+        for (let i = 0; i < stepsInTheFuture; i++) {
+            if (animationState.currentTimeStep + i < constants.numberOfTimeSteps) {
+                const nextBacteria = bacteriaTimeSeries[animationState.currentTimeStep + i];
+                nextSlices.push(nextBacteria);
+            }
+        }
 
-    renderScene(histories, bacteriaDataUpdated, concentrationState, appConfig.BACTERIUM, animationState, constants);
+    }
+    
+   
+
+    renderScene(histories, bacteriaDataUpdated, concentrationState, appConfig.BACTERIUM, animationState, constants, nextSlices);
 
     if (animationState.currentTimeStep >= constants.numberOfTimeSteps) {
         console.log('Simulation finished.');

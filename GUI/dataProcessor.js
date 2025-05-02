@@ -20,7 +20,7 @@ export function processFileData(fileContent) {
             angle: Math.round(bacterium.angle*50)/50,
             longAxis: Math.round(bacterium.length),
             parent: bacterium.parent ? bacterium.parent : undefined,
-            randomSwitch: Math.random() < 0.001 ? true : false,
+            randomSwitch: Math.random() < 0.0001 ? true : false,
         }
     ));
 
