@@ -92,11 +92,11 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlic
             const { x,y, angle, longAxis, randomSwitch } = bacterium;
             if (randomSwitch) {
                 const capsule = capsules[activeCount++];
-                const threePosition = new THREE.Vector3(x, y, index*0.2);
+                const threePosition = new THREE.Vector3(x, y, index*0.5);
                 capsule.position.set(threePosition.x, threePosition.y, threePosition.z);
                 capsule.rotation.z = angle * Math.PI;
                 updateCapsuleGeometry(capsule, longAxis);
-                updateCapsuleColor(capsule, "switch", BACTERIUM, THREE, null, 1-0.005*index);
+                updateCapsuleColor(capsule, "switch", BACTERIUM, THREE, null, 1-0.01*index);
                 capsule.visible = true;
             }
         }); 

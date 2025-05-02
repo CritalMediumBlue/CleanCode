@@ -3,6 +3,7 @@
  * @description Handles the creation and management of geometries and related visual aspects
  * for bacteria representation in the 3D scene.
  */
+import { interpolateViridis } from 'd3-scale-chromatic';
 
 /**
  * Populates geometry caches for different capsule lengths to avoid recreating geometries
@@ -82,9 +83,8 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
         } else {
             capsule.children[0].visible = true;
         }
-        const scalar = Math.round(similarity * 255);
-        const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
-        
+        const similarityColor = new THREE.Color(interpolateViridis(similarity));
+               
         capsule.material.color.copy(similarityColor);
         capsule.material.opacity = opacity;
         capsule.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.3));
