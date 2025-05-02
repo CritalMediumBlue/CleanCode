@@ -24,9 +24,9 @@ export const CONFIG = {
         COLOR_BY_INHERITANCE: true,
         POSITIVE_FEEDBACK: false,
         SIGNAL: {
-            DEFAULT: 0.15,
+            DEFAULT: 0,
             MIN: 0,
-            MAX: 0.5
+            MAX: 0.005
         }
       
     },

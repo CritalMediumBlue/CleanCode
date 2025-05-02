@@ -33,7 +33,8 @@ export function buildGrid(layer, cellSize = 7) {
   });
 }
 
-export function countNeighbors(x, y, phenotypeMemo, phenotypes) {
+export function countNeighbors(x, y, phenotypeManager) {
+  const { phenotypeMemo, phenotypes } = phenotypeManager;
   const neighborRadius = 7;
   const radiusSquared = neighborRadius * neighborRadius;
   let magentaCount = 0;

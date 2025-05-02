@@ -41,6 +41,13 @@ let magentaBacteriaCountHistory = [];
 let cyanBacteriaCountHistory = [];
 let averageSimilarityHistory = [];
 
+export const resetHistories = () => {
+    totalBacteriaCountHistory = [];
+    magentaBacteriaCountHistory = [];
+    cyanBacteriaCountHistory = [];
+    averageSimilarityHistory = [];
+}
+
 /**
  * Update history arrays with new data
  * @param {number} totalCount - Total bacteria count

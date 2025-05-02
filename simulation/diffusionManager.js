@@ -1,10 +1,9 @@
-
 import { ADI } from './diffusion.js';
 
 
-export function diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeMemo, phenotypes) {
+export function diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager) {
     const GRID = appConfig.GRID;
-    const IDsByColor = getIDsByColor(currentBacteria, phenotypeMemo, phenotypes);
+    const IDsByColor = getIDsByColor(currentBacteria, phenotypeManager);
     updateSourcesAndSinks(currentBacteria, concentrationState, ...IDsByColor, GRID);
     
     const result = diffuse(
@@ -18,7 +17,8 @@ export function diffusionStep(currentBacteria, concentrationState, appConfig, ph
 }
 
 
-function getIDsByColor(currentBacteria, phenotypeMemo, phenotypes) {
+function getIDsByColor(currentBacteria, phenotypeManager) {
+    const { phenotypeMemo, phenotypes } = phenotypeManager;
     const magentaIDs = [];
     const cyanIDs = [];
 

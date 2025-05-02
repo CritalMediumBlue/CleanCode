@@ -7,7 +7,7 @@ import { addEventListeners } from './GUI/guiManager.js';
 import {createBacteriumSystem,setValue,updateSimulation} from './simulation/simulationManager.js';
 import { 
     createStates,createConstants,
-    updateHistories,getHistories} from './state/stateManager.js';
+    updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 
 
 let appConfig;
@@ -18,7 +18,9 @@ let bacteriaTimeSeries;
 
 let bacteriaDataUpdated;
 let histories;
-let globalParams
+let globalParams;
+const nextSlices = [];
+
 
 
 
@@ -30,7 +32,7 @@ const guiActions = {
 
 
 const init = (processedData) => {
-
+    resetHistories();
     if (animationState) { 
         cancelAnimationFrame(animationState.animationFrameId);
     }
@@ -47,9 +49,10 @@ const init = (processedData) => {
     animate();
 };
 
-const nextSlices = [];
-
 const animate = () => {
+
+    
+
     animationState.animationFrameId = requestAnimationFrame(animate);
 
     if (animationState.play) {
