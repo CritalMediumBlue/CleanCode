@@ -96,7 +96,7 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlic
                 capsule.position.set(threePosition.x, threePosition.y, threePosition.z);
                 capsule.rotation.z = angle * Math.PI;
                 updateCapsuleGeometry(capsule, longAxis);
-                updateCapsuleColor(capsule, "switch", BACTERIUM, THREE, 0, 1-0.005*index);
+                updateCapsuleColor(capsule, "switch", BACTERIUM, THREE, null, 1-0.005*index);
                 capsule.visible = true;
             }
         }); 

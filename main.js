@@ -20,7 +20,7 @@ let bacteriaDataUpdated;
 let histories;
 let globalParams;
 const nextSlices = [];
-
+let storedProcessedData;
 
 
 
@@ -32,6 +32,7 @@ const guiActions = {
 
 
 const init = (processedData) => {
+    storedProcessedData = processedData;
     resetHistories();
     if (animationState) { 
         cancelAnimationFrame(animationState.animationFrameId);
@@ -82,8 +83,7 @@ const animate = () => {
 
     if (animationState.currentTimeStep >= constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
-        animationState.currentTimeStep = 1;
-        animationState.play = false;
+        init(storedProcessedData);
     }
 };
 

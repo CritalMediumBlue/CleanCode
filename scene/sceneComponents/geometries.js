@@ -66,20 +66,22 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
         
         const threeColor = new THREE.Color(color);
 
-        // Apply colors to the capsule and its wireframe
         capsule.material.color.copy(threeColor);
         capsule.material.opacity = opacity;
         capsule.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
       
     } else {
-        // Color based on similarity gradient (blue to red)
-        if (similarity === undefined || !similarity) {
+        if (similarity === null) {
             similarity = 0;
+            capsule.children[0].visible = false;
+        } else {
+            capsule.children[0].visible = true;
         }
         const scalar = Math.round(similarity * 255);
         const similarityColor = new THREE.Color(`rgb(${scalar}, ${scalar}, ${255-scalar})`);
         
-        capsule.material.color.set(similarityColor);
+        capsule.material.color.copy(similarityColor);
+        capsule.material.opacity = opacity;
         capsule.children[0].material.color.set(similarityColor.clone().multiplyScalar(0.3));
     }
 }
