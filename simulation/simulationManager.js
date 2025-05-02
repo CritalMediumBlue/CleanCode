@@ -1,4 +1,4 @@
-import {processBacteria} from './phenotypeSimulation.js';
+import {updateBacteriaPhenotypes,calculateSimilarities} from './phenotypeSimulation.js';
 import { diffusionStep } from './diffusionManager.js';
 
 
@@ -10,8 +10,8 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
 
     const concentration = concentrationState.concentrationField;
 
-    const bacteriaDataUpdated = processBacteria(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH);
-    
+    const bacteriaWithPhenotypes = updateBacteriaPhenotypes(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH);
+    const bacteriaDataUpdated = calculateSimilarities(bacteriaWithPhenotypes,phenotypeManager);
     diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
     
     const globalParams = getGlobalParams(bacteriaDataUpdated,phenotypeManager.phenotypes);

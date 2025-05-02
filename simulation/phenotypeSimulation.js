@@ -31,52 +31,80 @@ function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
     }
 }
 
-
-export function processBacteria(currentBacteria, concentrations,phenotypeManager,HEIGHT,WIDTH) {
+/**
+ * Determines the phenotype for each bacterium based on inheritance and environmental factors
+ * @param {Array} currentBacteria - Array of bacteria objects from the current time step
+ * @param {Float32Array} concentrations - Array of concentration values across the grid
+ * @param {Object} phenotypeManager - Manager containing phenotype data and rules
+ * @param {number} HEIGHT - Height of the grid
+ * @param {number} WIDTH - Width of the grid
+ * @returns {Array} - Array of bacteria with updated phenotypes
+ */
+export function updateBacteriaPhenotypes(currentBacteria, concentrations, phenotypeManager, HEIGHT, WIDTH) {
     buildGrid(currentBacteria);
 
-    const bacteriaDataUpdated = [];
-    currentBacteria.forEach((bacterium) => {
-            
+    const bacteriaWithPhenotypes = currentBacteria.map((bacterium) => {
         const { x, y, longAxis, angle, ID, parent, randomSwitch } = bacterium;
         
         const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
         const localConcentration = concentrations[idx] || 0;
 
+        // Check if phenotype already exists in memo
         if (!phenotypeManager.phenotypeMemo.has(ID)) {
             phenotypeManager.phenotypeMemo.set(ID, phenotypeManager.phenotypeMemo.get(ID/2n));
         }
 
-        let phenotype =  phenotypeManager.phenotypeMemo.get(ID); // this could be undefined
+        let phenotype = phenotypeManager.phenotypeMemo.get(ID); // this could be undefined
+        
+        // Determine phenotype based on rules
         if (!randomSwitch) {
             phenotype = parent === undefined 
-                    ? inheritancePhenotype(phenotypeManager, ID, localConcentration) 
-                    : simplifiedInheritancePhenotype(phenotypeManager, ID, parent);
-            phenotypeManager.phenotypeMemo.set(ID, phenotype);  // This is not undefined
+                ? inheritancePhenotype(phenotypeManager, ID, localConcentration) 
+                : simplifiedInheritancePhenotype(phenotypeManager, ID, parent);
+            phenotypeManager.phenotypeMemo.set(ID, phenotype);
         } else if (randomSwitch) {
-            phenotype = phenotype === phenotypeManager.phenotypes.MAGENTA ? phenotypeManager.phenotypes.CYAN : phenotypeManager.phenotypes.MAGENTA;
+            phenotype = phenotype === phenotypeManager.phenotypes.MAGENTA ? 
+                phenotypeManager.phenotypes.CYAN : 
+                phenotypeManager.phenotypes.MAGENTA;
             phenotypeManager.phenotypeMemo.set(ID, phenotype);
         }
+        
+        // Return bacterium with phenotype
+        return {
+            id: ID,
+            x: x,
+            y: y,
+            angle: angle,
+            longAxis: longAxis,
+            phenotype: phenotype
+        };
+    });
+    
+    return bacteriaWithPhenotypes;
+}
 
+/**
+ * Calculates similarity metrics for each bacterium based on its spatial relationships
+ * @param {Array} bacteriaWithPhenotypes - Array of bacteria with their phenotypes assigned
+ * @param {Object} phenotypeManager - Manager containing phenotype data
+ * @returns {Array} - Array of bacteria with phenotypes and similarity metrics
+ */
+export function calculateSimilarities(bacteriaWithPhenotypes, phenotypeManager) {
+    return bacteriaWithPhenotypes.map(bacterium => {
+        const { x, y, phenotype } = bacterium;
+        
         const [totalNeighbors, magentaNeighbors, cyanNeighbors] = countNeighbors(x, y, phenotypeManager);
+        
         const magentaProportion = magentaNeighbors / totalNeighbors;
         const cyanProportion = cyanNeighbors / totalNeighbors;
         const similarity = phenotype === phenotypeManager.phenotypes.MAGENTA 
             ? magentaProportion 
             : cyanProportion;
         
-        const updatedBacterium = {
-            id:ID,
-            x:x,
-            y:y,
-            angle:angle,
-            longAxis:longAxis,
-            phenotype:phenotype,
-            similarity,
+        return {
+            ...bacterium,
+            similarity
         };
-
-        bacteriaDataUpdated.push(updatedBacterium);
     });
-    return bacteriaDataUpdated;
 }
 
