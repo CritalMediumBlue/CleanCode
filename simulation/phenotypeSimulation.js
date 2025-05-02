@@ -3,9 +3,10 @@ import {simplifiedInheritancePhenotype} from './phenotypeSimRealData.js';
 
 function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
     const { phenotypeMemo, phenotypes } = phenotypeManager;
-    
+    const originalPhenotype = phenotypeMemo.get(ID);
+
     // If phenotype already determined, use transition rules
-    if (phenotypeMemo.get(ID) !== undefined) {
+    if (originalPhenotype !== undefined) {
         const {config, signal } = phenotypeManager;
         
         // Calculate transition rates based on feedback type
@@ -20,14 +21,13 @@ function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
         }
         
         const rand = Math.random();
-        const originalPhenotype = phenotypeMemo.get(ID);
         if (originalPhenotype === phenotypes.MAGENTA) {
             return rand < K_m2c ? phenotypes.CYAN : phenotypes.MAGENTA;
-        } else {
+        } else if (originalPhenotype === phenotypes.CYAN) {
             return rand < K_c2m ? phenotypes.MAGENTA : phenotypes.CYAN;
         }
-    }  else if (phenotypeMemo.get(ID) === undefined) {
-        return Math.random() < 0.0 ? phenotypes.MAGENTA : phenotypes.CYAN;
+    }  else if (originalPhenotype === undefined) {
+        return Math.random() < 0.5 ? phenotypes.MAGENTA : phenotypes.CYAN;
     }
 }
 
