@@ -1,13 +1,17 @@
 
 import {setupNewScene, renderScene} from './scene/graphicsManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
-
-
-
-import {createBacteriumSystem,setValue,updateSimulation} from './simulation/simulationManager.js';
+import {
+    createBacteriumSystem,
+    setValue,
+    updateSimulation,
+    getGlobalParams} from './simulation/simulationManager.js';
 import { 
-    createStates,createConstants,
-    updateHistories,getHistories,resetHistories} from './state/stateManager.js';
+    createStates,
+    createConstants,
+    updateHistories,
+    getHistories,
+    resetHistories} from './state/stateManager.js';
 
 
 let appConfig;
@@ -60,10 +64,8 @@ const animate = () => {
 
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
-        ({ bacteriaDataUpdated, globalParams } = updateSimulation(
-            currentBacteria, concentrationState, appConfig
-        ));
-
+        bacteriaDataUpdated = updateSimulation(currentBacteria, concentrationState, appConfig)
+        globalParams = getGlobalParams(bacteriaDataUpdated);
         updateData();
 
         const stepsInTheFuture = 200;

@@ -14,18 +14,17 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
     const bacteriaDataUpdated = calculateSimilarities(bacteriaWithPhenotypes,phenotypeManager);
     diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
     
-    const globalParams = getGlobalParams(bacteriaDataUpdated,phenotypeManager.phenotypes);
-
-    return {bacteriaDataUpdated, globalParams};
+    return bacteriaDataUpdated;
 
 }
 
 
-function getGlobalParams(bacteriaData,phenotypes) {
+export function getGlobalParams(bacteriaData) {
     let magCount = 0;
     let cyanCount = 0;
     let averageSimilarity = 0;
     let totalCount = 0;
+    const phenotypes = phenotypeManager.phenotypes;
     bacteriaData.forEach((bacterium) => {
         const phenotype = bacterium.phenotype;
         if (phenotype === phenotypes.MAGENTA) {magCount++;} 
