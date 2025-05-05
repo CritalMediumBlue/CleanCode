@@ -18,8 +18,8 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
     
     switch (mode) {
         case 'continuous':
-            bacteriaWithInformation = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager);
-            bacteriaDataUpdated = calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
+            bacteriaWithInformation = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH,changed);
+            bacteriaDataUpdated = bacteriaWithInformation;//calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
             break;
         case 'discrete':
             bacteriaWithInformation = updateBacteriaPhenotypes(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH,changed);
@@ -29,13 +29,17 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
 
 
     concentrationState.concentrationField = diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
-    
-    return bacteriaDataUpdated;
+    const globalParams = getGlobalParams(bacteriaDataUpdated);
+    return {
+        bacteriaDataUpdated,
+        globalParams
+    };
 
 }
 
 
 export function getGlobalParams(bacteriaData) {
+
     let magCount = 0;
     let cyanCount = 0;
     let averageSimilarity = 0;
@@ -79,6 +83,7 @@ export function createBacteriumSystem(config) {
     };
     changed = new Map();
     cytoplasmManager = {
+        signal: config.BACTERIUM.SIGNAL.DEFAULT ,
         pConcentrationMemo: new Map(),
         rConcentrationMemo: new Map()
     };
