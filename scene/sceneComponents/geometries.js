@@ -63,6 +63,10 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
                 color = 0xFFFF00; // Yellow color for switch
                 capsule.children[0].visible = false;
                 break;
+            default:
+                color = 0xFFFFFF; // Default white color
+                capsule.children[0].visible = false;
+                break;
         } 
         if (changed > 0.001) {
             color = 0xFFFF00; // Yellow color for switch

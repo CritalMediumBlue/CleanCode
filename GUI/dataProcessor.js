@@ -22,7 +22,7 @@ export function processFileData(fileContent) {
             parent: bacterium.parent ? bacterium.parent : undefined,
             randomSwitch: Math.random() < 0.0001 ? true : false,
         }
-    ));
+    ));  
 
         for (const bacterium of bacteriaInTimeSlice) {
             Object.seal(bacterium);
