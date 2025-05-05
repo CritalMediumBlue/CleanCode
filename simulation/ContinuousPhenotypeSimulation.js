@@ -1,28 +1,43 @@
 import { countNeighbors, buildGrid } from './grid.js'; 
 
+
 function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     const {pConcentrationMemo, rConcentrationMemo,signal} = cytoplasmManager;
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
     const rand1 = Math.random();
     const rand2 = Math.random();
+    const Kin = 0.1;
+    const Ksyn = 1;
+    const Kp = 0.1;
+    const Kr = 6.5;
+    const Kon = 0.1;
+    const DilutionRate = 0.1;
 
     if (originalConcentrationP !== undefined && originalConcentrationR !== undefined) {
         
+        const deltaP = Kin*(localConcentration)/(Kp+localConcentration)
+        - Kon*originalConcentrationP*originalConcentrationR
+        - DilutionRate*originalConcentrationP;
         
+        const deltaR = Ksyn*(originalConcentrationR)/(Kr+originalConcentrationR)
+        - Kon*originalConcentrationP*originalConcentrationR
+        - DilutionRate*originalConcentrationR;
+
+
      
 
         return {
-            p: originalConcentrationP + (rand1-0.5)*0.01,
-            r: originalConcentrationR + (rand2-0.5)*0.01
+            p: originalConcentrationP + deltaP,
+            r: originalConcentrationR + deltaR
         }
         
 
     }  else if (originalConcentrationP === undefined || originalConcentrationR === undefined) {
 
         return {
-            p: rand1,
-            r: rand2
+            p: 0,
+            r: 1
         }
     }
 }

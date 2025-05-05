@@ -1,10 +1,15 @@
 import { ADI } from './diffusion.js';
 
 
-export function diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager) {
+export function diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager, cytoplasmManager) {
     const GRID = appConfig.GRID;
+
+    if (cytoplasmManager === undefined) {
     const IDsByColor = getIDsByColor(currentBacteria, phenotypeManager);
-    updateSourcesAndSinks(currentBacteria, concentrationState, ...IDsByColor, GRID);
+    discreteSinksAndSources(currentBacteria, concentrationState, ...IDsByColor, GRID);
+    } else if (cytoplasmManager){
+        continuousSinksAndSources(currentBacteria, concentrationState, cytoplasmManager, GRID);
+    }
     
     return diffuse(
         appConfig,
@@ -12,6 +17,26 @@ export function diffusionStep(currentBacteria, concentrationState, appConfig, ph
         1, // Time step duration in minutes (dt)
         1  // Number of substeps for ADI
          );
+}
+
+const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplasmManager, GRID) => {
+    concentrationState.sources.fill(0);
+    concentrationState.sinks.fill(0);
+    const Kout = 1;
+    const Kin = 1;
+    const Kp = 0.1;
+    const Kr = 0.2;
+    for (const bacterium of currentBacteria) {
+        const { ID } = bacterium;
+        const rConcentration = cytoplasmManager.rConcentrationMemo.get(ID);
+        const coords = getAdjustedCoordinates(bacterium.x, bacterium.y, GRID);
+        const localConcentration = concentrationState.concentrationField[coords.idx];
+        const michaelisMR = rConcentration/(Kr+rConcentration);
+        const michaelisMP = localConcentration/(Kp+localConcentration);
+
+        concentrationState.sources[coords.idx] += Kout*michaelisMR; 
+        concentrationState.sinks[coords.idx] += Kin*michaelisMP;
+    }
 }
 
 
@@ -34,7 +59,7 @@ function getIDsByColor(currentBacteria, phenotypeManager) {
     return [magentaIDs, cyanIDs];
 }
 
-function updateSourcesAndSinks(currentBacteria, concentrationState, magentaIDsRaw, cyanIDsRaw, GRID) {
+function discreteSinksAndSources(currentBacteria, concentrationState, magentaIDsRaw, cyanIDsRaw, GRID) {
     const MagentaIDs = new Set(magentaIDsRaw);
     const CyanIDs = new Set(cyanIDsRaw);
 

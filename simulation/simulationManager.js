@@ -22,16 +22,19 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
             bacteriaWithInformation = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH,changed);
             bacteriaDataUpdated = bacteriaWithInformation;//calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
             globalParams = getGlobalParamsCont(bacteriaDataUpdated);
+            concentrationState.concentrationField = diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager,cytoplasmManager);
+
             break;
         case 'discrete':
             bacteriaWithInformation = updateBacteriaPhenotypes(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH,changed);
             bacteriaDataUpdated = calculateSimilarities(bacteriaWithInformation,phenotypeManager);
             globalParams = getGlobalParams(bacteriaDataUpdated);
+            concentrationState.concentrationField = diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
+
             break;
     }   
 
 
-    concentrationState.concentrationField = diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
     
     return {
         bacteriaDataUpdated,
@@ -69,7 +72,7 @@ function getGlobalParamsCont(bacteriaData) {
 
     let totalAimP = 0;
     let totalAimR = 0;
-    let extracellulatAimP = 1;
+    let extracellulatAimP = 0.5;
     let totalCount = 0;
 
     bacteriaData.forEach((bacterium) => {
@@ -79,12 +82,12 @@ function getGlobalParamsCont(bacteriaData) {
         totalAimR+=aimR
         totalCount++;
     } );
-
+    
 
     const globalParams = [
         Math.round(totalCount),
-        Math.round(totalAimP),
         totalAimR,
+        totalAimP,
         extracellulatAimP,
     ];
     return globalParams;
