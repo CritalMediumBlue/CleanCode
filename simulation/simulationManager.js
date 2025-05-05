@@ -67,16 +67,25 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
 }
 function getGlobalParamsCont(bacteriaData) {
 
-    let magCount = 1.2+(Math.random()-0.5)*0.1;
-    let cyanCount = 1.3+(Math.random()-0.5)*0.1;
-    let averageSimilarity = 0.5+(Math.random()-0.5)*0.1;
-    let totalCount = 2.5+(Math.random()-0.5)*0.1;
-    
+    let totalAimP = 0;
+    let totalAimR = 0;
+    let extracellulatAimP = 1;
+    let totalCount = 0;
+
+    bacteriaData.forEach((bacterium) => {
+        const aimP = bacterium.cytoplasmConcentrations.p
+        const aimR = bacterium.cytoplasmConcentrations.r
+        totalAimP+=aimP
+        totalAimR+=aimR
+        totalCount++;
+    } );
+
+
     const globalParams = [
         Math.round(totalCount),
-        Math.round(magCount),
-        cyanCount,
-        averageSimilarity,
+        Math.round(totalAimP),
+        totalAimR,
+        extracellulatAimP,
     ];
     return globalParams;
 }
