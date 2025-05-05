@@ -25,7 +25,7 @@ const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplas
     const Kout = 1;
     const Kin = 1;
     const Kp = 0.1;
-    const Kr = 0.2;
+    const Kr = 0.5;
     for (const bacterium of currentBacteria) {
         const { ID } = bacterium;
         const rConcentration = cytoplasmManager.rConcentrationMemo.get(ID);
@@ -91,7 +91,10 @@ function getAdjustedCoordinates(x, y, grid) {
   
     // Skip bacteria below the grid's bottom edge.
     if (adjustedY <= 0) {
-        return null;
+        adjustedY = 0;
+    }
+    if (adjustedX <= 0) {
+        adjustedX = 0;
     }
   
     // Clamp coordinates to valid grid boundaries (leaving a 1-cell border).
