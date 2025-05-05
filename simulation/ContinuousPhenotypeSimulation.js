@@ -9,7 +9,7 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     const Kin = 1;
     const Ksyn = 1;
     const Kp = 0.1;
-    const Kr = 3;
+    const Kr = 1;
     const Kon = 0.1;
     const DilutionRate = 0.05;
 
