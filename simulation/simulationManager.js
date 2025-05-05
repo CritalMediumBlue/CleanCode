@@ -85,7 +85,7 @@ function getGlobalParamsCont(bacteriaData) {
     
 
     const globalParams = [
-        Math.round(totalCount),
+        totalCount,
         totalAimR,
         totalAimP,
         extracellulatAimP,

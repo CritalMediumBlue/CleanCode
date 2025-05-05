@@ -28,9 +28,13 @@ function createMesh(THREE, GRID) {
     ); // width, height, widthSegments, heightSegments
     
     const material = new THREE.MeshBasicMaterial({
-        wireframe: true, 
+        //wireframe: true, 
         wireframeLinewidth: 1,
-        vertexColors: true
+        vertexColors: true,
+        transparent: true,
+        side: THREE.DoubleSide,
+        
+
     });
 
     // Initialize the color attribute buffer before creating the mesh
@@ -104,8 +108,8 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultipli
 
             // --- Update Height (Z-position) ---
             const concentration = concentrationData[idx];
-            const height = concentration; // Direct mapping
-            positions[bufferIndex + 2] = height * heightMultiplier; // Set Z value
+            const height = concentration* heightMultiplier; // Direct mapping
+            positions[bufferIndex + 2] = height ; // Set Z value
 
             // --- Update Color ---
             const { r, g, b } = calculateColor(concentration);

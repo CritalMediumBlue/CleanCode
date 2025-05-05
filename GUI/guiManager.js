@@ -24,6 +24,10 @@ export const addEventListeners = ( init, guiActions) => {
                 CONFIG.BACTERIUM.COLOR_BY_SIMILARITY = (selectedValue === 'similarity');
             }
         },
+        {
+            id:'MeshVisibleButton', event: 'click', handler: () => {guiActions.setMeshVisible()}
+        },
+        
 
         {
             id: 'toggleFeedbackButton', event: 'change', handler: (event) => {

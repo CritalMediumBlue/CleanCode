@@ -24,14 +24,16 @@ const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplas
     concentrationState.sinks.fill(0);
     const Kout = 1;
     const Kin = 1;
-    const Kp = 0.1;
-    const Kr = 0.5;
+    const Kp = 0.05;
+    const Kr = 0.05;
     for (const bacterium of currentBacteria) {
         const { ID } = bacterium;
         const rConcentration = cytoplasmManager.rConcentrationMemo.get(ID);
         const coords = getAdjustedCoordinates(bacterium.x, bacterium.y, GRID);
         const localConcentration = concentrationState.concentrationField[coords.idx];
+        
         const michaelisMR = rConcentration/(Kr+rConcentration);
+        
         const michaelisMP = localConcentration/(Kp+localConcentration);
 
         concentrationState.sources[coords.idx] += Kout*michaelisMR; 

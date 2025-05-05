@@ -43,6 +43,9 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
     stage.renderer.render(stage.scene, stage.camera);
 }
 
+export function meshVisibility() {
+    mesh.visible = !mesh.visible;
+}
 
 
 

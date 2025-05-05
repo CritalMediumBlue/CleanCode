@@ -1,5 +1,5 @@
 
-import {setupNewScene, renderScene} from './scene/graphicsManager.js';
+import {setupNewScene, renderScene,meshVisibility} from './scene/graphicsManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
 import {
     createBacteriumSystem,
@@ -30,7 +30,8 @@ let storedProcessedData;
 
 const guiActions = {
     setValue: (value) => {setValue(value);},
-    setPlayState: (isPlaying) => {animationState.play = isPlaying;}
+    setPlayState: (isPlaying) => {animationState.play = isPlaying;},
+    setMeshVisible: () => {meshVisibility();},
 };
 
 
