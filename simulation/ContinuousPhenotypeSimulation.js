@@ -43,14 +43,14 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrations, cytopla
         }
        
         
-        cytoplasmConcentrations = inheritanceConcentration(cytoplasmManager, ID, localConcentration) 
+        const cytoplasmConcentrations = inheritanceConcentration(cytoplasmManager, ID, localConcentration) 
 
 
         cytoplasmManager.pConcentrationMemo.set(ID, cytoplasmConcentrations.p);
         cytoplasmManager.rConcentrationMemo.set(ID, cytoplasmConcentrations.r);
         
 
-     
+        
         
         // Return bacterium with phenotype
         return {
@@ -59,8 +59,8 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrations, cytopla
             y: y,
             angle: angle,
             longAxis: longAxis,
-            pConcentration: cytoplasmConcentrations.p,
-            rConcentration: cytoplasmConcentrations.r,
+            phenotype: "continuous",
+            cytoplasmConcentrations
         };
     });
     

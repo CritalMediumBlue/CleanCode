@@ -8,28 +8,31 @@ let changed;
 let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
-const mode = 'discrete'; // or 'discrete'
+const mode = 'continuous'; // or 'discrete'
 
 export function updateSimulation(currentBacteria, concentrationState, appConfig) {
 
     const concentration = concentrationState.concentrationField;
     let bacteriaWithInformation;
     let bacteriaDataUpdated;
+    let globalParams = null;
     
     switch (mode) {
         case 'continuous':
             bacteriaWithInformation = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH,changed);
             bacteriaDataUpdated = bacteriaWithInformation;//calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
+            globalParams = getGlobalParamsCont(bacteriaDataUpdated);
             break;
         case 'discrete':
             bacteriaWithInformation = updateBacteriaPhenotypes(currentBacteria, concentration,phenotypeManager,HEIGHT,WIDTH,changed);
             bacteriaDataUpdated = calculateSimilarities(bacteriaWithInformation,phenotypeManager);
+            globalParams = getGlobalParams(bacteriaDataUpdated);
             break;
     }   
 
 
     concentrationState.concentrationField = diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
-    const globalParams = getGlobalParams(bacteriaDataUpdated);
+    
     return {
         bacteriaDataUpdated,
         globalParams
@@ -38,7 +41,7 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
 }
 
 
-export function getGlobalParams(bacteriaData) {
+ function getGlobalParams(bacteriaData) {
 
     let magCount = 0;
     let cyanCount = 0;
@@ -62,6 +65,23 @@ export function getGlobalParams(bacteriaData) {
     ];
     return globalParams;
 }
+function getGlobalParamsCont(bacteriaData) {
+
+    let magCount = 1.2+(Math.random()-0.5)*0.1;
+    let cyanCount = 1.3+(Math.random()-0.5)*0.1;
+    let averageSimilarity = 0.5+(Math.random()-0.5)*0.1;
+    let totalCount = 2.5+(Math.random()-0.5)*0.1;
+    
+    const globalParams = [
+        Math.round(totalCount),
+        Math.round(magCount),
+        cyanCount,
+        averageSimilarity,
+    ];
+    return globalParams;
+}
+
+
 
 export function setValue(value) {
     
