@@ -1,6 +1,6 @@
-import {updateBacteriaPhenotypes,calculateSimilarities} from './phenotypeSimulation.js';
+import {updateBacteriaPhenotypes,calculateSimilarities} from './DiscretePhenotypeSimulation.js';
 import { diffusionStep } from './diffusionManager.js';
-import { updateBacteriaCytoplasm, calculateCorrelations } from './citoplasmSimulation.js';
+import { updateBacteriaCytoplasm, calculateCorrelations } from './ContinuousPhenotypeSimulation.js';
 
 
 let phenotypeManager = null;
@@ -78,6 +78,12 @@ export function createBacteriumSystem(config) {
         phenotypeMemo: new Map()
     };
     changed = new Map();
+    cytoplasmManager = {
+        pConcentrationMemo: new Map(),
+        rConcentrationMemo: new Map()
+    };
+    Object.seal(cytoplasmManager);
+    Object.preventExtensions(cytoplasmManager);
     Object.seal(phenotypeManager);
     Object.preventExtensions(phenotypeManager);
     WIDTH = config.GRID.WIDTH;
