@@ -6,8 +6,7 @@ export function diffuse(
     timeStep,
     subSteps
 ) {
-    const WIDTH = appConfig.GRID.WIDTH;
-    const HEIGHT = appConfig.GRID.HEIGHT;
+    
     const DIFFUSION_RATE = appConfig.GRID.DIFFUSION_RATE;
     const currentConcentrationData = concentrationState.concentrationField;
     const nextConcentrationData = concentrationState.concentrationField;
@@ -15,8 +14,8 @@ export function diffuse(
     const sinks = concentrationState.sinks;
     
     concentrationState.concentrationField=ADI(
-        WIDTH, HEIGHT,
-        currentConcentrationData, nextConcentrationData, // Input concentration arrays
+       
+        currentConcentrationData, // Input concentration arrays
         sources, sinks, // Input source/sink arrays
         DIFFUSION_RATE, // Diffusion coefficient
         timeStep, // Time step duration in minutes (dt)

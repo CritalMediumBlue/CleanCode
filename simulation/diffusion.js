@@ -102,9 +102,12 @@ const checkForUnexpectedValues = (array, name) => {
 
 
 
-export const ADI = (WIDTH, HEIGHT, 
-    currentConcentrationData, nextConcentrationData,
+export const ADI = ( 
+    currentConcentrationData,
     sources, sinks, DIFFUSION_RATE, deltaT, deltaX) => {
+
+     const WIDTH = 100;
+     const HEIGHT = 60;
     
     // Temporary arrays for the ADI method
     const a = new Float32Array(Math.max(WIDTH, HEIGHT)); // Lower diagonal
@@ -115,6 +118,7 @@ export const ADI = (WIDTH, HEIGHT,
     
     // Intermediate array to store results after the first half-step
     const intermediateData = new Float32Array(WIDTH * HEIGHT);
+    const nextConcentrationData = new Float32Array(WIDTH * HEIGHT);
     
     // Check for NaN values in current concentration data and replace with safe values
     checkForUnexpectedValues(currentConcentrationData, 'currentConcentrationData');
