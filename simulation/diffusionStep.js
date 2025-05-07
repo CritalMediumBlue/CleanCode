@@ -2,9 +2,8 @@ import { ADI } from './diffusion.js';
 
 export function diffuse(
     appConfig,
-    concentrationState,
-    timeStep,
-    subSteps
+    concentrationState
+   
 ) {
     
     const DIFFUSION_RATE = appConfig.GRID.DIFFUSION_RATE;
@@ -15,10 +14,12 @@ export function diffuse(
     concentrationState.concentrationField=ADI(
        
         currentConcentrationData, // Input concentration arrays
-        sources, sinks, // Input source/sink arrays
+        sources,
+         sinks, // Input source/sink arrays
+         1,
+         1,
         DIFFUSION_RATE, // Diffusion coefficient
-        timeStep, // Time step duration in minutes (dt)
-        subSteps // Number of substeps for ADI
+        
     );
 }
 

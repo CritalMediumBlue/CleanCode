@@ -104,7 +104,7 @@ const checkForUnexpectedValues = (array, name) => {
 
 export const ADI = ( 
     currentConcentrationData,
-    sources, sinks, DIFFUSION_RATE, deltaT, deltaX) => {
+    sources, sinks,deltaT, deltaX, DIFFUSION_RATE ) => {
 
      const WIDTH = 100;
      const HEIGHT = 60;
