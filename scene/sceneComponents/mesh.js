@@ -107,7 +107,7 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultipli
             const bufferIndex = 3 * idx; // Base index for position and color arrays
 
             // --- Update Height (Z-position) ---
-            const concentration = concentrationData[idx];
+            const concentration = concentrationData[idx]*2;
             const height = concentration* heightMultiplier; // Direct mapping
             positions[bufferIndex + 2] = height ; // Set Z value
 

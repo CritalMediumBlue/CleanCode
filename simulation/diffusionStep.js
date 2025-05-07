@@ -1,0 +1,72 @@
+import { ADI } from './diffusion.js';
+
+export function diffuse(
+    appConfig,
+    concentrationState,
+    timeStep,
+    subSteps
+) {
+    const WIDTH = appConfig.GRID.WIDTH;
+    const HEIGHT = appConfig.GRID.HEIGHT;
+    const DIFFUSION_RATE = appConfig.GRID.DIFFUSION_RATE;
+    const currentConcentrationData = concentrationState.concentrationField;
+    const nextConcentrationData = concentrationState.concentrationField;
+    const sources = concentrationState.sources;
+    const sinks = concentrationState.sinks;
+    
+    return ADI(
+        WIDTH, HEIGHT,
+        currentConcentrationData, nextConcentrationData, // Input concentration arrays
+        sources, sinks, // Input source/sink arrays
+        DIFFUSION_RATE, // Diffusion coefficient
+        timeStep, // Time step duration in minutes (dt)
+        subSteps // Number of substeps for ADI
+    );
+}
+
+
+
+/* 
+
+export const requestDiffusionCalculation = (   concentrationState , diffParams, dataState, sceneConf) => {
+    if (isWorkerBusy) return; // Skip if the worker is busy
+
+    isWorkerBusy = true;
+    globalDataState = dataState; // Store reference to dataState
+
+    const { sources, sinks } = dataState;
+    const { DELTA_X: deltaX, DELTA_T: deltaT, DIFFUSION_RATE } = diffParams;
+    const concentration1  = concentrationState.concentrationField;
+
+    diffusionWorker.postMessage({
+        concentration1,
+        sources,
+        sinks,
+        diffParams, // Pass the entire diffParams object
+        DIFFUSION_RATE,
+        deltaX,
+        deltaT,
+        method: diffParams.METHOD,
+        timeLapse: diffParams.TIME_LAPSE,
+        sceneConf  // Pass the entire sceneConf object
+    });
+};
+
+// Handle messages from the Web Worker
+diffusionWorker.onmessage = function(e) {
+    const { currentConcentrationData, steadyState } = e.data;
+
+    if (globalDataState) {
+        globalDataState.currentConcentrationData = currentConcentrationData;
+        globalDataState.steadyState = steadyState;
+        globalDataState.currentTimeStep++;
+    }
+    isWorkerBusy = false;
+};
+
+// Handle errors from the Web Worker
+diffusionWorker.onerror = function(error) {
+    console.error('Diffusion Worker Error:', error);
+    isWorkerBusy = false;
+};
+ */

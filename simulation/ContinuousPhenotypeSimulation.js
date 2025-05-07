@@ -1,4 +1,4 @@
-import { countNeighbors, buildGrid } from './grid.js'; 
+import { buildGrid } from './grid.js'; 
 
 
 function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {

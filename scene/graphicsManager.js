@@ -32,7 +32,7 @@ export function setupNewScene(config) {
 
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, animationState, constants, nextSlices) {
     const concentration = concentrationState.concentrationField;
-    updateSurfaceMesh(mesh, concentration, 10);
+    updateSurfaceMesh(mesh, concentration, 30);
     if(bacteriaData) {
         updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
     }

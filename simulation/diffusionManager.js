@@ -1,7 +1,6 @@
-import { ADI } from './diffusion.js';
 
 
-export function diffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager, cytoplasmManager) {
+export function prepareDiffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager, cytoplasmManager) {
     const GRID = appConfig.GRID;
 
     if (cytoplasmManager === undefined) {
@@ -11,12 +10,6 @@ export function diffusionStep(currentBacteria, concentrationState, appConfig, ph
         continuousSinksAndSources(currentBacteria, concentrationState, cytoplasmManager, GRID);
     }
     
-    return diffuse(
-        appConfig,
-        concentrationState,
-        1, // Time step duration in minutes (dt)
-        1  // Number of substeps for ADI
-         );
 }
 
 const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplasmManager, GRID) => {
@@ -109,27 +102,3 @@ function getAdjustedCoordinates(x, y, grid) {
     return { x: adjustedX, y: adjustedY, idx };
 }
 
-
- function diffuse(
-    appConfig,
-    concentrationState,
-    timeStep,
-    subSteps
-) {
-    const WIDTH = appConfig.GRID.WIDTH;
-    const HEIGHT = appConfig.GRID.HEIGHT;
-    const DIFFUSION_RATE = appConfig.GRID.DIFFUSION_RATE;
-    const currentConcentrationData = concentrationState.concentrationField;
-    const nextConcentrationData = concentrationState.concentrationField;
-    const sources = concentrationState.sources;
-    const sinks = concentrationState.sinks;
-    
-    return ADI(
-        WIDTH, HEIGHT,
-        currentConcentrationData, nextConcentrationData, // Input concentration arrays
-        sources, sinks, // Input source/sink arrays
-        DIFFUSION_RATE, // Diffusion coefficient
-        timeStep, // Time step duration in minutes (dt)
-        subSteps // Number of substeps for ADI
-    );
-}
