@@ -21,7 +21,7 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
     switch (mode) {
         case 'continuous':
             bacteriaWithInformation = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH,changed);
-            bacteriaDataUpdated = bacteriaWithInformation;//calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
+            bacteriaDataUpdated = calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
             globalParams = getGlobalParamsCont(bacteriaDataUpdated);
             prepareDiffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager,cytoplasmManager);
             concentrationState.concentrationField = diffuse(appConfig, concentrationState,1,1)
