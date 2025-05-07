@@ -3,53 +3,68 @@ import { ADI } from './diffusion.js';
 export function diffuse(
     appConfig,
     concentrationState
-   
 ) {
     
-    const DIFFUSION_RATE = appConfig.GRID.DIFFUSION_RATE;
+    const diffusionRate = appConfig.GRID.DIFFUSION_RATE;
     const currentConcentrationData = concentrationState.concentrationField;
     const sources = concentrationState.sources;
     const sinks = concentrationState.sinks;
     const deltaX = 1;
     const deltaT = 1; 
+    const timeLapse = 5; //5 seconds
+    const method = "ADI";
+    const dataState = null;
     
     concentrationState.concentrationField=ADI(
        
         currentConcentrationData, // Input concentration arrays
         sources,
-         sinks, // Input source/sink arrays
-         deltaX, 
-            deltaT, // Time step
-        DIFFUSION_RATE, // Diffusion coefficient
+        sinks, // Input source/sink arrays
+        deltaX, 
+        deltaT, // Time step
+        timeLapse,
+        diffusionRate, // Diffusion coefficient
+        method, // Diffusion method
+        dataState // Data state object
         
     );
 }
 
-
-
 /* 
+const MAX_WORKERS = navigator.hardwareConcurrency || 4;
+console.log("Max Workers", MAX_WORKERS);
+const diffusionWorker = new Worker('./simulation/diffusionWorker.js', { type: 'module' });
+let isWorkerBusy = false; // Flag to track if the worker is busy
+let globalDataState = null; // Store a reference to the dataState object
+ 
 
-export const requestDiffusionCalculation = (   concentrationState , diffParams, dataState, sceneConf) => {
+export const requestDiffusionCalculation = (
+    concentration1,
+    sources,
+    sinks,
+     deltaX,
+     deltaT,
+     timeLapse,
+     diffusionRate,
+     method,
+     dataState) => {
     if (isWorkerBusy) return; // Skip if the worker is busy
 
     isWorkerBusy = true;
     globalDataState = dataState; // Store reference to dataState
 
-    const { sources, sinks } = dataState;
-    const { DELTA_X: deltaX, DELTA_T: deltaT, DIFFUSION_RATE } = diffParams;
-    const concentration1  = concentrationState.concentrationField;
 
+    
+   
     diffusionWorker.postMessage({
         concentration1,
         sources,
         sinks,
-        diffParams, // Pass the entire diffParams object
-        DIFFUSION_RATE,
+        diffusionRate,
         deltaX,
         deltaT,
-        method: diffParams.METHOD,
-        timeLapse: diffParams.TIME_LAPSE,
-        sceneConf  // Pass the entire sceneConf object
+        method: method,
+        timeLapse: timeLapse,
     });
 };
 
@@ -70,4 +85,5 @@ diffusionWorker.onerror = function(error) {
     console.error('Diffusion Worker Error:', error);
     isWorkerBusy = false;
 };
+
  */
