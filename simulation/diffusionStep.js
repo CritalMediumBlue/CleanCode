@@ -9,7 +9,6 @@ export function diffuse(
     
     const DIFFUSION_RATE = appConfig.GRID.DIFFUSION_RATE;
     const currentConcentrationData = concentrationState.concentrationField;
-    const nextConcentrationData = concentrationState.concentrationField;
     const sources = concentrationState.sources;
     const sinks = concentrationState.sinks;
     
