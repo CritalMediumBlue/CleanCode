@@ -10,14 +10,16 @@ export function diffuse(
     const currentConcentrationData = concentrationState.concentrationField;
     const sources = concentrationState.sources;
     const sinks = concentrationState.sinks;
+    const deltaX = 1;
+    const deltaT = 1;
     
     concentrationState.concentrationField=ADI(
        
         currentConcentrationData, // Input concentration arrays
         sources,
          sinks, // Input source/sink arrays
-         1,
-         1,
+         deltaX, 
+            deltaT, // Time step
         DIFFUSION_RATE, // Diffusion coefficient
         
     );
