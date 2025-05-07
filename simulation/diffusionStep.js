@@ -11,7 +11,7 @@ export function diffuse(
     const sources = concentrationState.sources;
     const sinks = concentrationState.sinks;
     const deltaX = 1;
-    const deltaT = 1;
+    const deltaT = 1; 
     
     concentrationState.concentrationField=ADI(
        
