@@ -30,7 +30,7 @@ export function diffuse(
     );
 }
 
-/* 
+/*    
 const MAX_WORKERS = navigator.hardwareConcurrency || 4;
 console.log("Max Workers", MAX_WORKERS);
 const diffusionWorker = new Worker('./simulation/diffusionWorker.js', { type: 'module' });
