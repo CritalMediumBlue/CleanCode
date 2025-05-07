@@ -24,7 +24,7 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
             bacteriaDataUpdated = calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
             globalParams = getGlobalParamsCont(bacteriaDataUpdated);
             prepareDiffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager,cytoplasmManager);
-            concentrationState.concentrationField = diffuse(appConfig, concentrationState,1,1)
+            diffuse(appConfig, concentrationState,1,1)
 
             break;
         case 'discrete':
@@ -32,7 +32,7 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
             bacteriaDataUpdated = calculateSimilarities(bacteriaWithInformation,phenotypeManager);
             globalParams = getGlobalParams(bacteriaDataUpdated);
             prepareDiffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
-            concentrationState.concentrationField = diffuse(appConfig, concentrationState,1,1)
+            diffuse(appConfig, concentrationState,1,1)
 
             break;
     }   

@@ -51,8 +51,8 @@ export const CONFIG = {
         CYAN: 'CYAN'
     },
     GRID: {
-        WIDTH: 102,
-        HEIGHT: 62,
+        WIDTH: 100,
+        HEIGHT: 60,
         DIFFUSION_RATE: 0.01,
     },
 };

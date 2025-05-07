@@ -14,7 +14,7 @@ export function diffuse(
     const sources = concentrationState.sources;
     const sinks = concentrationState.sinks;
     
-    return ADI(
+    concentrationState.concentrationField=ADI(
         WIDTH, HEIGHT,
         currentConcentrationData, nextConcentrationData, // Input concentration arrays
         sources, sinks, // Input source/sink arrays
