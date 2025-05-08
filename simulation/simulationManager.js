@@ -1,6 +1,5 @@
 import {updateBacteriaPhenotypes,calculateSimilarities} from './DiscretePhenotypeSimulation.js';
 import { prepareDiffusionStep} from './diffusionManager.js';
-import { diffuse } from './diffusionStep.js';
 import { updateBacteriaCytoplasm, calculateCorrelations } from './ContinuousPhenotypeSimulation.js';
 
 
@@ -24,7 +23,6 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
             bacteriaDataUpdated = calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
             globalParams = getGlobalParamsCont(bacteriaDataUpdated);
             prepareDiffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager,cytoplasmManager);
-            diffuse(appConfig, concentrationState)
 
             break;
         case 'discrete':
@@ -32,7 +30,6 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
             bacteriaDataUpdated = calculateSimilarities(bacteriaWithInformation,phenotypeManager);
             globalParams = getGlobalParams(bacteriaDataUpdated);
             prepareDiffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager);
-            diffuse(appConfig, concentrationState)
 
             break;
     }   

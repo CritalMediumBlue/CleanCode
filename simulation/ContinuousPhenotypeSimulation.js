@@ -1,5 +1,4 @@
-import { buildGrid } from './grid.js'; 
-
+import { getAdjustedCoordinates } from "./grid.js";
 
 function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     const {pConcentrationMemo, rConcentrationMemo,signal} = cytoplasmManager;
@@ -42,12 +41,12 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
 }
 
 export const updateBacteriaCytoplasm = (currentBacteria, concentrations, cytoplasmManager,HEIGHT,WIDTH) => {
-    buildGrid(currentBacteria);
 
     const bacteriaWithConcentrations = currentBacteria.map((bacterium) => {
         const { x, y, longAxis, angle, ID, parent } = bacterium;
         
-        const idx = Math.round(y + HEIGHT/2) * WIDTH + Math.round(x + WIDTH/2);
+        const adjustedCoords = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
+        const idx = adjustedCoords.idx;
         const localConcentration = concentrations[idx] || 0;
 
         // Check if ID already exists in memo

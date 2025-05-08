@@ -77,3 +77,26 @@ export function countNeighbors(x, y, phenotypeManager) {
 }
 
 
+
+export function getAdjustedCoordinates(x, y, HEIGHT, WIDTH) {
+  // Translate coordinates so (0,0) is the bottom-left corner of the grid, then round.
+  let adjustedX = Math.round(x + WIDTH / 2);
+  let adjustedY = Math.round(y + HEIGHT / 2);
+
+  // Skip bacteria below the grid's bottom edge.
+  if (adjustedY <= 0) {
+      adjustedY = 0;
+  }
+  if (adjustedX <= 0) {
+      adjustedX = 0;
+  }
+
+  // Clamp coordinates to valid grid boundaries (leaving a 1-cell border).
+  adjustedY = Math.min(adjustedY, HEIGHT - 2); 
+  adjustedX = Math.max(1, Math.min(adjustedX, WIDTH - 2));
+
+  // Calculate the 1D index corresponding to the 2D grid coordinates.
+  const idx = adjustedY * WIDTH + adjustedX;
+
+  return { x: adjustedX, y: adjustedY, idx };
+}
