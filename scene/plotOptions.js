@@ -102,7 +102,7 @@ export function createPlotOptions({ width, height, type }) {
                     scale: '%'
                 }
             ]
-        };
+        }; 
     } else if (type == 'phaseSpace') {
         return {
           width,
