@@ -113,8 +113,8 @@ export function createPlotOptions({ width, height, type }) {
             { label: "Y", points: { show: false } } // We'll draw points ourselves
           ],
           scales: {
-            x: { time: false, auto: false, min: 0, max: 13 },
-            y: { auto: false, min: 0, max: 10 }
+            x: { time: false, auto: false, min: 0, max: 4.5 },
+            y: { auto: false, min: 0, max: 2.5 }
           },
           axes: [
             { stroke: axisTextColor, grid: { show: true, stroke: strokeColor }, font: "12px Arial", color: axisTextColor, label: "P Concentration" },

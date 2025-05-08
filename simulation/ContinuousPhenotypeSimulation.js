@@ -5,12 +5,12 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
     
-    const Kin = 0.5;
-    const Ksyn = 0.5;
-    const Kp = 0.1;
-    const Kr = 1;
-    const Kon = 0.1;
-    const DilutionRate = 0.05;
+    const Kin = 0.316;   //0.317 is too much  // 0.315 is too little
+    const Ksyn = 0.4;
+    const Kp = 0.105;
+    const Kr = 0.4;
+    const Kon = 0.35;
+    const DilutionRate = 0.06;
 
     if (originalConcentrationP !== undefined && originalConcentrationR !== undefined) {
         
@@ -34,8 +34,8 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     }  else if (originalConcentrationP === undefined || originalConcentrationR === undefined) {
 
         return {
-            p: 0,
-            r: 1
+            p: 0.5,
+            r: 0.5
         }
     }
 }
