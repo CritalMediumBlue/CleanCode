@@ -6,8 +6,21 @@ import { createPlotOptions } from './plotOptions.js';
  * @param {Object} config - Configuration options for the plot
  * @returns {Object} - Reference to the created plot
  */
-export function setupPlot(uPlot) {
-    const plotContainer = document.getElementById('plot-overlay');
+export function setupPlot(uPlot,type) {
+    let Id = null;
+    let initData = null;
+    if (type === 'timeSeries') {
+        Id = 'plot-overlay';
+        initData = [0,0,0,0];
+    } else if (type === 'phaseSpace') {
+        Id = 'plot-overlay2';
+        initData = [
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // x values
+            [2, 8, 6, 4, 1, 3, 9, 5, 7, 10]  // y values
+          ];
+    }
+        
+    const plotContainer = document.getElementById(Id);
     
     // Clear previous content
     plotContainer.innerHTML = '';
@@ -18,10 +31,11 @@ export function setupPlot(uPlot) {
     
     const options = createPlotOptions({
         width,
-        height
+        height,
+        type
     });
     
-    return new uPlot(options, [0,0,0,0,0], plotContainer);
+    return new uPlot(options,initData, plotContainer);
 }
 
 /**
@@ -31,14 +45,18 @@ export function setupPlot(uPlot) {
  * @param {Array} cyanHistory - History of cyan bacteria counts
  * @param {Array} similarityHistory - History of similarity values
  */
-export function updatePlot(data, plot) {
-  
+export function updatePlot(data, plot, type) {
+  if(type === 'phaseSpace') {
+    plot.setData(data);
+  }
+    else if(type === 'timeSeries') {
     const end = data[0].length;
     const start = Math.max(0, end - 500);
 
     const slicedData = sliceData(start, end, data);
     
     plot.setData(slicedData);
+    }
 }
 
 function sliceData(start, end, data) {
