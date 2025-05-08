@@ -5,8 +5,8 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
     
-    const Kin = 1;
-    const Ksyn = 1;
+    const Kin = 0.5;
+    const Ksyn = 0.5;
     const Kp = 0.1;
     const Kr = 1;
     const Kon = 0.1;

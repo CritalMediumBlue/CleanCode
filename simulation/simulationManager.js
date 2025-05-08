@@ -21,7 +21,7 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
         case 'continuous':
             bacteriaWithInformation = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH,changed);
             bacteriaDataUpdated = calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
-            globalParams = getGlobalParamsCont(bacteriaDataUpdated);
+            globalParams = getGlobalParamsCont(bacteriaDataUpdated,concentration);
             prepareDiffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager,cytoplasmManager);
 
             break;
@@ -68,11 +68,11 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig)
     ];
     return globalParams;
 }
-function getGlobalParamsCont(bacteriaData) {
-
+function getGlobalParamsCont(bacteriaData,concentration) {
+    let length = concentration.length;
     let totalAimP = 0;
     let totalAimR = 0;
-    let extracellulatAimP = 0.5;
+    let extracellulatAimP = 0;
     let totalCount = 0;
 
     bacteriaData.forEach((bacterium) => {
@@ -82,6 +82,11 @@ function getGlobalParamsCont(bacteriaData) {
         totalAimR+=aimR
         totalCount++;
     } );
+
+    for (let i = 0; i < length; i++) {
+        extracellulatAimP += concentration[i];
+    }
+    extracellulatAimP = extracellulatAimP/length;
     
 
     const globalParams = [

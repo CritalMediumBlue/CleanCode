@@ -11,7 +11,7 @@ export function setupPlot(uPlot,type) {
     let initData = null;
     if (type === 'timeSeries') {
         Id = 'plot-overlay';
-        initData = [0,0,0,0];
+        initData = [[0], [1], [2], [3], [4]]; // Initialize with empty arrays for each series
     } else if (type === 'phaseSpace') {
         Id = 'plot-overlay2';
         initData = [
