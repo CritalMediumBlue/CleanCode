@@ -109,7 +109,7 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultipli
             // --- Update Height (Z-position) ---
             const concentration = concentrationData[idx]*2;
             const height = concentration* heightMultiplier; // Direct mapping
-            positions[bufferIndex + 2] = height-2 ; // Set Z value
+            positions[bufferIndex + 2] = height-1 ; // Set Z value
 
             // --- Update Color ---
             const { r, g, b } = calculateColor(concentration);
