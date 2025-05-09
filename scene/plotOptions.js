@@ -8,7 +8,7 @@ export function createPlotOptions({ width, height, type }) {
           v = d[d.length - 1];
           if (suffix == '%') {
             v = v.toFixed(2);
-            return v == null ? null : v + suffix;
+            return v == null ? null : v;
           }
           else {
             return v == null ? null : v;
@@ -47,21 +47,21 @@ export function createPlotOptions({ width, height, type }) {
                     width: 1,
                 },
                 {
-                    label: "Mag",
+                    label: "AimR",
                     scale: "%",
                     value: makeFmt('%'),
                     stroke: "magenta",
                     width: 2,
                 },
                 {
-                    label: "Cya",
+                    label: "AimP",
                     scale: "%",
                     value: makeFmt('%'),
                     stroke: "cyan",
                     width: 2,
                 },
                 {
-                    label: "Sim",
+                    label: "Con",
                     scale: "%",
                     value: makeFmt('%'),
                     stroke: "yellow",
@@ -143,11 +143,11 @@ export function createPlotOptions({ width, height, type }) {
                   else color = "white"; */
         
                   ctx.beginPath();
-                  ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                  ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
                   ctx.fillStyle = color;
                   ctx.fill();
                   ctx.strokeStyle = "#222"; // Optional: outline
-                  ctx.lineWidth = 0.5;
+                  ctx.lineWidth = 0.2;
                   ctx.stroke();
                   ctx.closePath();
                 }

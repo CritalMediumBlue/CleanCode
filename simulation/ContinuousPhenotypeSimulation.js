@@ -5,10 +5,10 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
     
-    const Kin = 0.316;   //0.317 is too much  // 0.315 is too little
-    const Ksyn = 0.4;
+    const Kin = 0.316;   //0.316 is the default
+    const Ksyn = 0.4;    //0.4 is the default
     const Kp = 0.105;
-    const Kr = 0.4;
+    const Kr = 0.5;    //0.4 is the default
     const Kon = 0.35;
     const DilutionRate = 0.06;
 
