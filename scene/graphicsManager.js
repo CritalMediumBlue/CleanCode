@@ -63,6 +63,9 @@ const getCytoConcentration = (bacteriaData) => {
     const aimR = new Float32Array(numOfBacteria);
 
     bacteriaData.forEach((bacterium, index) => {
+        if (bacterium.cytoplasmConcentrations === undefined) {
+            return; // this is useful for the discrete simulations
+        }
         const cytoplasmConcentrations = bacterium.cytoplasmConcentrations;
         aimP[index] = cytoplasmConcentrations.p;
         aimR[index] = cytoplasmConcentrations.r;

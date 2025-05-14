@@ -4,8 +4,8 @@ export function prepareDiffusionStep(currentBacteria, concentrationState, appCon
     const GRID = appConfig.GRID;
 
     if (cytoplasmManager === undefined) {
-    const IDsByColor = getIDsByColor(currentBacteria, phenotypeManager);
-    discreteSinksAndSources(currentBacteria, concentrationState, ...IDsByColor, GRID);
+        const IDsByColor = getIDsByColor(currentBacteria, phenotypeManager);
+        discreteSinksAndSources(currentBacteria, concentrationState, ...IDsByColor, GRID);
     } else if (cytoplasmManager){
         continuousSinksAndSources(currentBacteria, concentrationState, cytoplasmManager, GRID);
     }
@@ -17,9 +17,9 @@ export function prepareDiffusionStep(currentBacteria, concentrationState, appCon
 const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplasmManager, GRID) => {
     concentrationState.sources.fill(0);
     concentrationState.sinks.fill(0);
-    const Kout = 1.5;
+    const Kout = 0.7;
     const Kin = 0.5;
-    const Kp = 0.1;
+    const Kp = 0.2;
     const Kr = 0.5;
     for (const bacterium of currentBacteria) {
         const { ID } = bacterium;
@@ -60,22 +60,26 @@ function discreteSinksAndSources(currentBacteria, concentrationState, magentaIDs
     const MagentaIDs = new Set(magentaIDsRaw);
     const CyanIDs = new Set(cyanIDsRaw);
 
+
     concentrationState.sources.fill(0);
     concentrationState.sinks.fill(0);
 
     // Iterate through each bacterium in the current time step
     for (const bacterium of currentBacteria) {
-        // Convert bacterium's position to grid coordinates and index using GRID
         const coords = getAdjustedCoordinates(bacterium.x, bacterium.y, GRID.HEIGHT, GRID.WIDTH);
+        const localConcentration = concentrationState.concentrationField[coords.idx];
+        const Kp = 0.1;
+        const michaelisMP = localConcentration/(Kp+localConcentration);
+        // Convert bacterium's position to grid coordinates and index using GRID
 
         // Increment source count if the bacterium is Magenta
         if (MagentaIDs.has(bacterium.ID)) {
-            concentrationState.sources[coords.idx] += 1; // Simple count for now
+            concentrationState.sources[coords.idx] += 0.5; 
         }
 
         // Increment sink count if the bacterium is Cyan
         if (CyanIDs.has(bacterium.ID)) {
-            concentrationState.sinks[coords.idx] += 1; // Simple count for now
+            concentrationState.sinks[coords.idx] += michaelisMP; 
         }
     }
 }
