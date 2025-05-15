@@ -20,7 +20,7 @@ const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplas
     const Kout = 0.7;
     const Kin = 0.5;
     const Kp = 0.2;
-    const Kr = 0.5;
+    const Kr = 0.55;
     for (const bacterium of currentBacteria) {
         const { ID } = bacterium;
         const rConcentration = cytoplasmManager.rConcentrationMemo.get(ID);

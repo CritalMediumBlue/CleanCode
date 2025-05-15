@@ -9,7 +9,7 @@ const checkForUnexpectedValues = (array, name) => {
         }
     }
 }
-const scaleSS = 0.05
+const scaleSS = 0.005
 const WIDTH = 100;
 const HEIGHT = 60;
 export const ADI = ( 
@@ -45,22 +45,39 @@ export const ADI = (
  
     
     // First half-step: implicit in x-direction, explicit in y-direction
-    for (let j = 1; j < HEIGHT - 1; j++) {
+    for (let j = 0; j < HEIGHT ; j++) {
         // Set up the tridiagonal system for this row
+        //console.log('j', j) //this prints from 0 to 59 inclusive
+
+        const middleRow = currentConcentrationData.slice((j) * WIDTH, (j + 1) * WIDTH);
+        let lowerRow, upperRow;
+
+        if (j > 0 && j < HEIGHT - 1) {
+         lowerRow = currentConcentrationData.slice((j - 1) * WIDTH, (j) * WIDTH);
+         upperRow = currentConcentrationData.slice((j + 1) * WIDTH, (j + 2) * WIDTH);
+        } else if (j == 0) {
+         lowerRow = middleRow;
+         upperRow = currentConcentrationData.slice((j + 1) * WIDTH, (j + 2) * WIDTH);
+        } else if (j == HEIGHT-1 ) {
+         lowerRow = currentConcentrationData.slice((j - 1) * WIDTH, (j) * WIDTH);
+         upperRow = middleRow;
+        }
+        
         for (let i = 1; i < WIDTH - 1; i++) {
+
+            const idx = j * WIDTH + i;
             a[i] = -alpha;
             b[i] = 1 + 2*alpha;
             c[i] = -alpha;
             
             // Calculate the right-hand side using explicit method in y-direction
-            const idx = j * WIDTH + i;
             const term_y = alpha * (
-                currentConcentrationData[(j-1) * WIDTH + i] - 
-                2 * currentConcentrationData[idx] + 
-                currentConcentrationData[(j+1) * WIDTH + i]
+                lowerRow[i] - 
+                2 * middleRow[i] +
+                upperRow[i]
             ) + scaleSS*(sources[idx] - sinks[idx])*timeStep / 2;
             
-            d[i] = currentConcentrationData[idx] + term_y;
+            d[i] = middleRow[i] + term_y;
             
             // Check for NaN in right-hand side
             checkForUnexpectedValues(d, 'right-hand side');

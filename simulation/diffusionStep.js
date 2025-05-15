@@ -11,7 +11,7 @@ export function diffuse(
     const sinks = concentrationState.sinks;
     const deltaX = 1; //micrometers
     const deltaT = 0.1; // seconds
-    const timeLapse = 5; // seconds 
+    const timeLapse = 3; // seconds. Hopefully this will reach a steady state before this time
  
     
     concentrationState.concentrationField=ADI(
