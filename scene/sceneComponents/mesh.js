@@ -72,13 +72,12 @@ export function setupMesh(stage, THREE, GRID) {
  * @returns {Object} - Object containing r, g, b values between 0-1
  */
 const calculateColor = (concentration) => {
-    // Calculate the phase for the sine wave
-    const phase = concentration * 2 * Math.PI;
+    
 
     // Calculate RGB components using sine waves with phase shifts, scaled to [0, 1]
-    const red = (Math.sin(phase) + 1) / 2;
-    const green = (Math.sin(phase - (2 * Math.PI / 3)) + 1) / 2;
-    const blue = (Math.sin(phase - (4 * Math.PI / 3)) + 1) / 2;
+    const red = (Math.sin(concentration) + 1) / 2;
+    const green = (Math.sin(concentration - (2 * Math.PI / 3)) + 1) / 2;
+    const blue = (Math.sin(concentration - (4 * Math.PI / 3)) + 1) / 2;
 
     // Return RGB values, ensuring they are not NaN
     return {
@@ -106,13 +105,11 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultipli
             const idx = y * WIDTH + x; // Calculate 1D index
             const bufferIndex = 3 * idx; // Base index for position and color arrays
 
-            // --- Update Height (Z-position) ---
-            const concentration = concentrationData[idx]*2;
-            const height = concentration* heightMultiplier; // Direct mapping
+            const height = concentrationData[idx]*heightMultiplier
             positions[bufferIndex + 2] = height-1 ; // Set Z value
 
             // --- Update Color ---
-            const { r, g, b } = calculateColor(concentration);
+            const { r, g, b } = calculateColor(height);
             colorsAttribute.array[bufferIndex] = r;
             colorsAttribute.array[bufferIndex + 1] = g;
             colorsAttribute.array[bufferIndex + 2] = b;
