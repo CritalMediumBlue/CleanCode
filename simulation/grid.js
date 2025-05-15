@@ -90,11 +90,14 @@ export function getAdjustedCoordinates(x, y, HEIGHT, WIDTH) {
   if (adjustedX <= 0) {
       adjustedX = 0;
   }
+  if (adjustedY >= HEIGHT) {
+      adjustedY = HEIGHT - 1;
+  }
+  if (adjustedX >= WIDTH) {
+      adjustedX = WIDTH - 1;
+  }
 
-  // Clamp coordinates to valid grid boundaries (leaving a 1-cell border).
-  adjustedY = Math.min(adjustedY, HEIGHT - 2); 
-  adjustedX = Math.max(1, Math.min(adjustedX, WIDTH - 2));
-
+ 
   // Calculate the 1D index corresponding to the 2D grid coordinates.
   const idx = adjustedY * WIDTH + adjustedX;
 

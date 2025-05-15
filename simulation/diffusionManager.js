@@ -17,8 +17,8 @@ export function prepareDiffusionStep(currentBacteria, concentrationState, appCon
 const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplasmManager, GRID) => {
     concentrationState.sources.fill(0);
     concentrationState.sinks.fill(0);
-    const Kout = 0.005;
-    const Kin = 0.005;
+    const Kout = 0.01;
+    const Kin = 0.01;
     const Kp = 0.1;
     const Kr = 0.5;
     for (const bacterium of currentBacteria) {

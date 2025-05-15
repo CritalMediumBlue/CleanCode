@@ -35,7 +35,7 @@ export function setupNewScene(config) {
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, animationState, constants, nextSlices) {
     const concentration = concentrationState.concentrationField;
     const cytoplasmicconcentrations = getCytoConcentration(bacteriaData);
-    updateSurfaceMesh(mesh, concentration, 100);
+    updateSurfaceMesh(mesh, concentration, 500);
     if(bacteriaData) {
         updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
     }
