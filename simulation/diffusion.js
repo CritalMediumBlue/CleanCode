@@ -8,14 +8,13 @@ export const ADI = (
     const HEIGHT = 60;
     
     let intermediateConcentration = new Float32Array(WIDTH * HEIGHT);
-    let finalConcentration = new Float32Array(WIDTH * HEIGHT);
     
-    const alpha = DIFFUSION_RATE * deltaT / (2 * deltaX * deltaX); 
-    const totalNumberOfIterations = Math.round(timeLapse / deltaT);
+    const alpha = DIFFUSION_RATE * deltaT / (2 * deltaX * deltaX);  //non-dimensional factor
+    const totalNumberOfIterations = Math.round(timeLapse / deltaT); // Number of iterations required to cover the time lapse
     
 
-    for (let iteration = 0; iteration < totalNumberOfIterations; iteration++) {
-        // First half-step: implicit in x-direction, explicit in y-direction
+    for (let iteration = 0; iteration < totalNumberOfIterations; iteration++) { //hopefully the concentration will reach steady state after a few iterations
+       // First half-step
         for (let j = 0; j < HEIGHT; j++) {
             const a = Float32Array.from({length: WIDTH}, () => -alpha);
             const b = Float32Array.from({length: WIDTH}, () => 1 + 2*alpha);
@@ -25,7 +24,7 @@ export const ADI = (
             for (let i = 0; i < WIDTH; i++) {
                 const idx = j * WIDTH + i;
                 
-                // Safely handle y-direction terms with proper boundary conditions
+                // Handle y-direction terms with proper Neumann boundary conditions
                 let bottom = j <= 0 ? currentConcentrationData[idx] : currentConcentrationData[(j-1) * WIDTH + i]; 
                 let top = j >= HEIGHT-1 ? currentConcentrationData[idx] : currentConcentrationData[(j+1) * WIDTH + i]; 
           
@@ -33,36 +32,22 @@ export const ADI = (
             }
 
             // Boundary conditions for Thomas algorithm
-            b[0] = 1 + alpha;
-            b[WIDTH-1] = 1 + alpha;
-            a[0] = 0;
-            c[WIDTH-1] = 0;
+            b[0] = 1 + alpha; // Neumann boundary condition. Ghost cell has the same value as the first cell
+            b[WIDTH-1] = 1 + alpha; // Neumann boundary condition. Ghost cell has the same value as the last cell
+            a[0] = 0; // We don't need to solve for the ghost cell since we know its value is the same as the first cell
+            c[WIDTH-1] = 0; // We don't need to solve for the ghost cell since we know its value is the same as the last cell
             
             
             // Get the solution for this row
             const rowSolution = thomasAlgorithm(a, b, c, d, WIDTH);
             
-            // Copy the row solution to the appropriate row in intermediateConcentration
             for (let i = 0; i < WIDTH; i++) {
                 intermediateConcentration[j * WIDTH + i] = rowSolution[i];
             }
         }
 
-   /*      // Apply Neumann boundary conditions to the intermediate concentration
-        for (let i = 0; i < WIDTH; i++) {
-            // Copy from first interior row to boundary for zero gradient
-            intermediateConcentration[i] = intermediateConcentration[WIDTH + i]; 
-            // Copy from last interior row to boundary for zero gradient
-            intermediateConcentration[(HEIGHT-1) * WIDTH + i] = intermediateConcentration[(HEIGHT-2) * WIDTH + i]; 
-        }
-        for (let j = 0; j < HEIGHT; j++) {
-            // Copy from first interior column to boundary for zero gradient  
-            intermediateConcentration[j * WIDTH] = intermediateConcentration[j * WIDTH + 1];
-            // Copy from last interior column to boundary for zero gradient
-            intermediateConcentration[j * WIDTH + (WIDTH-1)] = intermediateConcentration[j * WIDTH + (WIDTH-2)];
-        } */
         
-        // Second half-step: explicit in x-direction, implicit in y-direction
+        // Second half-step
         for (let i = 0; i < WIDTH; i++) {
             const a = Float32Array.from({length: HEIGHT}, () => -alpha);
             const b = Float32Array.from({length: HEIGHT}, () => 1 + 2*alpha);
@@ -72,7 +57,7 @@ export const ADI = (
             for (let j = 0; j < HEIGHT; j++) {
                 const idx = j * WIDTH + i;
                 
-                // Safely handle x-direction terms with proper boundary conditions
+                // Handle x-direction terms with proper Neumann boundary conditions
                 let right = i >= WIDTH-1 ? intermediateConcentration[j * WIDTH + i] : intermediateConcentration[j * WIDTH + (i+1)]; 
                 let left = i <= 0 ? intermediateConcentration[j * WIDTH + i] : intermediateConcentration[j * WIDTH + (i-1)]; 
               
@@ -80,43 +65,23 @@ export const ADI = (
             }
             
             // Boundary conditions for Thomas algorithm
-            b[0] = 1 + alpha;
-            b[HEIGHT-1] = 1 + alpha;
-            a[0] = 0;
-            c[HEIGHT-1] = 0;
+            b[0] = 1 + alpha; // Neumann boundary condition. Ghost cell has the same value as the first cell
+            b[HEIGHT-1] = 1 + alpha; // Neumann boundary condition. Ghost cell has the same value as the last cell
+            a[0] = 0; // We don't need to solve for the ghost cell since we know its value is the same as the first cell
+            c[HEIGHT-1] = 0; // We don't need to solve for the ghost cell since we know its value is the same as the last cell
             
-            // Get the solution for this column
             const columnSolution = thomasAlgorithm(a, b, c, d, HEIGHT);
             
-            // Copy the column solution to the appropriate column in finalConcentration
             for (let j = 0; j < HEIGHT; j++) {
-                finalConcentration[j * WIDTH + i] = columnSolution[j];
+                currentConcentrationData[j * WIDTH + i] = columnSolution[j];
             }
         }
 
-   /*      // Apply Neumann boundary conditions to the final concentration
-        for (let j = 0; j < HEIGHT; j++) {
-            // Copy from first interior column to boundary
-            finalConcentration[j * WIDTH] = finalConcentration[j * WIDTH + 1];
-            // Copy from last interior column to boundary
-            finalConcentration[j * WIDTH + (WIDTH-1)] = finalConcentration[j * WIDTH + (WIDTH-2)];
-        }
-        for (let i = 0; i < WIDTH; i++) {
-            // Copy from first interior row to boundary
-            finalConcentration[i] = finalConcentration[WIDTH + i]; 
-            // Copy from last interior row to boundary
-            finalConcentration[(HEIGHT-1) * WIDTH + i] = finalConcentration[(HEIGHT-2) * WIDTH + i]; 
-        } */
-
-        // Update the current concentration data with the final concentration
-        currentConcentrationData.set(finalConcentration);
-        
-        // Check for numerical issues after each iteration (optional but safer)
-        // checkForUnexpectedValues(finalConcentration, `finalConcentration-iter${iteration}`);
+       
     }
     
     // Final validation check
-    checkForUnexpectedValues(finalConcentration, 'finalConcentration');
+    checkForUnexpectedValues(currentConcentrationData, 'currentConcentrationData');
     
     return currentConcentrationData;
 };

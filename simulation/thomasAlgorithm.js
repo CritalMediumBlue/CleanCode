@@ -5,31 +5,6 @@ export function thomasAlgorithm(
     rightHandSide,
     n
 ) {
-    if (lowerDiagonal.length !== n) {
-        throw new Error(`lowerDiagonal must have length ${n}, got ${lowerDiagonal?.length}`);
-    }
-    if (mainDiagonal.length !== n) {
-        throw new Error(`mainDiagonal must have length ${n}, got ${mainDiagonal?.length}`);
-    }
-    if (upperDiagonal.length !== n) {
-        throw new Error(`upperDiagonal must have length ${n}, got ${upperDiagonal?.length}`);
-    }
-    if (rightHandSide.length !== n) {
-        throw new Error(`rightHandSide must have length ${n}, got ${rightHandSide?.length}`);
-    }
-    
-    if (Math.abs(lowerDiagonal[0]) !== 0) {
-        console.warn("First element of lowerDiagonal should be 0 for a proper tridiagonal system");
-        lowerDiagonal[0] = 0; 
-    }
-    if (Math.abs(upperDiagonal[n-1]) !== 0) {
-        console.warn("Last element of upperDiagonal should be 0 for a proper tridiagonal system");
-        upperDiagonal[n-1] = 0; 
-    }
-    if (Math.abs(mainDiagonal[0]) === 0) {
-        console.warn("First element of mainDiagonal should not be 0 for a proper tridiagonal system");
-        mainDiagonal[0] = 1e-6; 
-    }
     
     const modifiedUpperDiagonal = new Float64Array(n);
     const modifiedRightHandSide = new Float64Array(n);
