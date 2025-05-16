@@ -10,8 +10,8 @@ export function diffuse(
     const sources = concentrationState.sources;
     const sinks = concentrationState.sinks;
     const deltaX = 1; //micrometers
-    const deltaT = 0.05; //seconds
-    const timeLapse = 10; //seconds
+    const deltaT = 0.1; //seconds
+    const timeLapse = 1; //seconds
   
     
     concentrationState.concentrationField=ADI(
