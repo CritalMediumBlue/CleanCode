@@ -1,0 +1,35 @@
+export function thomasAlgorithm(
+    lowerDiagonal,
+    mainDiagonal,
+    upperDiagonal,
+    rightHandSide,
+    n
+) {
+    
+    const modifiedUpperDiagonal = new Float32Array(n);
+    const modifiedRightHandSide = new Float32Array(n);
+   
+    const firstPivot = Math.abs(mainDiagonal[0]) < 1e-5 
+        ? Math.sign(mainDiagonal[0])*1e-5 
+        : mainDiagonal[0];
+    modifiedUpperDiagonal[0] = upperDiagonal[0] / firstPivot;
+    modifiedRightHandSide[0] = rightHandSide[0] / firstPivot;
+    
+    for (let i = 1; i < n; i++) {  
+        const denominator = mainDiagonal[i] - lowerDiagonal[i] * modifiedUpperDiagonal[i-1];
+        const safeDenominator = Math.abs(denominator) < 1e-5 
+            ? Math.sign(denominator) * 1e-5 
+            : denominator;
+        modifiedUpperDiagonal[i] = upperDiagonal[i] / safeDenominator;
+        modifiedRightHandSide[i] = (rightHandSide[i] - lowerDiagonal[i] * modifiedRightHandSide[i-1]) / safeDenominator;
+    }
+    const solution = new Float32Array(n);
+    solution[n-1] = modifiedRightHandSide[n-1];
+    
+    for (let i = n - 2; i >= 0; i--) {
+        solution[i] = modifiedRightHandSide[i] - modifiedUpperDiagonal[i] * solution[i+1];
+    }
+    
+
+    return solution;
+}
