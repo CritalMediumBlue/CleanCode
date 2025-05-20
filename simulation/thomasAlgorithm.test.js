@@ -21,7 +21,7 @@ describe('Thomas Algorithm', () => {
         // Calculate right hand side for known solution
         const knownSolution = new Float64Array(n);
         for (let i = 0; i < n; i++) {
-            knownSolution[i] = Math.sin(i *2* Math.PI / (n - 1));
+            knownSolution[i] = Math.sin(i *2* Math.PI / (n - 1))+Math.random();
         }
         const rightHandSide = new Float64Array(n);
         
@@ -61,7 +61,7 @@ describe('Thomas Algorithm', () => {
         // Calculate right hand side for known solution
         const knownSolution = new Float64Array(n);
         for (let i = 0; i < n; i++) {
-            knownSolution[i] = Math.sin(i *2* Math.PI / (n - 1));
+            knownSolution[i] = Math.sin(i *2* Math.PI / (n - 1))+Math.random();
         }
         const rightHandSide = new Float64Array(n);
         

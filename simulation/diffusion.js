@@ -116,12 +116,3 @@ export const FTCS = (
     return currentConcentrationData;
 };
 
-const checkForSteadyState = (currentConcentrationData, previousConcentrationData) => {
-    const tolerance = 1e-6; 
-    for (let i = 0; i < currentConcentrationData.length; i++) {
-        if (Math.abs(currentConcentrationData[i] - previousConcentrationData[i]) > tolerance) {
-            return false;
-        }
-    }
-    return true;
-}
