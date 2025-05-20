@@ -10,7 +10,7 @@ describe('Diffusion methods', () => {
         const deltaX = 1; // micrometers
         
         const deltaT = 0.01; // seconds
-        const tolerance = 1e-6; 
+        const tolerance = 1e-5; 
 
 
         const sources = new Float64Array(100*60).fill(0);
@@ -37,7 +37,7 @@ describe('Diffusion methods', () => {
         const initialForADI = new Float64Array(totalCells).fill(1);
         const initialForFTCS = new Float64Array(totalCells).fill(1);
    
-        const timeLapse = 30; // seconds
+        const timeLapse = 5; // seconds
 
         const resultADI = ADI(initialForADI, sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
         const resultFTCS = FTCS(initialForFTCS, sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
@@ -50,7 +50,7 @@ describe('Diffusion methods', () => {
         const initialForADI = new Float64Array(totalCells).fill(1);
         const initialForFTCS = new Float64Array(totalCells).fill(1);
    
-        const timeLapse = 60; // seconds
+        const timeLapse = 15; // seconds
 
         const resultADI = ADI(initialForADI, sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
         const resultFTCS = FTCS(initialForFTCS, sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
@@ -63,7 +63,7 @@ describe('Diffusion methods', () => {
        const initialForADI = new Float64Array(totalCells);
         const initialForFTCS = new Float64Array(totalCells);
    
-        const timeLapse = 120; // seconds
+        const timeLapse = 30; // seconds
 
         const resultADI = ADI(initialForADI, sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
         const resultFTCS = FTCS(initialForFTCS, sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse);

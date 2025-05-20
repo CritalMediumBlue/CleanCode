@@ -30,8 +30,6 @@ export const ADI = (
                 d[i] = alpha*bottom + (1 - 2*alpha)*currentConcentrationData[idx] + alpha*top + (sources[idx] - sinks[idx]) * deltaT / 2;
             }
 
-            
-            // Get the solution for this row
             const rowSolution = thomasAlgorithm(a, b, c, d, WIDTH);
             
             for (let i = 0; i < WIDTH; i++) {
@@ -39,7 +37,6 @@ export const ADI = (
             }
         }
 
-        
 
         // Second half-step
         ({ a, b, c, d } = generateDiagonals(HEIGHT, alpha));
@@ -49,7 +46,6 @@ export const ADI = (
             for (let j = 0; j < HEIGHT; j++) {
                 const idx = j * WIDTH + i;
                 
-                // Handle x-direction terms with proper Neumann boundary conditions
                 let right = i >= WIDTH-1 ? intermediateConcentration[idx] : intermediateConcentration[j * WIDTH + (i+1)]; 
                 let left = i <= 0 ? intermediateConcentration[idx] : intermediateConcentration[j * WIDTH + (i-1)]; 
               

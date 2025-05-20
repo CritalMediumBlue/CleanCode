@@ -42,7 +42,7 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     }  else if (originalConcentrationP === undefined || originalConcentrationR === undefined) {
 
         return {
-            p: 0.5,
+            p: 1,
             r: 0.5
         }
     }
