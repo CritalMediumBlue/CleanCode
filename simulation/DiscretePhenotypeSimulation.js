@@ -34,7 +34,7 @@ function inheritancePhenotype(phenotypeManager, ID, localConcentration) {
 /**
  * Determines the phenotype for each bacterium based on inheritance and environmental factors
  * @param {Array} currentBacteria - Array of bacteria objects from the current time step
- * @param {Float32Array} concentrations - Array of concentration values across the grid
+ * @param {Float64Array} concentrations - Array of concentration values across the grid
  * @param {Object} phenotypeManager - Manager containing phenotype data and rules
  * @param {number} HEIGHT - Height of the grid
  * @param {number} WIDTH - Width of the grid

@@ -59,8 +59,8 @@ const getCytoConcentration = (bacteriaData) => {
         return;
     }
     const numOfBacteria = bacteriaData.length;
-    const aimP = new Float32Array(numOfBacteria);
-    const aimR = new Float32Array(numOfBacteria);
+    const aimP = new Float64Array(numOfBacteria);
+    const aimR = new Float64Array(numOfBacteria);
 
     bacteriaData.forEach((bacterium, index) => {
         const cytoplasmConcentrations = bacterium.cytoplasmConcentrations;

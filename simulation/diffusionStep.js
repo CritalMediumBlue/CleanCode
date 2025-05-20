@@ -1,4 +1,4 @@
-import { ADI } from './diffusion.js';
+import { ADI,FTCS } from './diffusion.js';
 
 export function diffuse(
     appConfig,
@@ -8,13 +8,16 @@ export function diffuse(
     const diffusionRate = appConfig.GRID.DIFFUSION_RATE;
     const currentConcentrationData = concentrationState.concentrationField;
     const sources = concentrationState.sources;
-    const sinks = concentrationState.sinks;
+    const sinks = concentrationState.sinks;  
     const deltaX = 1; //micrometers
-    const deltaT = 0.1; //seconds
+    const deltaT = 0.01; //seconds
     const timeLapse = 1; //seconds
+
+    
+        
   
     
-    concentrationState.concentrationField=ADI(
+    concentrationState.concentrationField=FTCS(
         currentConcentrationData, // Input concentration arrays
         sources,
         sinks, // Input source/sink arrays
