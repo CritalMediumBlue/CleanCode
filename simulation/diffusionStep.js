@@ -10,14 +10,14 @@ export function diffuse(
     const sources = concentrationState.sources;
     const sinks = concentrationState.sinks;  
     const deltaX = 1; //micrometers
-    const deltaT = 0.01; //seconds
+    const deltaT = 0.08; //seconds
     const timeLapse = 1; //seconds
 
     
         
   
     
-    concentrationState.concentrationField=FTCS(
+    concentrationState.concentrationField=ADI(
         currentConcentrationData, // Input concentration arrays
         sources,
         sinks, // Input source/sink arrays

@@ -84,7 +84,7 @@ export const FTCS = (
     const WIDTH = 100;
     const HEIGHT = 60;
 
-    const maxDeltaT =0.5* deltaX * deltaX / (4 * DIFFUSION_RATE); // Time step based on stability condition
+    const maxDeltaT =0.1* deltaX * deltaX / (4 * DIFFUSION_RATE); // Time step based on stability condition
     
     const totalNumberOfIterations = Math.round(timeLapse / maxDeltaT); // Number of iterations required to cover the time lapse
     
@@ -116,3 +116,12 @@ export const FTCS = (
     return currentConcentrationData;
 };
 
+const checkForSteadyState = (currentConcentrationData, previousConcentrationData) => {
+    const tolerance = 1e-6; 
+    for (let i = 0; i < currentConcentrationData.length; i++) {
+        if (Math.abs(currentConcentrationData[i] - previousConcentrationData[i]) > tolerance) {
+            return false;
+        }
+    }
+    return true;
+}
