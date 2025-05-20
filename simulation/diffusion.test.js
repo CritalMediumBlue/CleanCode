@@ -1,4 +1,3 @@
-import { number } from 'yargs';
 import {ADI, FTCS} from './diffusion.js';
 
         const WIDTH = 100;
@@ -10,7 +9,7 @@ import {ADI, FTCS} from './diffusion.js';
         const deltaX = 1; // micrometers
         
         const deltaT = 0.08; // seconds
-        const tolerance = 6e-6; 
+        const tolerance = 1e-6; 
 
 
         const timeLapses = [60, 100, 140]; // seconds
