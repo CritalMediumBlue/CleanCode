@@ -8,7 +8,7 @@ import {ADI, FTCS} from './diffusion.js';
         const DIFFUSION_RATE = 100; // choose a moderate value
         const deltaX = 1; // micrometers
         
-        const deltaT = 0.15;  // seconds
+        const deltaT = 0.25;  // seconds
         const tolerance = 1e-6; 
 
 
@@ -17,8 +17,8 @@ import {ADI, FTCS} from './diffusion.js';
 describe('Diffusion methods with low sources', () => {   
         const sources = new Float64Array(100*60).fill(0);
         const sinks = new Float64Array(100*60).fill(0);
-        let numberOfSources =300;
-        let numberOfSinks = 300;
+        let numberOfSources =500;
+        let numberOfSinks = 500;
 
         while (numberOfSources > 0) {
             const randomIndex = Math.floor(Math.random() * (100*60));
@@ -106,20 +106,20 @@ describe('Diffusion methods with low sources', () => {
 describe('Diffusion methods with medium sources', () => {   
         const sources = new Float64Array(100*60).fill(0);
         const sinks = new Float64Array(100*60).fill(0);
-        let numberOfSources = 300;
-        let numberOfSinks = 300;
+        let numberOfSources = 500;
+        let numberOfSinks = 500;
 
         while (numberOfSources > 0) {
             const randomIndex = Math.floor(Math.random() * (100*60));
-            if (sources[randomIndex] < 3) {
-                sources[randomIndex] += 3;
+            if (sources[randomIndex] < 4) {
+                sources[randomIndex] += 4;
                 numberOfSources--;
             }
         }
         while (numberOfSinks > 0) {
             const randomIndex = Math.floor(Math.random() * (100*60));
-            if (sinks[randomIndex] < 3) {
-                sinks[randomIndex] += 3;
+            if (sinks[randomIndex] < 4) {
+                sinks[randomIndex] += 4;
                 numberOfSinks--;
             }
         }
@@ -195,20 +195,20 @@ describe('Diffusion methods with medium sources', () => {
 describe('Diffusion methods with High sources', () => {   
         const sources = new Float64Array(100*60).fill(0);
         const sinks = new Float64Array(100*60).fill(0);
-        let numberOfSources = 300;
-        let numberOfSinks =  300;
+        let numberOfSources = 500;
+        let numberOfSinks =  500;
 
         while (numberOfSources > 0) {
             const randomIndex = Math.floor(Math.random() * (100*60));
-            if (sources[randomIndex] < 5) {
-                sources[randomIndex] += 5;
+            if (sources[randomIndex] < 6) {
+                sources[randomIndex] += 6;
                 numberOfSources--;
             }
         }
         while (numberOfSinks > 0) {
             const randomIndex = Math.floor(Math.random() * (100*60));
-            if (sinks[randomIndex] < 5) {
-                sinks[randomIndex] += 5;
+            if (sinks[randomIndex] < 6) {
+                sinks[randomIndex] += 6;
                 numberOfSinks--;
             }
         }
@@ -279,4 +279,4 @@ describe('Diffusion methods with High sources', () => {
         }
     });
      
-});
+}); 

@@ -56,6 +56,10 @@ export const ADI = (
             
             for (let j = 0; j < HEIGHT; j++) {
                 currentConcentrationData[j * WIDTH + i] = columnSolution[j];
+                if (currentConcentrationData[j * WIDTH + i] < 0) {
+                    currentConcentrationData[j * WIDTH + i] = 0; // Ensure concentration doesn't go negative
+                    console.warn("Concentration went negative");
+                }
             }
         }
     }
@@ -106,7 +110,12 @@ export const FTCS = (
             let top = j >= HEIGHT-1 ? currentConcentrationData[idx] : currentConcentrationData[(j+1) * WIDTH + i]; 
             
             newConcentrationData[idx] = currentConcentrationData[idx] + DIFFUSION_RATE * maxDeltaT / (deltaX * deltaX) * (left + right + bottom + top - 4 * currentConcentrationData[idx]) + (sources[idx] - sinks[idx]) * maxDeltaT;
+            if (newConcentrationData[idx] < 0) {
+                newConcentrationData[idx] = 0; // Ensure concentration doesn't go negative
+                console.warn("Concentration went negative");
+
             }
+        }
         }
 
         // Update the concentration data for the next iteration

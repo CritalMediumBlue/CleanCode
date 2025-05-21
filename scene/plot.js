@@ -47,6 +47,10 @@ export function setupPlot(uPlot,type) {
  */
 export function updatePlot(data, plot, type) {
   if(type === 'phaseSpace') {
+    const AverageX = data[0].reduce((a, b) => a + b, 0) / data[0].length;
+    const AverageY = data[1].reduce((a, b) => a + b, 0) / data[1].length;
+    data[0].push(AverageX);
+    data[1].push(AverageY);
     plot.setData(data);
   }
     else if(type === 'timeSeries') {

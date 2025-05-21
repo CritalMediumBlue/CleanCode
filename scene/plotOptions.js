@@ -77,7 +77,7 @@ export function createPlotOptions({ width, height, type }) {
                 {
                     stroke: axisTextColor, // Axis line color
                     grid: {
-                        show: true,
+                        show: false,
                         stroke: strokeColor, // Grid line color
                     },
                     font: "12px Arial",
@@ -85,6 +85,7 @@ export function createPlotOptions({ width, height, type }) {
                 {
                     stroke: axisTextColor, // Axis line color
                     grid: {
+                        show: false,
                         stroke: strokeColor, // Grid line color
                     },
                     scale: 'count',
@@ -94,7 +95,7 @@ export function createPlotOptions({ width, height, type }) {
                     side: 1,
                     stroke: axisTextColor, // Axis line color
                     grid: {
-                        show: false,
+                        show: true,
                         stroke: strokeColor, // Grid line color
                     },
                     font: "12px Arial",
@@ -113,8 +114,8 @@ export function createPlotOptions({ width, height, type }) {
             { label: "Y", points: { show: false } } // We'll draw points ourselves
           ],
           scales: {
-            x: { time: false, auto: false, min: 0, max: 4.5 },
-            y: { auto: false, min: 0, max: 2.5 }
+            x: { time: false, auto: false, min: 0, max: 3.2 },
+            y: { auto: false, min: 0, max: 2 }
           },
           axes: [
             { stroke: axisTextColor, grid: { show: true, stroke: strokeColor }, font: "12px Arial", color: axisTextColor, label: "P Concentration" },
@@ -126,7 +127,7 @@ export function createPlotOptions({ width, height, type }) {
                 let ctx = u.ctx;
                 let xdata = u.data[0];
                 let ydata = u.data[1];
-                for (let i = 0; i < xdata.length; i++) {
+                for (let i = 0; i < xdata.length-1; i++) {
                   let x = u.valToPos(xdata[i], 'x', true);
                   let y = u.valToPos(ydata[i], 'y', true);
         
@@ -137,10 +138,6 @@ export function createPlotOptions({ width, height, type }) {
                   const green = xdata[i] * 255;
                   const blue = ydata[i] * 255 + xdata[i] * 255;
                   color = `rgb(${red}, ${green}, ${blue})`;
-
-               /*    if (xdata[i] > ydata[i]) color = "magenta";
-                  else if (xdata[i] < ydata[i]) color = "cyan";
-                  else color = "white"; */
         
                   ctx.beginPath();
                   ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
@@ -151,6 +148,24 @@ export function createPlotOptions({ width, height, type }) {
                   ctx.stroke();
                   ctx.closePath();
                 }
+                // Draw the last point with a bigger size
+                let x = u.valToPos(xdata[xdata.length-1], 'x', true);
+                let y = u.valToPos(ydata[ydata.length-1], 'y', true);
+                ctx.beginPath();
+                let color;
+                const red = ydata[ydata.length-1] * 255;
+                const green = xdata[xdata.length-1] * 255;
+                const blue = ydata[ydata.length-1] * 255 + xdata[xdata.length-1] * 255;
+                color = `rgb(${red}, ${green}, ${blue})`;
+                ctx.beginPath();
+                ctx.arc(x, y, 8, 0, 2 * Math.PI);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.strokeStyle = "#222"; 
+                ctx.lineWidth = 0.2;
+                ctx.stroke();
+                ctx.closePath();
+
               }
             ]
           }

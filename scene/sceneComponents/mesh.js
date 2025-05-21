@@ -33,6 +33,7 @@ function createMesh(THREE, GRID) {
         vertexColors: true,
         transparent: true,
         side: THREE.DoubleSide,
+        opacity: 0.6,
         
 
     });
@@ -73,11 +74,11 @@ export function setupMesh(stage, THREE, GRID) {
  */
 const calculateColor = (concentration) => {
     
-
+    let con = 10*concentration;
     // Calculate RGB components using sine waves with phase shifts, scaled to [0, 1]
-    const red = (Math.sin(concentration) + 1) / 2;
-    const green = (Math.sin(concentration - (2 * Math.PI / 3)) + 1) / 2;
-    const blue = (Math.sin(concentration - (4 * Math.PI / 3)) + 1) / 2;
+    const red = (Math.sin(con) + 1) / 2;
+    const green = (Math.sin(con - (2 * Math.PI / 3)) + 1) / 2;
+    const blue = (Math.sin(con - (4 * Math.PI / 3)) + 1) / 2;
 
     // Return RGB values, ensuring they are not NaN
     return {
@@ -106,7 +107,7 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultipli
             const bufferIndex = 3 * idx; // Base index for position and color arrays
 
             const height = concentrationData[idx]*heightMultiplier
-            positions[bufferIndex + 2] = height-1 ; // Set Z value
+            positions[bufferIndex + 2] = height ; // Set Z value
 
             // --- Update Color ---
             const { r, g, b } = calculateColor(height);

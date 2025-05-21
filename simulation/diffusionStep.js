@@ -2,23 +2,23 @@ import { ADI,FTCS } from './diffusion.js';
 
 
 
-
-/*     const sources = new Float64Array(100*60).fill(0);
-    const sinks = new Float64Array(100*60).fill(0);
-        let numberOfSources = 200;
-        let numberOfSinks = 200;
+/* 
+    const sources = new Float64Array(100*60).fill(0);
+        const sinks = new Float64Array(100*60).fill(0);
+        let numberOfSources =300;
+        let numberOfSinks = 300;
 
         while (numberOfSources > 0) {
             const randomIndex = Math.floor(Math.random() * (100*60));
             if (sources[randomIndex] < 2) {
-                sources[randomIndex] += 5;
+                sources[randomIndex] += 3;
                 numberOfSources--;
             }
         }
         while (numberOfSinks > 0) {
             const randomIndex = Math.floor(Math.random() * (100*60));
             if (sinks[randomIndex] < 2) {
-                sinks[randomIndex] += 5;
+                sinks[randomIndex] += 3;
                 numberOfSinks--;
             }
         }
