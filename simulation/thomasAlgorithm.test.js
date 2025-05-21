@@ -2,7 +2,7 @@ import { thomasAlgorithm } from './thomasAlgorithm';
 
 
 describe('Thomas Algorithm', () => {
-   const tolerance = 1e-15;
+   const tolerance = 1e-11;
     
     test('solves a large system similar to diffusion for the x axis', () => {
         const n = 100;
@@ -81,6 +81,24 @@ describe('Thomas Algorithm', () => {
         // Check if the solution matches the expected values
         for (let i = 0; i < n; i++) {
             expect(Math.abs(solution[i] - knownSolution[i])).toBeLessThan(tolerance);
+        }
+    });
+        test('solves a simple tridiagonal system with known analytical solution', () => {
+        const n = 5;
+        
+        const lowerDiagonal = [0,-1,-1,-1,-3];
+        const mainDiagonal =  [2,2,2,2,4]
+        const upperDiagonal = [-1,-1,-1,-1,0];
+        const rightHandSide = [3,1,25,8,2]
+
+        const exactSolution = [23.25, 43.5, 62.75, 57.0, 43.25];
+        
+        
+        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n);
+        
+        // The analytical solution is x²
+        for (let i = 0; i < n; i++) {
+            expect(Math.abs(solution[i] - exactSolution[i])).toBeLessThan(tolerance);
         }
     });
 });

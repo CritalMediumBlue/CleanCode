@@ -2,13 +2,15 @@
 import { thomasAlgorithm } from './thomasAlgorithm.js';
 //this is a 2D Alternating Direction Implicit (ADI) method for simulating diffusion (heat equation) 
 export const ADI = (
-    currentConcentrationData,
+    concentrationData,
     sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse
 ) => {
     const WIDTH = 100;
     const HEIGHT = 60;
+
+    const currentConcentrationData = new Float64Array(concentrationData);
     
-    let intermediateConcentration = new Float64Array(WIDTH * HEIGHT);
+    const intermediateConcentration = new Float64Array(WIDTH * HEIGHT);
     
     const alpha = DIFFUSION_RATE * deltaT / (2 * deltaX * deltaX);  //non-dimensional factor
     const totalNumberOfIterations = Math.round(timeLapse / deltaT); // Number of iterations required to cover the time lapse
@@ -58,7 +60,7 @@ export const ADI = (
                 currentConcentrationData[j * WIDTH + i] = columnSolution[j];
                 if (currentConcentrationData[j * WIDTH + i] < 0) {
                     currentConcentrationData[j * WIDTH + i] = 0; // Ensure concentration doesn't go negative
-                    console.warn("Concentration went negative");
+                    console.warn("Concentration went negative at ADI");
                 }
             }
         }
@@ -82,20 +84,21 @@ const generateDiagonals = (length, alpha) => {
 
 
 export const FTCS = (
-    currentConcentrationData,
+    concentrationData,
     sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse
 ) => {
     const WIDTH = 100;
     const HEIGHT = 60;
 
-    const maxDeltaT =0.1* deltaX * deltaX / (4 * DIFFUSION_RATE); // Time step based on stability condition
+    const maxDeltaT =0.5* deltaX * deltaX / (4 * DIFFUSION_RATE); // Time step based on stability condition
     
     const totalNumberOfIterations = Math.round(timeLapse / maxDeltaT); // Number of iterations required to cover the time lapse
-    
+    const currentConcentrationData = new Float64Array(concentrationData);
+    const newConcentrationData = new Float64Array(WIDTH * HEIGHT);
+
 
     for (let iteration = 0; iteration < totalNumberOfIterations; iteration++) { 
        
-      const newConcentrationData = new Float64Array(WIDTH * HEIGHT);
 
         for (let j = 0; j < HEIGHT; j++) {
             for (let i = 0; i < WIDTH; i++) {
@@ -112,14 +115,15 @@ export const FTCS = (
             newConcentrationData[idx] = currentConcentrationData[idx] + DIFFUSION_RATE * maxDeltaT / (deltaX * deltaX) * (left + right + bottom + top - 4 * currentConcentrationData[idx]) + (sources[idx] - sinks[idx]) * maxDeltaT;
             if (newConcentrationData[idx] < 0) {
                 newConcentrationData[idx] = 0; // Ensure concentration doesn't go negative
-                console.warn("Concentration went negative");
+                console.warn("Concentration went negative at FTCS");
 
             }
         }
         }
 
-        // Update the concentration data for the next iteration
-        currentConcentrationData = newConcentrationData;
+        for (let idx = 0; idx < WIDTH * HEIGHT; idx++) {
+            currentConcentrationData[idx] = newConcentrationData[idx];
+        }
     }
     
     return currentConcentrationData;
