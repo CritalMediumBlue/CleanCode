@@ -70,7 +70,7 @@ function sliceData(start, end, data) {
 }
 
 function scaleData(data, start) {
-  const scaleFactor = 100;
+  const scaleFactor = 100+start*1000;
 
   // Create a deep copy of the data array
   const scaledData = [];

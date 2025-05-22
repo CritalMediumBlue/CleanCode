@@ -23,8 +23,8 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
         - DilutionRate*originalConcentrationR;//+(Math.random() - 0.5)*0.02;
 
 
-        let finalConcentrationP = originalConcentrationP + deltaP*timeLapse;
-        let finalConcentrationR = originalConcentrationR + deltaR*timeLapse;
+        let finalConcentrationP = originalConcentrationP + deltaP*timeLapse*0.25;
+        let finalConcentrationR = originalConcentrationR + deltaR*timeLapse*0.25;
 
         if (finalConcentrationP < 1e-10) {
             finalConcentrationP = 1e-10;
