@@ -89,7 +89,3 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrations, cytopla
 }
 
 
-
-export const calculateCorrelations = (bacteriaWithConcentrations,cytoplasmManager) => {
-    return bacteriaWithConcentrations
-}

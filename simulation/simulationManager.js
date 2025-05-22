@@ -1,5 +1,5 @@
 import { prepareDiffusionStep} from './diffusionManager.js';
-import { updateBacteriaCytoplasm, calculateCorrelations } from './ContinuousPhenotypeSimulation.js';
+import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
 
 
 let cytoplasmManager = null;
@@ -8,16 +8,16 @@ let HEIGHT;
 
 export function updateSimulation(currentBacteria, concentrationState, appConfig, minutes) {
 
-    const timeLapse = minutes*60; // seconds
+    const timeLapse = minutes*60; // seconds  30.99 sec
 
     const concentration = concentrationState.concentrationField;
   
     
  
-    const bacteriaWithInformation = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH);
-    const bacteriaDataUpdated = calculateCorrelations(bacteriaWithInformation,cytoplasmManager);
+    const bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH);
     prepareDiffusionStep(currentBacteria, concentrationState, appConfig,cytoplasmManager);
      
+    
     
     
     const globalParams = getGlobalParamsCont(bacteriaDataUpdated,concentration);
