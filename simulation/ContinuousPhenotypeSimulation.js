@@ -26,11 +26,11 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
         let finalConcentrationP = originalConcentrationP + deltaP;
         let finalConcentrationR = originalConcentrationR + deltaR;
 
-        if (finalConcentrationP < 1e-20) {
-            finalConcentrationP = 1e-20;
+        if (finalConcentrationP < 1e-10) {
+            finalConcentrationP = 1e-10;
         }
-        if (finalConcentrationR < 1e-20) {
-            finalConcentrationR = 1e-20;
+        if (finalConcentrationR < 1e-10) {
+            finalConcentrationR = 1e-10;
         }
 
         return {
