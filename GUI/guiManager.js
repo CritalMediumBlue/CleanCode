@@ -35,14 +35,7 @@ export const addEventListeners = ( init, guiActions) => {
             }
         },
 
-        {
-            id: 'signalSlider', event: 'input', handler: (event) => {
-                const value = parseFloat(event.target.value);
-                const valueElement = document.getElementById('signalValue');
-                if (valueElement) valueElement.textContent = value.toFixed(2);
-                guiActions.setValue(value);
-            }
-        },
+      
 
      
 

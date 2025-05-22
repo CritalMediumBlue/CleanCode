@@ -1,19 +1,15 @@
 import { diffuse } from './diffusionStep.js';;
 import { getAdjustedCoordinates } from './grid.js';
-export function prepareDiffusionStep(currentBacteria, concentrationState, appConfig, phenotypeManager, cytoplasmManager) {
+export function prepareDiffusionStep(currentBacteria, concentrationState, appConfig, cytoplasmManager) {
     const GRID = appConfig.GRID;
 
-    if (cytoplasmManager === undefined) {
-        const IDsByColor = getIDsByColor(currentBacteria, phenotypeManager);
-        discreteSinksAndSources(currentBacteria, concentrationState, ...IDsByColor, GRID);
-    } else if (cytoplasmManager){
         const timeLapse = 0.5;
         for (let i = 0; i < 10; i++) {
             continuousSinksAndSources(currentBacteria, concentrationState, cytoplasmManager, GRID, timeLapse);
             diffuse( concentrationState, timeLapse)
         }
 
-    }
+    
 
     
 }
@@ -39,49 +35,4 @@ const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplas
         concentrationState.sinks[coords.idx] += Kin*michaelisMP;
     }
 }
-
-
-function getIDsByColor(currentBacteria, phenotypeManager) {
-    const { phenotypeMemo, phenotypes } = phenotypeManager;
-    const magentaIDs = [];
-    const cyanIDs = [];
-
-    currentBacteria.forEach((bacterium) => {
-        const ID = bacterium.ID;
-        const phenotype = phenotypeMemo.get(ID);
-        
-        if (phenotype === phenotypes.MAGENTA) {
-            magentaIDs.push(ID);
-        } else if (phenotype === phenotypes.CYAN) {
-            cyanIDs.push(ID);
-        }
-    });
-
-    return [magentaIDs, cyanIDs];
-}
-
-function discreteSinksAndSources(currentBacteria, concentrationState, magentaIDsRaw, cyanIDsRaw, GRID) {
-    const MagentaIDs = new Set(magentaIDsRaw);
-    const CyanIDs = new Set(cyanIDsRaw);
-
-    concentrationState.sources.fill(0);
-    concentrationState.sinks.fill(0);
-
-    // Iterate through each bacterium in the current time step
-    for (const bacterium of currentBacteria) {
-        // Convert bacterium's position to grid coordinates and index using GRID
-        const coords = getAdjustedCoordinates(bacterium.x, bacterium.y, GRID.HEIGHT, GRID.WIDTH);
-
-        // Increment source count if the bacterium is Magenta
-        if (MagentaIDs.has(bacterium.ID)) {
-            concentrationState.sources[coords.idx] += 1; // Simple count for now
-        }
-
-        // Increment sink count if the bacterium is Cyan
-        if (CyanIDs.has(bacterium.ID)) {
-            concentrationState.sinks[coords.idx] += 1; // Simple count for now
-        }
-    }
-}
-
 

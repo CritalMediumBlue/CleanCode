@@ -3,7 +3,6 @@ import {setupNewScene, renderScene,meshVisibility} from './scene/graphicsManager
 import { addEventListeners } from './GUI/guiManager.js';
 import {
     createBacteriumSystem,
-    setValue,
     updateSimulation
     } from './simulation/simulationManager.js';
 import { 
@@ -30,7 +29,6 @@ let durationOfoneStep;
 
 
 const guiActions = {
-    setValue: (value) => {setValue(value);},
     setPlayState: (isPlaying) => {animationState.play = isPlaying;},
     setMeshVisible: () => {meshVisibility();},
 };
@@ -68,7 +66,7 @@ const animate = () => {
 
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
-        ({bacteriaDataUpdated,globalParams} = updateSimulation(currentBacteria, concentrationState, appConfig));
+        ({bacteriaDataUpdated,globalParams} = updateSimulation(currentBacteria, concentrationState, appConfig,constants.fromStepToMinutes));
 
         updateData();
 
