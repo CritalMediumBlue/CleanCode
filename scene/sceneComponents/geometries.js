@@ -86,6 +86,7 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
         capsule.material.color.copy(threeColor);
         capsule.material.opacity = changed > 0.001 ? 1-changed : opacity;
         capsule.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
+        capsule.renderOrder = 0;
       
     } else {
         if (similarity === null) {

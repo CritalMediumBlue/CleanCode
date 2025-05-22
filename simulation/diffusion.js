@@ -90,7 +90,7 @@ export const FTCS = (
     const WIDTH = 100;
     const HEIGHT = 60;
 
-    const maxDeltaT =0.5* deltaX * deltaX / (4 * DIFFUSION_RATE); // Time step based on stability condition
+    const maxDeltaT =0.05* deltaX * deltaX / (4 * DIFFUSION_RATE); // Time step based on stability condition
     
     const totalNumberOfIterations = Math.round(timeLapse / maxDeltaT); // Number of iterations required to cover the time lapse
     const currentConcentrationData = new Float64Array(concentrationData);

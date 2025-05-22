@@ -16,11 +16,11 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
         
         const deltaP = Kin*(localConcentration)/(Kp+localConcentration)
         - Kon*originalConcentrationP*originalConcentrationR
-        - DilutionRate*originalConcentrationP+(Math.random() - 0.5)*0.02;
+        - DilutionRate*originalConcentrationP;//+(Math.random() - 0.5)*0.02;
         
         const deltaR = Ksyn*(originalConcentrationR)/(Kr+originalConcentrationR)
         - Kon*originalConcentrationP*originalConcentrationR
-        - DilutionRate*originalConcentrationR+(Math.random() - 0.5)*0.02;
+        - DilutionRate*originalConcentrationR;//+(Math.random() - 0.5)*0.02;
 
 
         let finalConcentrationP = originalConcentrationP + deltaP;
