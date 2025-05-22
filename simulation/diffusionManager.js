@@ -4,21 +4,25 @@ export function prepareDiffusionStep(currentBacteria, concentrationState, appCon
     const GRID = appConfig.GRID;
 
     if (cytoplasmManager === undefined) {
-    const IDsByColor = getIDsByColor(currentBacteria, phenotypeManager);
-    discreteSinksAndSources(currentBacteria, concentrationState, ...IDsByColor, GRID);
+        const IDsByColor = getIDsByColor(currentBacteria, phenotypeManager);
+        discreteSinksAndSources(currentBacteria, concentrationState, ...IDsByColor, GRID);
     } else if (cytoplasmManager){
-    continuousSinksAndSources(currentBacteria, concentrationState, cytoplasmManager, GRID);
+        const timeLapse = 0.5;
+        for (let i = 0; i < 10; i++) {
+            continuousSinksAndSources(currentBacteria, concentrationState, cytoplasmManager, GRID, timeLapse);
+            diffuse( concentrationState, timeLapse)
+        }
+
     }
 
-    diffuse( concentrationState)
     
 }
 
-const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplasmManager, GRID) => {
+const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplasmManager, GRID, timeLapse) => {
     concentrationState.sources.fill(0);
     concentrationState.sinks.fill(0);
-    const Kout = 4;  //4 is the maximum for stable diffusion
-    const Kin = 2;  //2 is the maximum for stable diffusion
+    const Kout = 4*timeLapse;  //4 is the maximum for stable diffusion
+    const Kin = 2*timeLapse;  //2 is the maximum for stable diffusion
     const Kp = 0.1;
     const Kr = 0.5;
     for (const bacterium of currentBacteria) {
