@@ -24,6 +24,7 @@ let histories;
 let globalParams;
 const nextSlices = [];
 let storedProcessedData;
+let durationOfoneStep;
 
 
 
@@ -36,21 +37,23 @@ const guiActions = {
 
 
 const init = (processedData) => {
+    constants = createConstants();
     storedProcessedData = processedData;
+    bacteriaTimeSeries = processedData.bacteriaTimeSeries;
+    constants.numberOfTimeSteps = bacteriaTimeSeries.length;
+    constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
+    Object.freeze(constants); 
+    console.log(`Duration of one step: ${constants.fromStepToMinutes} minutes`);
     resetHistories();
     if (animationState) { 
         cancelAnimationFrame(animationState.animationFrameId);
     }
     
     ({animationState,concentrationState} = createStates(appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT));
-    constants = createConstants();
 
     setupNewScene(appConfig);
     createBacteriumSystem(appConfig);
-    bacteriaTimeSeries = processedData.bacteriaTimeSeries;
-    constants.numberOfTimeSteps = bacteriaTimeSeries.length;
-    constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
-    Object.freeze(constants); 
+    
     animate();
 };
 
@@ -66,6 +69,7 @@ const animate = () => {
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
         ({bacteriaDataUpdated,globalParams} = updateSimulation(currentBacteria, concentrationState, appConfig));
+
         updateData();
 
         const stepsInTheFuture = 100;

@@ -1,4 +1,4 @@
-import {updateBacteriaPhenotypes,calculateSimilarities} from './DiscretePhenotypeSimulation.js';
+//import {updateBacteriaPhenotypes,calculateSimilarities} from './DiscretePhenotypeSimulation.js';
 import { prepareDiffusionStep} from './diffusionManager.js';
 import { updateBacteriaCytoplasm, calculateCorrelations } from './ContinuousPhenotypeSimulation.js';
 
@@ -108,7 +108,6 @@ export function setValue(value) {
         const maxSignal = phenotypeManager.config.BACTERIUM.SIGNAL.MAX;
         phenotypeManager.signal = clamp(value, minSignal, maxSignal) ;
         console.log('Signal set to:', phenotypeManager.signal);
-   
 }
 
 export function createBacteriumSystem(config) {

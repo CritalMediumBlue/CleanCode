@@ -24,7 +24,7 @@ const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplas
     const Kout = 4*timeLapse;  //4 is the maximum for stable diffusion
     const Kin = 2*timeLapse;  //2 is the maximum for stable diffusion
     const Kp = 0.1;
-    const Kr = 0.5;
+    const Kr = 0.6;
     for (const bacterium of currentBacteria) {
         const { ID } = bacterium;
         const rConcentration = cytoplasmManager.rConcentrationMemo.get(ID);

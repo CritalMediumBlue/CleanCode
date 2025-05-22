@@ -153,9 +153,10 @@ export function createPlotOptions({ width, height, type }) {
                 let y = u.valToPos(ydata[ydata.length-1], 'y', true);
                 ctx.beginPath();
                 let color;
-                const red = ydata[ydata.length-1] * 255*0.8;
-                const green = xdata[xdata.length-1] * 255*0.8;
-                const blue = ydata[ydata.length-1] * 255 *0.8+ xdata[xdata.length-1] * 255*0.8;
+                const factor = 0.5;
+                const red = ydata[ydata.length-1] * 255*factor;
+                const green = xdata[xdata.length-1] * 255*factor;
+                const blue = ydata[ydata.length-1] * 255 *factor+ xdata[xdata.length-1] * 255*factor;
                 color = `rgb(${red}, ${green}, ${blue})`;
                 ctx.beginPath();
                 ctx.arc(x, y, 8, 0, 2 * Math.PI);

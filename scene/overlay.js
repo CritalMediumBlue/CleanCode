@@ -23,6 +23,7 @@ export function updateOverlay(animationState,constants) {
     
     // Update overlay text content with current simulation stats
     overlay.innerText = `Step: ${currentTimeStep} / ${numberOfTimeSteps}
-    Time: ${timeString}`
+    Time: ${timeString} hh:mm:ss
+    One step represents ${(fromStepToMinutes*(60)).toFixed(0)} seconds`
 }
 

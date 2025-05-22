@@ -79,7 +79,6 @@ function analyzeBacteriaLineage(bacteriaTimeSeries) {
     });
     const averageLifetime = sum / count ;
 
-
     return averageLifetime
 }
 
