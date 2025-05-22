@@ -63,15 +63,11 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrations, cytopla
             cytoplasmManager.rConcentrationMemo.set(ID, cytoplasmManager.rConcentrationMemo.get(ID/2n));
         }
        
-        
         const cytoplasmConcentrations = inheritanceConcentration(cytoplasmManager, ID, localConcentration) 
 
 
         cytoplasmManager.pConcentrationMemo.set(ID, cytoplasmConcentrations.p);
         cytoplasmManager.rConcentrationMemo.set(ID, cytoplasmConcentrations.r);
-        
-
-        
         
         // Return bacterium with phenotype
         return {

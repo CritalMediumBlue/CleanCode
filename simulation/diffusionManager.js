@@ -1,16 +1,13 @@
 import { diffuse } from './diffusionStep.js';;
 import { getAdjustedCoordinates } from './grid.js';
 export function prepareDiffusionStep(currentBacteria, concentrationState, appConfig, cytoplasmManager) {
-    const GRID = appConfig.GRID;
-
+        
+        const GRID = appConfig.GRID;
         const timeLapse = 0.5;
         for (let i = 0; i < 10; i++) {
             continuousSinksAndSources(currentBacteria, concentrationState, cytoplasmManager, GRID, timeLapse);
             diffuse( concentrationState, timeLapse)
         }
-
-    
-
     
 }
 
