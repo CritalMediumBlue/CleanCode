@@ -7,7 +7,7 @@ export const createStates = (gridSize) => {
     }; 
     sealObject(animationState);
     const concentrationState = {
-        concentrationField: new Float64Array(gridSize).fill(0.2),
+        concentrationField: new Float64Array(gridSize).fill(0.21),
         sources: new Float64Array(gridSize).fill(0),
         sinks:new Float64Array(gridSize).fill(0),
         visible:null,

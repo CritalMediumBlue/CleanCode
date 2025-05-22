@@ -42,8 +42,8 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     }  else if (originalConcentrationP === undefined || originalConcentrationR === undefined) {
 
         return {
-            p: 1.15,
-            r: 0.25
+            p: 1.13,
+            r: 0.26
         }
     }
 }
@@ -51,7 +51,7 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
 export const updateBacteriaCytoplasm = (currentBacteria, concentrations, cytoplasmManager,HEIGHT,WIDTH) => {
 
     const bacteriaWithConcentrations = currentBacteria.map((bacterium) => {
-        const { x, y, longAxis, angle, ID, parent } = bacterium;
+        const { x, y, longAxis, angle, ID } = bacterium;
         
         const adjustedCoords = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
         const idx = adjustedCoords.idx;

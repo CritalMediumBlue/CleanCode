@@ -33,7 +33,7 @@ function createMesh(THREE, GRID) {
         vertexColors: true,
         transparent: true,
         side: THREE.DoubleSide,
-        opacity: 0.85,
+        opacity: 0.7,
       
 
     });
@@ -108,7 +108,7 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultipli
             const bufferIndex = 3 * idx; // Base index for position and color arrays
 
             const height = concentrationData[idx]*heightMultiplier
-            positions[bufferIndex + 2] = height-5; // Set Z value
+            positions[bufferIndex + 2] = height-6; // Set Z value
 
             // --- Update Color ---
             const { r, g, b } = calculateColor(height);
