@@ -1,6 +1,6 @@
 import { getAdjustedCoordinates } from "./grid.js";
 
-function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
+function inheritanceConcentration(cytoplasmManager, ID, localConcentration, timeLapse) {
     const {pConcentrationMemo, rConcentrationMemo,signal} = cytoplasmManager;
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
@@ -23,8 +23,8 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
         - DilutionRate*originalConcentrationR;//+(Math.random() - 0.5)*0.02;
 
 
-        let finalConcentrationP = originalConcentrationP + deltaP;
-        let finalConcentrationR = originalConcentrationR + deltaR;
+        let finalConcentrationP = originalConcentrationP + deltaP*timeLapse;
+        let finalConcentrationR = originalConcentrationR + deltaR*timeLapse;
 
         if (finalConcentrationP < 1e-10) {
             finalConcentrationP = 1e-10;
@@ -48,7 +48,8 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration) {
     }
 }
 
-export const updateBacteriaCytoplasm = (currentBacteria, concentrations, cytoplasmManager,HEIGHT,WIDTH) => {
+export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager,HEIGHT,WIDTH, timeLapse) => {
+    const concentrations = concentrationsState.concentrationField;
 
     const bacteriaWithConcentrations = currentBacteria.map((bacterium) => {
         const { x, y, longAxis, angle, ID } = bacterium;
@@ -63,7 +64,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrations, cytopla
             cytoplasmManager.rConcentrationMemo.set(ID, cytoplasmManager.rConcentrationMemo.get(ID/2n));
         }
        
-        const cytoplasmConcentrations = inheritanceConcentration(cytoplasmManager, ID, localConcentration) 
+        const cytoplasmConcentrations = inheritanceConcentration(cytoplasmManager, ID, localConcentration, timeLapse) 
 
 
         cytoplasmManager.pConcentrationMemo.set(ID, cytoplasmConcentrations.p);

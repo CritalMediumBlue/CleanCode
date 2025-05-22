@@ -108,6 +108,8 @@ export function createPlotOptions({ width, height, type }) {
         return {
           width,
           height,
+          title: "Cytoplasm concentrations in each bacterium",
+          titleColor: "rgb(255, 255, 255)",
           legend: { show: false },
           series: [
             { label: "X" },
@@ -118,8 +120,8 @@ export function createPlotOptions({ width, height, type }) {
             y: { auto: false, min: 0, max: 2 }
           },
           axes: [
-            { stroke: axisTextColor, grid: { show: true, stroke: strokeColor }, font: "12px Arial", color: axisTextColor, label: "P Concentration" },
-            { stroke: axisTextColor, grid: { show: true, stroke: strokeColor }, scale: "y", font: "12px Arial", color: axisTextColor, label: "R Concentration" }
+            { stroke: axisTextColor, grid: { show: true, stroke: strokeColor }, font: "12px Arial", color: axisTextColor, label: "AimP [nM]" },
+            { stroke: axisTextColor, grid: { show: true, stroke: strokeColor }, scale: "y", font: "12px Arial", color: axisTextColor, label: "AimR [nM]" }
           ],
           hooks: {
             draw: [

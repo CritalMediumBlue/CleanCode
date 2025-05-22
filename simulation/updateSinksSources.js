@@ -1,7 +1,7 @@
 import { getAdjustedCoordinates } from './grid.js';
 
 
-export const continuousSinksAndSources = (currentBacteria, concentrationState, GRID, cytoplasmManager, timeLapse) => {
+export const updateSinksAndSources = (currentBacteria, concentrationState, GRID, cytoplasmManager, timeLapse) => {
     
     concentrationState.sources.fill(0);
     concentrationState.sinks.fill(0);

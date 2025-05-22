@@ -105,3 +105,7 @@ canvas {
     padding: 4px 8px;
     border-radius: 3px;
 }
+.u-title {
+  color: white !important;
+}
+

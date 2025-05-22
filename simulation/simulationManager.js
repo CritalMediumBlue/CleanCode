@@ -1,4 +1,4 @@
-import { continuousSinksAndSources} from './diffusionManager.js';
+import { updateSinksAndSources} from './updateSinksSources.js';
 import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
 import { diffuse } from './diffusionStep.js';;
 
@@ -9,20 +9,20 @@ let HEIGHT;
 
 export function updateSimulation(currentBacteria, concentrationState, appConfig, minutes) {
 
-    const timeLapse = minutes*60; // seconds  30.99 sec
+    const totalTimeLapse = minutes*60; // seconds  30.99 sec
+    const timeLapse = 1; // seconds
 
-    const concentration = concentrationState.concentrationField;
-  
+    const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
+    let bacteriaDataUpdated
     
- 
-    const bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH);
-    continuousSinksAndSources(currentBacteria, concentrationState, appConfig.GRID, cytoplasmManager,0.5);
-    diffuse(concentrationState, 0.5);
-     
+    for (let i = 0; i < numberOfIterations; i++) {
+        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse);
+        updateSinksAndSources(currentBacteria, concentrationState, appConfig.GRID, cytoplasmManager,timeLapse);
+        diffuse(concentrationState, timeLapse);
+    }
     
     
-    
-    const globalParams = getGlobalParamsCont(bacteriaDataUpdated,concentration);
+    const globalParams = getGlobalParamsCont(bacteriaDataUpdated,concentrationState);
 
     return {
         bacteriaDataUpdated,
@@ -32,7 +32,8 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig,
 }
 
 
-function getGlobalParamsCont(bacteriaData,concentration) {
+function getGlobalParamsCont(bacteriaData,concentrationState) {
+    const concentration = concentrationState.concentrationField;
     let length = concentration.length;
     let totalAimP = 0;
     let totalAimR = 0;
