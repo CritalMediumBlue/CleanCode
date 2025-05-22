@@ -1,17 +1,8 @@
-import { diffuse } from './diffusionStep.js';;
 import { getAdjustedCoordinates } from './grid.js';
-export function prepareDiffusionStep(currentBacteria, concentrationState, appConfig, cytoplasmManager) {
-        
-        const GRID = appConfig.GRID;
-        const timeLapse = 0.5;
-        for (let i = 0; i < 10; i++) {
-            continuousSinksAndSources(currentBacteria, concentrationState, cytoplasmManager, GRID, timeLapse);
-            diffuse( concentrationState, timeLapse)
-        }
-    
-}
 
-const continuousSinksAndSources = (currentBacteria, concentrationState, cytoplasmManager, GRID, timeLapse) => {
+
+export const continuousSinksAndSources = (currentBacteria, concentrationState, GRID, cytoplasmManager, timeLapse) => {
+    
     concentrationState.sources.fill(0);
     concentrationState.sinks.fill(0);
     const Kout = 4*timeLapse;  //4 is the maximum for stable diffusion

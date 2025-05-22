@@ -1,5 +1,6 @@
-import { prepareDiffusionStep} from './diffusionManager.js';
+import { continuousSinksAndSources} from './diffusionManager.js';
 import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
+import { diffuse } from './diffusionStep.js';;
 
 
 let cytoplasmManager = null;
@@ -15,7 +16,8 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig,
     
  
     const bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentration,cytoplasmManager,HEIGHT,WIDTH);
-    prepareDiffusionStep(currentBacteria, concentrationState, appConfig,cytoplasmManager);
+    continuousSinksAndSources(currentBacteria, concentrationState, appConfig.GRID, cytoplasmManager,0.5);
+    diffuse(concentrationState, 0.5);
      
     
     
