@@ -7,7 +7,7 @@ export const createStates = (gridSize) => {
     }; 
     sealObject(animationState);
     const concentrationState = {
-        concentrationField: new Float64Array(gridSize).fill(0.21),
+        concentrationField: new Float64Array(gridSize).fill(1),
         sources: new Float64Array(gridSize).fill(0),
         sinks:new Float64Array(gridSize).fill(0),
         visible:null,
@@ -71,7 +71,6 @@ export const getHistories = () => {
     const dataLength = totalBacteriaCountHistory.length;
     const data = [
         Array.from({ length: dataLength }, (_, index) => index),
-        totalBacteriaCountHistory,
         magentaBacteriaCountHistory,
         cyanBacteriaCountHistory,
         averageSimilarityHistory

@@ -39,11 +39,11 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
     if(bacteriaData) {
         updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
     }
-    if (histories) {
-        updatePlot(histories, plot, "timeSeries");
-    }
-    if (cytoplasmicconcentrations) {
+    
+    if (cytoplasmicconcentrations && histories) {
         updatePlot(cytoplasmicconcentrations, phaseSpace, "phaseSpace");
+        updatePlot(histories, plot, "timeSeries");
+
     }
     updateOverlay(animationState, constants);
     stage.renderer.render(stage.scene, stage.camera);

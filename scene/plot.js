@@ -27,7 +27,7 @@ export function setupPlot(uPlot,type) {
     
     // Calculate fixed dimensions (using container size)
     const width = plotContainer.clientWidth;
-    const height = plotContainer.clientHeight*0.9;
+    const height = plotContainer.clientHeight*0.8;
     
     const options = createPlotOptions({
         width,
@@ -38,15 +38,11 @@ export function setupPlot(uPlot,type) {
     return new uPlot(options,initData, plotContainer);
 }
 
-/**
- * Updates plot data with new history values
- * @param {Array} totalHistory - History of total bacteria counts
- * @param {Array} magentaHistory - History of magenta bacteria counts
- * @param {Array} cyanHistory - History of cyan bacteria counts
- * @param {Array} similarityHistory - History of similarity values
- */
+
 export function updatePlot(data, plot, type) {
+  
   if(type === 'phaseSpace') {
+    data = scaleData(data,0);
     const AverageX = data[0].reduce((a, b) => a + b, 0) / data[0].length;
     const AverageY = data[1].reduce((a, b) => a + b, 0) / data[1].length;
     data[0].push(AverageX);
@@ -54,10 +50,11 @@ export function updatePlot(data, plot, type) {
     plot.setData(data);
   }
     else if(type === 'timeSeries') {
-    const end = data[0].length;
+    let scaledData = scaleData(data,1);
+    const end = scaledData[0].length;
     const start = Math.max(0, end - 500);
 
-    const slicedData = sliceData(start, end, data);
+    const slicedData = sliceData(start, end, scaledData);
     
     plot.setData(slicedData);
     }
@@ -72,4 +69,21 @@ function sliceData(start, end, data) {
   return d;
 }
 
+function scaleData(data, start) {
+  const scaleFactor = 100;
 
+  // Create a deep copy of the data array
+  const scaledData = [];
+  for (let i = 0; i < data.length; i++) {
+    scaledData[i] = [...data[i]]; // Create a copy of each sub-array
+  }
+  
+  // Apply scaling to the copy
+  for (let i = start; i < scaledData.length; i++) {
+    for (let j = 0; j < scaledData[i].length; j++) {
+      scaledData[i][j] = scaledData[i][j] * scaleFactor;
+    }
+  }
+  
+  return scaledData;
+}
