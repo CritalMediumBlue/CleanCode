@@ -1,0 +1,1748 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{Niklas2019}{article}{}
+      \name{author}{2}{}{%
+        {{hash=3eaa493f0e78ff2478d958e40c4a3d2a}{%
+           family={Niklas},
+           familyi={N\bibinitperiod},
+           given={Karl\bibnamedelima J},
+           giveni={K\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=725440c5c6179efcdfa77acf9279dd98}{%
+           family={Newman},
+           familyi={N\bibinitperiod},
+           given={Stuart\bibnamedelima A},
+           giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=17028548b731784e73f5e3a76a1a2da1}{%
+           family={Christine},
+           familyi={C\bibinitperiod},
+           given={Raines},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press ({OUP})}%
+      }
+      \strng{namehash}{5b5e32e1f9d89fb9b0a6229af80d3dd5}
+      \strng{fullhash}{5b5e32e1f9d89fb9b0a6229af80d3dd5}
+      \strng{bibnamehash}{5b5e32e1f9d89fb9b0a6229af80d3dd5}
+      \strng{authorbibnamehash}{5b5e32e1f9d89fb9b0a6229af80d3dd5}
+      \strng{authornamehash}{5b5e32e1f9d89fb9b0a6229af80d3dd5}
+      \strng{authorfullhash}{5b5e32e1f9d89fb9b0a6229af80d3dd5}
+      \strng{editorbibnamehash}{17028548b731784e73f5e3a76a1a2da1}
+      \strng{editornamehash}{17028548b731784e73f5e3a76a1a2da1}
+      \strng{editorfullhash}{17028548b731784e73f5e3a76a1a2da1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Experimental Botany}
+      \field{month}{12}
+      \field{number}{11}
+      \field{title}{The many roads to and from multicellularity}
+      \field{volume}{71}
+      \field{year}{2019}
+      \field{pages}{3247\bibrangedash 3253}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1093/jxb/erz547
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1093/jxb/erz547
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1093/jxb/erz547
+      \endverb
+    \endentry
+    \entry{Lyons2015}{article}{}
+      \name{author}{2}{}{%
+        {{hash=07c04238348d64c8ac9bfe6dc11de31a}{%
+           family={Lyons},
+           familyi={L\bibinitperiod},
+           given={Nicholas\bibnamedelima A},
+           giveni={N\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=a154df86de6c23ab996aeb3d89f3faa0}{%
+           family={Kolter},
+           familyi={K\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier {BV}}%
+      }
+      \strng{namehash}{db18f4c5c7a9207b31786e10ded73d75}
+      \strng{fullhash}{db18f4c5c7a9207b31786e10ded73d75}
+      \strng{bibnamehash}{db18f4c5c7a9207b31786e10ded73d75}
+      \strng{authorbibnamehash}{db18f4c5c7a9207b31786e10ded73d75}
+      \strng{authornamehash}{db18f4c5c7a9207b31786e10ded73d75}
+      \strng{authorfullhash}{db18f4c5c7a9207b31786e10ded73d75}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Current Opinion in Microbiology}
+      \field{month}{4}
+      \field{title}{On the evolution of bacterial multicellularity}
+      \field{volume}{24}
+      \field{year}{2015}
+      \field{pages}{21\bibrangedash 28}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1016/j.mib.2014.12.007
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.mib.2014.12.007
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.mib.2014.12.007
+      \endverb
+    \endentry
+    \entry{Vlamakis2008}{article}{}
+      \name{author}{4}{}{%
+        {{hash=041bce4a2b8118873f399f2dd9564336}{%
+           family={Vlamakis},
+           familyi={V\bibinitperiod},
+           given={Hera},
+           giveni={H\bibinitperiod}}}%
+        {{hash=5565da3e4769b030af859adbd7bf8665}{%
+           family={Aguilar},
+           familyi={A\bibinitperiod},
+           given={Claudio},
+           giveni={C\bibinitperiod}}}%
+        {{hash=260eec13c3ded455699a8ef0939fd725}{%
+           family={Losick},
+           familyi={L\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=a154df86de6c23ab996aeb3d89f3faa0}{%
+           family={Kolter},
+           familyi={K\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cold Spring Harbor Laboratory}%
+      }
+      \strng{namehash}{8ce386b44a8d882af13d7a174b9116e1}
+      \strng{fullhash}{2275c7cda0bf7c0c6af8f211e95fd8bc}
+      \strng{bibnamehash}{2275c7cda0bf7c0c6af8f211e95fd8bc}
+      \strng{authorbibnamehash}{2275c7cda0bf7c0c6af8f211e95fd8bc}
+      \strng{authornamehash}{8ce386b44a8d882af13d7a174b9116e1}
+      \strng{authorfullhash}{2275c7cda0bf7c0c6af8f211e95fd8bc}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Genes and Development}
+      \field{month}{4}
+      \field{number}{7}
+      \field{title}{Control of cell fate by the formation of an architecturally complex bacterial community}
+      \field{volume}{22}
+      \field{year}{2008}
+      \field{pages}{945\bibrangedash 953}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1101/gad.1645008
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1101/gad.1645008
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1101/gad.1645008
+      \endverb
+    \endentry
+    \entry{Srinivasan2018}{article}{}
+      \name{author}{6}{}{%
+        {{hash=15fb6a4ca073a56053b2d24dcf72557b}{%
+           family={Srinivasan},
+           familyi={S\bibinitperiod},
+           given={Siddarth},
+           giveni={S\bibinitperiod}}}%
+        {{hash=5baf38865a54a3f759a363b880e331f7}{%
+           family={Vladescu},
+           familyi={V\bibinitperiod},
+           given={Ioana\bibnamedelima D.},
+           giveni={I\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=fd627bc843ab55e4e212532203310296}{%
+           family={Koehler},
+           familyi={K\bibinitperiod},
+           given={Stephan\bibnamedelima A.},
+           giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=a858b23fe809850823c7b0bb8d417bc0}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xiaoling},
+           giveni={X\bibinitperiod}}}%
+        {{hash=f4e740c86e9e4c13f086db6634855d02}{%
+           family={Mani},
+           familyi={M\bibinitperiod},
+           given={Madhav},
+           giveni={M\bibinitperiod}}}%
+        {{hash=75866850e1b3033ada668d59208a7199}{%
+           family={Rubinstein},
+           familyi={R\bibinitperiod},
+           given={Shmuel\bibnamedelima M.},
+           giveni={S\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier {BV}}%
+      }
+      \strng{namehash}{93014024db0cfffcdfe314070dac109f}
+      \strng{fullhash}{c4056606c08feb73848251705e724782}
+      \strng{bibnamehash}{c4056606c08feb73848251705e724782}
+      \strng{authorbibnamehash}{c4056606c08feb73848251705e724782}
+      \strng{authornamehash}{93014024db0cfffcdfe314070dac109f}
+      \strng{authorfullhash}{c4056606c08feb73848251705e724782}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Biophysical Journal}
+      \field{month}{3}
+      \field{number}{6}
+      \field{title}{Matrix Production and Sporulation in Bacillus subtilis Biofilms Localize to Propagating Wave~Fronts}
+      \field{volume}{114}
+      \field{year}{2018}
+      \field{pages}{1490\bibrangedash 1498}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1016/j.bpj.2018.02.002
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.bpj.2018.02.002
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.bpj.2018.02.002
+      \endverb
+    \endentry
+    \entry{Wang2021}{article}{}
+      \name{author}{6}{}{%
+        {{hash=a858b23fe809850823c7b0bb8d417bc0}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xiaoling},
+           giveni={X\bibinitperiod}}}%
+        {{hash=fe7749d1c35ed98a802666ba5b932dc6}{%
+           family={Dong},
+           familyi={D\bibinitperiod},
+           given={Fulin},
+           giveni={F\bibinitperiod}}}%
+        {{hash=fee042a98dca9ede8f63ee006efc99fb}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Jiali},
+           giveni={J\bibinitperiod}}}%
+        {{hash=5809204f8be16f771ba073b2519067ce}{%
+           family={Tan},
+           familyi={T\bibinitperiod},
+           given={Yifan},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=8c3bfc0dbcc9920993eaf2df2147d425}{%
+           family={Hu},
+           familyi={H\bibinitperiod},
+           given={Shuaishuai},
+           giveni={S\bibinitperiod}}}%
+        {{hash=6a4c78fb3d965b2b2a9c3f627b540555}{%
+           family={Zhao},
+           familyi={Z\bibinitperiod},
+           given={Hui},
+           giveni={H\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Springer Science}%
+        {Business Media LLC}%
+      }
+      \strng{namehash}{3e4e5605f16705b8cadf0db42cee6f44}
+      \strng{fullhash}{01c3835d7852f8731fb12151a11ee6ae}
+      \strng{bibnamehash}{01c3835d7852f8731fb12151a11ee6ae}
+      \strng{authorbibnamehash}{01c3835d7852f8731fb12151a11ee6ae}
+      \strng{authornamehash}{3e4e5605f16705b8cadf0db42cee6f44}
+      \strng{authorfullhash}{01c3835d7852f8731fb12151a11ee6ae}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1432-072X}
+      \field{journaltitle}{Archives of Microbiology}
+      \field{month}{8}
+      \field{number}{9}
+      \field{title}{The self-healing of Bacillus subtilis biofilms}
+      \field{volume}{203}
+      \field{year}{2021}
+      \field{pages}{5635\bibrangedash 5645}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1007/s00203-021-02542-w
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1007/s00203-021-02542-w
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1007/s00203-021-02542-w
+      \endverb
+    \endentry
+    \entry{Dong2022}{article}{}
+      \name{author}{6}{}{%
+        {{hash=fe7749d1c35ed98a802666ba5b932dc6}{%
+           family={Dong},
+           familyi={D\bibinitperiod},
+           given={Fulin},
+           giveni={F\bibinitperiod}}}%
+        {{hash=34bf72bd7ebc345cbf0228777c850699}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Song},
+           giveni={S\bibinitperiod}}}%
+        {{hash=870e1304002e24cb793a50618a43cd96}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Duohuai},
+           giveni={D\bibinitperiod}}}%
+        {{hash=0e0efdc98be454a85259b558de685ae8}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Jinchang},
+           giveni={J\bibinitperiod}}}%
+        {{hash=a858b23fe809850823c7b0bb8d417bc0}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xiaoling},
+           giveni={X\bibinitperiod}}}%
+        {{hash=6a4c78fb3d965b2b2a9c3f627b540555}{%
+           family={Zhao},
+           familyi={Z\bibinitperiod},
+           given={Hui},
+           giveni={H\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier BV}%
+      }
+      \strng{namehash}{3f09f369e2d8314d0f84a8213973a430}
+      \strng{fullhash}{825daf5e00ee715c6248ab20227904c1}
+      \strng{bibnamehash}{825daf5e00ee715c6248ab20227904c1}
+      \strng{authorbibnamehash}{825daf5e00ee715c6248ab20227904c1}
+      \strng{authornamehash}{3f09f369e2d8314d0f84a8213973a430}
+      \strng{authorfullhash}{825daf5e00ee715c6248ab20227904c1}
+      \field{extraname}{1}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1476-9271}
+      \field{journaltitle}{Computational Biology and Chemistry}
+      \field{month}{4}
+      \field{title}{Osmotic pressure induced by extracellular matrix drives Bacillus subtilis biofilms’ self-healing}
+      \field{volume}{97}
+      \field{year}{2022}
+      \field{pages}{107632}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.compbiolchem.2022.107632
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1016/j.compbiolchem.2022.107632
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1016/j.compbiolchem.2022.107632
+      \endverb
+    \endentry
+    \entry{Dong2022_1}{article}{}
+      \name{author}{5}{}{%
+        {{hash=fe7749d1c35ed98a802666ba5b932dc6}{%
+           family={Dong},
+           familyi={D\bibinitperiod},
+           given={Fulin},
+           giveni={F\bibinitperiod}}}%
+        {{hash=34bf72bd7ebc345cbf0228777c850699}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Song},
+           giveni={S\bibinitperiod}}}%
+        {{hash=870e1304002e24cb793a50618a43cd96}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Duohuai},
+           giveni={D\bibinitperiod}}}%
+        {{hash=0e0efdc98be454a85259b558de685ae8}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Jinchang},
+           giveni={J\bibinitperiod}}}%
+        {{hash=a858b23fe809850823c7b0bb8d417bc0}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xiaoling},
+           giveni={X\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Wiley}%
+      }
+      \strng{namehash}{3f09f369e2d8314d0f84a8213973a430}
+      \strng{fullhash}{8cef9ffff43e257425920d510d3c6964}
+      \strng{bibnamehash}{8cef9ffff43e257425920d510d3c6964}
+      \strng{authorbibnamehash}{8cef9ffff43e257425920d510d3c6964}
+      \strng{authornamehash}{3f09f369e2d8314d0f84a8213973a430}
+      \strng{authorfullhash}{8cef9ffff43e257425920d510d3c6964}
+      \field{extraname}{2}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1758-2229}
+      \field{journaltitle}{Environmental Microbiology Reports}
+      \field{month}{6}
+      \field{number}{5}
+      \field{title}{Matrix‐producing cells formed ‘Van Gogh bundles’ facilitate Bacillus subtilis biofilm self‐healing}
+      \field{volume}{14}
+      \field{year}{2022}
+      \field{pages}{822\bibrangedash 827}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1111/1758-2229.13099
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1111/1758-2229.13099
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1111/1758-2229.13099
+      \endverb
+    \endentry
+    \entry{Lpez2009}{article}{}
+      \name{author}{4}{}{%
+        {{hash=cbedce6f51b8ff8d9759739ad19b53a8}{%
+           family={Lopez},
+           familyi={L\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=041bce4a2b8118873f399f2dd9564336}{%
+           family={Vlamakis},
+           familyi={V\bibinitperiod},
+           given={Hera},
+           giveni={H\bibinitperiod}}}%
+        {{hash=260eec13c3ded455699a8ef0939fd725}{%
+           family={Losick},
+           familyi={L\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=a154df86de6c23ab996aeb3d89f3faa0}{%
+           family={Kolter},
+           familyi={K\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cold Spring Harbor Laboratory}%
+      }
+      \strng{namehash}{fe0c60c124e9b7d96dfcffb683f6b65f}
+      \strng{fullhash}{ff7bf1e20b400918b9ed152e067d7ab2}
+      \strng{bibnamehash}{ff7bf1e20b400918b9ed152e067d7ab2}
+      \strng{authorbibnamehash}{ff7bf1e20b400918b9ed152e067d7ab2}
+      \strng{authornamehash}{fe0c60c124e9b7d96dfcffb683f6b65f}
+      \strng{authorfullhash}{ff7bf1e20b400918b9ed152e067d7ab2}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Genes and Development}
+      \field{month}{7}
+      \field{number}{14}
+      \field{title}{Paracrine signaling in a bacterium}
+      \field{volume}{23}
+      \field{year}{2009}
+      \field{pages}{1631\bibrangedash 1638}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1101/gad.1813709
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1101/gad.1813709
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1101/gad.1813709
+      \endverb
+    \endentry
+    \entry{turing}{article}{}
+      \name{author}{1}{}{%
+        {{hash=210009410406a940d2f3646302cecd82}{%
+           family={Turing},
+           familyi={T\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{210009410406a940d2f3646302cecd82}
+      \strng{fullhash}{210009410406a940d2f3646302cecd82}
+      \strng{bibnamehash}{210009410406a940d2f3646302cecd82}
+      \strng{authorbibnamehash}{210009410406a940d2f3646302cecd82}
+      \strng{authornamehash}{210009410406a940d2f3646302cecd82}
+      \strng{authorfullhash}{210009410406a940d2f3646302cecd82}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issue}{641}
+      \field{journaltitle}{Philosophical Transactions of the Royal Society of London. Series B, Biological Sciences}
+      \field{title}{The chemical basis of morphogenesis}
+      \field{volume}{237}
+      \field{year}{1952}
+      \field{pages}{37\bibrangedash 72}
+      \range{pages}{36}
+      \verb{doi}
+      \verb 10.1098/rstb.1952.0012
+      \endverb
+    \endentry
+    \entry{Landge2020}{article}{}
+      \name{author}{4}{}{%
+        {{hash=467276c9bff147bbfb1a138486c3a970}{%
+           family={Landge},
+           familyi={L\bibinitperiod},
+           given={Amit\bibnamedelima N.},
+           giveni={A\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=c1a106dc2bfd976054af7bc48c5c1462}{%
+           family={Jordan},
+           familyi={J\bibinitperiod},
+           given={Benjamin\bibnamedelima M.},
+           giveni={B\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=2fd2306896eff53e02538f8beda1fb7a}{%
+           family={Diego},
+           familyi={D\bibinitperiod},
+           given={Xavier},
+           giveni={X\bibinitperiod}}}%
+        {{hash=21751ac446b31c870d90da6b5150ab29}{%
+           family={Müller},
+           familyi={M\bibinitperiod},
+           given={Patrick},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier {BV}}%
+      }
+      \strng{namehash}{75ae682b0d831f5077addeed8fe48be6}
+      \strng{fullhash}{39dd6177ffcb1b8295ce6a0647548cab}
+      \strng{bibnamehash}{39dd6177ffcb1b8295ce6a0647548cab}
+      \strng{authorbibnamehash}{39dd6177ffcb1b8295ce6a0647548cab}
+      \strng{authornamehash}{75ae682b0d831f5077addeed8fe48be6}
+      \strng{authorfullhash}{39dd6177ffcb1b8295ce6a0647548cab}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Developmental Biology}
+      \field{month}{4}
+      \field{number}{1}
+      \field{title}{Pattern formation mechanisms of self-organizing reaction-diffusion systems}
+      \field{volume}{460}
+      \field{year}{2020}
+      \field{pages}{2\bibrangedash 11}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1016/j.ydbio.2019.10.031
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.ydbio.2019.10.031
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.ydbio.2019.10.031
+      \endverb
+    \endentry
+    \entry{Nagarajan2022}{article}{}
+      \name{author}{3}{}{%
+        {{hash=76db24be1ee10a4175c763817d01fe74}{%
+           family={Nagarajan},
+           familyi={N\bibinitperiod},
+           given={Karthik},
+           giveni={K\bibinitperiod}}}%
+        {{hash=aad4a841b5c9cabb55c717fa7b482705}{%
+           family={Ni},
+           familyi={N\bibinitperiod},
+           given={Congjian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=1f1da404d938ec93aeb11f57d17ff3fc}{%
+           family={Lu},
+           familyi={L\bibinitperiod},
+           given={Ting},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {American Chemical Society ({ACS})}%
+      }
+      \strng{namehash}{2658cb1ab0dc6f22587cb8f674ba81b4}
+      \strng{fullhash}{2658cb1ab0dc6f22587cb8f674ba81b4}
+      \strng{bibnamehash}{2658cb1ab0dc6f22587cb8f674ba81b4}
+      \strng{authorbibnamehash}{2658cb1ab0dc6f22587cb8f674ba81b4}
+      \strng{authornamehash}{2658cb1ab0dc6f22587cb8f674ba81b4}
+      \strng{authorfullhash}{2658cb1ab0dc6f22587cb8f674ba81b4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{{ACS} Synthetic Biology}
+      \field{month}{10}
+      \field{number}{11}
+      \field{title}{Agent-Based Modeling of Microbial Communities}
+      \field{volume}{11}
+      \field{year}{2022}
+      \field{pages}{3564\bibrangedash 3574}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1021/acssynbio.2c00411
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1021/acssynbio.2c00411
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1021/acssynbio.2c00411
+      \endverb
+    \endentry
+    \entry{chai_vlamakis_kolter_2011}{article}{}
+      \name{author}{3}{}{%
+        {{hash=dee7f5719f64610a885a1dca7d15bd89}{%
+           family={Chai},
+           familyi={C\bibinitperiod},
+           given={Liraz},
+           giveni={L\bibinitperiod}}}%
+        {{hash=041bce4a2b8118873f399f2dd9564336}{%
+           family={Vlamakis},
+           familyi={V\bibinitperiod},
+           given={Hera},
+           giveni={H\bibinitperiod}}}%
+        {{hash=a154df86de6c23ab996aeb3d89f3faa0}{%
+           family={Kolter},
+           familyi={K\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{fullhash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{bibnamehash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{authorbibnamehash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{authornamehash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{authorfullhash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{MRS Bulletin}
+      \field{number}{5}
+      \field{title}{Extracellular signal regulation of cell differentiation in biofilms}
+      \field{volume}{36}
+      \field{year}{2011}
+      \field{pages}{374\bibrangedash 379}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1557/mrs.2011.68
+      \endverb
+    \endentry
+    \entry{Webb2003}{article}{}
+      \name{author}{3}{}{%
+        {{hash=d665bc986c2e0282d236da9d6065b04f}{%
+           family={Webb},
+           familyi={W\bibinitperiod},
+           given={Jeremy\bibnamedelima S},
+           giveni={J\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=4d3e4b1f2954ef81e08898b9bdbfbe93}{%
+           family={Givskov},
+           familyi={G\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=5aa7e6b35cfcb40a88ee215f843a3aee}{%
+           family={Kjelleberg},
+           familyi={K\bibinitperiod},
+           given={Staffan},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier {BV}}%
+      }
+      \strng{namehash}{8c422ab67db9b66300b651fcec69e680}
+      \strng{fullhash}{8c422ab67db9b66300b651fcec69e680}
+      \strng{bibnamehash}{8c422ab67db9b66300b651fcec69e680}
+      \strng{authorbibnamehash}{8c422ab67db9b66300b651fcec69e680}
+      \strng{authornamehash}{8c422ab67db9b66300b651fcec69e680}
+      \strng{authorfullhash}{8c422ab67db9b66300b651fcec69e680}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Current Opinion in Microbiology}
+      \field{month}{12}
+      \field{number}{6}
+      \field{title}{Bacterial biofilms: prokaryotic adventures in multicellularity}
+      \field{volume}{6}
+      \field{year}{2003}
+      \field{pages}{578\bibrangedash 585}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1016/j.mib.2003.10.014
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.mib.2003.10.014
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.mib.2003.10.014
+      \endverb
+    \endentry
+    \entry{Ido2020}{article}{}
+      \name{author}{7}{}{%
+        {{hash=a6488eb269d21207658ceb6945124643}{%
+           family={Ido},
+           familyi={I\bibinitperiod},
+           given={Nir},
+           giveni={N\bibinitperiod}}}%
+        {{hash=a657ef123b104d5944783f7daf99706a}{%
+           family={Lybman},
+           familyi={L\bibinitperiod},
+           given={Amir},
+           giveni={A\bibinitperiod}}}%
+        {{hash=cbca155b2a52ed3cff7b861d7e2c9359}{%
+           family={Hayet},
+           familyi={H\bibinitperiod},
+           given={Shahar},
+           giveni={S\bibinitperiod}}}%
+        {{hash=28f936d94d61312bc1529fb24e00c098}{%
+           family={Azulay},
+           familyi={A\bibinitperiod},
+           given={David\bibnamedelima N.},
+           giveni={D\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=345385012444b4fd4dd0ec5eea6b5362}{%
+           family={Ghrayeb},
+           familyi={G\bibinitperiod},
+           given={Mnar},
+           giveni={M\bibinitperiod}}}%
+        {{hash=d01395af8dab2f2a87010f685553b360}{%
+           family={Liddawieh},
+           familyi={L\bibinitperiod},
+           given={Sajeda},
+           giveni={S\bibinitperiod}}}%
+        {{hash=dee7f5719f64610a885a1dca7d15bd89}{%
+           family={Chai},
+           familyi={C\bibinitperiod},
+           given={Liraz},
+           giveni={L\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Royal Society of Chemistry ({RSC})}%
+      }
+      \strng{namehash}{3c191c10b15eadf5bceea3a2a118060c}
+      \strng{fullhash}{a9863446c80760b4427bf33a3c3f280c}
+      \strng{bibnamehash}{3c191c10b15eadf5bceea3a2a118060c}
+      \strng{authorbibnamehash}{3c191c10b15eadf5bceea3a2a118060c}
+      \strng{authornamehash}{3c191c10b15eadf5bceea3a2a118060c}
+      \strng{authorfullhash}{a9863446c80760b4427bf33a3c3f280c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Soft Matter}
+      \field{number}{26}
+      \field{title}{Bacillus subtilis biofilms characterized as hydrogels. Insights on water uptake and water binding in biofilms}
+      \field{volume}{16}
+      \field{year}{2020}
+      \field{pages}{6180\bibrangedash 6190}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1039/d0sm00581a
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1039/d0sm00581a
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1039/d0sm00581a
+      \endverb
+    \endentry
+    \entry{Mah2012}{article}{}
+      \name{author}{1}{}{%
+        {{hash=9c69c8a9acde004fffc373e13fefed0c}{%
+           family={Mah},
+           familyi={M\bibinitperiod},
+           given={Thien-Fah},
+           giveni={T\bibinithyphendelim F\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Future Medicine Ltd}%
+      }
+      \strng{namehash}{9c69c8a9acde004fffc373e13fefed0c}
+      \strng{fullhash}{9c69c8a9acde004fffc373e13fefed0c}
+      \strng{bibnamehash}{9c69c8a9acde004fffc373e13fefed0c}
+      \strng{authorbibnamehash}{9c69c8a9acde004fffc373e13fefed0c}
+      \strng{authornamehash}{9c69c8a9acde004fffc373e13fefed0c}
+      \strng{authorfullhash}{9c69c8a9acde004fffc373e13fefed0c}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Future Microbiology}
+      \field{month}{9}
+      \field{number}{9}
+      \field{title}{Biofilm-specific antibiotic resistance}
+      \field{volume}{7}
+      \field{year}{2012}
+      \field{pages}{1061\bibrangedash 1072}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.2217/fmb.12.76
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.2217/fmb.12.76
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.2217/fmb.12.76
+      \endverb
+    \endentry
+    \entry{Vlamakis2013}{article}{}
+      \name{author}{5}{}{%
+        {{hash=041bce4a2b8118873f399f2dd9564336}{%
+           family={Vlamakis},
+           familyi={V\bibinitperiod},
+           given={Hera},
+           giveni={H\bibinitperiod}}}%
+        {{hash=c9d4e5fe448117de9c1bf6f587af3f31}{%
+           family={Chai},
+           familyi={C\bibinitperiod},
+           given={Yunrong},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=7101691bbced4f25c8ddae2e2cc33399}{%
+           family={Beauregard},
+           familyi={B\bibinitperiod},
+           given={Pascale},
+           giveni={P\bibinitperiod}}}%
+        {{hash=260eec13c3ded455699a8ef0939fd725}{%
+           family={Losick},
+           familyi={L\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=a154df86de6c23ab996aeb3d89f3faa0}{%
+           family={Kolter},
+           familyi={K\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Springer Science}%
+        {Business Media {LLC}}%
+      }
+      \strng{namehash}{1ddb0800e8225d9871ed3d48f028ef13}
+      \strng{fullhash}{0390b8d149d10b677462d0e216e8d72c}
+      \strng{bibnamehash}{0390b8d149d10b677462d0e216e8d72c}
+      \strng{authorbibnamehash}{0390b8d149d10b677462d0e216e8d72c}
+      \strng{authornamehash}{1ddb0800e8225d9871ed3d48f028ef13}
+      \strng{authorfullhash}{0390b8d149d10b677462d0e216e8d72c}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Nature Reviews Microbiology}
+      \field{month}{1}
+      \field{number}{3}
+      \field{title}{Sticking together: building a biofilm the Bacillus subtilis way}
+      \field{volume}{11}
+      \field{year}{2013}
+      \field{pages}{157\bibrangedash 168}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1038/nrmicro2960
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1038/nrmicro2960
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1038/nrmicro2960
+      \endverb
+    \endentry
+    \entry{Arnaouteli2021}{article}{}
+      \name{author}{4}{}{%
+        {{hash=2b508701a91a172c91c9545e8bccb0f7}{%
+           family={Arnaouteli},
+           familyi={A\bibinitperiod},
+           given={Sofia},
+           giveni={S\bibinitperiod}}}%
+        {{hash=877aa6dba186ba837a79d5e8ea0af974}{%
+           family={Bamford},
+           familyi={B\bibinitperiod},
+           given={Natalie\bibnamedelima C.},
+           giveni={N\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=9d37d0706a9f2947fc16581069e028d2}{%
+           family={Stanley-Wall},
+           familyi={S\bibinithyphendelim W\bibinitperiod},
+           given={Nicola\bibnamedelima R.},
+           giveni={N\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=56b653738f4d97f955c4f1c1a14156b0}{%
+           family={Kovács},
+           familyi={K\bibinitperiod},
+           given={Ákos\bibnamedelima T.},
+           giveni={Á\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Springer Science}%
+        {Business Media {LLC}}%
+      }
+      \strng{namehash}{287ff4bdeb7a3ae9912f75d4d7f4509c}
+      \strng{fullhash}{d62431988946a6b7a18e7c7dde99189a}
+      \strng{bibnamehash}{d62431988946a6b7a18e7c7dde99189a}
+      \strng{authorbibnamehash}{d62431988946a6b7a18e7c7dde99189a}
+      \strng{authornamehash}{287ff4bdeb7a3ae9912f75d4d7f4509c}
+      \strng{authorfullhash}{d62431988946a6b7a18e7c7dde99189a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Nature Reviews Microbiology}
+      \field{month}{4}
+      \field{number}{9}
+      \field{title}{Bacillus subtilis biofilm formation and social interactions}
+      \field{volume}{19}
+      \field{year}{2021}
+      \field{pages}{600\bibrangedash 614}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1038/s41579-021-00540-9
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1038/s41579-021-00540-9
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1038/s41579-021-00540-9
+      \endverb
+    \endentry
+    \entry{Chai2011}{article}{}
+      \name{author}{3}{}{%
+        {{hash=dee7f5719f64610a885a1dca7d15bd89}{%
+           family={Chai},
+           familyi={C\bibinitperiod},
+           given={Liraz},
+           giveni={L\bibinitperiod}}}%
+        {{hash=041bce4a2b8118873f399f2dd9564336}{%
+           family={Vlamakis},
+           familyi={V\bibinitperiod},
+           given={Hera},
+           giveni={H\bibinitperiod}}}%
+        {{hash=a154df86de6c23ab996aeb3d89f3faa0}{%
+           family={Kolter},
+           familyi={K\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Springer Science}%
+        {Business Media {LLC}}%
+      }
+      \strng{namehash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{fullhash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{bibnamehash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{authorbibnamehash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{authornamehash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \strng{authorfullhash}{9bc9d10b18094fc97fc0ab97fc1fd954}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{{MRS} Bulletin}
+      \field{month}{5}
+      \field{number}{5}
+      \field{title}{Extracellular signal regulation of cell differentiation in biofilms}
+      \field{volume}{36}
+      \field{year}{2011}
+      \field{pages}{374\bibrangedash 379}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1557/mrs.2011.68
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1557/mrs.2011.68
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1557/mrs.2011.68
+      \endverb
+    \endentry
+    \entry{Rahman2021}{article}{}
+      \name{author}{4}{}{%
+        {{hash=d1684ae71e1750d656dc88b44709cc8d}{%
+           family={Rahman},
+           familyi={R\bibinitperiod},
+           given={Faisal\bibnamedelima Bin},
+           giveni={F\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=33c8c7b8af86452ee5a33b888d16ebbf}{%
+           family={Sarkar},
+           familyi={S\bibinitperiod},
+           given={Bishajit},
+           giveni={B\bibinitperiod}}}%
+        {{hash=10a7fc245529b17c5e7c49a79f0237f1}{%
+           family={Moni},
+           familyi={M\bibinitperiod},
+           given={Ripa},
+           giveni={R\bibinitperiod}}}%
+        {{hash=66e52cfbb07fe583ca1220bfbf551b30}{%
+           family={Rahman},
+           familyi={R\bibinitperiod},
+           given={Mohammad\bibnamedelima Shahedur},
+           giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier {BV}}%
+      }
+      \strng{namehash}{c16c877df82ca9c6eb1b97ab3b972750}
+      \strng{fullhash}{cc5946eb8fc7973b5ec941c2f4d6574b}
+      \strng{bibnamehash}{cc5946eb8fc7973b5ec941c2f4d6574b}
+      \strng{authorbibnamehash}{cc5946eb8fc7973b5ec941c2f4d6574b}
+      \strng{authornamehash}{c16c877df82ca9c6eb1b97ab3b972750}
+      \strng{authorfullhash}{cc5946eb8fc7973b5ec941c2f4d6574b}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Biotechnology Reports}
+      \field{month}{12}
+      \field{title}{Molecular genetics of surfactin and its effects on different sub-populations of Bacillus subtilis}
+      \field{volume}{32}
+      \field{year}{2021}
+      \field{pages}{e00686}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1016/j.btre.2021.e00686
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.btre.2021.e00686
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.btre.2021.e00686
+      \endverb
+    \endentry
+    \entry{Lpez20091}{article}{}
+      \name{author}{5}{}{%
+        {{hash=cbedce6f51b8ff8d9759739ad19b53a8}{%
+           family={Lopez},
+           familyi={L\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=e09f969a6285568b38740a6ced769d15}{%
+           family={Fischbach},
+           familyi={F\bibinitperiod},
+           given={Michael\bibnamedelima A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=d7326d3a439d2561b8ad7de03545abca}{%
+           family={Chu},
+           familyi={C\bibinitperiod},
+           given={Frances},
+           giveni={F\bibinitperiod}}}%
+        {{hash=260eec13c3ded455699a8ef0939fd725}{%
+           family={Losick},
+           familyi={L\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=a154df86de6c23ab996aeb3d89f3faa0}{%
+           family={Kolter},
+           familyi={K\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Proceedings of the National Academy of Sciences}%
+      }
+      \strng{namehash}{41f5c1cebbfbc83093c17e0b4426089b}
+      \strng{fullhash}{d462e9ac4d431779926044509f796808}
+      \strng{bibnamehash}{d462e9ac4d431779926044509f796808}
+      \strng{authorbibnamehash}{d462e9ac4d431779926044509f796808}
+      \strng{authornamehash}{41f5c1cebbfbc83093c17e0b4426089b}
+      \strng{authorfullhash}{d462e9ac4d431779926044509f796808}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the National Academy of Sciences}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{Structurally diverse natural products that cause potassium leakage trigger multicellularity in Bacillus subtilis}
+      \field{volume}{106}
+      \field{year}{2009}
+      \field{pages}{280\bibrangedash 285}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1073/pnas.0810940106
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1073/pnas.0810940106
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1073/pnas.0810940106
+      \endverb
+    \endentry
+    \entry{Devi2015}{article}{}
+      \name{author}{5}{}{%
+        {{hash=1a1455c88d585742a8f1ee4dec49892a}{%
+           family={Devi},
+           familyi={D\bibinitperiod},
+           given={Seram\bibnamedelima Nganbiton},
+           giveni={S\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=90d55d433c350e6a8b4e2df0bdb10e0b}{%
+           family={Vishnoi},
+           familyi={V\bibinitperiod},
+           given={Monika},
+           giveni={M\bibinitperiod}}}%
+        {{hash=cfee7e73406ad5b3ee79a0316aa539f3}{%
+           family={Kiehler},
+           familyi={K\bibinitperiod},
+           given={Brittany},
+           giveni={B\bibinitperiod}}}%
+        {{hash=78b37682ab1f863b7e86312df505714e}{%
+           family={Haggett},
+           familyi={H\bibinitperiod},
+           given={Lindsey},
+           giveni={L\bibinitperiod}}}%
+        {{hash=54c431c624cf1c166325fa7312429b8e}{%
+           family={Fujita},
+           familyi={F\bibinitperiod},
+           given={Masaya},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Microbiology Society}%
+      }
+      \strng{namehash}{218da44e68687bb870222130c5d96109}
+      \strng{fullhash}{b49768fe21c5e44b80503ce5bb5645fc}
+      \strng{bibnamehash}{b49768fe21c5e44b80503ce5bb5645fc}
+      \strng{authorbibnamehash}{b49768fe21c5e44b80503ce5bb5645fc}
+      \strng{authornamehash}{218da44e68687bb870222130c5d96109}
+      \strng{authorfullhash}{b49768fe21c5e44b80503ce5bb5645fc}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Microbiology}
+      \field{month}{5}
+      \field{number}{5}
+      \field{title}{In vivo functional characterization of the transmembrane histidine kinase {KinC} in Bacillus subtilis}
+      \field{volume}{161}
+      \field{year}{2015}
+      \field{pages}{1092\bibrangedash 1104}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1099/mic.0.000054
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1099/mic.0.000054
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1099/mic.0.000054
+      \endverb
+    \endentry
+    \entry{simon}{misc}{}
+      \name{author}{4}{}{%
+        {{hash=06ee5e2314f7c8645b19e6b0cfb08c64}{%
+           family={Dannenberg},
+           familyi={D\bibinitperiod},
+           given={Simon},
+           giveni={S\bibinitperiod}}}%
+        {{hash=01a142480d84fae235b0f3870b567f4d}{%
+           family={Penning},
+           familyi={P\bibinitperiod},
+           given={Jonas},
+           giveni={J\bibinitperiod}}}%
+        {{hash=d4490269ffc14257acba827169be243b}{%
+           family={Simm},
+           familyi={S\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=2cc3ba597281604d6c59f6d9eadb2b02}{%
+           family={Klumpp},
+           familyi={K\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {arXiv}%
+      }
+      \strng{namehash}{1bf3d5d4e35247b4bfb75079ff43be40}
+      \strng{fullhash}{72ac50cd30c9fcb4904f9a3eb63fd4bf}
+      \strng{bibnamehash}{72ac50cd30c9fcb4904f9a3eb63fd4bf}
+      \strng{authorbibnamehash}{72ac50cd30c9fcb4904f9a3eb63fd4bf}
+      \strng{authornamehash}{1bf3d5d4e35247b4bfb75079ff43be40}
+      \strng{authorfullhash}{72ac50cd30c9fcb4904f9a3eb63fd4bf}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The motility-matrix production switch in Bacillus subtilis -- a modeling perspective}
+      \field{year}{2023}
+      \verb{doi}
+      \verb 10.48550/ARXIV.2308.12780
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2308.12780
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2308.12780
+      \endverb
+      \keyw{Biological Physics (physics.bio-ph),Chaotic Dynamics (nlin.CD),Cell Behavior (q-bio.CB),Molecular Networks (q-bio.MN),Quantitative Methods (q-bio.QM),FOS: Physical sciences,FOS: Physical sciences,FOS: Biological sciences,FOS: Biological sciences}
+    \endentry
+    \entry{Voigt2005}{article}{}
+      \name{author}{3}{}{%
+        {{hash=ecb7f9b68090201ca38185fea8d97537}{%
+           family={Voigt},
+           familyi={V\bibinitperiod},
+           given={Christopher\bibnamedelima A},
+           giveni={C\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=81fb8a0d421625f59d1dc1a19d31a6be}{%
+           family={Wolf},
+           familyi={W\bibinitperiod},
+           given={Denise\bibnamedelima M},
+           giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=3884636e9e301b5b70daad17c42a6555}{%
+           family={Arkin},
+           familyi={A\bibinitperiod},
+           given={Adam\bibnamedelima P},
+           giveni={A\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press (OUP)}%
+      }
+      \strng{namehash}{1e702906a68b409d688146b8d1819425}
+      \strng{fullhash}{1e702906a68b409d688146b8d1819425}
+      \strng{bibnamehash}{1e702906a68b409d688146b8d1819425}
+      \strng{authorbibnamehash}{1e702906a68b409d688146b8d1819425}
+      \strng{authornamehash}{1e702906a68b409d688146b8d1819425}
+      \strng{authorfullhash}{1e702906a68b409d688146b8d1819425}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1943-2631}
+      \field{journaltitle}{Genetics}
+      \field{month}{3}
+      \field{number}{3}
+      \field{title}{The Bacillus subtilis sin Operon}
+      \field{volume}{169}
+      \field{year}{2005}
+      \field{pages}{1187\bibrangedash 1202}
+      \range{pages}{16}
+      \verb{doi}
+      \verb 10.1534/genetics.104.031955
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1534/genetics.104.031955
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1534/genetics.104.031955
+      \endverb
+    \endentry
+    \entry{Newman2013}{article}{}
+      \name{author}{3}{}{%
+        {{hash=8c7bdaeb3dce061862d45346ac84e283}{%
+           family={Newman},
+           familyi={N\bibinitperiod},
+           given={Joseph\bibnamedelima A.},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=3d0e5811e7eab377f62066c31c42bea3}{%
+           family={Rodrigues},
+           familyi={R\bibinitperiod},
+           given={Cecilia},
+           giveni={C\bibinitperiod}}}%
+        {{hash=80de21071c837bf869e50a0869e718f9}{%
+           family={Lewis},
+           familyi={L\bibinitperiod},
+           given={Richard\bibnamedelima J.},
+           giveni={R\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier BV}%
+      }
+      \strng{namehash}{00b637f4b7ac95497d488611289f08b4}
+      \strng{fullhash}{00b637f4b7ac95497d488611289f08b4}
+      \strng{bibnamehash}{00b637f4b7ac95497d488611289f08b4}
+      \strng{authorbibnamehash}{00b637f4b7ac95497d488611289f08b4}
+      \strng{authornamehash}{00b637f4b7ac95497d488611289f08b4}
+      \strng{authorfullhash}{00b637f4b7ac95497d488611289f08b4}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0021-9258}
+      \field{journaltitle}{Journal of Biological Chemistry}
+      \field{month}{4}
+      \field{number}{15}
+      \field{title}{Molecular Basis of the Activity of SinR Protein, the Master Regulator of Biofilm Formation in Bacillus subtilis}
+      \field{volume}{288}
+      \field{year}{2013}
+      \field{pages}{10766\bibrangedash 10778}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1074/jbc.m113.455592
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1074/jbc.m113.455592
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1074/jbc.m113.455592
+      \endverb
+    \endentry
+    \entry{Chen2023}{article}{}
+      \name{author}{5}{}{%
+        {{hash=48c731464964d6c671b8384c3e00652c}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Zhuo},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=508f0d842afa04c25bb82f9531760d8b}{%
+           family={Zarazúa-Osorio},
+           familyi={Z\bibinithyphendelim O\bibinitperiod},
+           given={Brenda},
+           giveni={B\bibinitperiod}}}%
+        {{hash=bc43b20f570b152a78507ff44354975b}{%
+           family={Srivastava},
+           familyi={S\bibinitperiod},
+           given={Priyanka},
+           giveni={P\bibinitperiod}}}%
+        {{hash=54c431c624cf1c166325fa7312429b8e}{%
+           family={Fujita},
+           familyi={F\bibinitperiod},
+           given={Masaya},
+           giveni={M\bibinitperiod}}}%
+        {{hash=801d09642e9231145483c3e581d7f0b0}{%
+           family={Igoshin},
+           familyi={I\bibinitperiod},
+           given={Oleg\bibnamedelima A.},
+           giveni={O\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=56b653738f4d97f955c4f1c1a14156b0}{%
+           family={Kovács},
+           familyi={K\bibinitperiod},
+           given={Ákos\bibnamedelima T.},
+           giveni={Á\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {American Society for Microbiology}%
+      }
+      \strng{namehash}{d8497e685177bbf3ba044dd717b10318}
+      \strng{fullhash}{89cefaaa41bfca2f994f622444851574}
+      \strng{bibnamehash}{89cefaaa41bfca2f994f622444851574}
+      \strng{authorbibnamehash}{89cefaaa41bfca2f994f622444851574}
+      \strng{authornamehash}{d8497e685177bbf3ba044dd717b10318}
+      \strng{authorfullhash}{89cefaaa41bfca2f994f622444851574}
+      \strng{editorbibnamehash}{56b653738f4d97f955c4f1c1a14156b0}
+      \strng{editornamehash}{56b653738f4d97f955c4f1c1a14156b0}
+      \strng{editorfullhash}{56b653738f4d97f955c4f1c1a14156b0}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{2379-5077}
+      \field{journaltitle}{mSystems}
+      \field{month}{4}
+      \field{number}{2}
+      \field{title}{The Slowdown of Growth Rate Controls the Single-Cell Distribution of Biofilm Matrix Production via an SinI-SinR-SlrR Network}
+      \field{volume}{8}
+      \field{year}{2023}
+      \verb{doi}
+      \verb 10.1128/msystems.00622-22
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1128/msystems.00622-22
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1128/msystems.00622-22
+      \endverb
+    \endentry
+    \entry{Pedreira2021}{article}{}
+      \name{author}{3}{}{%
+        {{hash=e369e8fc92265499312789360be79648}{%
+           family={Pedreira},
+           familyi={P\bibinitperiod},
+           given={Tiago},
+           giveni={T\bibinitperiod}}}%
+        {{hash=1e378a828e03afd40d265ae37d8749bb}{%
+           family={Elfmann},
+           familyi={E\bibinitperiod},
+           given={Christoph},
+           giveni={C\bibinitperiod}}}%
+        {{hash=f8ebe0fe92072cc3c87891e6e7986017}{%
+           family={Stülke},
+           familyi={S\bibinitperiod},
+           given={Jörg},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press (OUP)}%
+      }
+      \strng{namehash}{d6536a3f717fb552a552c8a262a0ce19}
+      \strng{fullhash}{d6536a3f717fb552a552c8a262a0ce19}
+      \strng{bibnamehash}{d6536a3f717fb552a552c8a262a0ce19}
+      \strng{authorbibnamehash}{d6536a3f717fb552a552c8a262a0ce19}
+      \strng{authornamehash}{d6536a3f717fb552a552c8a262a0ce19}
+      \strng{authorfullhash}{d6536a3f717fb552a552c8a262a0ce19}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1362-4962}
+      \field{journaltitle}{Nucleic Acids Research}
+      \field{month}{10}
+      \field{number}{D1}
+      \field{title}{The current state of SubtiWiki, the database for the model organism Bacillus subtilis}
+      \field{volume}{50}
+      \field{year}{2021}
+      \field{pages}{D875\bibrangedash D882}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1093/nar/gkab943
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1093/nar/gkab943
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1093/nar/gkab943
+      \endverb
+    \endentry
+    \entry{Hallinan2010}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=5bee66fc928b7159beb60c2f46515176}{%
+           family={Hallinan},
+           familyi={H\bibinitperiod},
+           given={J\bibnamedelima S},
+           giveni={J\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=b5a937520ff7324495f7bd311e8c703d}{%
+           family={Misirli},
+           familyi={M\bibinitperiod},
+           given={G},
+           giveni={G\bibinitperiod}}}%
+        {{hash=493a54be9b32fedf509077a0fcfeafc5}{%
+           family={Wipat},
+           familyi={W\bibinitperiod},
+           given={A},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{d7cd13407e9e011b3b897b9b4fd04c6a}
+      \strng{fullhash}{d7cd13407e9e011b3b897b9b4fd04c6a}
+      \strng{bibnamehash}{d7cd13407e9e011b3b897b9b4fd04c6a}
+      \strng{authorbibnamehash}{d7cd13407e9e011b3b897b9b4fd04c6a}
+      \strng{authornamehash}{d7cd13407e9e011b3b897b9b4fd04c6a}
+      \strng{authorfullhash}{d7cd13407e9e011b3b897b9b4fd04c6a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2010 Annual International Conference of the IEEE Engineering in Medicine and Biology}
+      \field{month}{8}
+      \field{title}{Evolutionary computation for the design of a stochastic switch for synthetic genetic circuits}
+      \field{year}{2010}
+      \verb{doi}
+      \verb 10.1109/iembs.2010.5626353
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1109/IEMBS.2010.5626353
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1109/IEMBS.2010.5626353
+      \endverb
+    \endentry
+    \entry{Dundee2022}{article}{}
+      \name{author}{1}{}{%
+        {{hash=ec6a66e2cbda1b626fe4956a565869cf}{%
+           family={Alharbi},
+           familyi={A\bibinitperiod},
+           given={Yamen},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{publisher}{1}{%
+        {University of Dundee}%
+      }
+      \strng{namehash}{ec6a66e2cbda1b626fe4956a565869cf}
+      \strng{fullhash}{ec6a66e2cbda1b626fe4956a565869cf}
+      \strng{bibnamehash}{ec6a66e2cbda1b626fe4956a565869cf}
+      \strng{authorbibnamehash}{ec6a66e2cbda1b626fe4956a565869cf}
+      \strng{authornamehash}{ec6a66e2cbda1b626fe4956a565869cf}
+      \strng{authorfullhash}{ec6a66e2cbda1b626fe4956a565869cf}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Mathematical modelling of gene regulation network governing biofilm formation in Bacillus subtilis}
+      \field{year}{2022}
+      \verb{doi}
+      \verb 10.15132/20000260
+      \endverb
+      \verb{urlraw}
+      \verb https://discovery.dundee.ac.uk/en/studentTheses/mathematical-modelling-of-gene-regulation-network-governing-biofi
+      \endverb
+      \verb{url}
+      \verb https://discovery.dundee.ac.uk/en/studentTheses/mathematical-modelling-of-gene-regulation-network-governing-biofi
+      \endverb
+    \endentry
+    \entry{Catto2023}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=d12697a9f65cf29cf7cb268edea87a2a}{%
+           family={Catto},
+           familyi={C\bibinitperiod},
+           given={Erin},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{d12697a9f65cf29cf7cb268edea87a2a}
+      \strng{fullhash}{d12697a9f65cf29cf7cb268edea87a2a}
+      \strng{bibnamehash}{d12697a9f65cf29cf7cb268edea87a2a}
+      \strng{authorbibnamehash}{d12697a9f65cf29cf7cb268edea87a2a}
+      \strng{authornamehash}{d12697a9f65cf29cf7cb268edea87a2a}
+      \strng{authorfullhash}{d12697a9f65cf29cf7cb268edea87a2a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A TypeScript port of Box2D.}
+      \field{howpublished}{Available at \url{https://github.com/flyover/box2d.ts.git}}
+      \field{note}{commit 7b387c368244fddde9cff9cbd643df3993aa698d}
+      \field{title}{Box2d.ts}
+      \field{year}{2019}
+      \verb{urlraw}
+      \verb https://github.com/flyover/box2d.ts.git
+      \endverb
+      \verb{url}
+      \verb https://github.com/flyover/box2d.ts.git
+      \endverb
+    \endentry
+    \entry{caltech}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=c00a4266cf377f6a1dcc5018d0e10391}{%
+           family={Ursell},
+           familyi={U\bibinitperiod},
+           given={Tristan},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{c00a4266cf377f6a1dcc5018d0e10391}
+      \strng{fullhash}{c00a4266cf377f6a1dcc5018d0e10391}
+      \strng{bibnamehash}{c00a4266cf377f6a1dcc5018d0e10391}
+      \strng{authorbibnamehash}{c00a4266cf377f6a1dcc5018d0e10391}
+      \strng{authornamehash}{c00a4266cf377f6a1dcc5018d0e10391}
+      \strng{authorfullhash}{c00a4266cf377f6a1dcc5018d0e10391}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{http://rpdata.caltech.edu/courses/aph162/2006/Protocols/diffusion.pdf}}
+      \field{note}{[Accessed 07-01-2024]}
+      \field{title}{rpdata.caltech.edu}
+      \field{year}{2005}
+    \endentry
+    \entry{gitconnectedSolvingHeat}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=80f33649e13375460dd8ce16d167c22c}{%
+           family={Nervadof},
+           familyi={N\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{80f33649e13375460dd8ce16d167c22c}
+      \strng{fullhash}{80f33649e13375460dd8ce16d167c22c}
+      \strng{bibnamehash}{80f33649e13375460dd8ce16d167c22c}
+      \strng{authorbibnamehash}{80f33649e13375460dd8ce16d167c22c}
+      \strng{authornamehash}{80f33649e13375460dd8ce16d167c22c}
+      \strng{authorfullhash}{80f33649e13375460dd8ce16d167c22c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://levelup.gitconnected.com/solving-2d-heat-equation-numerically-using-python-3334004aa01a}}
+      \field{note}{[Accessed 07-01-2024]}
+      \field{title}{{S}olving 2{D} {H}eat {E}quation {N}umerically using {P}ython --- levelup.gitconnected.com}
+      \field{year}{2020}
+    \endentry
+    \entry{unimuenster}{misc}{}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.uni-muenster.de/imperia/md/content/physik_tp/lectures/ws2016-2017/num_methods_i/heat.pdf}}
+      \field{note}{[Accessed 07-01-2024]}
+      \field{title}{uni-muenster.de}
+      \field{year}{2016}
+    \endentry
+    \entry{Bashkatov2003}{article}{}
+      \name{author}{6}{}{%
+        {{hash=346304efad5ebe497e71c12e5dbf7553}{%
+           family={Bashkatov},
+           familyi={B\bibinitperiod},
+           given={Alexey\bibnamedelima N.},
+           giveni={A\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=a37118d7ea97154aea31c3625ac1507e}{%
+           family={Genina},
+           familyi={G\bibinitperiod},
+           given={Elina\bibnamedelima A.},
+           giveni={E\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=bf6e276f42d690e389603bad21a2b3fc}{%
+           family={Sinichkin},
+           familyi={S\bibinitperiod},
+           given={Yuri\bibnamedelima P.},
+           giveni={Y\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=d412359f1d2c5420f13668e60c017f1e}{%
+           family={Kochubey},
+           familyi={K\bibinitperiod},
+           given={Vyacheslav\bibnamedelima I.},
+           giveni={V\bibinitperiod\bibinitdelim I\bibinitperiod}}}%
+        {{hash=02db5f325143256f69c7036b26d75d45}{%
+           family={Lakodina},
+           familyi={L\bibinitperiod},
+           given={Nina\bibnamedelima A.},
+           giveni={N\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=4449b664f02903fcc87cd67fdd57d742}{%
+           family={Tuchin},
+           familyi={T\bibinitperiod},
+           given={Valery\bibnamedelima V.},
+           giveni={V\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier BV}%
+      }
+      \strng{namehash}{9ee185f80848054e9312db5d736ada17}
+      \strng{fullhash}{82831b2458769089338ec5f885be0d54}
+      \strng{bibnamehash}{82831b2458769089338ec5f885be0d54}
+      \strng{authorbibnamehash}{82831b2458769089338ec5f885be0d54}
+      \strng{authornamehash}{9ee185f80848054e9312db5d736ada17}
+      \strng{authorfullhash}{82831b2458769089338ec5f885be0d54}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0006-3495}
+      \field{journaltitle}{Biophysical Journal}
+      \field{month}{11}
+      \field{number}{5}
+      \field{title}{Glucose and Mannitol Diffusion in Human Dura Mater}
+      \field{volume}{85}
+      \field{year}{2003}
+      \field{pages}{3310\bibrangedash 3318}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1016/s0006-3495(03)74750-x
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1016/S0006-3495(03)74750-X
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1016/S0006-3495(03)74750-X
+      \endverb
+    \endentry
+    \entry{vanGestel2021}{article}{}
+      \name{author}{12}{}{%
+        {{hash=64aa2a6a6b34efca6a6b120a74f15f60}{%
+           family={Gestel},
+           familyi={G\bibinitperiod},
+           given={Jordi},
+           giveni={J\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=b7f346a4b06eba0bfb16378988e41638}{%
+           family={Bareia},
+           familyi={B\bibinitperiod},
+           given={Tasneem},
+           giveni={T\bibinitperiod}}}%
+        {{hash=c7c0ba9aa6ac79f2c8016d5677b29568}{%
+           family={Tenennbaum},
+           familyi={T\bibinitperiod},
+           given={Bar},
+           giveni={B\bibinitperiod}}}%
+        {{hash=4e705a74911f23b927b3db8220f1e940}{%
+           family={Dal\bibnamedelima Co},
+           familyi={D\bibinitperiod\bibinitdelim C\bibinitperiod},
+           given={Alma},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a83f86a5a585714332c07cf416e8e580}{%
+           family={Guler},
+           familyi={G\bibinitperiod},
+           given={Polina},
+           giveni={P\bibinitperiod}}}%
+        {{hash=5a7505ce52d31eb67952316c29b30675}{%
+           family={Aframian},
+           familyi={A\bibinitperiod},
+           given={Nitzan},
+           giveni={N\bibinitperiod}}}%
+        {{hash=96ca8e6cf78d340029f4695b3a511e96}{%
+           family={Puyesky},
+           familyi={P\bibinitperiod},
+           given={Shani},
+           giveni={S\bibinitperiod}}}%
+        {{hash=8975df6167e4450531690ee0bb8f50c1}{%
+           family={Grinberg},
+           familyi={G\bibinitperiod},
+           given={Ilana},
+           giveni={I\bibinitperiod}}}%
+        {{hash=fac2556eca7e8c7bbdd301b83ce1a3bd}{%
+           family={D’Souza},
+           familyi={D\bibinitperiod},
+           given={Glen\bibnamedelima G.},
+           giveni={G\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=947117749bb46aab376d31d4fd13a6d8}{%
+           family={Erez},
+           familyi={E\bibinitperiod},
+           given={Zohar},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=c2f19d53883b12deec0e1b89e4f2d4f0}{%
+           family={Ackermann},
+           familyi={A\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=611d91fbbe8ac81f209c7b92bf0d2325}{%
+           family={Eldar},
+           familyi={E\bibinitperiod},
+           given={Avigdor},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{2}{%
+        {Springer Science}%
+        {Business Media LLC}%
+      }
+      \strng{namehash}{4d8d785a2e27ee4c792cd88267008a62}
+      \strng{fullhash}{c0af718b62938f587f9c5e6d1bb9e244}
+      \strng{bibnamehash}{4d8d785a2e27ee4c792cd88267008a62}
+      \strng{authorbibnamehash}{4d8d785a2e27ee4c792cd88267008a62}
+      \strng{authornamehash}{4d8d785a2e27ee4c792cd88267008a62}
+      \strng{authorfullhash}{c0af718b62938f587f9c5e6d1bb9e244}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{2041-1723}
+      \field{journaltitle}{Nature Communications}
+      \field{month}{4}
+      \field{number}{1}
+      \field{title}{Short-range quorum sensing controls horizontal gene transfer at micron scale in bacterial communities}
+      \field{volume}{12}
+      \field{year}{2021}
+      \verb{doi}
+      \verb 10.1038/s41467-021-22649-4
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1038/s41467-021-22649-4
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1038/s41467-021-22649-4
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
