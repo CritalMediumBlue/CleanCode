@@ -1,0 +1,31 @@
+\chapter{Conclusions and Future Work}\label{chap:conclusion}
+
+\section{Summary of Outcomes}\label{sec:summary_Ch7}
+This thesis represents a significant achievement in the field of computational biology by introducing a novel agent-based model that simulates the signaling pathways in \textit{Bacillus subtilis} involved in the initial phase of biofilm formation and matrix production. It is the first of its kind to integrate the dynamics of ComX and surfactin signaling, along with intracellular regulatory mechanisms involving the transcription factors SinI, SinR, and SlrR that respond to extracellular environmental conditions. Furthermore, the model accounts for volume exclusion interactions that occur due to physical constraints within the biofilm, as well as the processes of cell growth, reproduction, and the inheritance of cytoplasmic composition from one generation to the next. While there are existing models applied to \textit{B. subtilis} that address some aspects of biofilm behavior or intracellular processes in isolation, this work is unprecedented in its comprehensive approach that combines molecular, cellular, and intercellular scales to provide an in-depth understanding of biofilm formation in \textit{Bacillus subtilis}. The inclusion of such detailed biological details at multiple scales of magnitude has not been previously attempted in existing agent-based models of biofilm formation and matrix production in \textit{B. subtilis}, making this model unique among its peers. Additionally, the model exhibited behaviors in its simulations that are consistent with previously published results. This consistency underscores the model's value as a tool for evaluating the current understanding of signal pathways and gene regulation that drive the emergent behaviors observed in biofilms.
+
+Furthermore, the model is designed with flexibility in mind, allowing for easy updates and modifications. This means that if future studies reveal new details about molecular mechanisms or the overall behavior of biofilms, the model can be easily adjusted to investigate how these new insights might impact the complex process of biofilm formation.
+
+\section{Recommendations \& Future Work}\label{sec:future_Ch7}
+
+\textbf{Accurate Physics Simulations}.
+
+The significant computational power required to simulate volume exclusion interactions between cells limits the number of bacteria that can be simultaneously simulated. Furthermore, utilizing the library Box2d.ts to simulate the physical interactions of rigid objects may impose limitations on the types of mechanical simulations that can accurately model the volume exclusion forces between bacteria. One potential improvement of the model would be to integrate a scientific simulation library capable of accurately handling mechanical interactions between soft bodies and considering the semi-solid microscopic environment commonly found in biofilms.
+
+
+\textbf{Simulation Parameters}.
+
+In our efforts to create a simple yet accurate model, we made some significant assumptions that may potentially reduce the model's accuracy. For instance, the parameters used in Table 4.1 and the presumed protein concentration in the cytoplasm (SinI, SlrR, and SinR) are not based on direct experimental data. Instead, they are based on indirect calculations and computer simulations developed by other researchers. Additionally, the actual rate of secretion of signaling molecules was not taken into consideration. Instead, a dimensionless parameter was used to address the knowledge gap in this aspect of the signaling network. Finally, since the concentrations of these signaling molecules did not have any real units, the sensitivity to ComX and surfactin was also hypothesized.
+
+
+\textbf{Adding Short-Range Quorum Sensing and Signal Molecule Uptake}.
+
+The agent-based model presented in this thesis simulates long-range bacterial communication, which is an important factor in understanding the emergent properties of biofilms. However, a wealth of recent evidence, including findings reported in {\footnotesize\cite{vanGestel2021}}, suggests that understanding short-range interactions (where signaling molecules propagate no more than a few microns from the source due to irreversible cellular uptake) is essential for capturing the finer details of microbial communication. Consequently, future developments of the model should include provisions for short-range cell communication and the absorption of signaling molecules by neighboring cells. This additional level of detail would allow for a more precise simulation of the localized conditions that bacteria encounter.
+
+
+\textbf{\textit{De novo} gene circuit design}.
+
+In addition to being a useful tool for analyzing known genetic circuits and signaling networks in \textit{Bacillus subtilis}, we expect this model to be valuable for designing and testing \textit{de novo} gene circuits in a wide variety of bacterial species. To accomplish this, we would need to modify the equations described in section 2.4.3, the signaling molecules being secreted, and the rules that define the behavior of each phenotype (e.g., growth rate and sensitivity to chemical signals).
+
+\textbf{Exploring Self-Healing Properties of Biofilms}.
+
+Recent studies have revealed the ability of \textit{Bacillus subtilis} biofilms to self-repair after damage caused by physical cutting to the biofilm. This phenomenon, similar to wound healing, shows the resilience and adaptive capabilities of biofilms {\footnotesize\cite{Wang2021}\cite{Dong2022}\cite{Dong2022_1}}. The agent-based model developed in this thesis can be used as a tool to explore the mechanisms of this self-healing process. By simulating the signaling networks that facilitate communication among cells at the site of injury, this model has the potential to offer new insights into the coordinated cellular responses that drive biofilm recovery. By adjusting simulation conditions, it would be possible to recreate scenarios of biofilm damage and observe the subsequent biological processes that contribute to the biofilm's self-healing mechanism.

@@ -1,0 +1,48 @@
+\contentsline {chapter}{\numberline {1}Introduction}{2}{}%
+\contentsline {section}{\numberline {1.1}Multicellularity: From Eukaryotic Organisms to Bacterial Biofilms}{2}{}%
+\contentsline {section}{\numberline {1.2}Insights from Reaction-Diffusion Model}{2}{}%
+\contentsline {section}{\numberline {1.3}Objectives}{3}{}%
+\contentsline {subsection}{\numberline {1.3.1}Developing an Agent-Based Model}{3}{}%
+\contentsline {subsection}{\numberline {1.3.2}Visualization of Biofilm simulation}{4}{}%
+\contentsline {chapter}{\numberline {2}Literature Review}{5}{}%
+\contentsline {section}{\numberline {2.1}Introduction}{5}{}%
+\contentsline {section}{\numberline {2.2}\textit {Bacillus subtilis} Biofilms}{5}{}%
+\contentsline {section}{\numberline {2.3}Paracrine signaling}{6}{}%
+\contentsline {section}{\numberline {2.4}Cytoplasmic Gene Regulatory Networks}{8}{}%
+\contentsline {subsection}{\numberline {2.4.1}Activation of the surfactin-producing phenotype}{8}{}%
+\contentsline {subsection}{\numberline {2.4.2}Activation of the Matrix-producing phenotype}{8}{}%
+\contentsline {subsection}{\numberline {2.4.3}Mathematical modelling of SlrR-SinI-SinR gene regulatory network}{9}{}%
+\contentsline {section}{\numberline {2.5}Conclusion}{10}{}%
+\contentsline {chapter}{\numberline {3}Structure of the Agent-Based Model}{11}{}%
+\contentsline {section}{\numberline {3.1}Secretion and diffusion of signaling molecules on the 2D grid}{11}{}%
+\contentsline {section}{\numberline {3.2}Biological functions}{11}{}%
+\contentsline {subsection}{\numberline {3.2.1}Motion}{12}{}%
+\contentsline {subsection}{\numberline {3.2.2}Growth}{12}{}%
+\contentsline {subsection}{\numberline {3.2.3}Reproduction and Inheritance}{12}{}%
+\contentsline {subsection}{\numberline {3.2.4}Gene Regulatory Network}{13}{}%
+\contentsline {subsection}{\numberline {3.2.5}Phenotype Differentiation}{13}{}%
+\contentsline {section}{\numberline {3.3}Volume exclusion interactions}{14}{}%
+\contentsline {section}{\numberline {3.4}Conclusion}{14}{}%
+\contentsline {chapter}{\numberline {4}Dimensional Analysis and Parameters}{16}{}%
+\contentsline {section}{\numberline {4.1}Spatial and Temporal Points of Reference}{16}{}%
+\contentsline {subsection}{\numberline {4.1.1}Bacterial Length}{16}{}%
+\contentsline {subsection}{\numberline {4.1.2}Bacterial Doubling Time}{16}{}%
+\contentsline {section}{\numberline {4.2}Numerical Simulation of the Diffusion Equation}{18}{}%
+\contentsline {section}{\numberline {4.3}Regulatory gene circuit}{19}{}%
+\contentsline {section}{\numberline {4.4}Secretion of Signaling Molecules}{19}{}%
+\contentsline {section}{\numberline {4.5}Conclusion}{20}{}%
+\contentsline {chapter}{\numberline {5}Simulation of Biofilm Development}{21}{}%
+\contentsline {section}{\numberline {5.1}Progression of a Simulated Biofilm Monolayer}{21}{}%
+\contentsline {subsection}{\numberline {5.1.1}After 4 Hours}{21}{}%
+\contentsline {subsection}{\numberline {5.1.2}After 5 and 6 Hours}{21}{}%
+\contentsline {subsection}{\numberline {5.1.3}After 7 and 8 Hours}{22}{}%
+\contentsline {subsection}{\numberline {5.1.4}After 12 Hours}{23}{}%
+\contentsline {section}{\numberline {5.2}Phenotype oscillations}{27}{}%
+\contentsline {section}{\numberline {5.3}Conclusion}{28}{}%
+\contentsline {chapter}{\numberline {6}Conclusions and Future Work}{29}{}%
+\contentsline {section}{\numberline {6.1}Summary of Outcomes}{29}{}%
+\contentsline {section}{\numberline {6.2}Recommendations \& Future Work}{29}{}%
+\contentsline {chapter}{\numberline {7}Software Documentation}{31}{}%
+\contentsline {section}{\numberline {7.1}\texttt {Box2d} library}{31}{}%
+\contentsline {section}{\numberline {7.2}Biofilm Monolayer Simulatior}{31}{}%
+\contentsline {section}{\numberline {7.3}Small Auxiliary repository}{31}{}%
