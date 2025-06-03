@@ -1,0 +1,43 @@
+\chapter{Software Documentation}
+
+% This is totally free-form - you can break it down by chapter, or integrate
+% it. This is not at all critical.
+
+% Set this up for MATLAB - you can tweak it for other languages. This could go in the toplevel preamble if you prefer.
+
+
+\section{\texttt{Box2d} library}
+
+\texttt{Box2D} is an open-source 2D physics engine used in game development. It manages the simulation of rigid bodies, handling collision detection, movement, and various physical properties like gravity and friction. Its performance and flexibility make it a popular choice among developers for adding realistic physics to games.
+
+The original \texttt{Box2D} library was written in C++ by Erin Catto, and has since been ported to many other languages. The Github repository of the C++ version can be found at: \\ 
+\url{https://github.com/erincatto/box2d.git}
+
+The TypeScript version, \texttt{Box2D.ts}, was used in this thesis to simulate the physics volume exclusion interactions between cells.  The Github repository of the TypeScript version can be found at: \\ 
+\url{https://github.com/flyover/box2d.ts.git}
+
+
+\section{Biofilm Monolayer Simulatior}
+
+The main code for the agent based model is written in TypeScript. The code is available at: \\
+\url{https://github.com/CritalMediumBlue/box2d_for_bacteria.git}
+
+The code has many unused example files inherited from the \texttt{Box2D.ts} library, these files are not relevant in this thesis but are kept for future reference. 
+The relevant file used in this thesis is \texttt{pyramid.js}, which was originally an example file from the \texttt{Box2D.ts} library. This file was modified to simulate the physics of the biofilm monolayer. 
+
+
+\section{Small Auxiliary repository}
+
+The code for the auxiliary scripts used in this thesis is available at:\\
+
+\url{https://github.com/CritalMediumBlue/ploter.git}
+
+The repository contains the following folders:
+
+\begin{itemize}
+	\item \texttt{comparison} - Contains an HTML file showing two videos side by side. It was used for comparing the results of two physics engines (Box2D.ts and Matter.js) when simulating the biofilm monolayer.
+	\item \texttt{plotter ode} - Contains an HTML file showing the 3D phase space with the solutions of system of ODEs used to model the gene regulatory network.
+	\item \texttt{random plotter} - Contains an HTML file with a video that demonstrates an experiment with cells reproducing and inheriting the color of their parents with some random variations.
+\end{itemize}
+% Some examples of using the code - sample workflow
+
