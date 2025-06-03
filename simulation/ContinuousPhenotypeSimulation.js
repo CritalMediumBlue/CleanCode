@@ -5,12 +5,12 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
     
-    const Kin = 0.21;   //0.316 is the default
+    const Kin = 0.20;   //0.316 is the default
     const Ksyn = 0.3;    //0.4 is the default
-    const Kp = 0.05;
+    const Kp = 0.06;
     const Kr = 0.4;    //0.4 is the default. Try 0.5
-    const Kon = 0.35;
-    const DilutionRate = 0.06;
+    const Kon = 0.34;
+    const DilutionRate = 0.0625;
 
     if (originalConcentrationP !== undefined && originalConcentrationR !== undefined) {
         
@@ -23,8 +23,8 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
         - DilutionRate*originalConcentrationR;//+(Math.random() - 0.5)*0.02;
 
 
-        let finalConcentrationP = originalConcentrationP + deltaP*timeLapse*0.25;
-        let finalConcentrationR = originalConcentrationR + deltaR*timeLapse*0.25;
+        let finalConcentrationP = originalConcentrationP + deltaP*timeLapse*0.2;
+        let finalConcentrationR = originalConcentrationR + deltaR*timeLapse*0.2;
 
         if (finalConcentrationP < 1e-10) {
             finalConcentrationP = 1e-10;

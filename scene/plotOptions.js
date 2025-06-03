@@ -117,9 +117,9 @@ export function createPlotOptions({ width, height, type }) {
                   ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
                   ctx.fillStyle = color;
                   ctx.fill();
-                  ctx.strokeStyle = "#222"; // Optional: outline
-                  ctx.lineWidth = 0.2;
-                  ctx.stroke();
+                 // ctx.strokeStyle = "#222"; // Optional: outline
+                  //ctx.lineWidth = 0.2;
+                  //ctx.stroke();
                   ctx.closePath();
                 }
                 // Draw the last point with a bigger size
@@ -136,9 +136,9 @@ export function createPlotOptions({ width, height, type }) {
                 ctx.arc(x, y, 8, 0, 2 * Math.PI);
                 ctx.fillStyle = color;
                 ctx.fill();
-                ctx.strokeStyle = "#222"; 
-                ctx.lineWidth = 0.2;
-                ctx.stroke();
+                //ctx.strokeStyle = "#222"; 
+                //ctx.lineWidth = 0.2;
+                //ctx.stroke();
                 ctx.closePath();
 
               }
