@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber thesis"] 0 "thesis.bcf" "thesis.bbl" "thesis" 1748961662.21383 0
+["biber thesis"] 0 "thesis.bcf" "thesis.bbl" "thesis" 1749027059.24291 0
   "library.bib" 0 -1 0 ""
   "thesis.bcf" 0 -1 0 "pdflatex"
   (generated)
   "thesis.bbl"
   "thesis.blg"
   (rewritten before read)
-["pdflatex"] 1748961660.54662 "/home/ricardo/Desktop/Repos/CleanCode/Documentation/Sporulation/thesis.tex" "thesis.pdf" "thesis" 1748961662.21417 0
+["pdflatex"] 1749027057.69216 "/home/ricardo/Desktop/Repos/CleanCode/Documentation/Sporulation/thesis.tex" "thesis.pdf" "thesis" 1749027059.24321 0
   "/etc/texmf/web2c/texmf.cnf" 1730823505.70511 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/ricardo/Desktop/Repos/CleanCode/Documentation/Sporulation/thesis.tex" 1748961656.90919 2464 163aa60380298adb27fd7c8ff481b74e ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -19,9 +19,7 @@
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam7.tfm" 1246382020 928 2dc8d444221b7a635bb58038579b861a ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm" 1246382020 908 2921f8a10601f252058503cc6570e581 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm" 1246382020 940 228d6584342e91276bf566bcf9716b83 ""
-  "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
-  "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbxti10.tfm" 1136768653 1532 9162035f4e7176612125649e348e2195 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmcsc10.tfm" 1136768653 1300 63a6111ee6274895728663cf4b4e7e81 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmex10.tfm" 1136768653 992 662f679a0b3d2d53c1b94050fdaa3f50 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -36,9 +34,7 @@
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1136768653 1120 8b7d695260f3cff42e636090a8002094 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmti12.tfm" 1136768653 1484 ed72f8f5cf654cda15ecc8e32bfcbee5 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm" 1136768653 772 9a936b7f5e2ff0557fce0f62822f0bbf ""
-  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1248133631 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1248133631 32080 340ef9bf63678554ee606688e7b5339d ""
-  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb" 1248133631 36554 b67dc2cfa451409e100b3fcf5f506509 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb" 1248133631 32001 6aeea3afe875097b1eb0da29acd61e28 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb" 1248133631 30251 6afa5cb1d0204815a708a080681d4674 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb" 1248133631 36741 fa121aac0049305630cf160b86157ee4 ""
@@ -46,6 +42,7 @@
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb" 1248133631 35469 70d41d2b9ea31d5d813066df7c99281c ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1248133631 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1248133631 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb" 1248133631 36118 fad905eba93cff5bce1e185fe980a177 ""
@@ -127,15 +124,13 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1730823524.55255 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1730823580 8213995 c1b0dd577e86c2646bf2c62b6e960062 ""
-  "chapters/literature_review.tex" 1748941626.90835 16753 b04bd2db2a2d8c928f56dc814c8e0dae ""
-  "figures/Screenshot.png" 1748941627.26535 169088 7d85b919e0f25818e74ba5ea58d88270 ""
-  "figures/paracrine.jpg" 1748941627.35035 161569 6242a288615779f923f486cdf0189a7e ""
-  "figures/re.jpg" 1748941627.35435 713916 a4cde3f7073795a9122b1d06a054f346 ""
-  "thesis.aux" 1748961662.02218 8484 483ef6b8e76671432bc58821d39404f9 "pdflatex"
+  "chapters/literature_review.tex" 1749027055.9483 8584 9f67f87119cc6095c78a10b3d8a3baae ""
+  "figures/circuit.png" 1749022777.08488 214010 3d898e9c8b2ba9ecd3c6bb8b2e262c3f ""
+  "thesis.aux" 1749027059.06229 4023 34247de41ebca95328f982515f89d085 "pdflatex"
   "thesis.bbl" 1748961615.01729 66213 6eb7c0487c2e607e1b5e810c981ccf3f "biber thesis"
-  "thesis.run.xml" 1748961662.02618 2413 875e0ffac75c2584ea7f6fdee666ee0b "pdflatex"
+  "thesis.run.xml" 1749027059.06529 2413 a812dd07f0da2095d385c870f02e76ae "pdflatex"
   "thesis.tex" 1748961656.90919 2464 163aa60380298adb27fd7c8ff481b74e ""
-  "thesis.toc" 1748961662.02618 739 af7e4f6c8796a9a030f4cd7221f6d916 "pdflatex"
+  "thesis.toc" 1749027059.06529 153 cbf953f4b161412ea9030c3c35d45db5 "pdflatex"
   (generated)
   "thesis.aux"
   "thesis.bcf"
