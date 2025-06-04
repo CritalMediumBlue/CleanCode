@@ -8,6 +8,10 @@ describe('Thomas Algorithm', () => {
         const n = 100;
         const alpha = 1;
 
+        const modUpperDiag = new Float64Array(n);
+        const modRightSide = new Float64Array(n);
+        const solutionArray = new Float64Array(n);
+
         const lowerDiagonal = new Float64Array(n).fill(-alpha);
         const mainDiagonal = new Float64Array(n).fill(1 + 2 * alpha);
         const upperDiagonal = new Float64Array(n).fill(-alpha);
@@ -36,7 +40,7 @@ describe('Thomas Algorithm', () => {
         rightHandSide[n-1] = lowerDiagonal[n-1] * knownSolution[n-2] + 
                                                  mainDiagonal[n-1] * knownSolution[n-1];
         
-        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n);
+        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
         
         // Check if the solution matches the expected values
         for (let i = 0; i < n; i++) {
@@ -51,6 +55,9 @@ describe('Thomas Algorithm', () => {
         const lowerDiagonal = new Float64Array(n).fill(-alpha);
         const mainDiagonal = new Float64Array(n).fill(1 + 2 * alpha);
         const upperDiagonal = new Float64Array(n).fill(-alpha);
+        const modUpperDiag = new Float64Array(n);
+        const modRightSide = new Float64Array(n);
+        const solutionArray = new Float64Array(n);
         
         lowerDiagonal[0] = 0; // First element of lower diagonal
         upperDiagonal[n - 1] = 0; // Last element of upper diagonal
@@ -76,7 +83,7 @@ describe('Thomas Algorithm', () => {
         rightHandSide[n-1] = lowerDiagonal[n-1] * knownSolution[n-2] + 
                                                  mainDiagonal[n-1] * knownSolution[n-1];
         
-        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n);
+        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
         
         // Check if the solution matches the expected values
         for (let i = 0; i < n; i++) {
@@ -90,11 +97,14 @@ describe('Thomas Algorithm', () => {
         const mainDiagonal =  [2,2,2,2,4]
         const upperDiagonal = [-1,-1,-1,-1,0];
         const rightHandSide = [3,1,25,8,2]
+        const modUpperDiag = new Float64Array(n);
+        const modRightSide = new Float64Array(n);
+        const solutionArray = new Float64Array(n);
 
         const exactSolution = [23.25, 43.5, 62.75, 57.0, 43.25];
         
         
-        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n);
+        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
         
         // The analytical solution is x²
         for (let i = 0; i < n; i++) {

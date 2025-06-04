@@ -3,33 +3,47 @@ export function thomasAlgorithm(
     mainDiagonal,
     upperDiagonal,
     rightHandSide,
-    n
+    n,
+    modifiedUpperDiagonal,
+    modifiedRightHandSide,
+    solution
 ) {
     const tolerance = 1e-10;
-    const modifiedUpperDiagonal = new Float64Array(n);
-    const modifiedRightHandSide = new Float64Array(n);
-   
-    const firstPivot = Math.abs(mainDiagonal[0]) < tolerance 
-        ? Math.sign(mainDiagonal[0])*tolerance 
-        : mainDiagonal[0];
-    modifiedUpperDiagonal[0] = upperDiagonal[0] / firstPivot;
-    modifiedRightHandSide[0] = rightHandSide[0] / firstPivot;
-    
-    for (let i = 1; i < n; i++) {  
-        const denominator = mainDiagonal[i] - lowerDiagonal[i] * modifiedUpperDiagonal[i-1];
-        const safeDenominator = Math.abs(denominator) < tolerance 
-            ? Math.sign(denominator) * tolerance 
-            : denominator;
-        modifiedUpperDiagonal[i] = upperDiagonal[i] / safeDenominator;
-        modifiedRightHandSide[i] = (rightHandSide[i] - lowerDiagonal[i] * modifiedRightHandSide[i-1]) / safeDenominator;
+
+    let pivot = mainDiagonal[0];
+    if (Math.abs(pivot) < tolerance) {
+     
+        pivot = (pivot >= 0) ? tolerance : -tolerance;
     }
-    const solution = new Float64Array(n);
+    const invPivot = 1.0 / pivot; 
+
+    modifiedUpperDiagonal[0] = upperDiagonal[0] * invPivot;
+    modifiedRightHandSide[0] = rightHandSide[0] * invPivot;
+
+    // --- Forward elimination ---
+    for (let i = 1; i < n; i++) {
+        const l_i = lowerDiagonal[i]; // Current lower diagonal element
+        const u_prime_prev = modifiedUpperDiagonal[i-1]; // Previously modified upper diagonal
+        const d_prime_prev = modifiedRightHandSide[i-1]; // Previously modified RHS
+
+        // Calculate denominator for the current row
+        let currentDenominator = mainDiagonal[i] - l_i * u_prime_prev;
+
+        // Ensure denominator is not too close to zero
+        if (Math.abs(currentDenominator) < tolerance) {
+            currentDenominator = (currentDenominator >= 0) ? tolerance : -tolerance;
+        }
+        const invDenominator = 1.0 / currentDenominator; // Pre-calculate inverse
+
+        modifiedUpperDiagonal[i] = upperDiagonal[i] * invDenominator;
+        modifiedRightHandSide[i] = (rightHandSide[i] - l_i * d_prime_prev) * invDenominator;
+    }
+
+    // --- Back substitution (remains the same as original) ---
     solution[n-1] = modifiedRightHandSide[n-1];
-    
     for (let i = n - 2; i >= 0; i--) {
         solution[i] = modifiedRightHandSide[i] - modifiedUpperDiagonal[i] * solution[i+1];
     }
-    
 
     return solution;
 }
