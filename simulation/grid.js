@@ -75,13 +75,13 @@ export function countNeighbors(x, y, phenotypeManager) {
   const totalCount = magentaCount + cyanCount;
   return [totalCount, magentaCount, cyanCount];
 }
-
-
+let adjustedX = null
+let adjustedY = null
 
 export function getAdjustedCoordinates(x, y, HEIGHT, WIDTH) {
   // Translate coordinates so (0,0) is the bottom-left corner of the grid, then round.
-  let adjustedX = Math.round(x + WIDTH / 2);
-  let adjustedY = Math.round(y + HEIGHT / 2);
+  adjustedX = Math.round(x + WIDTH / 2);
+  adjustedY = Math.round(y + HEIGHT / 2);
 
   // Skip bacteria below the grid's bottom edge.
   if (adjustedY <= 0) {

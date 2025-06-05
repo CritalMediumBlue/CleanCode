@@ -1,16 +1,18 @@
 import { getAdjustedCoordinates } from "./grid.js";
-
-function inheritanceConcentration(cytoplasmManager, ID, localConcentration, timeLapse) {
-    const {pConcentrationMemo, rConcentrationMemo,signal} = cytoplasmManager;
-    const originalConcentrationP = pConcentrationMemo.get(ID);
-    const originalConcentrationR = rConcentrationMemo.get(ID);
-    
+ 
     const Kin = 0.20;   //0.316 is the default
     const Ksyn = 0.3;    //0.4 is the default
     const Kp = 0.06;
     const Kr = 0.4;    //0.4 is the default. Try 0.5
     const Kon = 0.34;
     const DilutionRate = 0.0625;
+
+
+function inheritanceConcentration(cytoplasmManager, ID, localConcentration, timeLapse) {
+    const {pConcentrationMemo, rConcentrationMemo,signal} = cytoplasmManager;
+    const originalConcentrationP = pConcentrationMemo.get(ID);
+    const originalConcentrationR = rConcentrationMemo.get(ID);
+   
 
     if (originalConcentrationP !== undefined && originalConcentrationR !== undefined) {
         
@@ -50,6 +52,7 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
 
 export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager,HEIGHT,WIDTH, timeLapse) => {
     const concentrations = concentrationsState.concentrationField;
+    const { pConcentrationMemo, rConcentrationMemo } = cytoplasmManager;
 
     const bacteriaWithConcentrations = currentBacteria.map((bacterium) => {
         const { x, y, longAxis, angle, ID } = bacterium;
@@ -59,24 +62,24 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
         const localConcentration = concentrations[idx] || 0;
 
         // Check if ID already exists in memo
-        if (!cytoplasmManager.pConcentrationMemo.has(ID) || !cytoplasmManager.rConcentrationMemo.has(ID)) {
-            cytoplasmManager.pConcentrationMemo.set(ID, cytoplasmManager.pConcentrationMemo.get(ID/2n));
-            cytoplasmManager.rConcentrationMemo.set(ID, cytoplasmManager.rConcentrationMemo.get(ID/2n));
+        if (!pConcentrationMemo.has(ID) || !rConcentrationMemo.has(ID)) {
+            pConcentrationMemo.set(ID, pConcentrationMemo.get(ID/2n));
+            rConcentrationMemo.set(ID, rConcentrationMemo.get(ID/2n));
         }
        
         const cytoplasmConcentrations = inheritanceConcentration(cytoplasmManager, ID, localConcentration, timeLapse) 
 
 
-        cytoplasmManager.pConcentrationMemo.set(ID, cytoplasmConcentrations.p);
-        cytoplasmManager.rConcentrationMemo.set(ID, cytoplasmConcentrations.r);
+        pConcentrationMemo.set(ID, cytoplasmConcentrations.p);
+        rConcentrationMemo.set(ID, cytoplasmConcentrations.r);
         
         // Return bacterium with phenotype
         return {
             id: ID,
-            x: x,
-            y: y,
-            angle: angle,
-            longAxis: longAxis,
+            x,
+            y,
+            angle,
+            longAxis,
             phenotype: "continuous",
             cytoplasmConcentrations
         };
