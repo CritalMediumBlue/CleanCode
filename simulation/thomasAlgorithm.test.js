@@ -40,11 +40,11 @@ describe('Thomas Algorithm', () => {
         rightHandSide[n-1] = lowerDiagonal[n-1] * knownSolution[n-2] + 
                                                  mainDiagonal[n-1] * knownSolution[n-1];
         
-        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
+        thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
         
         // Check if the solution matches the expected values
         for (let i = 0; i < n; i++) {
-            expect(Math.abs(solution[i] - knownSolution[i])).toBeLessThan(tolerance);
+            expect(Math.abs(solutionArray[i] - knownSolution[i])).toBeLessThan(tolerance);
         }
     });
       
@@ -83,11 +83,11 @@ describe('Thomas Algorithm', () => {
         rightHandSide[n-1] = lowerDiagonal[n-1] * knownSolution[n-2] + 
                                                  mainDiagonal[n-1] * knownSolution[n-1];
         
-        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
+        thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
         
         // Check if the solution matches the expected values
         for (let i = 0; i < n; i++) {
-            expect(Math.abs(solution[i] - knownSolution[i])).toBeLessThan(tolerance);
+            expect(Math.abs(solutionArray[i] - knownSolution[i])).toBeLessThan(tolerance);
         }
     });
         test('solves a simple tridiagonal system with known analytical solution', () => {
@@ -104,11 +104,11 @@ describe('Thomas Algorithm', () => {
         const exactSolution = [23.25, 43.5, 62.75, 57.0, 43.25];
         
         
-        const solution = thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
+        thomasAlgorithm(lowerDiagonal, mainDiagonal, upperDiagonal, rightHandSide, n, modUpperDiag, modRightSide, solutionArray);
         
         // The analytical solution is x²
         for (let i = 0; i < n; i++) {
-            expect(Math.abs(solution[i] - exactSolution[i])).toBeLessThan(tolerance);
+            expect(Math.abs(solutionArray[i] - exactSolution[i])).toBeLessThan(tolerance);
         }
     });
 });

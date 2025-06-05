@@ -29,6 +29,7 @@ export const initADIArrays = (WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT) => 
 
     const {a: a1, b: b1, c: c1, d: d1} = generateDiagonals(WIDTH, alpha);
     const {a: a2, b: b2, c: c2, d: d2} = generateDiagonals(HEIGHT, alpha);
+    console.log("ADI arrays initialized");
 
     return {
         modifiedUpperDiagonal1,
@@ -46,6 +47,7 @@ export const initADIArrays = (WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT) => 
 }
 
 
+let adiArraysCache = null;
 
 export const ADI = (
     concentrationData,
@@ -53,7 +55,13 @@ export const ADI = (
 ) => {
     const WIDTH = 100;
     const HEIGHT = 60;
-        const {
+    
+    // Initialize arrays once and reuse them across function calls
+    if (!adiArraysCache ) {
+        adiArraysCache = initADIArrays(WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT);
+    }
+    
+    const {
         modifiedUpperDiagonal1,
         modifiedRightHandSide1,
         solution1,
@@ -64,8 +72,8 @@ export const ADI = (
         a1, b1, c1, d1,
         a2, b2, c2, d2,
         alpha
-    } = initADIArrays(WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT, timeLapse);
-  
+    } = adiArraysCache;
+
     const totalNumberOfIterations = Math.round(timeLapse / deltaT); 
 
     const currentConcentrationData = new Float64Array(concentrationData);
@@ -74,20 +82,22 @@ export const ADI = (
        
             
         for (let j = 0; j < HEIGHT; j++) {
+            const rowOffset = j * WIDTH;
             for (let i = 0; i < WIDTH; i++) {
-                const idx = j * WIDTH + i;
+                const idx = rowOffset + i;
                 
                 // Handle y-direction terms with proper Neumann boundary conditions
-                let bottom = j <= 0 ? currentConcentrationData[idx] : currentConcentrationData[(j-1) * WIDTH + i]; 
-                let top = j >= HEIGHT-1 ? currentConcentrationData[idx] : currentConcentrationData[(j+1) * WIDTH + i]; 
-          
-                d1[i] = alpha*bottom + (1 - 2*alpha)*currentConcentrationData[idx] + alpha*top + (sources[idx] - sinks[idx]) * deltaT / 2;
+                const center = currentConcentrationData[idx];
+                const bottom = j <= 0 ? center : currentConcentrationData[(j-1) * WIDTH + i]; 
+                const top = j >= HEIGHT-1 ? center : currentConcentrationData[(j+1) * WIDTH + i]; 
+                
+                d1[i] = alpha*bottom + (1 - 2*alpha)*center + alpha*top + (sources[idx] - sinks[idx]) * deltaT / 2;
             }
 
             thomasAlgorithm(a1, b1, c1, d1, WIDTH, modifiedUpperDiagonal1, modifiedRightHandSide1, solution1);
             
             for (let i = 0; i < WIDTH; i++) {
-                intermediateConcentration[j * WIDTH + i] = solution1[i];
+                intermediateConcentration[rowOffset + i] = solution1[i];
             }
         }
 
@@ -96,12 +106,16 @@ export const ADI = (
         for (let i = 0; i < WIDTH; i++) {
             
             for (let j = 0; j < HEIGHT; j++) {
-                const idx = j * WIDTH + i;
+                const rowOffset = j * WIDTH;
+                const idx = rowOffset + i;
+
+
+                const center = intermediateConcentration[idx];
+                const right = i >= WIDTH-1 ? center : intermediateConcentration[j * WIDTH + (i+1)]; 
+                const left = i <= 0 ? center : intermediateConcentration[j * WIDTH + (i-1)]; 
                 
-                let right = i >= WIDTH-1 ? intermediateConcentration[idx] : intermediateConcentration[j * WIDTH + (i+1)]; 
-                let left = i <= 0 ? intermediateConcentration[idx] : intermediateConcentration[j * WIDTH + (i-1)]; 
-              
-                d2[j] = alpha*left + (1 - 2*alpha)*intermediateConcentration[idx] + alpha*right + (sources[idx] - sinks[idx]) * deltaT / 2;
+
+                d2[j] = alpha*left + (1 - 2*alpha)*center + alpha*right + (sources[idx] - sinks[idx]) * deltaT / 2;
             }
             
             thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
