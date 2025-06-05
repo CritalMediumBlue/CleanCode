@@ -14,7 +14,7 @@ export const CONFIG = {
     },
     BACTERIUM: {
         CAP_SEGMENTS: 1,
-        RADIAL_SEGMENTS: 6,
+        RADIAL_SEGMENTS: 4,
         INITIAL_POOL_SIZE: 2000,
         POOL_GROWTH_FACTOR: 1.1,
         WIREFRAME_SCALE: 1.05,

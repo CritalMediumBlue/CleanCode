@@ -35,7 +35,7 @@ export function setupNewScene(config) {
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, animationState, constants, nextSlices) {
     const concentration = concentrationState.concentrationField;
     const cytoplasmicconcentrations = getCytoConcentration(bacteriaData);
-    updateSurfaceMesh(mesh, concentration, 20);
+    updateSurfaceMesh(mesh, concentration, 10);
     if(bacteriaData) {
         updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
     }
@@ -46,7 +46,9 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
 
     }
     updateOverlay(animationState, constants);
-    stage.renderer.render(stage.scene, stage.camera);
+    if (animationState.currentTimeStep % 5 === 0) {
+        stage.renderer.render(stage.scene, stage.camera);
+    }
 }
 
 export function meshVisibility() {

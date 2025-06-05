@@ -26,9 +26,7 @@ export function setupCapsulePool(stage, BACTERIUM, THREE, capsules) {
     // Create capsule objects until we reach the desired pool size
     while (capsules.length < poolSize) {
         const capsuleGeometry = new THREE.CapsuleGeometry();
-        const capsuleMaterial = new THREE.MeshBasicMaterial({
-            transparent: true,
-        });
+        const capsuleMaterial = new THREE.MeshBasicMaterial();
         
         const capsule = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
         
