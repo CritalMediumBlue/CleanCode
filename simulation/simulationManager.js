@@ -10,7 +10,7 @@ let HEIGHT;
 export function updateSimulation(currentBacteria, concentrationState, appConfig, minutes) {
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
-    const timeLapse = 1; // seconds
+    const timeLapse = 1.5; // seconds
 
     const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
     let bacteriaDataUpdated

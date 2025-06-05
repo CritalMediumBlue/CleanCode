@@ -6,7 +6,7 @@ import {ADI, FTCS} from './diffusion.js';
         // Pick parameters so that both methods cover the same physical time.
         const DIFFUSION_RATE = 100; // choose a moderate value
         const deltaX = 1; // micrometers
-        const deltaT = 0.05;  // seconds
+        const deltaT = 0.1;  // seconds
         const tolerance = 1e-5; 
 
         const timeLapses = [];
@@ -54,6 +54,7 @@ describe('Compare Diffusion methods', () => {
                 }
             }
             const range = Math.abs(maxValue - minValue);
+            console.log(range);
             
             for (let i = 0; i < totalCells; i++) {
                 const diff = Math.abs(resultADI[i] - resultFTCS[i]);

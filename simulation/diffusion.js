@@ -1,124 +1,117 @@
 
 import { thomasAlgorithm } from './thomasAlgorithm.js';
 
-// Constants moved outside for clarity and potential reuse
-const WIDTH = 100;
-const HEIGHT = 60;
-const GRID_SIZE = WIDTH * HEIGHT;
-
-// Pre-allocated arrays for reuse across multiple calls
-const preallocatedArrays = {
-  modUpperDiag: new Float64Array(Math.max(WIDTH, HEIGHT)),
-  modRightSide: new Float64Array(Math.max(WIDTH, HEIGHT)),
-  solutionArray: new Float64Array(Math.max(WIDTH, HEIGHT)),
-  a_width: new Float64Array(WIDTH),
-  b_width: new Float64Array(WIDTH),
-  c_width: new Float64Array(WIDTH),
-  d_width: new Float64Array(WIDTH),
-  a_height: new Float64Array(HEIGHT),
-  b_height: new Float64Array(HEIGHT),
-  c_height: new Float64Array(HEIGHT),
-  d_height: new Float64Array(HEIGHT),
-  intermediateConcentration: new Float64Array(GRID_SIZE)
+const generateDiagonals = (length, alpha) => {
+    const a = new Float64Array(length).fill(-alpha);
+    const b = new Float64Array(length).fill(1 + 2 * alpha);
+    const c = new Float64Array(length).fill(-alpha);
+    const d = new Float64Array(length);
+    b[0] = 1 + alpha; 
+    b[length - 1] = 1 + alpha; 
+    a[0] = 0; 
+    c[length - 1] = 0; 
+    return { a, b, c, d };
 };
 
-// Initialize diagonal arrays (only done once)
-const initializeDiagonals = () => {
-  // Initialize for WIDTH
-  for (let i = 0; i < WIDTH; i++) {
-    preallocatedArrays.a_width[i] = -1; // Will be multiplied by alpha later
-    preallocatedArrays.b_width[i] = 2;  // Will be adjusted later
-    preallocatedArrays.c_width[i] = -1; // Will be multiplied by alpha later
-  }
-  preallocatedArrays.a_width[0] = 0;
-  preallocatedArrays.c_width[WIDTH - 1] = 0;
-  
-  // Initialize for HEIGHT
-  for (let i = 0; i < HEIGHT; i++) {
-    preallocatedArrays.a_height[i] = -1; // Will be multiplied by alpha later
-    preallocatedArrays.b_height[i] = 2;  // Will be adjusted later
-    preallocatedArrays.c_height[i] = -1; // Will be multiplied by alpha later
-  }
-  preallocatedArrays.a_height[0] = 0;
-  preallocatedArrays.c_height[HEIGHT - 1] = 0;
-};
+export const initADIArrays = (WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT) => {
+   
+    const modifiedUpperDiagonal1 = new Float64Array(WIDTH);
+    const modifiedRightHandSide1 = new Float64Array(WIDTH);
+    const solution1 = new Float64Array(WIDTH);
+    const modifiedUpperDiagonal2 = new Float64Array(HEIGHT);
+    const modifiedRightHandSide2 = new Float64Array(HEIGHT);
+    const solution2 = new Float64Array(HEIGHT);
+    
+    const intermediateConcentration = new Float64Array(WIDTH * HEIGHT);
+    
+    
+    const alpha = DIFFUSION_RATE * deltaT / (2 * deltaX * deltaX);  
 
-// Call this once when your application starts
-initializeDiagonals();
+    const {a: a1, b: b1, c: c1, d: d1} = generateDiagonals(WIDTH, alpha);
+    const {a: a2, b: b2, c: c2, d: d2} = generateDiagonals(HEIGHT, alpha);
+
+    return {
+        modifiedUpperDiagonal1,
+        modifiedRightHandSide1,
+        solution1,
+        modifiedUpperDiagonal2,
+        modifiedRightHandSide2,
+        solution2,
+        intermediateConcentration,
+        a1, b1, c1, d1,
+        a2, b2, c2, d2,
+        alpha
+    };
+    
+}
+
+
 
 export const ADI = (
     concentrationData,
     sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse
 ) => {
-    // Create a copy of the input data or reuse the original if appropriate
+    const WIDTH = 100;
+    const HEIGHT = 60;
+        const {
+        modifiedUpperDiagonal1,
+        modifiedRightHandSide1,
+        solution1,
+        modifiedUpperDiagonal2,
+        modifiedRightHandSide2,
+        solution2,
+        intermediateConcentration,
+        a1, b1, c1, d1,
+        a2, b2, c2, d2,
+        alpha
+    } = initADIArrays(WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT, timeLapse);
+  
+    const totalNumberOfIterations = Math.round(timeLapse / deltaT); 
+
     const currentConcentrationData = new Float64Array(concentrationData);
-    
-    // Reuse pre-allocated arrays
-    const {
-      modUpperDiag, modRightSide, solutionArray,
-      a_width, b_width, c_width, d_width,
-      a_height, b_height, c_height, d_height,
-      intermediateConcentration
-    } = preallocatedArrays;
-    
-    const alpha = DIFFUSION_RATE * deltaT / (2 * deltaX * deltaX);
-    const totalNumberOfIterations = Math.round(timeLapse / deltaT);
-    
-    // Scale the diagonal arrays by alpha (only need to do this once per ADI call)
-    for (let i = 0; i < WIDTH; i++) {
-      a_width[i] = i === 0 ? 0 : -alpha;
-      b_width[i] = i === 0 || i === WIDTH - 1 ? 1 + alpha : 1 + 2 * alpha;
-      c_width[i] = i === WIDTH - 1 ? 0 : -alpha;
-    }
-    
-    for (let i = 0; i < HEIGHT; i++) {
-      a_height[i] = i === 0 ? 0 : -alpha;
-      b_height[i] = i === 0 || i === HEIGHT - 1 ? 1 + alpha : 1 + 2 * alpha;
-      c_height[i] = i === HEIGHT - 1 ? 0 : -alpha;
-    }
 
     for (let iteration = 0; iteration < totalNumberOfIterations; iteration++) { 
-        // First half-step (rows)
-        for (let j = 0; j < HEIGHT; j++) {
-            const rowOffset = j * WIDTH;
+       
             
+        for (let j = 0; j < HEIGHT; j++) {
             for (let i = 0; i < WIDTH; i++) {
-                const idx = rowOffset + i;
+                const idx = j * WIDTH + i;
                 
-                // Handle y-direction terms with pre-computed boundary conditions
-                const bottom = j <= 0 ? currentConcentrationData[idx] : currentConcentrationData[idx - WIDTH]; 
-                const top = j >= HEIGHT-1 ? currentConcentrationData[idx] : currentConcentrationData[idx + WIDTH]; 
+                // Handle y-direction terms with proper Neumann boundary conditions
+                let bottom = j <= 0 ? currentConcentrationData[idx] : currentConcentrationData[(j-1) * WIDTH + i]; 
+                let top = j >= HEIGHT-1 ? currentConcentrationData[idx] : currentConcentrationData[(j+1) * WIDTH + i]; 
           
-                d_width[i] = alpha * bottom + (1 - 2 * alpha) * currentConcentrationData[idx] + 
-                           alpha * top + (sources[idx] - sinks[idx]) * deltaT / 2;
+                d1[i] = alpha*bottom + (1 - 2*alpha)*currentConcentrationData[idx] + alpha*top + (sources[idx] - sinks[idx]) * deltaT / 2;
             }
 
-            thomasAlgorithm(a_width, b_width, c_width, d_width, WIDTH, modUpperDiag, modRightSide, solutionArray);
+            thomasAlgorithm(a1, b1, c1, d1, WIDTH, modifiedUpperDiagonal1, modifiedRightHandSide1, solution1);
             
-            // Store intermediate results
             for (let i = 0; i < WIDTH; i++) {
-                intermediateConcentration[rowOffset + i] = solutionArray[i];
+                intermediateConcentration[j * WIDTH + i] = solution1[i];
             }
         }
 
-        // Second half-step (columns)
+
+        
         for (let i = 0; i < WIDTH; i++) {
+            
             for (let j = 0; j < HEIGHT; j++) {
                 const idx = j * WIDTH + i;
                 
-                const left = i <= 0 ? intermediateConcentration[idx] : intermediateConcentration[idx - 1]; 
-                const right = i >= WIDTH-1 ? intermediateConcentration[idx] : intermediateConcentration[idx + 1]; 
+                let right = i >= WIDTH-1 ? intermediateConcentration[idx] : intermediateConcentration[j * WIDTH + (i+1)]; 
+                let left = i <= 0 ? intermediateConcentration[idx] : intermediateConcentration[j * WIDTH + (i-1)]; 
               
-                d_height[j] = alpha * left + (1 - 2 * alpha) * intermediateConcentration[idx] + 
-                            alpha * right + (sources[idx] - sinks[idx]) * deltaT / 2;
+                d2[j] = alpha*left + (1 - 2*alpha)*intermediateConcentration[idx] + alpha*right + (sources[idx] - sinks[idx]) * deltaT / 2;
             }
             
-            thomasAlgorithm(a_height, b_height, c_height, d_height, HEIGHT, modUpperDiag, modRightSide, solutionArray);
+            thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
             
-            // Update final results
             for (let j = 0; j < HEIGHT; j++) {
-                const idx = j * WIDTH + i;
-                currentConcentrationData[idx] = Math.max(0, solutionArray[j]); // Avoid negative values
+                currentConcentrationData[j * WIDTH + i] = solution2[j];
+                if (currentConcentrationData[j * WIDTH + i] < 0) {
+                    currentConcentrationData[j * WIDTH + i] = 0; 
+                    console.warn("Concentration went negative at ADI");
+                }
             }
         }
     }
