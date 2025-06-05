@@ -112,7 +112,7 @@ const countIterationsToSteadyState = (method, timeStep) => {
     while (!steadyState) {
         counter += 1;
         steadyState = true;
-        
+        const original = new Float64Array(initial); 
         // Calculate next state
         const nextConcentration = method(
             initial,
@@ -125,7 +125,7 @@ const countIterationsToSteadyState = (method, timeStep) => {
         );
         // Check for steady state
         for (let i = 0; i < totalCells; i++) {
-            if (Math.abs(nextConcentration[i] - initial[i]) > tolerance) {
+            if (Math.abs(nextConcentration[i] - original[i]) > tolerance) {
                 steadyState = false;
                 break;
             }

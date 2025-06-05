@@ -76,7 +76,8 @@ export const ADI = (
 
     const totalNumberOfIterations = Math.round(timeLapse / deltaT); 
 
-    const currentConcentrationData = new Float64Array(concentrationData);
+    const currentConcentrationData = concentrationData;
+    //const currentConcentrationData = new Float64Array(concentrationData);
 
     for (let iteration = 0; iteration < totalNumberOfIterations; iteration++) { 
        
@@ -100,9 +101,6 @@ export const ADI = (
                 intermediateConcentration[rowOffset + i] = solution1[i];
             }
         }
-
-
-        
         for (let i = 0; i < WIDTH; i++) {
             
             for (let j = 0; j < HEIGHT; j++) {
@@ -128,7 +126,10 @@ export const ADI = (
                 }
             }
         }
+
+
     }
+
     
     return currentConcentrationData;
 };
