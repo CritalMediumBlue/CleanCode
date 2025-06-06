@@ -1,9 +1,9 @@
 import { getAdjustedCoordinates } from "./grid.js";
  
-    const Kin = 0.20;   //0.316 is the default
-    const Ksyn = 0.3;    //0.4 is the default
+    const Kin = 0.20;   
+    const Ksyn = 0.3;    
     const Kp = 0.06;
-    const Kr = 0.4;    //0.4 is the default. Try 0.5
+    const Kr = 0.4;    
     const Kon = 0.34;
     const DilutionRate = 0.0625;
 
@@ -18,11 +18,11 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
         
         const deltaP = Kin*(localConcentration)/(Kp+localConcentration)
         - Kon*originalConcentrationP*originalConcentrationR
-        - DilutionRate*originalConcentrationP;//+(Math.random() - 0.5)*0.02;
+        - DilutionRate*originalConcentrationP;
         
         const deltaR = Ksyn*(originalConcentrationR)/(Kr+originalConcentrationR)
         - Kon*originalConcentrationP*originalConcentrationR
-        - DilutionRate*originalConcentrationR;//+(Math.random() - 0.5)*0.02;
+        - DilutionRate*originalConcentrationR;
 
 
         let finalConcentrationP = originalConcentrationP + deltaP*timeLapse*0.2;
@@ -50,13 +50,30 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
     }
 }
 
-export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager,HEIGHT,WIDTH, timeLapse) => {
+export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse) => {
     const concentrations = concentrationsState.concentrationField;
     const { pConcentrationMemo, rConcentrationMemo } = cytoplasmManager;
-
-    const bacteriaWithConcentrations = currentBacteria.map((bacterium) => {
+    const sourcesArray = concentrationsState.sources;
+    const sinksArray = concentrationsState.sinks;
+    
+    // Initialize sources and sinks arrays first
+    sourcesArray.fill(0);
+    sinksArray.fill(0);
+    
+    // Define constants upfront
+    const Kout = 4 * timeLapse;  
+    const Kin = 2 * timeLapse;   
+    const Kp = 0.1;
+    const Kr = 0.6;
+    
+    const bacteriaCount = currentBacteria.length;
+    const resultArray = new Array(bacteriaCount);
+    
+    for (let i = 0; i < bacteriaCount; i++) {
+        const bacterium = currentBacteria[i];
         const { x, y, longAxis, angle, ID } = bacterium;
         
+        // Process 1: Update cytoplasm concentrations
         const adjustedCoords = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
         const idx = adjustedCoords.idx;
         const localConcentration = concentrations[idx] || 0;
@@ -67,14 +84,23 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
             rConcentrationMemo.set(ID, rConcentrationMemo.get(ID/2n));
         }
        
-        const cytoplasmConcentrations = inheritanceConcentration(cytoplasmManager, ID, localConcentration, timeLapse) 
-
-
+        const cytoplasmConcentrations = inheritanceConcentration(
+            cytoplasmManager, ID, localConcentration, timeLapse
+        );
+        
         pConcentrationMemo.set(ID, cytoplasmConcentrations.p);
         rConcentrationMemo.set(ID, cytoplasmConcentrations.r);
         
-        // Return bacterium with phenotype
-        return {
+        const rConcentration = cytoplasmConcentrations.r; 
+        
+        const krPlusR = Kr + rConcentration;
+        const kpPlusLocal = Kp + localConcentration;
+        
+        sourcesArray[idx] += Kout * (rConcentration / krPlusR); 
+        sinksArray[idx] += Kin * (localConcentration / kpPlusLocal);
+        
+        // Assign to pre-allocated array
+        resultArray[i] = {
             id: ID,
             x,
             y,
@@ -83,9 +109,8 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
             phenotype: "continuous",
             cytoplasmConcentrations
         };
-    });
+    }
     
-    return bacteriaWithConcentrations;
+    return resultArray;
 }
-
 

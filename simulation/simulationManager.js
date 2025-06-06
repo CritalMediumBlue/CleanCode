@@ -6,7 +6,7 @@ import { diffuse } from './diffusionStep.js';;
 let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
-
+// 98% of the time is spent in this function
 export function updateSimulation(currentBacteria, concentrationState, appConfig, minutes) {
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
@@ -17,7 +17,7 @@ export function updateSimulation(currentBacteria, concentrationState, appConfig,
     
     for (let i = 0; i < numberOfIterations; i++) {
         bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse);
-        updateSinksAndSources(currentBacteria, concentrationState, appConfig.GRID, cytoplasmManager,timeLapse);
+        //updateSinksAndSources(currentBacteria, concentrationState, appConfig.GRID, cytoplasmManager,timeLapse);
         diffuse(concentrationState, timeLapse);
     }
     

@@ -33,20 +33,21 @@ export function setupNewScene(config) {
 
 
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, animationState, constants, nextSlices) {
-    const concentration = concentrationState.concentrationField;
-    const cytoplasmicconcentrations = getCytoConcentration(bacteriaData);
-    updateSurfaceMesh(mesh, concentration, 10);
-    if(bacteriaData) {
-        updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
-    }
     
-    if (cytoplasmicconcentrations && histories) {
-        updatePlot(cytoplasmicconcentrations, phaseSpace, "phaseSpace");
-        updatePlot(histories, plot, "timeSeries");
+    if (animationState.currentTimeStep % 5 === 0 || !animationState.play) {
+        const concentration = concentrationState.concentrationField;
+        const cytoplasmicconcentrations = getCytoConcentration(bacteriaData);
+        updateSurfaceMesh(mesh, concentration, 10);
+        if(bacteriaData) {
+            updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
+        }
+        
+        if (cytoplasmicconcentrations && histories) {
+            updatePlot(cytoplasmicconcentrations, phaseSpace, "phaseSpace");
+            updatePlot(histories, plot, "timeSeries");
 
-    }
-    updateOverlay(animationState, constants);
-    if (animationState.currentTimeStep % 5 === 0) {
+        }
+        updateOverlay(animationState, constants);
         stage.renderer.render(stage.scene, stage.camera);
     }
 }
