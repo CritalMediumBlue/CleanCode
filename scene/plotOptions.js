@@ -88,8 +88,8 @@ export function createPlotOptions({ width, height, type }) {
             { label: "Y", points: { show: false } } // We'll draw points ourselves
           ],
           scales: {
-            x: { time: false, auto: false, min: 0, max: 3.2*100 },
-            y: { auto: false, min: 0, max: 2*100 }
+            x: { time: false, auto: false, min: 0, max: 3.2 },
+            y: { auto: false, min: 0, max: 2 }
           },
           axes: [
             { stroke: axisTextColor, grid: { show: true, stroke: strokeColor }, font: "12px Arial", color: axisTextColor, label: "AimP [nM]" },
@@ -107,7 +107,7 @@ export function createPlotOptions({ width, height, type }) {
         
                   // Color logic
                   let color;
-                  const factor = 0.5/100;
+                  const factor = 0.5;//0.5/100;
                   const red = ydata[i] * 255*factor;
                   const green = xdata[i] * 255*factor;
                   const blue = ydata[i] * 255 *factor+ xdata[i] * 255*factor;
@@ -127,7 +127,7 @@ export function createPlotOptions({ width, height, type }) {
                 let y = u.valToPos(ydata[ydata.length-1], 'y', true);
                 ctx.beginPath();
                 let color;
-                const factor = 0.5/100;
+                const factor = 0.5;//0.5/100;
                 const red = ydata[ydata.length-1] * 255*factor;
                 const green = xdata[xdata.length-1] * 255*factor;
                 const blue = ydata[ydata.length-1] * 255 *factor+ xdata[xdata.length-1] * 255*factor;

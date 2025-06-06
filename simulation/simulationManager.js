@@ -1,4 +1,5 @@
 import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
+import { updateBacteriaCytoplasmSpo } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
 
@@ -15,8 +16,8 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
     let bacteriaDataUpdated
     
     for (let i = 0; i < numberOfIterations; i++) {
-        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse);
-        diffuse(concentrationState, timeLapse);
+        bacteriaDataUpdated = updateBacteriaCytoplasmSpo(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse);
+        //diffuse(concentrationState, timeLapse);
     }
     
     

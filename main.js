@@ -23,7 +23,6 @@ let histories;
 let globalParams;
 const nextSlices = [];
 let storedProcessedData;
-let durationOfoneStep;
 
 
 
