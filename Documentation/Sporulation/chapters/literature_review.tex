@@ -42,8 +42,8 @@ depending on the concentration of its phosphorylated form.
 Several authors have formulated systems of differential equations to quantitatively model the biomolecular dynamics involved in the gene regulatory network that controls the expression of the extracellular matrix. The systems of equations describe the changes in the concentration of SinR, SinI, and SlrR proteins in the cytoplasm of individual \textit{Bacillus subtilis} cells over time.{\footnotesize\cite{simon}\cite{Voigt2005}\cite{Newman2013}\cite{Chen2023}\cite{Pedreira2021}\cite{Hallinan2010}}. Having considered the models proposed by these authors, we have decided to adopt a modified version of the model proposed by Dannenberg et al. {\footnotesize\cite{simon}} as the basis for our own model. The model is described by the following system of differential equations:
 
 \begin{align}
-\frac{dR}{dt} &= P_{1}g(R)f(A)+P_{3} - K_{on(RI)} R I - K_{on(RL)}RL  - D_{R} R, \label{eq:1} \\
-\frac{dI}{dt} &= P_{1}g(R)f(A)  - K_{on(RI)} R I - D_{I} I, \label{eq:2} \\
+\frac{dR}{dt} &= P_{1}g(R)f(A_p)+P_{3} - K_{on(RI)} R I - K_{on(RL)}RL  - D_{R} R, \label{eq:1} \\
+\frac{dI}{dt} &= P_{1}g(R)f(A_p)  - K_{on(RI)} R I - D_{I} I, \label{eq:2} \\
 \frac{dL}{dt} &= P_{L}g(R) - K_{on(RL)} RL - D_{L} L , \label{eq:3} \\
 \frac{dA}{dt} &= P_V + P_S f(A_p) - D_A A - K_{p}A S , \label{eq:4} \\
 \frac{dA_p}{dt} &= K_{p}A S - D_A A_p, \label{eq:5}
@@ -52,11 +52,14 @@ Several authors have formulated systems of differential equations to quantitativ
 where  \(P_V\) and \(P_S\) represent the basal and activated production rates of Spo0A, respectively.
 \(P_3\), \(P_1\), and \(P_L\) represent the 
  production rates of SinR, SinI and SlrR due to the activation of their corresponding promoters.
- \(R\), \(I\), \(L\), and \(A\) represent the protein concentrations of SinR, SinI, SlrR, and Spo0A$\sim$P within a single
-  bacterial cell. \(K_{on(XY)}\) represents the rate constant for the formation of the $(XY)$ complex,
+ \(R\), \(I\), \(L\), \(A_p\), and \(A\) represent the concentrations of SinR, SinI, SlrR, Spo0A$\sim$P, and Spo0A, respectively.
+  \(K_{on(XY)}\) represents the rate constant for the formation of the $(XY)$ complex,
    while \(D_Z\) encompasses both the dilution rate of component $Z$ caused by cell
-    growth and the degradation rate caused by protein breakdown. The phenomenological 
-    Haldane equation \(f(A)\) and the repression Hill function \(g(R)\) are defined as follows:
+    growth and the degradation rate caused by protein breakdown. 
+    \(K_p\) is the rate constant for the phosphorylation of Spo0A due to the activity of surfactin in the extracellular medium, 
+and \(S\) represents the concentration of surfactin in the extracellular medium.
+    The phenomenological 
+    Haldane equation \(f(A_p)\) and the repression Hill function \(g(R)\) are defined as follows:
 
 
 \begin{align*}
@@ -64,9 +67,8 @@ where  \(P_V\) and \(P_S\) represent the basal and activated production rates of
     g(R) &= \left(\frac{1}{1 + (R/K_R)}\right) \\
 \end{align*}  
 
-where $A$ represents the concentration of Spo0A$\sim$P in the cytoplasm. \(K_{A}\) and \(K_R\) represent
- the binding affinities of Spo0A and SinR, respectively, while \(n_A\) and \(n_R\) represent 
- the cooperativities of the binding. \(K_S\) is a constant that accounts for the inhibition of Spo0A$\sim$P 
+where $A_p$ represents the concentration of Spo0A$\sim$P in the cytoplasm. \(K_{A}\) and \(K_R\) represent
+ the binding affinities of Spo0A and SinR, respectively. \(K_S\) is a constant that accounts for the inhibition of Spo0A$\sim$P 
  when it reaches high concentrations.
 
 Equation (\ref{eq:1}) describes the dynamics of the SinR protein concentration in the cell. SinR is 
@@ -76,21 +78,20 @@ increased by the activation mediated by low levels of Spo0A$\sim$P.
 Additionally, the concentration of SinR is affected by its interaction with SinI and SlrR, which form complexes with SinR at rates $K_{on(RI)}$ and $K_{on(RL)}$, respectively, leading to a reduction in free SinR molecules.
 
 Equation (\ref{eq:2}) represents the changes in the concentration of SinI. SinI is produced according to its own maximum production rate $P_1$, which is modulated by the function $g(R)$ that models SinR's repression, and the
- function $f(A)$ which accounts for activation by low levels of Spo0A$\sim$P and repression by high 
+ function $f(A_p)$ which accounts for activation by low levels of Spo0A$\sim$P and repression by high 
  levels of Spo0A$\sim$P. Just like SinR, the concentration of SinI is decreased both by degradation and dilution at a rate of $D_I$, and by its binding to SinR, forming the RI complex at a rate of $K_{on(RI)}$.
 
 Equation (\ref{eq:3}) represents the dynamics of the SlrR protein concentration. 
 The synthesis of SlrR is again dependant on a production rate ($P_L$), modulated by the function $g(R)$ representing the repressive effect of SinR on SlrR transcription. Similarly, it also considers SlrR's degradation and dilution through the rate $D_L$ and its interaction with SinR, which sequesters SlrR into the RL complex at the rate $K_{on(RL)}$.
 
-Lastly, (\ref{eq:4}) describes the rate of change of the concentration of Spo0A$\sim$P. Spo0A$\sim$P
-is produced at a basal rate $P_V$ and at an activated rate $P_S$ when the concentration of Spo0A$\sim$P is low. For
-simplicity, we assume that the phosphorilation of Spo0A is carried out at a constant rate, which allows us
-to ignore the concentration of the unphosphorilated form of Spo0A. However, this should be taken into account
-when considering the extracellular concentration gradients of nutrients and surfactin.
+Lastly, (\ref{eq:4}) and (\ref{eq:5}) 
+describes the rate of change of the concentration of Spo0A and Spo0A$\sim$P, respectively.
+Spo0A
+is produced at a basal rate $P_V$ and at an activated rate $P_S$ when the concentration of Spo0A$\sim$P is low. 
 
-The Hill function and Haldane equation represent the regulatory effects of two proteins, Spo0A and SinR, 
+The Hill function and Haldane equation represent the regulatory effects of two proteins, Spo0A$\sim$P and SinR, 
 in a phenomenological manner.
- The Haldane equation \( f(A) \) models the phenomenon in which Spo0A promotes gene transcription
+ The Haldane equation \( f(A_p) \) models the phenomenon in which Spo0A$\sim$P promotes gene transcription
  when its concentration is low, but inhibits the same transcription when its concentration is high.
   On the other hand, the repression Hill function \( g(R) \) describes how SinR 
   inhibits the expression of genes that produce SlrR and SinI.
