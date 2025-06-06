@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber thesis"] 0 "thesis.bcf" "thesis.bbl" "thesis" 1749215417.51473 0
+["biber thesis"] 0 "thesis.bcf" "thesis.bbl" "thesis" 1749218935.17927 0
   "library.bib" 0 -1 0 ""
   "thesis.bcf" 0 -1 0 "pdflatex"
   (generated)
   "thesis.bbl"
   "thesis.blg"
   (rewritten before read)
-["pdflatex"] 1749215415.91216 "/home/ricardo/Desktop/Repos/CleanCode/Documentation/Sporulation/thesis.tex" "thesis.pdf" "thesis" 1749215417.51513 0
+["pdflatex"] 1749218933.66379 "/home/ricardo/Desktop/Repos/CleanCode/Documentation/Sporulation/thesis.tex" "thesis.pdf" "thesis" 1749218935.1796 0
   "/etc/texmf/web2c/texmf.cnf" 1730823505.70511 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/ricardo/Desktop/Repos/CleanCode/Documentation/Sporulation/thesis.tex" 1748961656.90919 2464 163aa60380298adb27fd7c8ff481b74e ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -124,13 +124,13 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1730823524.55255 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1730823580 8213995 c1b0dd577e86c2646bf2c62b6e960062 ""
-  "chapters/literature_review.tex" 1749215415.70583 8635 21288f49f88a52c7c6fc8a2f26fdf42f ""
+  "chapters/literature_review.tex" 1749218933.4696 8643 915ddd4a4fa172cd2b8655a9bd527745 ""
   "figures/circuit.png" 1749022777.08488 214010 3d898e9c8b2ba9ecd3c6bb8b2e262c3f ""
-  "thesis.aux" 1749215417.31483 4053 0f79d03c5fa1b628d46a12a4d321ce78 "pdflatex"
+  "thesis.aux" 1749218934.9916 4053 0f79d03c5fa1b628d46a12a4d321ce78 "pdflatex"
   "thesis.bbl" 1748961615.01729 66213 6eb7c0487c2e607e1b5e810c981ccf3f "biber thesis"
-  "thesis.run.xml" 1749215417.31683 2413 a812dd07f0da2095d385c870f02e76ae "pdflatex"
+  "thesis.run.xml" 1749218934.9946 2413 a812dd07f0da2095d385c870f02e76ae "pdflatex"
   "thesis.tex" 1748961656.90919 2464 163aa60380298adb27fd7c8ff481b74e ""
-  "thesis.toc" 1749215417.31683 153 cbf953f4b161412ea9030c3c35d45db5 "pdflatex"
+  "thesis.toc" 1749218934.9946 153 cbf953f4b161412ea9030c3c35d45db5 "pdflatex"
   (generated)
   "thesis.aux"
   "thesis.bcf"

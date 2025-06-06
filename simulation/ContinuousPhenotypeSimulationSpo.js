@@ -5,14 +5,14 @@ import { getAdjustedCoordinates } from "./grid.js";
     const Kp = 0.06;
     const Kr = 0.4;    
     const Kon = 0.34;
-    const DilutionRate = 0.0625;
-    const Pv = 0.001; // Constant production rate of P
-    const Ps = 0.5; // Constant production rate of P
-    const kA = 0.65; // Constant for Haldane equation
-    const kS = 0.01; // Constant for Haldane equation
+    const DilutionRate = 0.05;
+    const Pv = 0.07; // Constant production rate of P
+    const Ps = 2; // Constant production rate of P
+    const kA = 0.8; // Constant for Haldane equation
+    const kS = 0.5; // Constant for Haldane equation
 
 
-function inheritanceConcentration(cytoplasmManager, ID, localConcentration, timeLapse) {
+function inheritanceConcentration(cytoplasmManager, ID, localSurfactin, timeLapse) {
     const { rConcentrationMemo, iConcentrationMemo, lConcentrationMemo, aConcentrationMemo, pConcentrationMemo } = cytoplasmManager;
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
@@ -30,9 +30,9 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
 
         const haldane = (originalConcentrationP/kA) / (1 + (originalConcentrationP/kA) + (Math.pow(originalConcentrationP,4)/(kA*kS)));
 
-        const deltaA = Pv + Ps*haldane - DilutionRate*originalConcentrationA
+        const deltaA = (Pv + Ps*haldane) - DilutionRate*originalConcentrationA - originalConcentrationA*localSurfactin*0.1;
 
-        const deltaP = originalConcentrationA*localConcentration - DilutionRate*originalConcentrationP;
+        const deltaP = originalConcentrationA*localSurfactin*0.1 - DilutionRate*originalConcentrationP;
         
         const deltaR = 0;
 
@@ -69,7 +69,7 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
             p: finalConcentrationP,
             r: finalConcentrationR,
             i: finalConcentrationI,
-            l: finalConcentrationL,
+            l: Pv + Ps*haldane,
             a: finalConcentrationA
         }
         
@@ -77,11 +77,11 @@ function inheritanceConcentration(cytoplasmManager, ID, localConcentration, time
     }  else if (originalConcentrationP === undefined || originalConcentrationR === undefined) {
 
         return {
-            p: 1.13,
-            r: 0.26,
-            i: 0.1,
-            l: 0.1,
-            a: 0.1
+            p: 0,
+            r: 0,
+            i: 0,
+            l: 0,
+            a: 0
         }
     }
 }
@@ -94,9 +94,12 @@ const haldaneField = new Float64Array(width * height); // Initialize haldaneFiel
 for (let i = 0; i < width; i++) {
     for (let j = 0; j < height; j++) {
         const index = i + j * width;
-        surfactinXField[index] =(height- j)* 0.01; // Example initialization, adjust as needed
+        surfactinXField[index] =(height- j)* 0.0015; 
         const localConcentration = surfactinXField[index];
-        haldaneField[index] = Ps*(localConcentration/kA) / (1 + (localConcentration/kA) + (localConcentration*localConcentration/(kA*kS)));
+        const originalConcentrationP = localConcentration; // Assuming localConcentration is the original concentration P
+        haldaneField[index] = (originalConcentrationP/kA) / (1 + (originalConcentrationP/kA) + (Math.pow(originalConcentrationP,4)/(kA*kS)));
+        
+
     }
 }
 
@@ -106,8 +109,8 @@ export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState,
     // Ensure surfactinXField is initialized only once
         
     //const concentrations = concentrationsState.concentrationField;
-    //const concentrations = surfactinXField; // Using surfactinXField for concentrations
-    //concentrationsState.concentrationField = haldaneField; // Update the concentration field with surfactinXField
+    //concentrationsState.concentrationField = surfactinXField; // Using surfactinXField for concentrations
+    concentrationsState.concentrationField = haldaneField; // Update the concentration field with surfactinXField
 
     const { rConcentrationMemo, iConcentrationMemo, lConcentrationMemo, aConcentrationMemo, pConcentrationMemo } = cytoplasmManager;
     const sourcesArray = concentrationsState.sources;
@@ -133,7 +136,7 @@ export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState,
         // Process 1: Update cytoplasm concentrations
         const adjustedCoords = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
         const idx = adjustedCoords.idx;
-        const localComX = surfactinXField[idx] || 0;
+        const localSurfactin = surfactinXField[idx] || 0;
 
         // Check if ID already exists in memo
         if (!pConcentrationMemo.has(ID) || !rConcentrationMemo.has(ID)) {
@@ -145,7 +148,7 @@ export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState,
         }
        
         const cytoplasmConcentrations = inheritanceConcentration(
-            cytoplasmManager, ID, localComX, timeLapse
+            cytoplasmManager, ID, localSurfactin, timeLapse*0.1
         );
         
         pConcentrationMemo.set(ID, cytoplasmConcentrations.p);

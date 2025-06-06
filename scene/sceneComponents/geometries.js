@@ -75,8 +75,8 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
             }
             case "Sporulation": {
                 const factor = 0.5;
-                const red = cytoplasmConcentrations.r*factor;
-                const green = cytoplasmConcentrations.a*factor;
+                const red = 0;
+                const green = cytoplasmConcentrations.a*0.05;
                 const blue = cytoplasmConcentrations.p*factor;
                 
                 color = `rgb(${Math.round(red * 255)}, ${Math.round(green * 255)}, ${Math.round(blue * 255)})`;

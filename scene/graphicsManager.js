@@ -24,8 +24,8 @@ export function setupNewScene(config) {
     stage = setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules);
     capsules = setupCapsulePool(stage, BACTERIUM, THREE, capsules);
     mesh = setupMesh(stage, THREE, GRID);
-    plot = setupPlot( uPlot,"timeSeries");
-    phaseSpace = setupPlot(uPlot,"phaseSpace");
+   /*  plot = setupPlot( uPlot,"timeSeries");
+    phaseSpace = setupPlot(uPlot,"phaseSpace"); */
 
     stage.scene.add(new THREE.AxesHelper(10));
     stage.scene.fog = new THREE.Fog(SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR);
@@ -37,16 +37,15 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
     if (animationState.currentTimeStep % 1 === 0 || !animationState.play) {
         const concentration = concentrationState.concentrationField;
         const cytoplasmicconcentrations = getCytoConcentration(bacteriaData);
-        updateSurfaceMesh(mesh, concentration, 10);
+        updateSurfaceMesh(mesh, concentration, 80);
         if(bacteriaData) {
             updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
         }
         
-        if (cytoplasmicconcentrations && histories) {
+     /*    if (cytoplasmicconcentrations && histories) {
             updatePlot(cytoplasmicconcentrations, phaseSpace, "phaseSpace");
             updatePlot(histories, plot, "timeSeries");
-
-        }
+        } */
         updateOverlay(animationState, constants);
         stage.renderer.render(stage.scene, stage.camera);
     }

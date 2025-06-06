@@ -45,8 +45,8 @@ Several authors have formulated systems of differential equations to quantitativ
 \frac{dR}{dt} &= P_{1}g(R)f(A)+P_{3} - K_{on(RI)} R I - K_{on(RL)}RL  - D_{R} R, \label{eq:1} \\
 \frac{dI}{dt} &= P_{1}g(R)f(A)  - K_{on(RI)} R I - D_{I} I, \label{eq:2} \\
 \frac{dL}{dt} &= P_{L}g(R) - K_{on(RL)} RL - D_{L} L , \label{eq:3} \\
-\frac{dA}{dt} &= P_V + P_S f(A_p) - D_A A, \label{eq:4}\\
-\frac{dA_p}{dt} &= A S - D_A A_p, \label{eq:5}
+\frac{dA}{dt} &= P_V + P_S f(A_p) - D_A A - K_{p}A S , \label{eq:4} \\
+\frac{dA_p}{dt} &= K_{p}A S - D_A A_p, \label{eq:5}
 \end{align}
 
 where  \(P_V\) and \(P_S\) represent the basal and activated production rates of Spo0A, respectively.
@@ -60,8 +60,8 @@ where  \(P_V\) and \(P_S\) represent the basal and activated production rates of
 
 
 \begin{align*}
-    f(A) &= \left(\frac{(A/K_A)^{n_A}}{1 + (A/K_A)^{n_A}+ \frac{A^2}{K_A K_S }} \right) \\ 
-    g(R) &= \left(\frac{1}{1 + (R/K_R)^{n_R}}\right) \\
+    f(A_p) &= \left(\frac{(A_p/K_A)}{1 + (A_p/K_A)+ \frac{A_p^2}{K_A K_S }} \right) \\ 
+    g(R) &= \left(\frac{1}{1 + (R/K_R)}\right) \\
 \end{align*}  
 
 where $A$ represents the concentration of Spo0A$\sim$P in the cytoplasm. \(K_{A}\) and \(K_R\) represent
