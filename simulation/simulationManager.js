@@ -6,7 +6,7 @@ let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
 // 98% of the time is spent in this function
-export function updateSimulation(currentBacteria, concentrationState, appConfig, minutes) {
+export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
     const timeLapse = 1.5; // seconds

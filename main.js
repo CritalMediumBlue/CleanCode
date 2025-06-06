@@ -66,7 +66,7 @@ const animate = () => {
 
         const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
 
-        ({bacteriaDataUpdated,globalParams} = updateSimulation(currentBacteria, concentrationState, appConfig,constants.fromStepToMinutes));
+        ({bacteriaDataUpdated,globalParams} = updateSimulation(currentBacteria, concentrationState,constants.fromStepToMinutes));
 
         updateData();
 
