@@ -5,7 +5,7 @@ import { getAdjustedCoordinates } from "./grid.js";
     const Kp = 0.06;
     const Kr = 0.4;    
     const Kon = 0.34;
-    const DilutionRate = 0.05;
+    const DilutionRate = 0.035;
     const Pv = 0.07; // Constant production rate of P
     const Ps = 2; // Constant production rate of P
     const kA = 0.8; // Constant for Haldane equation
@@ -94,7 +94,7 @@ const haldaneField = new Float64Array(width * height); // Initialize haldaneFiel
 for (let i = 0; i < width; i++) {
     for (let j = 0; j < height; j++) {
         const index = i + j * width;
-        surfactinXField[index] =(height- j)* 0.0015; 
+        surfactinXField[index] =0.001+(height- j)* 0.0017; 
         const localConcentration = surfactinXField[index];
         const originalConcentrationP = localConcentration; // Assuming localConcentration is the original concentration P
         haldaneField[index] = (originalConcentrationP/kA) / (1 + (originalConcentrationP/kA) + (Math.pow(originalConcentrationP,4)/(kA*kS)));
@@ -148,7 +148,7 @@ export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState,
         }
        
         const cytoplasmConcentrations = inheritanceConcentration(
-            cytoplasmManager, ID, localSurfactin, timeLapse*0.1
+            cytoplasmManager, ID, localSurfactin, timeLapse*0.05
         );
         
         pConcentrationMemo.set(ID, cytoplasmConcentrations.p);
