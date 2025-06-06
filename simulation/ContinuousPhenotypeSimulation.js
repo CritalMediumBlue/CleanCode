@@ -106,7 +106,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
             y,
             angle,
             longAxis,
-            phenotype: "continuous",
+            phenotype: "avigdor",
             cytoplasmConcentrations
         };
     }

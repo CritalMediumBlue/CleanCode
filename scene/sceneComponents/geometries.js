@@ -63,19 +63,30 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
                 color = 0xFFFF00; // Yellow color for switch
                 capsule.children[0].visible = false;
                 break;
-            case "continuous":
+            case "avigdor": {
                 const factor = 0.5;
                 const red = cytoplasmConcentrations.r*factor;
                 const green = cytoplasmConcentrations.p*factor;
-                const blue =  (cytoplasmConcentrations.r+cytoplasmConcentrations.p)*factor;
-              
+                const blue = cytoplasmConcentrations.p*factor+ cytoplasmConcentrations.r*factor;
+                
                 color = `rgb(${Math.round(red * 255)}, ${Math.round(green * 255)}, ${Math.round(blue * 255)})`;
                 capsule.children[0].visible = true;
                 break;
-            
+            }
+            case "Sporulation": {
+                const factor = 0.5;
+                const red = cytoplasmConcentrations.r*factor;
+                const green = cytoplasmConcentrations.a*factor;
+                const blue = cytoplasmConcentrations.p*factor;
+                
+                color = `rgb(${Math.round(red * 255)}, ${Math.round(green * 255)}, ${Math.round(blue * 255)})`;
+                capsule.children[0].visible = true;
+                break;
+            }
+        }
 
 
-        } 
+        
         if (changed > 0.001) {
             color = 0xFFFF00; // Yellow color for switch
             capsule.children[0].visible = true;

@@ -16,8 +16,8 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
     let bacteriaDataUpdated
     
     for (let i = 0; i < numberOfIterations; i++) {
-        bacteriaDataUpdated = updateBacteriaCytoplasmSpo(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse);
-        //diffuse(concentrationState, timeLapse);
+        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse);
+        diffuse(concentrationState, timeLapse);
     }
     
     
@@ -66,8 +66,11 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 export function createBacteriumSystem(config) {
     cytoplasmManager = {
         signal: config.BACTERIUM.SIGNAL.DEFAULT ,
-        pConcentrationMemo: new Map(),
-        rConcentrationMemo: new Map()
+        rConcentrationMemo: new Map(),
+        iConcentrationMemo: new Map(),
+        lConcentrationMemo: new Map(),
+        aConcentrationMemo: new Map(),
+        pConcentrationMemo: new Map()
     };
     Object.seal(cytoplasmManager);
     Object.preventExtensions(cytoplasmManager);

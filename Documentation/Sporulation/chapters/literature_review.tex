@@ -45,7 +45,8 @@ Several authors have formulated systems of differential equations to quantitativ
 \frac{dR}{dt} &= P_{1}g(R)f(A)+P_{3} - K_{on(RI)} R I - K_{on(RL)}RL  - D_{R} R, \label{eq:1} \\
 \frac{dI}{dt} &= P_{1}g(R)f(A)  - K_{on(RI)} R I - D_{I} I, \label{eq:2} \\
 \frac{dL}{dt} &= P_{L}g(R) - K_{on(RL)} RL - D_{L} L , \label{eq:3} \\
-\frac{dA}{dt} &= P_V + P_S f(A) - D_A A, \label{eq:4}
+\frac{dA}{dt} &= P_V + P_S f(A_p) - D_A A, \label{eq:4}\\
+\frac{dA_p}{dt} &= A S - D_A A_p, \label{eq:5}
 \end{align}
 
 where  \(P_V\) and \(P_S\) represent the basal and activated production rates of Spo0A, respectively.
