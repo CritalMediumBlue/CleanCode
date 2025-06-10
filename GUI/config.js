@@ -13,8 +13,8 @@ export const CONFIG = {
         CONTROLS_MIN_DISTANCE: 20
     },
     BACTERIUM: {
-        CAP_SEGMENTS: 1,
-        RADIAL_SEGMENTS: 4,
+        CAP_SEGMENTS: 3,
+        RADIAL_SEGMENTS: 7,
         INITIAL_POOL_SIZE: 2000,
         POOL_GROWTH_FACTOR: 1.1,
         WIREFRAME_SCALE: 1.05,

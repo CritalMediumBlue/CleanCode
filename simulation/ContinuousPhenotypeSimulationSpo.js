@@ -94,7 +94,7 @@ const haldaneField = new Float64Array(width * height); // Initialize haldaneFiel
 for (let i = 0; i < width; i++) {
     for (let j = 0; j < height; j++) {
         const index = i + j * width;
-        surfactinXField[index] =0.001+(height- j)* 0.0017; 
+        surfactinXField[index] =(height- j)* 0.0015; 
         const localConcentration = surfactinXField[index];
         const originalConcentrationP = localConcentration; // Assuming localConcentration is the original concentration P
         haldaneField[index] = (originalConcentrationP/kA) / (1 + (originalConcentrationP/kA) + (Math.pow(originalConcentrationP,4)/(kA*kS)));
@@ -148,7 +148,7 @@ export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState,
         }
        
         const cytoplasmConcentrations = inheritanceConcentration(
-            cytoplasmManager, ID, localSurfactin, timeLapse*0.05
+            cytoplasmManager, ID, localSurfactin, timeLapse*0.035
         );
         
         pConcentrationMemo.set(ID, cytoplasmConcentrations.p);
