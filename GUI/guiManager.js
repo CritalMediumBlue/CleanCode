@@ -13,6 +13,7 @@ const tab = pane.addTab({
   pages: [
     {title: 'General'},
     {title: 'Concentration'},
+    {title: 'Initialization'}
   ],
 });
 
@@ -25,7 +26,15 @@ const stateFolder = tab.pages[0].addFolder({
   title: 'State'
 });
 
+const scaleConcentration = tab.pages[1].addFolder({
+  title: 'Scales'
+});
 
+const visibleConcentration = tab.pages[1].addFolder({
+  title: 'Visibility'
+});
+
+ 
 
 
 // Add a "Step" button to the "Time" folder
@@ -33,8 +42,15 @@ timeFolder.addButton({title: 'Run'});
 timeFolder.addButton({title: 'Stop'});
 timeFolder.addButton({title: 'Reset'});
 timeFolder.addButton({title: 'Single Step'});
-stateFolder.addButton({title: 'upload State'})
-
+stateFolder.addButton({title: 'Load State'})
+stateFolder.addButton({title: 'Save State'});
+const PARAMS = {
+  scale: 50,
+};
+scaleConcentration.addBinding(PARAMS, 'scale', {
+  min: 0,
+  max: 100,
+});
 
 
 
