@@ -1,16 +1,8 @@
 
 import {setupNewScene, renderScene,meshVisibility} from './scene/graphicsManager.js';
 import { addEventListeners } from './GUI/guiManager.js';
-import {
-    createBacteriumSystem,
-    updateSimulation
-    } from './simulation/simulationManager.js';
-import { 
-    createStates,
-    createConstants,
-    updateHistories,
-    getHistories,
-    resetHistories} from './state/stateManager.js';
+import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
+import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 
 
 let appConfig;

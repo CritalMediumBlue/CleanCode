@@ -5,6 +5,39 @@
 
 import { CONFIG } from './config.js';
 import { processFileData } from './dataProcessor.js';
+import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.5/dist/tweakpane.min.js';
+
+
+const pane = new Pane();
+const tab = pane.addTab({
+  pages: [
+    {title: 'General'},
+    {title: 'Concentration'},
+  ],
+});
+
+// Create a folder called "Time" in the "General" tab
+const timeFolder = tab.pages[0].addFolder({
+  title: 'Time'
+});
+
+const stateFolder = tab.pages[0].addFolder({
+  title: 'State'
+});
+
+
+
+
+// Add a "Step" button to the "Time" folder
+timeFolder.addButton({title: 'Run'});
+timeFolder.addButton({title: 'Stop'});
+timeFolder.addButton({title: 'Reset'});
+timeFolder.addButton({title: 'Single Step'});
+stateFolder.addButton({title: 'upload State'})
+
+
+
+
 
 const addSafeEventListener = (id, event, handler) => {
   
