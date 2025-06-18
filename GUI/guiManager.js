@@ -8,7 +8,14 @@ import { processFileData } from './dataProcessor.js';
 import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.5/dist/tweakpane.min.js';
 
 
-const pane = new Pane();
+const pane = new Pane({
+  title: 'Panel 1',
+  position: 'fixed',
+  x: 10,
+  y: 10
+});
+
+
 const tab = pane.addTab({
   pages: [
     {title: 'General'},
@@ -34,8 +41,53 @@ const visibleConcentration = tab.pages[1].addFolder({
   title: 'Visibility'
 });
 
- 
+const pane2 = new Pane({
+  title: 'Panel 2',
+  position: 'fixed',
+  x: 300,
+  y: 10
+});
 
+
+
+const tab2 = pane2.addTab({
+  pages: [
+    {title: 'General'},
+    {title: 'Concentration'},
+    {title: 'Initialization'}
+  ],
+});
+
+// Create a folder called "Time" in the "General" tab
+const timeFolder2 = tab2.pages[0].addFolder({
+  title: 'Time'
+});
+
+const stateFolder2 = tab2.pages[0].addFolder({
+  title: 'State'
+});
+
+const scaleConcentration2 = tab2.pages[1].addFolder({
+  title: 'Scales'
+});
+
+const visibleConcentration2 = tab2.pages[1].addFolder({
+  title: 'Visibility'
+});
+
+ 
+// Get the DOM element of each pane
+const pane1Elem = pane.element;
+const pane2Elem = pane2.element;
+
+// Set their positions using CSS
+pane1Elem.style.position = 'fixed'; 
+pane1Elem.style.right = '10px';
+pane1Elem.style.top = '10px';
+
+pane2Elem.style.position = 'fixed';
+pane2Elem.style.right = '300px';
+pane2Elem.style.top = '10px';
 
 // Add a "Step" button to the "Time" folder
 timeFolder.addButton({title: 'Run'});
