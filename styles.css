@@ -109,3 +109,16 @@ canvas {
   color: white !important;
 }
 
+
+
+#pane {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 18%; 
+    height: 100%;
+}
+#pane * {
+    font-size: 18px !important;
+}
+

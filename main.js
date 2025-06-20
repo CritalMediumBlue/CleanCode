@@ -3,7 +3,7 @@ import {setupNewScene, renderScene,meshVisibility} from './scene/graphicsManager
 import { addEventListeners } from './GUI/guiManager.js';
 import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
-
+import { initGUI } from './GUI/tweakGUI.js';    
 
 let appConfig;
 let animationState;
@@ -15,7 +15,6 @@ let histories;
 let globalParams;
 const nextSlices = [];
 let storedProcessedData;
-
 
 
 
@@ -92,6 +91,7 @@ appConfig = addEventListeners(
     init,
     guiActions  // Pass simulation actions for GUI to use
 );
+initGUI(init, guiActions);
 
 
 console.log("Initial setup complete. Waiting for data file...");
