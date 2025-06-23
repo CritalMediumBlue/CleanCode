@@ -1,6 +1,6 @@
 
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
-    setColorMultiplier,visibleGridAndAxes} from './scene/graphicsManager.js';
+    setColorMultiplier,visibleGridAndAxes,takeScreenshot} from './scene/graphicsManager.js';
 import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
@@ -16,7 +16,7 @@ let histories;
 let globalParams;
 const nextSlices = [];
 let storedProcessedData;
-
+let bacteriaDataUpdated;
 
 
 const guiActions = {
@@ -34,6 +34,14 @@ const guiActions = {
     visibleGridAndAxes: (visible) => {
         visibleGridAndAxes(visible);
     },
+    takeScreenshot: (filename) => {
+        takeScreenshot(filename);
+    },
+    stepForward: () => { singleStep(); },
+    init: (processedData) => {
+        init(processedData);
+    },
+    
 
 };
 
@@ -62,13 +70,29 @@ const init = (processedData) => {
 const animate = () => {
 
     
-    let bacteriaDataUpdated;
+    
 
     session.animationFrameId = requestAnimationFrame(animate);
 
     if (session.play) {
 
-        const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
+        singleStep();
+
+    }
+    
+   
+
+    renderScene(histories, bacteriaDataUpdated, concentrationState, CONFIG.BACTERIUM, session, constants, nextSlices);
+
+    if (session.currentTimeStep >= constants.numberOfTimeSteps) {
+        console.log('Simulation finished.');
+        init(storedProcessedData);
+    }
+
+};
+
+const singleStep = () => {  
+     const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
 
         ({bacteriaDataUpdated,globalParams} = updateSimulation(currentBacteria, concentrationState,constants.fromStepToMinutes));
 
@@ -82,18 +106,7 @@ const animate = () => {
                 nextSlices.push(nextBacteria);
             }
         }
-
-    }
-    
-   
-
-    renderScene(histories, bacteriaDataUpdated, concentrationState, CONFIG.BACTERIUM, session, constants, nextSlices);
-
-    if (session.currentTimeStep >= constants.numberOfTimeSteps) {
-        console.log('Simulation finished.');
-        init(storedProcessedData);
-    }
-};
+}
 
 const updateData = () => {
     updateHistories(...globalParams);
@@ -101,7 +114,7 @@ const updateData = () => {
     session.currentTimeStep++;
 }
 
-initGUI(init, guiActions);
+initGUI(guiActions);
 
 
 console.log("Initial setup complete. Waiting for data file...");

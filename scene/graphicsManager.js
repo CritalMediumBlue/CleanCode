@@ -94,6 +94,17 @@ export function visibleGridAndAxes(visible) {
 }
 
 
+export function takeScreenshot(filename = 'screenshot') {
+  const canvas = stage.renderer.domElement;
+  const dataURL = canvas.toDataURL('image/png');
+  const link = document.createElement('a');
+  link.href = dataURL;
+  link.download = `${filename}.png`;
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  }
 
 const getCytoConcentration = (bacteriaData) => {
     if (!bacteriaData || bacteriaData.length === 0) {

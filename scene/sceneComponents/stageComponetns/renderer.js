@@ -11,7 +11,8 @@
 export function createRenderer(THREE, ratio=1) {
     // Create renderer with specified antialiasing option (default: false)
     const renderer = new THREE.WebGLRenderer({
-        antialias: false
+        antialias: false,
+        preserveDrawingBuffer: true, 
     });
     
     renderer.setSize(window.innerWidth*ratio, window.innerHeight*ratio);
