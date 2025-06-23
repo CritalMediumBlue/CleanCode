@@ -5,31 +5,37 @@ import { processFileData } from './dataProcessor.js';
 export const initGUI =  ( init, guiActions) => {
 const pane = new Pane({ title:"control", container: document.getElementById('pane'),});
 
+
+
 const tab = pane.addTab({pages: [{title: 'Session'},{title: 'Signaling'},{title: 'Visualization'}]});
 
-// Session controls
-const stateFolder = tab.pages[0].addFolder({title: 'State'});
-const timeFolder = tab.pages[0].addFolder({title: 'Execution'});
-const recordFolder = tab.pages[0].addFolder({title: 'Record Screen'});
-
+//Simulation State controls
+const stateFolder = tab.pages[0].addFolder({title: 'Simulation state'});
 
 const loadButton = stateFolder.addButton({title: '📂',label:"Load state"});
 const savebutton = stateFolder.addButton({title: '💾', label:"Save state"});
 const newSimulationButton = stateFolder.addButton({title: '➕', label:"New Simulation"});
 
-const runButton=timeFolder.addButton({title: '▶', label:"Run "});
-const pauseButton=timeFolder.addButton({title: '⏸', label:"Pause "});
-const stopButton=timeFolder.addButton({title: '⏹', label:"Stop "});
-const resetButton=timeFolder.addButton({title: '↺', label:"Reset "});
-const stepBackButton = timeFolder.addButton({title: '⏮', label:"Step Backward"});
-const stepForwardButton = timeFolder.addButton({title: '⏭', label:"Step Forward"});
-const speedBlade = timeFolder.addBlade({view: 'slider',label: 'Speed',min: 0,max: 1,value: 0.5});
+
+//Simulation execution controls
+const executionfolder = tab.pages[0].addFolder({title: 'Simulation execution'});
+
+const runButton=executionfolder.addButton({title: '▶', label:"Run "});
+const pauseButton=executionfolder.addButton({title: '⏸', label:"Pause "});
+const stopButton=executionfolder.addButton({title: '⏹', label:"Stop "});
+const resetButton=executionfolder.addButton({title: '↺', label:"Reset "});
+const stepBackButton = executionfolder.addButton({title: '⏮', label:"Step Backward"});
+const stepForwardButton = executionfolder.addButton({title: '⏭', label:"Step Forward"});
+const speedBlade = executionfolder.addBlade({view: 'slider',label: 'Speed',min: 0,max: 1,value: 0.5});
 const PARAMS = {
   time: new Date().toLocaleTimeString(),
 };
-
-const timeBinding = timeFolder.addBinding(PARAMS, 'time', {readonly: true,});
+const timeBinding = executionfolder.addBinding(PARAMS, 'time', {readonly: true,});
 setInterval(() => {PARAMS.time = new Date().toLocaleTimeString();timeBinding.refresh();}, 100);
+
+
+//Simulation recording controls
+const recordFolder = tab.pages[0].addFolder({title: 'Record Screen'});
 
 const screenShotButton = recordFolder.addButton({title: '📸', label: "Screenshot"});
 const recordButton = recordFolder.addButton({title: '⏺', label: "Start "});
@@ -40,8 +46,6 @@ const stopRecordButton = recordFolder.addButton({title: '⏹', label: "Stop "});
 runButton.on('click', () => {guiActions.setPlayState(true);});
 loadButton.on('click', () => {
   
-  
-  // Create a temporary file input element
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = '.json'; // Specify acceptable file types if needed
@@ -57,6 +61,8 @@ loadButton.on('click', () => {
     reader.onload = (e) => {
         const processedData = processFileData(e.target.result);
         init(processedData);
+        executionfolder.hidden = false;
+        recordFolder.hidden = false;
     };
     reader.readAsText(event.target.files[0]);
     }
@@ -65,15 +71,13 @@ loadButton.on('click', () => {
     document.body.removeChild(fileInput);
   };
   
-  // Trigger file selection dialog
   fileInput.click();
-  // Show the relevant folders
-  timeFolder.hidden = false;
-  recordFolder.hidden = false;
+
 });
 pauseButton.on('click', () => {guiActions.setPlayState(false);});
+resetButton.on('click', () => {guiActions.reset();});
 
-timeFolder.hidden = true;
+executionfolder.hidden = true;
 recordFolder.hidden = true;
 
 
@@ -93,17 +97,19 @@ const Kin = extracellular.addBlade({view: 'slider',label: 'Kin',min: 0,max: 1,va
 
 // Visualization controls
 const visualizationFolder = tab.pages[2].addFolder({title: 'Visualization'});
-const scalesFolder = tab.pages[2].addFolder({title: 'Scales'});
+const scalesFolder = tab.pages[2].addFolder({title: 'Mesh rendering'});
 // More descriptive naming
 const visualSettings = {
   bacteria: true,
   mesh: true,
+  helperCoordinates: true,
   plot1: true,
   plot2: true,
 };
-const scalesSettings = {
-  meshScale: 15,
+const MeshScalesSettings = {
+  meshHeightScale: 15,
   meshTranslationZ: -10,
+  colorMultiplier: 1,
 }
 const meshBinding = visualizationFolder.addBinding(visualSettings, 'mesh', {
   label: 'Mesh'
@@ -120,6 +126,13 @@ bacteriaBinding.on('change', () => {
   guiActions.setCapsuleVisibility(visualSettings.bacteria);
 });
 
+const helperCoordinatesBinding = visualizationFolder.addBinding(visualSettings, 'helperCoordinates', {
+  label: 'Helper Coordinates'
+});
+helperCoordinatesBinding.on('change', () => {
+  guiActions.visibleGridAndAxes(visualSettings.helperCoordinates);
+});
+
 const plot1Binding = visualizationFolder.addBinding(visualSettings, 'plot1', {
   label: 'Phase Space'
 });
@@ -128,23 +141,32 @@ const plot2Binding = visualizationFolder.addBinding(visualSettings, 'plot2', {
   label: 'Concentration'
 });
 
-const meshScaleBinding = scalesFolder.addBinding(scalesSettings, 'meshScale', {
-  label: 'Mesh Scale',
+const meshHeightScaleBinding = scalesFolder.addBinding(MeshScalesSettings, 'meshHeightScale', {
+  label: 'Mesh Height Scale',
   min: 0,
-  max: 30,
-  step: 0.1
+  max: 60,
+  step: 1
 });
-const meshTranslationZBinding = scalesFolder.addBinding(scalesSettings, 'meshTranslationZ', {
+const meshTranslationZBinding = scalesFolder.addBinding(MeshScalesSettings, 'meshTranslationZ', {
   label: 'Mesh offset',
-  min: -30,
+  min: -50,
   max: 30,
-  step: 0.1
+  step: 1
 });
-meshScaleBinding.on('change', () => {
-  guiActions.setMeshScale(scalesSettings.meshScale);
+const colorMultiplierBinding = scalesFolder.addBinding(MeshScalesSettings, 'colorMultiplier', {
+  label: 'Color Multiplier',
+  min: 0,
+  max: 100,
+  step: 1
+});
+meshHeightScaleBinding.on('change', () => {
+  guiActions.setMeshScale(MeshScalesSettings.meshHeightScale);
 });
 meshTranslationZBinding.on('change', () => {
-  guiActions.translateMesh(scalesSettings.meshTranslationZ);
+  guiActions.translateMesh(MeshScalesSettings.meshTranslationZ);
+});
+colorMultiplierBinding.on('change', () => {
+  guiActions.setColorMultiplier(MeshScalesSettings.colorMultiplier);
 });
 }
 

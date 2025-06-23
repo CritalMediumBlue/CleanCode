@@ -64,6 +64,7 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 
 
 export function createBacteriumSystem(config) {
+   
     cytoplasmManager = {
         signal: config.BACTERIUM.SIGNAL.DEFAULT ,
         rConcentrationMemo: new Map(),

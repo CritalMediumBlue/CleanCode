@@ -97,7 +97,7 @@ const calculateColor = (concentration) => {
  * @param {Array} concentrationData - Array of concentration values
  * @param {number} heightMultiplier - Factor to multiply height values by
  */
-export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultiplier,translation) {
+export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultiplier,translation,colorMultiplier) {
     // Get direct access to the position and color buffer arrays
     const positions = surfaceMesh.geometry.attributes.position.array; // x, y, z for each vertex
     const colorsAttribute = surfaceMesh.geometry.attributes.color; // r, g, b for each vertex
@@ -108,11 +108,11 @@ export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultipli
             const idx = y * WIDTH + x; // Calculate 1D index
             const bufferIndex = 3 * idx; // Base index for position and color arrays
 
-            const height = concentrationData[idx]*heightMultiplier
-            positions[bufferIndex + 2] = height+translation; // Set Z value
+            const height = concentrationData[idx];
+            positions[bufferIndex + 2] = height*heightMultiplier+translation; // Set Z value
 
             // --- Update Color ---
-            const { r, g, b } = calculateColor(height);
+            const { r, g, b } = calculateColor(height*colorMultiplier);
             colorsAttribute.array[bufferIndex] = r;
             colorsAttribute.array[bufferIndex + 1] = g;
             colorsAttribute.array[bufferIndex + 2] = b;

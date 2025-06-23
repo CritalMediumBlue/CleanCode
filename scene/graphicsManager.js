@@ -14,10 +14,13 @@ let plot = null;
 let phaseSpace = null;
 let meshScale = 15;
 let meshTranslationZ = -10;
+let colorMultiplier = 1; 
 let capsuleVisibility = true;
 let currentBacteriaData = null;
 let BACTERIUM = null;
 let currentnextSlices = null;
+let helperGrid = null;
+let helperAxes = null;
 
 
 export function setupNewScene(config) {
@@ -32,8 +35,15 @@ export function setupNewScene(config) {
     mesh = setupMesh(stage, THREE, GRID);
     plot = setupPlot(uPlot, "timeSeries");
     phaseSpace = setupPlot(uPlot, "phaseSpace");
+    helperAxes = new THREE.AxesHelper(100);
+    helperGrid = new THREE.GridHelper(100, 100, 0xFFFFFF, 0xFFFFFF);
+    helperGrid.material.transparent = true;
+    helperGrid.material.opacity = 0.50;
+    helperGrid.rotation.x = Math.PI / 2; 
+    
 
-    stage.scene.add(new THREE.AxesHelper(10));
+    stage.scene.add(helperAxes);
+    stage.scene.add(helperGrid);
     
     stage.scene.fog = new THREE.Fog(SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR);
 }
@@ -45,7 +55,7 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
         
         const concentration = concentrationState.concentrationField;
         const cytoplasmicconcentrations = getCytoConcentration(bacteriaData);
-        updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ);
+        updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ, colorMultiplier);
         
         if(bacteriaData) {
             currentBacteriaData = bacteriaData;
@@ -75,6 +85,14 @@ export function setCapsuleVisibility(visible) {
     capsuleVisibility = visible;
     updateCapsules(currentBacteriaData, BACTERIUM, THREE, capsules, currentnextSlices, capsuleVisibility);
 }
+export function setColorMultiplier(multiplier) {
+    colorMultiplier = multiplier;
+}
+export function visibleGridAndAxes(visible) {
+    helperGrid.visible = visible;
+    helperAxes.visible = visible;
+}
+
 
 
 const getCytoConcentration = (bacteriaData) => {

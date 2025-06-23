@@ -1,5 +1,6 @@
 
-import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility} from './scene/graphicsManager.js';
+import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
+    setColorMultiplier,visibleGridAndAxes} from './scene/graphicsManager.js';
 import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
@@ -24,6 +25,16 @@ const guiActions = {
     setMeshScale: (scale) => {scaleMesh(scale);},
     translateMesh: (z) => {translateMesh(z);},
     setCapsuleVisibility: (visible) => {setCapsuleVisibility(visible);},
+    setColorMultiplier: (value) => {setColorMultiplier(value);},
+    reset: () => {
+        const continueSimu = session.play;
+        init(storedProcessedData);
+        session.play = continueSimu;
+    },
+    visibleGridAndAxes: (visible) => {
+        visibleGridAndAxes(visible);
+    },
+
 };
 
 
