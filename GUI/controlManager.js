@@ -8,7 +8,7 @@ import { initVisualizationTab } from './visualizationTab.js';
 export const initGUI =  (  guiActions) => {
 const pane = new Pane({ title:"control", container: document.getElementById('pane'),});
 
-const tab = pane.addTab({pages: [{title: 'Session'},{title: 'Equations'},{title: 'Visualization'}]});
+const tab = pane.addTab({pages: [{title: 'State'},{title: 'Equations'},{title: 'Visualization'}]});
 initSessionTab(tab, guiActions);
 initSignallingTab(tab, guiActions);
 initVisualizationTab(tab, guiActions);

@@ -6,19 +6,12 @@ import { createPlotOptions } from './plotOptions.js';
  * @param {Object} config - Configuration options for the plot
  * @returns {Object} - Reference to the created plot
  */
-export function setupPlot(uPlot,type) {
+export function setupPlot(uPlot) {
     let Id = null;
     let initData = null;
-    if (type === 'timeSeries') {
-        Id = 'plot-overlay';
-        initData = [[0], [1], [2], [3], [4]]; // Initialize with empty arrays for each series
-    } else if (type === 'phaseSpace') {
-        Id = 'plot-overlay2';
-        initData = [
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // x values
-            [2, 8, 6, 4, 1, 3, 9, 5, 7, 10]  // y values
-          ];
-    }
+      Id = 'plot-overlay';
+      initData = [[0], [1], [2], [3], [4]]; // Initialize with empty arrays for each series
+    
         
     const plotContainer = document.getElementById(Id);
     
@@ -31,25 +24,16 @@ export function setupPlot(uPlot,type) {
     
     const options = createPlotOptions({
         width,
-        height,
-        type
+        height
     });
+    console.log("New plot created");
     
     return new uPlot(options,initData, plotContainer);
 }
 
 
-export function updatePlot(data, plot, type) {
+export function updatePlot(data, plot) {
   
-  if(type === 'phaseSpace') {
-    data = scaleData(data,0);
-    const AverageX = data[0].reduce((a, b) => a + b, 0) / data[0].length;
-    const AverageY = data[1].reduce((a, b) => a + b, 0) / data[1].length;
-    data[0].push(AverageX);
-    data[1].push(AverageY);
-    plot.setData(data);
-  }
-    else if(type === 'timeSeries') {
     let scaledData = scaleData(data,1);
     const end = scaledData[0].length;
     const start = Math.max(0, end - 500);
@@ -57,7 +41,7 @@ export function updatePlot(data, plot, type) {
     const slicedData = sliceData(start, end, scaledData);
     
     plot.setData(slicedData);
-    }
+    
 }
 
 function sliceData(start, end, data) {

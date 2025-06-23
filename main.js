@@ -31,16 +31,10 @@ const guiActions = {
         init(storedProcessedData);
         session.play = continueSimu;
     },
-    visibleGridAndAxes: (visible) => {
-        visibleGridAndAxes(visible);
-    },
-    takeScreenshot: (filename) => {
-        takeScreenshot(filename);
-    },
+    visibleGridAndAxes: (visible) => {visibleGridAndAxes(visible);},
+    takeScreenshot: (filename) => {takeScreenshot(filename);},
     stepForward: () => { singleStep(); },
-    init: (processedData) => {
-        init(processedData);
-    },
+    init: (processedData) => {init(processedData);},
     
 
 };
@@ -70,18 +64,13 @@ const init = (processedData) => {
 const animate = () => {
 
     
-    
-
     session.animationFrameId = requestAnimationFrame(animate);
 
     if (session.play) {
-
-        singleStep();
-
+      singleStep();
     }
     
    
-
     renderScene(histories, bacteriaDataUpdated, concentrationState, CONFIG.BACTERIUM, session, constants, nextSlices);
 
     if (session.currentTimeStep >= constants.numberOfTimeSteps) {
