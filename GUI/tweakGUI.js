@@ -1,5 +1,4 @@
 import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.5/dist/tweakpane.min.js';
-import { CONFIG } from './config.js';
 import { processFileData } from './dataProcessor.js';
 
 
@@ -101,15 +100,18 @@ const visualSettings = {
   plot1: true,
   plot2: true,
 };
+const meshBinding = visualizationFolder.addBinding(visualSettings, 'mesh', {
+  label: 'Mesh'
+});
+meshBinding.on('change', () => {
+  guiActions.setMeshVisible(visualSettings.mesh);
+});
 
 // Add bindings with better formatting and labels
 const bacteriaBinding = visualizationFolder.addBinding(visualSettings, 'bacteria', {
   label: 'Bacteria'
 });
 
-const meshBinding = visualizationFolder.addBinding(visualSettings, 'mesh', {
-  label: 'Mesh'
-});
 
 const plot1Binding = visualizationFolder.addBinding(visualSettings, 'plot1', {
   label: 'Phase Space'

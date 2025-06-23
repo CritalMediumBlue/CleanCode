@@ -51,8 +51,8 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
     }
 }
 
-export function meshVisibility() {
-    mesh.visible = !mesh.visible;
+export function meshVisibility(boolean) {
+    mesh.visible = boolean;
 }
 
 

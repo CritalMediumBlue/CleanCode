@@ -20,9 +20,7 @@ export const CONFIG = {
         WIREFRAME_SCALE: 1.05,
         WIREFRAME_COLOR: 'rgb(100, 100, 100)',
         NEIGHBOR_RADIUS: 7,
-        MAX_NEIGHBORS: 60,
         COLOR_BY_INHERITANCE: true,
-        POSITIVE_FEEDBACK: false,
         SIGNAL: {
             DEFAULT: 0,
             MIN: 0,

@@ -1,9 +1,10 @@
 
 import {setupNewScene, renderScene,meshVisibility} from './scene/graphicsManager.js';
-import { addEventListeners } from './GUI/guiManager.js';
 import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/tweakGUI.js';    
+import { CONFIG } from './GUI/config.js';
+
 
 let appConfig;
 let animationState;
@@ -20,7 +21,7 @@ let storedProcessedData;
 
 const guiActions = {
     setPlayState: (isPlaying) => {animationState.play = isPlaying;},
-    setMeshVisible: () => {meshVisibility();},
+    setMeshVisible: (boolean) => {meshVisibility(boolean);},
 };
 
 
@@ -87,10 +88,7 @@ const updateData = () => {
     animationState.currentTimeStep++;
 }
 
-appConfig = addEventListeners(
-    init,
-    guiActions  // Pass simulation actions for GUI to use
-);
+appConfig = CONFIG;
 initGUI(init, guiActions);
 
 
