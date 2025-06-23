@@ -14,22 +14,27 @@ let plot = null;
 let phaseSpace = null;
 let meshScale = 15;
 let meshTranslationZ = -10;
+let capsuleVisibility = true;
+let currentBacteriaData = null;
+let BACTERIUM = null;
+let currentnextSlices = null;
 
 
 export function setupNewScene(config) {
 
     const SCENE = config.SCENE;
-    const BACTERIUM = config.BACTERIUM;
+    BACTERIUM = config.BACTERIUM;
     const GRID = config.GRID;
 
 
     stage = setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules);
     capsules = setupCapsulePool(stage, BACTERIUM, THREE, capsules);
     mesh = setupMesh(stage, THREE, GRID);
-     plot = setupPlot( uPlot,"timeSeries");
-    phaseSpace = setupPlot(uPlot,"phaseSpace"); 
+    plot = setupPlot(uPlot, "timeSeries");
+    phaseSpace = setupPlot(uPlot, "phaseSpace");
 
     stage.scene.add(new THREE.AxesHelper(10));
+    
     stage.scene.fog = new THREE.Fog(SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR);
 }
 
@@ -37,11 +42,15 @@ export function setupNewScene(config) {
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, session, constants, nextSlices) {
     
     if (session.currentTimeStep % 1 === 0 || !session.play) {
+        
         const concentration = concentrationState.concentrationField;
         const cytoplasmicconcentrations = getCytoConcentration(bacteriaData);
         updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ);
+        
         if(bacteriaData) {
-            updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
+            currentBacteriaData = bacteriaData;
+            currentnextSlices = nextSlices;
+            updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices, capsuleVisibility);
         }
         
          if (cytoplasmicconcentrations && histories) {
@@ -61,6 +70,10 @@ export function scaleMesh(scale) {
 }
 export function translateMesh(z){
     meshTranslationZ = z;
+}
+export function setCapsuleVisibility(visible) {
+    capsuleVisibility = visible;
+    updateCapsules(currentBacteriaData, BACTERIUM, THREE, capsules, currentnextSlices, capsuleVisibility);
 }
 
 

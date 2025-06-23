@@ -116,7 +116,9 @@ meshBinding.on('change', () => {
 const bacteriaBinding = visualizationFolder.addBinding(visualSettings, 'bacteria', {
   label: 'Bacteria'
 });
-
+bacteriaBinding.on('change', () => {
+  guiActions.setCapsuleVisibility(visualSettings.bacteria);
+});
 
 const plot1Binding = visualizationFolder.addBinding(visualSettings, 'plot1', {
   label: 'Phase Space'
@@ -128,7 +130,7 @@ const plot2Binding = visualizationFolder.addBinding(visualSettings, 'plot2', {
 
 const meshScaleBinding = scalesFolder.addBinding(scalesSettings, 'meshScale', {
   label: 'Mesh Scale',
-  min: 1,
+  min: 0,
   max: 30,
   step: 0.1
 });

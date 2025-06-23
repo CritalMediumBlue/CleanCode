@@ -1,5 +1,5 @@
 
-import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh} from './scene/graphicsManager.js';
+import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility} from './scene/graphicsManager.js';
 import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
@@ -23,6 +23,7 @@ const guiActions = {
     setMeshVisible: (boolean) => {meshVisibility(boolean);},
     setMeshScale: (scale) => {scaleMesh(scale);},
     translateMesh: (z) => {translateMesh(z);},
+    setCapsuleVisibility: (visible) => {setCapsuleVisibility(visible);},
 };
 
 
