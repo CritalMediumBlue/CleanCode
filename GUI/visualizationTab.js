@@ -3,7 +3,7 @@ export const initVisualizationTab = (tab, guiActions) => {
 
 // Visualization controls
 const visualizationFolder = tab.pages[2].addFolder({title: 'Visualization'});
-const scalesFolder = tab.pages[2].addFolder({title: 'Mesh rendering'});
+const meshFolder = tab.pages[2].addFolder({title: 'Mesh rendering'});
 // More descriptive naming
 const visualSettings = {
   bacteria: true,
@@ -47,20 +47,20 @@ const plot2Binding = visualizationFolder.addBinding(visualSettings, 'plot2', {
   label: 'Concentration'
 });
 
-const meshHeightScaleBinding = scalesFolder.addBinding(MeshScalesSettings, 'meshHeightScale', {
-  label: 'Mesh Height Scale',
+const meshHeightScaleBinding = meshFolder.addBinding(MeshScalesSettings, 'meshHeightScale', {
+  label: 'Z-Scale mesh',
   min: 0,
   max: 60,
   step: 1
 });
-const meshTranslationZBinding = scalesFolder.addBinding(MeshScalesSettings, 'meshTranslationZ', {
+const meshTranslationZBinding = meshFolder.addBinding(MeshScalesSettings, 'meshTranslationZ', {
   label: 'Mesh offset',
   min: -50,
   max: 30,
   step: 1
 });
-const colorMultiplierBinding = scalesFolder.addBinding(MeshScalesSettings, 'colorMultiplier', {
-  label: 'Color Multiplier',
+const colorMultiplierBinding = meshFolder.addBinding(MeshScalesSettings, 'colorMultiplier', {
+  label: 'Scale color',
   min: 0,
   max: 100,
   step: 1

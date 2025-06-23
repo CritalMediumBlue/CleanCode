@@ -2,7 +2,7 @@ import { processFileData } from './dataProcessor.js';
 
 export const initSessionTab = (tab, guiActions) => {
 
-    // ############################################ Session controls ############################################
+    // ############################################ Session Buttons ############################################
     // ############### Simulation State controls
     const stateFolder = tab.pages[0].addFolder({title: 'Simulation state'});
     
@@ -10,7 +10,7 @@ export const initSessionTab = (tab, guiActions) => {
     const savebutton = stateFolder.addButton({title: '💾', label:"Save state"});
     const newSimulationButton = stateFolder.addButton({title: '➕', label:"New Simulation"});
     
-    
+    tab.pages[0].addBlade({view: 'separator',  });
     // ############### Simulation execution controls
     const executionfolder = tab.pages[0].addFolder({title: 'Simulation execution'});
     executionfolder.hidden = true;
@@ -23,7 +23,8 @@ export const initSessionTab = (tab, guiActions) => {
     const stepForwardButton = executionfolder.addButton({title: '⏭', label:"Step Forward"});
     const speedBlade = executionfolder.addBlade({view: 'slider',label: 'Speed',min: 0,max: 1,value: 0.5});
     
-    
+    tab.pages[0].addBlade({view: 'separator',  });
+
     // ############### Simulation recording controls
     const recordFolder = tab.pages[0].addFolder({title: 'Record Screen'});
     recordFolder.hidden = true;
@@ -42,7 +43,6 @@ export const initSessionTab = (tab, guiActions) => {
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = '.json'; 
-      //fileInput.style.display = 
       document.body.appendChild(fileInput);
       
       // Set up the file handling
