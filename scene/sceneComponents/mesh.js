@@ -62,7 +62,7 @@ export function setupMesh(stage, THREE, GRID) {
     const surfaceMesh = createMesh(THREE, GRID);
     surfaceMesh.position.set(0, 0, 0);
     //surfaceMesh.rotation.x = Math.PI;
-    //surfaceMesh.rotation.x = Math.PI/10;
+    surfaceMesh.rotation.z = Math.PI;
     stage.scene.add(surfaceMesh);
 
     return surfaceMesh;
