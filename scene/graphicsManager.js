@@ -1,4 +1,4 @@
-import {THREE, OrbitControls, uPlot, Chart} from './graphycLibrariesImports.js';
+import {THREE, OrbitControls, Chart} from './graphycLibrariesImports.js';
 import { setupMesh, updateSurfaceMesh } from './sceneComponents/mesh.js';
 import { setupCapsulePool, updateCapsules } from './sceneComponents/capsulePool.js';
 import { setupPlot, updatePlot } from './plot.js';
@@ -33,7 +33,7 @@ export function setupNewScene(config) {
     stage = setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules);
     capsules = setupCapsulePool(stage, BACTERIUM, THREE, capsules);
     mesh = setupMesh(stage, THREE, GRID);
-    plot = setupPlot(uPlot);
+    plot = setupPlot(Chart);
     helperAxes = new THREE.AxesHelper(100);
     helperGrid = new THREE.GridHelper(100, 100, 0xFFFFFF, 0xFFFFFF);
     helperGrid.material.transparent = true;

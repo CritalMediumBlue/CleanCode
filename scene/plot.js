@@ -2,48 +2,81 @@ import { createPlotOptions } from './plotOptions.js';
 
 /**
  * Initializes the plot visualization
- * @param {Object} _ - Unused parameter (was THREE library)
- * @param {Object} config - Configuration options for the plot
- * @returns {Object} - Reference to the created plot
+ * @param {Object} Chart - Chart.js library
+ * @returns {Object} - Reference to the created chart
  */
-export function setupPlot(uPlot) {
-    let Id = null;
-    let initData = null;
-      Id = 'plot-overlay';
-      initData = [[0], [1], [2], [3], [4]]; // Initialize with empty arrays for each series
-    
-        
+export function setupPlot(Chart) {
+    const Id = 'plot-overlay';
     const plotContainer = document.getElementById(Id);
     
     // Clear previous content
     plotContainer.innerHTML = '';
     
-    // Calculate fixed dimensions (using container size)
-    const width = plotContainer.clientWidth;
-    const height = plotContainer.clientHeight*0.8;
+    // Create canvas element for Chart.js
+    const canvas = document.createElement('canvas');
+    canvas.width = plotContainer.clientWidth;
+    canvas.height = plotContainer.clientHeight * 0.8;
+    plotContainer.appendChild(canvas);
     
+    const ctx = canvas.getContext('2d');
+    
+    // Get chart options from plotOptions.js
     const options = createPlotOptions({
-        width,
-        height
+        width: canvas.width,
+        height: canvas.height
     });
-    console.log("New plot created");
     
-    return new uPlot(options,initData, plotContainer);
+    // Create initial empty dataset
+    const chartData = {
+        labels: [], // x-axis data points (empty initially)
+        datasets: [{
+            label: 'AimP [nM]',
+            data: [], // y-axis data points (empty initially)
+            borderColor: 'yellow',
+            backgroundColor: 'rgba(255, 255, 0, 0.1)',
+            borderWidth: 1,
+            fill: false,
+            tension: 0.1,
+            pointRadius: 0, // Hide points for cleaner look
+        }]
+    };
+    
+    console.log("New chart created");
+    
+    // Create and return the chart instance
+    return new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: options
+    });
 }
 
-
-export function updatePlot(data, plot) {
-  
-    let scaledData = scaleData(data,1);
+export function updatePlot(data, chart) {
+    if (!data || !data[0] || !data[1] || data[0].length === 0 || data[1].length === 0) return;
+    
+    let scaledData = scaleData(data, 1);
     const end = scaledData[0].length;
-    const start = Math.max(0, end - 500);
-
+    const start = Math.max(0, end - 500); // Limit to last 500 points
+    
     const slicedData = sliceData(start, end, scaledData);
     
-    plot.setData(slicedData);
+    // Update chart data
+    chart.data.labels = slicedData[0]; // X-axis values
     
+    // For Y values, we just need the array of values
+    chart.data.datasets[0].data = slicedData[1];
+    
+    // Ensure update doesn't animate for performance
+    chart.update();
 }
 
+/**
+ * Slices a specific range of data points from arrays
+ * @param {number} start - Start index to slice from
+ * @param {number} end - End index to slice to
+ * @param {Array} data - 2D array of data to slice
+ * @returns {Array} - Sliced data
+ */
 function sliceData(start, end, data) {
   let d = [];
 
@@ -53,8 +86,13 @@ function sliceData(start, end, data) {
   return d;
 }
 
+/**
+ * Scales data values by a scaling factor
+ * @param {Array} data - 2D array of data to scale
+ * @param {number} start - Index to start scaling from
+ * @returns {Array} - Scaled data
+ */
 function scaleData(data, start) {
-  //const scaleFactor = 100+start*1000;
   const scaleFactor = 1;
 
   // Create a deep copy of the data array
