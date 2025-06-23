@@ -93,6 +93,7 @@ const Kin = extracellular.addBlade({view: 'slider',label: 'Kin',min: 0,max: 1,va
 
 // Visualization controls
 const visualizationFolder = tab.pages[2].addFolder({title: 'Visualization'});
+const scalesFolder = tab.pages[2].addFolder({title: 'Scales'});
 // More descriptive naming
 const visualSettings = {
   bacteria: true,
@@ -100,6 +101,10 @@ const visualSettings = {
   plot1: true,
   plot2: true,
 };
+const scalesSettings = {
+  meshScale: 15,
+  meshTranslationZ: -10,
+}
 const meshBinding = visualizationFolder.addBinding(visualSettings, 'mesh', {
   label: 'Mesh'
 });
@@ -121,8 +126,24 @@ const plot2Binding = visualizationFolder.addBinding(visualSettings, 'plot2', {
   label: 'Concentration'
 });
 
-
+const meshScaleBinding = scalesFolder.addBinding(scalesSettings, 'meshScale', {
+  label: 'Mesh Scale',
+  min: 1,
+  max: 30,
+  step: 0.1
+});
+const meshTranslationZBinding = scalesFolder.addBinding(scalesSettings, 'meshTranslationZ', {
+  label: 'Mesh offset',
+  min: -30,
+  max: 30,
+  step: 0.1
+});
+meshScaleBinding.on('change', () => {
+  guiActions.setMeshScale(scalesSettings.meshScale);
+});
+meshTranslationZBinding.on('change', () => {
+  guiActions.translateMesh(scalesSettings.meshTranslationZ);
+});
 }
-
 
 

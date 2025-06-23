@@ -1,13 +1,12 @@
 
-import {setupNewScene, renderScene,meshVisibility} from './scene/graphicsManager.js';
+import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh} from './scene/graphicsManager.js';
 import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
-import { initGUI } from './GUI/tweakGUI.js';    
-import { CONFIG } from './GUI/config.js';
+import { initGUI } from './GUI/controlManager.js';    
+import { CONFIG } from './config.js';
 
 
-let appConfig;
-let animationState;
+let session;
 let constants;
 let concentrationState;
 let bacteriaTimeSeries;
@@ -20,8 +19,10 @@ let storedProcessedData;
 
 
 const guiActions = {
-    setPlayState: (isPlaying) => {animationState.play = isPlaying;},
+    setPlayState: (isPlaying) => {session.play = isPlaying;},
     setMeshVisible: (boolean) => {meshVisibility(boolean);},
+    setMeshScale: (scale) => {scaleMesh(scale);},
+    translateMesh: (z) => {translateMesh(z);},
 };
 
 
@@ -34,14 +35,14 @@ const init = (processedData) => {
     Object.freeze(constants); 
     console.log(`Duration of one step: ${constants.fromStepToMinutes} minutes`);
     resetHistories();
-    if (animationState) { 
-        cancelAnimationFrame(animationState.animationFrameId);
+    if (session) { 
+        cancelAnimationFrame(session.animationFrameId);
     }
     
-    ({animationState,concentrationState} = createStates(appConfig.GRID.WIDTH * appConfig.GRID.HEIGHT));
+    ({session,concentrationState} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
 
-    setupNewScene(appConfig);
-    createBacteriumSystem(appConfig);
+    setupNewScene(CONFIG);
+    createBacteriumSystem(CONFIG);
     
     animate();
 };
@@ -51,11 +52,11 @@ const animate = () => {
     
     let bacteriaDataUpdated;
 
-    animationState.animationFrameId = requestAnimationFrame(animate);
+    session.animationFrameId = requestAnimationFrame(animate);
 
-    if (animationState.play) {
+    if (session.play) {
 
-        const currentBacteria = bacteriaTimeSeries[animationState.currentTimeStep];
+        const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
 
         ({bacteriaDataUpdated,globalParams} = updateSimulation(currentBacteria, concentrationState,constants.fromStepToMinutes));
 
@@ -64,8 +65,8 @@ const animate = () => {
         const stepsInTheFuture = 100;
         nextSlices.length = 0;
         for (let i = 0; i < stepsInTheFuture; i++) {
-            if (animationState.currentTimeStep + i < constants.numberOfTimeSteps) {
-                const nextBacteria = bacteriaTimeSeries[animationState.currentTimeStep + i];
+            if (session.currentTimeStep + i < constants.numberOfTimeSteps) {
+                const nextBacteria = bacteriaTimeSeries[session.currentTimeStep + i];
                 nextSlices.push(nextBacteria);
             }
         }
@@ -74,9 +75,9 @@ const animate = () => {
     
    
 
-    renderScene(histories, bacteriaDataUpdated, concentrationState, appConfig.BACTERIUM, animationState, constants, nextSlices);
+    renderScene(histories, bacteriaDataUpdated, concentrationState, CONFIG.BACTERIUM, session, constants, nextSlices);
 
-    if (animationState.currentTimeStep >= constants.numberOfTimeSteps) {
+    if (session.currentTimeStep >= constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
         init(storedProcessedData);
     }
@@ -85,10 +86,9 @@ const animate = () => {
 const updateData = () => {
     updateHistories(...globalParams);
     histories = getHistories();
-    animationState.currentTimeStep++;
+    session.currentTimeStep++;
 }
 
-appConfig = CONFIG;
 initGUI(init, guiActions);
 
 

@@ -1,11 +1,11 @@
 
 export const createStates = (gridSize) => {
-    const animationState = {
+    const session = {
         /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
         /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
         /** @type {boolean} */ play: false, // Controls whether the animation is running
     }; 
-    sealObject(animationState);
+    sealObject(session);
     const concentrationState = {
         concentrationField: new Float64Array(gridSize).fill(0.21),
         sources: new Float64Array(gridSize).fill(0),
@@ -14,7 +14,7 @@ export const createStates = (gridSize) => {
     }
     sealObject(concentrationState);
     return {
-        animationState,
+        session,
         concentrationState
     }
 }

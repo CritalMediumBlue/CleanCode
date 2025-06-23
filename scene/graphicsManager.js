@@ -12,6 +12,8 @@ let stage = {};
 let capsules = []; 
 let plot = null; 
 let phaseSpace = null;
+let meshScale = 15;
+let meshTranslationZ = -10;
 
 
 export function setupNewScene(config) {
@@ -32,12 +34,12 @@ export function setupNewScene(config) {
 }
 
 
-export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, animationState, constants, nextSlices) {
+export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, session, constants, nextSlices) {
     
-    if (animationState.currentTimeStep % 1 === 0 || !animationState.play) {
+    if (session.currentTimeStep % 1 === 0 || !session.play) {
         const concentration = concentrationState.concentrationField;
         const cytoplasmicconcentrations = getCytoConcentration(bacteriaData);
-        updateSurfaceMesh(mesh, concentration, 15);
+        updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ);
         if(bacteriaData) {
             updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices);
         }
@@ -46,13 +48,19 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
             updatePlot(cytoplasmicconcentrations, phaseSpace, "phaseSpace");
             updatePlot(histories, plot, "timeSeries");
         } 
-        updateOverlay(animationState, constants);
+        updateOverlay(session, constants);
         stage.renderer.render(stage.scene, stage.camera);
     }
 }
 
 export function meshVisibility(boolean) {
     mesh.visible = boolean;
+}
+export function scaleMesh(scale) {
+    meshScale = scale;
+}
+export function translateMesh(z){
+    meshTranslationZ = z;
 }
 
 

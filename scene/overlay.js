@@ -4,10 +4,10 @@
  */
 
 
-export function updateOverlay(animationState,constants) {
+export function updateOverlay(session,constants) {
 
     const overlay = document.getElementById("dynamic-text-overlay");
-    const currentTimeStep = animationState.currentTimeStep;
+    const currentTimeStep = session.currentTimeStep;
     const numberOfTimeSteps = constants.numberOfTimeSteps;
     const fromStepToMinutes = constants.fromStepToMinutes;
 
