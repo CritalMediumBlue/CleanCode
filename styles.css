@@ -8,51 +8,13 @@ body, html {
     font-family: Arial, sans-serif;
 }
 
-/* Style for file input element */
-.file-input {
-    position: fixed;
-    top: 5px;
-    left: 5px;
-    font-size: 14px;
-    padding: 8px;
-    z-index: 1000;
-}
 
-/* Ensure canvas takes full screen */
-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-.container {
-    display: flex;
-    
-    align-items: center;
-    padding: 0px;
-    gap: 0px;
-}
-
-.controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.controls label {
-    margin-right: 0px;
-}
-
-.controls select {
-    min-width: 150px;
-    padding: 0px;
-    border-radius: 0px;
-}
 
 #dynamic-text-overlay {
     position: fixed;
     left:10px;
     bottom: 10px;
-    background-color: rgba(0, 255, 0, 0.3);
+    background-color: rgba(0, 255, 255, 0.315);
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
@@ -63,58 +25,20 @@ canvas {
 /* Plot overlay container styling */
 #plot-overlay {
     position: fixed;
-    top: 50px;
+    top: 10px;
     left: 10px;
-    width: 35%;
+    width: 25%;
     height: 35%;
-    background-color: rgba(0, 0, 0,0);
+    background-color: rgba(0, 19, 59, 0.096);
     z-index: 100;
     overflow: hidden;
 }
-
-
-
-/* uPlot styling */
-#plot-overlay .uplot .u-legend {
-    color: rgba(255, 255, 255, 1);
-    background: rgba(0, 0, 0, 0);
-    padding: 4px 8px;
-    border-radius: 3px;
-}
-
-
-
-/* Plot overlay container styling */
-#plot-overlay2 {
-    position: fixed;
-    bottom: 100px;
-    left: 10px;
-    width: 35%;
-    height: 35%;
-    background-color: rgba(0, 0, 0,0);
-    z-index: 100;
-    overflow: hidden;
-}
-
-
-
-/* uPlot styling */
-#plot-overlay2 .uplot .u-legend {
-    color: rgba(255, 255, 255, 1);
-    background: rgba(0, 0, 0, 0);
-    padding: 4px 8px;
-    border-radius: 3px;
-}
-.u-title {
-  color: white !important;
-}
-
 
 
 #pane {
     position: fixed;
     top: 0;
-    right: 0;
+    right: 1px;
     width: 18%; 
     height: 100%;
 }

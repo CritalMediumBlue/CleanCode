@@ -11,13 +11,14 @@
             "three": "https://cdn.jsdelivr.net/npm/three@v0.175.0/build/three.module.js",
             "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/",
             "d3-scale-chromatic": "https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3.0.0/+esm",
-            "chart.js": "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/+esm"
+            "chart.js": "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/+esm",
+            "rapier": "https://cdn.skypack.dev/@dimforge/rapier2d-simd-compat"
             }
           }
     </script>
 <style>
 :root {
-  --tp-base-background-color: hsla(0, 0%, 0%, 1.00);
+  --tp-base-background-color: hsla(236, 100%, 10%, 0.8);
   --tp-base-shadow-color: hsla(180, 100%, 50%, 1.00);
   --tp-button-background-color: hsla(180, 100%, 10%, 1.00);
   --tp-button-background-color-active: rgba(0, 128, 128, 1.00);
@@ -29,7 +30,7 @@
   --tp-container-background-color-focus: hsla(180, 50%, 41%, 1.00);
   --tp-container-background-color-hover: hsla(180, 50%, 36%, 1.00);
   --tp-container-foreground-color: hsla(0, 0%, 100%, 1.00);
-  --tp-groove-foreground-color: hsla(0, 0%, 100%, 1.00);
+  --tp-groove-foreground-color: rgb(0, 255, 255);
   --tp-input-background-color: hsla(180, 100%, 10%, 1.00);
   --tp-input-background-color-active: rgba(0, 128, 128, 1.00);
   --tp-input-background-color-focus: rgba(0, 102, 102, 1.00);
@@ -43,19 +44,11 @@
 </head> 
 <body>
 
-    
     <div id="scene-container"></div>
-    
     <div id="plot-overlay"></div>
-    <div id="plot-overlay2"></div>
     <div id="pane"></div>
-
-
     <div id="dynamic-text-overlay"></div>
 
-
-
-    
     <script type="module" src="main.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@ import { initVisualizationTab } from './visualizationTab.js';
 
 
 
-export const initGUI =  (  guiActions) => {
+export const initGUI =  (guiActions) => {
 const pane = new Pane({ title:"control", container: document.getElementById('pane'),});
 
 const tab = pane.addTab({pages: [{title: 'State'},{title: 'Equations'},{title: 'Visualization'}]});
