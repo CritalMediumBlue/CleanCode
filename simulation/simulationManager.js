@@ -13,6 +13,7 @@ export const setEquations = (equations) => {
 }
 
 
+
 export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
