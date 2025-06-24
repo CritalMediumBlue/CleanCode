@@ -13,4 +13,35 @@ const kout = extracellular.addBlade({view: 'slider',label: 'kout',min: 0,max: 1,
 const Kin = extracellular.addBlade({view: 'slider',label: 'Kin',min: 0,max: 1,value: 0.5});
 
 
+loadEquations.on('click', () => {
+      
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = '.json'; 
+      document.body.appendChild(fileInput);
+      
+      // Set up the file handling
+      fileInput.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const processedData = processFileData(e.target.result);
+            guiActions.init(processedData);
+            executionfolder.hidden = false;
+            recordFolder.hidden = false;
+        };
+        reader.readAsText(event.target.files[0]);
+        }
+        
+        // Clean up
+        document.body.removeChild(fileInput);
+      };
+      
+      fileInput.click();
+    
+    });
+
+
 }
