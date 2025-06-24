@@ -63,7 +63,7 @@ function simulateConcentration(cytoplasmManager, ID, localSurfactin, timeLapse, 
             p: finalConcentrationP,
             r: finalConcentrationR,
             i: finalConcentrationI,
-            l: Pv + Ps*haldane,
+            l: 0,
             a: finalConcentrationA
         }
         

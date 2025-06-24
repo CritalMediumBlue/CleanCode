@@ -9,7 +9,7 @@ import { getAdjustedCoordinates } from "./grid.js";
 
 
 function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLapse, parsedEquations) {
-    const {pConcentrationMemo, rConcentrationMemo,signal} = cytoplasmManager;
+    const {pConcentrationMemo, rConcentrationMemo} = cytoplasmManager;
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
    

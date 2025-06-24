@@ -1,5 +1,5 @@
- import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
-//import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
+// import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
+import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
 
@@ -74,7 +74,6 @@ export function createBacteriumSystem(config, equations) {
     parsedEquations = JSON.parse(equations);
    
     cytoplasmManager = {
-        signal: config.BACTERIUM.SIGNAL.DEFAULT ,
         rConcentrationMemo: new Map(),
         iConcentrationMemo: new Map(),
         lConcentrationMemo: new Map(),
