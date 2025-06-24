@@ -9,9 +9,23 @@ let HEIGHT;
 let parsedEquations = null;
 
 
+const width = 100; // Assuming a grid width of 100
+const height = 60; // Assuming a grid height of 60
+const surfactinXField = new Float64Array(width * height); // Initialize surfactinXField with the grid size
+
+for (let i = 0; i < width; i++) {
+    for (let j = 0; j < height; j++) {
+        const index = i + j * width;
+        surfactinXField[index] =(height- j)* 0.0015; 
+        const localConcentration = surfactinXField[index];
+        const originalConcentrationP = localConcentration; // Assuming localConcentration is the original concentration P        
+    }
+}
 
 
 export function updateSimulation(currentBacteria, concentrationState, minutes) {
+
+    concentrationState.concentrationField = surfactinXField; // This is only for the Spo simulation, comment out for the original simulation
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
     const timeLapse = 1.5; // seconds

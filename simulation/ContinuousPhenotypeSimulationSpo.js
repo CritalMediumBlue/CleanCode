@@ -80,22 +80,6 @@ function simulateConcentration(cytoplasmManager, ID, localSurfactin, timeLapse, 
     }
 }
 
-const width = 100; // Assuming a grid width of 100
-const height = 60; // Assuming a grid height of 60
-const surfactinXField = new Float64Array(width * height); // Initialize surfactinXField with the grid size
-const haldaneField = new Float64Array(width * height); // Initialize haldaneField with the grid size
-
-for (let i = 0; i < width; i++) {
-    for (let j = 0; j < height; j++) {
-        const index = i + j * width;
-        surfactinXField[index] =(height- j)* 0.0015; 
-        const localConcentration = surfactinXField[index];
-        const originalConcentrationP = localConcentration; // Assuming localConcentration is the original concentration P
-        haldaneField[index] = (originalConcentrationP/kA) / (1 + (originalConcentrationP/kA) + (Math.pow(originalConcentrationP,4)/(kA*kS)));
-        
-
-    }
-}
 
 
 
@@ -103,8 +87,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
     // Ensure surfactinXField is initialized only once
         
    
-    concentrationsState.concentrationField = haldaneField; // Update the concentration field with surfactinXField
-
+    const concentrations = concentrationsState.concentrationField;
     const { rConcentrationMemo, iConcentrationMemo, lConcentrationMemo, aConcentrationMemo, pConcentrationMemo } = cytoplasmManager;
     const sourcesArray = concentrationsState.sources;
     const sinksArray = concentrationsState.sinks;
@@ -124,7 +107,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
         // Process 1: Update cytoplasm concentrations
         const adjustedCoords = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
         const idx = adjustedCoords.idx;
-        const localSurfactin = surfactinXField[idx] || 0;
+        const localSurfactin = concentrations[idx] || 0;
 
         // Check if ID already exists in memo
         if (!pConcentrationMemo.has(ID) || !rConcentrationMemo.has(ID)) {
