@@ -8,7 +8,7 @@ import { getAdjustedCoordinates } from "./grid.js";
     const DilutionRate = 0.0625;
 
 
-function inheritanceConcentration(cytoplasmManager, ID, localConcentration, timeLapse, parsedEquations) {
+function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLapse, parsedEquations) {
     const {pConcentrationMemo, rConcentrationMemo,signal} = cytoplasmManager;
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
@@ -84,7 +84,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
             rConcentrationMemo.set(ID, rConcentrationMemo.get(ID/2n));
         }
        
-        const cytoplasmConcentrations = inheritanceConcentration(
+        const cytoplasmConcentrations = simulateConcentration(
             cytoplasmManager, ID, localConcentration, timeLapse, parsedEquations
         );
         

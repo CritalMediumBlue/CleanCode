@@ -1,5 +1,5 @@
-import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
-import { updateBacteriaCytoplasmSpo } from './ContinuousPhenotypeSimulationSpo.js';
+ import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
+//import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
 
@@ -8,9 +8,6 @@ let WIDTH;
 let HEIGHT;
 let parsedEquations = null;
 
-export const setEquations = (equations) => {
-    parsedEquations = JSON.parse(equations);
-}
 
 
 
@@ -23,7 +20,7 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
     let bacteriaDataUpdated
     
     for (let i = 0; i < numberOfIterations; i++) {
-        bacteriaDataUpdated = updateBacteriaCytoplasmSpo(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
+        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
             parsedEquations);
         
         diffuse(concentrationState, timeLapse);
@@ -72,7 +69,9 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 }
 
 
-export function createBacteriumSystem(config) {
+export function createBacteriumSystem(config, equations) {
+
+    parsedEquations = JSON.parse(equations);
    
     cytoplasmManager = {
         signal: config.BACTERIUM.SIGNAL.DEFAULT ,

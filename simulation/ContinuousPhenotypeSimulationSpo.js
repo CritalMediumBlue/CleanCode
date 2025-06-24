@@ -8,7 +8,7 @@ import { getAdjustedCoordinates } from "./grid.js";
     const kS = 0.5; // Constant for Haldane equation
 
 
-function inheritanceConcentration(cytoplasmManager, ID, localSurfactin, timeLapse, parsedEquations) {
+function simulateConcentration(cytoplasmManager, ID, localSurfactin, timeLapse, parsedEquations) {
     const { rConcentrationMemo, iConcentrationMemo, lConcentrationMemo, aConcentrationMemo, pConcentrationMemo } = cytoplasmManager;
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
@@ -99,7 +99,7 @@ for (let i = 0; i < width; i++) {
 
 
 
-export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse,parsedEquations) => {
+export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse,parsedEquations) => {
     // Ensure surfactinXField is initialized only once
         
    
@@ -135,7 +135,7 @@ export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState,
             aConcentrationMemo.set(ID, aConcentrationMemo.get(ID/2n));
         }
        
-        const cytoplasmConcentrations = inheritanceConcentration(
+        const cytoplasmConcentrations = simulateConcentration(
             cytoplasmManager, ID, localSurfactin, timeLapse*0.035, parsedEquations
         );
         
