@@ -1,10 +1,6 @@
 import { getAdjustedCoordinates } from "./grid.js";
  
-    const Kin = 0.20;   
-    const Ksyn = 0.3;    
-    const Kp = 0.06;
-    const Kr = 0.4;    
-    const Kon = 0.34;
+   
     const DilutionRate = 0.035;
     const Pv = 0.07; // Constant production rate of P
     const Ps = 2; // Constant production rate of P
@@ -24,9 +20,7 @@ function inheritanceConcentration(cytoplasmManager, ID, localSurfactin, timeLaps
 
     if (originalConcentrationP !== undefined && originalConcentrationR !== undefined) {
         
-        /* const deltaA = Kin*(localConcentration)/(Kp+localConcentration)
-        - Kon*originalConcentrationP*originalConcentrationR
-        - DilutionRate*originalConcentrationP; */
+   
 
         const haldane = (originalConcentrationP/kA) / (1 + (originalConcentrationP/kA) + (Math.pow(originalConcentrationP,4)/(kA*kS)));
 
@@ -108,8 +102,7 @@ for (let i = 0; i < width; i++) {
 export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse) => {
     // Ensure surfactinXField is initialized only once
         
-    //const concentrations = concentrationsState.concentrationField;
-    //concentrationsState.concentrationField = surfactinXField; // Using surfactinXField for concentrations
+   
     concentrationsState.concentrationField = haldaneField; // Update the concentration field with surfactinXField
 
     const { rConcentrationMemo, iConcentrationMemo, lConcentrationMemo, aConcentrationMemo, pConcentrationMemo } = cytoplasmManager;
@@ -120,11 +113,6 @@ export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState,
     sourcesArray.fill(0);
     sinksArray.fill(0);
     
-    // Define constants upfront
-    const Kout = 4 * timeLapse;  
-    const Kin = 2 * timeLapse;   
-    const Kp = 0.1;
-    const Kr = 0.6;
     
     const bacteriaCount = currentBacteria.length;
     const resultArray = new Array(bacteriaCount);
@@ -157,14 +145,7 @@ export const updateBacteriaCytoplasmSpo = (currentBacteria, concentrationsState,
         lConcentrationMemo.set(ID, cytoplasmConcentrations.l);
         aConcentrationMemo.set(ID, cytoplasmConcentrations.a);
         
-        //const rConcentration = cytoplasmConcentrations.r; 
-        
-        //const krPlusR = Kr + rConcentration;
-        //const kpPlusLocal = Kp + localConcentration;
-        
-        //sourcesArray[idx] += Kout * (rConcentration / krPlusR); 
-        //sinksArray[idx] += Kin * (localConcentration / kpPlusLocal);
-        
+   
         // Assign to pre-allocated array
         resultArray[i] = {
             id: ID,

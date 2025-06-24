@@ -3,7 +3,8 @@ export const initSignallingTab = (tab, guiActions) => {
 const equations = tab.pages[1].addFolder({title: 'Equations'});
 const intracellular = tab.pages[1].addFolder({title: 'Cytoplasm params'});
 const extracellular = tab.pages[1].addFolder({title: 'Extracellular params'});
-
+intracellular.hidden = true;
+extracellular.hidden = true;
 const loadEquations = equations.addButton({title: '📂',label:"Load Equations"});
 
 const sliderK1 = intracellular.addBlade({view: 'slider',label: 'k1',min: 0,max: 1,value: 0.5});
@@ -27,10 +28,10 @@ loadEquations.on('click', () => {
             
         const reader = new FileReader();
         reader.onload = (e) => {
-            const processedData = processFileData(e.target.result);
-            guiActions.init(processedData);
-            executionfolder.hidden = false;
-            recordFolder.hidden = false;
+            const equations = e.target.result;
+            guiActions.setEquations(equations);
+            intracellular.hidden = false;
+            extracellular.hidden = false;
         };
         reader.readAsText(event.target.files[0]);
         }
