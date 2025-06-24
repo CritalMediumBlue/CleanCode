@@ -1,0 +1,35 @@
+{
+  "name": "SimulationName",
+  "description": "Description of the ODE system",
+  "variables": {
+    "r": {
+      "initialValue": 0.26,
+      "equation": "Ksyn*(r)/(Kr+r) - Kon*p*r - DilutionRate*r",
+      "minValue": 1e-10
+    },
+    "p": {
+      "initialValue": 1.13,
+      "equation": "Kin*(extracellular)/(Kp+extracellular) - Kon*p*r - DilutionRate*p",
+      "minValue": 1e-10,
+      "extracellularDependency": "extracellular"
+    }
+  },
+  "constants": {
+    "Kin": 0.20,
+    "Ksyn": 0.3,
+    "Kp": 0.06,
+    "Kr": 0.4,
+    "Kon": 0.34,
+    "DilutionRate": 0.0625
+  },
+  "extracellular": {
+    "sources": {
+      "equation": "Kout * (r / (Kr + r))",
+      "scaleFactor": "4 * timeLapse"
+    },
+    "sinks": {
+      "equation": "Kin * (extracellular / (Kp + extracellular))",
+      "scaleFactor": "2 * timeLapse"
+    }
+  }
+}

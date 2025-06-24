@@ -1,5 +1,5 @@
-// import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
-import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
+ import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
+//import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
 
@@ -16,9 +16,7 @@ const surfactinXField = new Float64Array(width * height); // Initialize surfacti
 for (let i = 0; i < width; i++) {
     for (let j = 0; j < height; j++) {
         const index = i + j * width;
-        surfactinXField[index] =(height- j)* 0.0015; 
-        const localConcentration = surfactinXField[index];
-        const originalConcentrationP = localConcentration; // Assuming localConcentration is the original concentration P        
+        surfactinXField[index] =(height- j)* 0.03; 
     }
 }
 
@@ -37,7 +35,7 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
         bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
             parsedEquations);
         
-        diffuse(concentrationState, timeLapse);
+        //diffuse(concentrationState, timeLapse);
     }
     
     
@@ -86,6 +84,8 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 export function createBacteriumSystem(config, equations) {
 
     parsedEquations = JSON.parse(equations);
+
+    console.log(parsedEquations.variables)
    
     cytoplasmManager = {
         rConcentrationMemo: new Map(),
