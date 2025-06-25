@@ -14,9 +14,8 @@ export const initSessionTab = (tab, guiActions) => {
     // ############### Simulation execution controls
     const executionfolder = tab.pages[0].addFolder({title: 'Simulation execution'});
     executionfolder.hidden = true;
-    
-    const runButton=executionfolder.addButton({title: '▶', label:"Run "});
-    const pauseButton=executionfolder.addButton({title: '⏸', label:"Pause "});
+
+    const runPauseButton=executionfolder.addButton({title: '▶/⏸', label:"Run/Pause"});
     const stopButton=executionfolder.addButton({title: '⏹', label:"Stop "});
     const resetButton=executionfolder.addButton({title: '↺', label:"Reset "});
     const stepBackButton = executionfolder.addButton({title: '⏮', label:"Step Backward"});
@@ -69,8 +68,7 @@ export const initSessionTab = (tab, guiActions) => {
     });
     
     // ################ Simulation execution controls
-    runButton.on('click', () => {guiActions.setPlayState(true);});
-    pauseButton.on('click', () => {guiActions.setPlayState(false);});
+    runPauseButton.on('click', () => {guiActions.setPlayState();});
     resetButton.on('click', () => {guiActions.reset();});
     stepForwardButton.on('click', () => {guiActions.stepForward();});
     

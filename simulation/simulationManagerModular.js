@@ -7,6 +7,10 @@ let WIDTH;
 let HEIGHT;
 let parsedEquations = null;
 
+export const setIntraParameter = (paramName, newValue) => {
+  parsedEquations.intracellularConstants[paramName].value = newValue;
+}
+
 
 const width = 100; // Assuming a grid width of 100
 const height = 60; // Assuming a grid height of 60
