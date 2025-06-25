@@ -7,7 +7,6 @@ tab.pages[1].addBlade({view: 'separator',  });
 const extracellular = tab.pages[1].addFolder({title: 'Extracellular params'});
 const loadEquations = equations.addButton({title: '📂',label:"Load Equations"});
 
-let parameters = null;
 
 loadEquations.on('click', () => {
       
@@ -24,7 +23,7 @@ loadEquations.on('click', () => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const equations = e.target.result;
-            parameters = guiActions.setEquations(equations);
+            const parameters = guiActions.setEquations(equations);
             console.log('parameter names loaded:', parameters); 
 
 /* The log looks like this:
@@ -33,7 +32,7 @@ Object { intracellularParameters: (6) […], extracellularParameters: (4) […] 
 signallingTab.js:28:21
  */
 
-            initiateSliders();
+            initiateSliders(parameters);
 
         };
         reader.readAsText(event.target.files[0]);
@@ -49,7 +48,12 @@ signallingTab.js:28:21
 
     });
 
-    const initiateSliders = () => {
+    const initiateSliders = (parameters) => {
+      
+
+      const parameterSettings = initiateParameterSettings( parameters );
+
+      console.log("Parameter settings initialized:", parameterSettings);
 
       for ( let i = 0; i < parameters.intracellularParameters.length; i++) {
         const parameter = parameters.intracellularParameters[i];
@@ -78,6 +82,33 @@ signallingTab.js:28:21
       }
 
     }
+
+    const initiateParameterSettings = (parameters) => {
+    const parameterSettings = {
+      intracellular: {},
+      extracellular: {}
+    };
+    parameters.intracellularParameters.forEach(constant => {
+      parameterSettings.intracellular[constant] = constant.value;
+    });
+
+    parameters.extracellularParameters.forEach(constant => {
+      parameterSettings.extracellular[constant] = constant.value;
+    });
+    return parameterSettings;
+    
+  }
+
+/* const MeshScalesSettings = {
+  meshHeightScale: 15,
+  meshTranslationZ: -10,
+  colorMultiplier: 1,
+}
+colorMultiplierBinding.on('change', () => {
+  guiActions.setColorMultiplier(MeshScalesSettings.colorMultiplier);
+});
+ */
+
 
 
 }
