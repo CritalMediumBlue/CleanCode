@@ -1,4 +1,4 @@
- import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationModular.js';
+ import { updateBacteriaCytoplasm, initEquations } from './ContinuousPhenotypeSimulationModular.js';
 import { diffuse } from './diffusionStep.js';;
 
 
@@ -9,14 +9,14 @@ let parsedEquations = null;
 
 export const setIntraParameter = (paramName, newValue) => {
   parsedEquations.intracellularConstants[paramName].value = newValue;
+  initEquations(parsedEquations);
+
 }
 export const setExtraParameter = (paramName, newValue) => {
     parsedEquations.extracellularConstants[paramName].value = newValue;
-    }
+    initEquations(parsedEquations);
+}
 
-
-const width = 100; // Assuming a grid width of 100
-const height = 60; // Assuming a grid height of 60
 
 
 export function updateSimulation(currentBacteria, concentrationState, minutes) {
@@ -29,7 +29,7 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
     let bacteriaDataUpdated
     
     for (let i = 0; i < numberOfIterations; i++) {
-        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
+        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState, cytoplasmManager, HEIGHT, WIDTH, timeLapse,
             parsedEquations);
         
         diffuse(concentrationState, timeLapse);
@@ -80,6 +80,8 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 
 export function createBacteriumSystem(config, equations) {
     parsedEquations = JSON.parse(equations);
+    initEquations(parsedEquations);
+
    
     cytoplasmManager = {};
     

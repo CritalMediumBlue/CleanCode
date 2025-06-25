@@ -1,14 +1,86 @@
 import { getAdjustedCoordinates } from "./grid.js";
 
-
-function simulateConcentration(speciesMemos, ID, localConcentration, timeLapse, parsedEquations) {
+let parsedEquations = null;
+export const initEquations = (equations) => {
+    parsedEquations = equations;
+    console.log(parsedEquations.intracellularConstants);
+    console.log(parsedEquations.intracellularSpecies);
+};
+function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLapse) {
     const originalConcentrations = {};
     const timeFactor = parsedEquations.intracellularConstants.timeStep.value;
     
-    Object.entries(speciesMemos).forEach(([speciesName, memo]) => {
-        const originalConcentration = memo.get(ID);
+    Object.keys(cytoplasmManager).forEach(speciesName => {
+        const originalConcentration = cytoplasmManager[speciesName].get(ID);
         originalConcentrations[speciesName] = originalConcentration;
     });
+
+   // console.log(parsedEquations.intracellularSpecies);
+/*     
+Object { x: {…}, v: {…}, y: {…} }
+​
+v: Object { initialValue: 0, diffEquation: "-Math.pow(w, 2) * x", minValue: -1000 }
+​​
+diffEquation: "-Math.pow(w, 2) * x"
+​​
+initialValue: 0
+​​
+minValue: -1000
+​​
+<prototype>: Object { … }
+​
+x: Object { initialValue: 1, diffEquation: "v", minValue: -1000 }
+​​
+diffEquation: "v"
+​​
+initialValue: 1
+​​
+minValue: -1000
+​​
+<prototype>: Object { … }
+​
+y: Object { initialValue: 0.5, diffEquation: "0", minValue: -1000 }
+​​
+diffEquation: "0"
+​​
+initialValue: 0.5
+​​
+minValue: -1000
+​​
+<prototype>: Object { … }
+​
+<prototype>: Object { … }
+
+*/
+
+   // console.log(parsedEquations.intracellularConstants);
+/* 
+Object { w: {…}, timeStep: {…} }
+​
+timeStep: Object { value: 0.001, minValue: 0, maxValue: 0.1 }
+​​
+maxValue: 0.1
+​​
+minValue: 0
+​​
+value: 0.001
+​​
+<prototype>: Object { … }
+​
+w: Object { value: 0.5, minValue: 0, maxValue: 2 }
+​​
+maxValue: 2
+​​
+minValue: 0
+​​
+value: 0.5
+​​
+<prototype>: Object { … }
+​
+<prototype>: Object { … }
+
+
+ */
 
     const w = parsedEquations.intracellularConstants.w.value;
 
@@ -17,7 +89,6 @@ function simulateConcentration(speciesMemos, ID, localConcentration, timeLapse, 
        
         const deltaX = originalConcentrations.v ; 
         const deltaV = -Math.pow(w, 2) * originalConcentrations.x;
-
         const deltaY = 0;
 
         let finalConcentrationX = originalConcentrations.x + deltaX * timeLapse * timeFactor;
@@ -39,18 +110,16 @@ function simulateConcentration(speciesMemos, ID, localConcentration, timeLapse, 
 }
 
 
-export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse, parsedEquations) => {
+export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse) => {
     const concentrations = concentrationsState.concentrationField;
     const sourcesArray = concentrationsState.sources;
     const sinksArray = concentrationsState.sinks;
 
     const speciesNames = Object.keys(parsedEquations.intracellularSpecies);
 
-    const speciesMemos = {};
-    speciesNames.forEach(species => {
-        speciesMemos[species] = cytoplasmManager[`${species}`];
-    });
-
+   /*  console.log(parsedEquations.intracellularSpecies);
+    console.log(parsedEquations.intracellularConstants);
+ */
     sourcesArray.fill(0);
     sinksArray.fill(0);
     
@@ -66,18 +135,18 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
         const localConcentration = concentrations[idx] || 0;
 
         speciesNames.forEach(species => {
-            if (!speciesMemos[species].has(ID)) {
-                speciesMemos[species].set(ID, speciesMemos[species].get(ID/2n));
+            if (!cytoplasmManager[species].has(ID)) {
+                cytoplasmManager[species].set(ID, cytoplasmManager[species].get(ID/2n));
             }
         });
        
         const cytoplasmConcentrations = simulateConcentration(
-            speciesMemos, ID, localConcentration, timeLapse, parsedEquations
+            cytoplasmManager, ID, localConcentration, timeLapse, parsedEquations
         );
         
         speciesNames.forEach(species => {
             if (cytoplasmConcentrations[species] !== undefined) {
-                speciesMemos[species].set(ID, cytoplasmConcentrations[species]);
+                cytoplasmManager[species].set(ID, cytoplasmConcentrations[species]);
             }
         });
         
@@ -97,3 +166,4 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
     
     return resultArray;
 };
+
