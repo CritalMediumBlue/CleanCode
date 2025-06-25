@@ -10,6 +10,9 @@ let parsedEquations = null;
 export const setIntraParameter = (paramName, newValue) => {
   parsedEquations.intracellularConstants[paramName].value = newValue;
 }
+export const setExtraParameter = (paramName, newValue) => {
+    parsedEquations.extracellularConstants[paramName].value = newValue;
+    }
 
 
 const width = 100; // Assuming a grid width of 100
@@ -29,7 +32,7 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
         bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
             parsedEquations);
         
-        diffuse(concentrationState, timeLapse*0.2);
+        diffuse(concentrationState, timeLapse);
     }
     
     

@@ -55,12 +55,9 @@ export const initSignallingTab = (tab, guiActions) => {
   
   const initiateSliders = (parameters) => {
     parameterSettings = initiateParameterSettings(parameters);
-    console.log("Parameter settings initialized:", parameterSettings);
     const bindings = {};
-    console.log("We will create bindings for the following parameters:", parameterSettings);
 
     Object.keys(parameterSettings.intracellular).forEach(paramName => {
-      const settings = parameterSettings.intracellular;
       bindings[paramName] = intracellular.addBinding(
         parameterSettings.intracellular,
         paramName,
@@ -77,9 +74,8 @@ export const initSignallingTab = (tab, guiActions) => {
     });
     
     Object.keys(parameterSettings.extracellular).forEach(paramName => {
-      const settings = parameterSettings.extracellular;
       bindings[paramName] = extracellular.addBinding(
-        settings,
+        parameterSettings.extracellular,
         paramName,
         {
           label: paramName,
@@ -87,9 +83,9 @@ export const initSignallingTab = (tab, guiActions) => {
           max: parameters.extracellularParameters[paramName].maxValue,
         }
       );
-      
+
       bindings[paramName].on('change', () => {
-        guiActions.setExtracellularParameter(paramName, settings[paramName]);
+        guiActions.setExtracellularParameter(paramName, parameterSettings.extracellular[paramName]);
       });
     });
   };

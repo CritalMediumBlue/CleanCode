@@ -1,7 +1,7 @@
 
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
     setColorMultiplier,visibleGridAndAxes,takeScreenshot} from './scene/graphicsManager.js';
-import {createBacteriumSystem,updateSimulation, setIntraParameter} from './simulation/simulationManagerModular.js';
+import {createBacteriumSystem,updateSimulation, setIntraParameter, setExtraParameter} from './simulation/simulationManagerModular.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
 import { CONFIG } from './config.js';
@@ -44,6 +44,10 @@ const guiActions = {
      setIntracellularParameter: (paramName, value) => {
        console.log(`Setting intracellular parameter: ${paramName} to ${value}`);
          setIntraParameter(paramName, value);
+     },
+     setExtracellularParameter: (paramName, value) => {
+       console.log(`Setting extracellular parameter: ${paramName} to ${value}`);
+       setExtraParameter(paramName, value);
      }
 
 };
