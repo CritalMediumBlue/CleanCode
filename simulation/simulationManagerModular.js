@@ -5,15 +5,17 @@ import { diffuse } from './diffusionStep.js';;
 let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
+let equations = null;
+
 let parsedEquations = null;
 
 export const setIntraParameter = (paramName, newValue) => {
   parsedEquations.intracellularConstants[paramName].value = newValue;
-  initEquations(parsedEquations);
+  initEquations(equations);
 }
 export const setExtraParameter = (paramName, newValue) => {
     parsedEquations.extracellularConstants[paramName].value = newValue;
-    initEquations(parsedEquations);
+    initEquations(equations);
 }
 
 
@@ -77,14 +79,15 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 }
 
 
-export function createBacteriumSystem(config, equations) {
-    parsedEquations = JSON.parse(equations);
-    initEquations(parsedEquations);
+export function createBacteriumSystem(config, equationsfile) {
+    equations = equationsfile;
+    initEquations(equationsfile);
+    parsedEquations = JSON.parse(equationsfile);
 
    
     cytoplasmManager = {};
     
-    const speciesNames = Object.keys(JSON.parse(equations).intracellularSpecies);
+    const speciesNames = Object.keys(JSON.parse(equationsfile).intracellularSpecies);
    
     
     // Create a concentration Map for each species
