@@ -35,7 +35,7 @@ export function setupNewScene(config) {
     mesh = setupMesh(stage, THREE, GRID);
     plot = setupPlot(Chart);
     helperAxes = new THREE.AxesHelper(100);
-    helperGrid = new THREE.GridHelper(100, 100, 0xFFFFFF, 0xFFFFFF);
+    helperGrid = new THREE.GridHelper(200, 200, 0xFFFFFF, 0xFFFFFF);
     helperGrid.material.transparent = true;
     helperGrid.material.opacity = 0.50;
     helperGrid.rotation.x = Math.PI / 2; 
