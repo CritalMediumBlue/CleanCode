@@ -65,28 +65,44 @@ loadEquations.on('click', () => {
     
     const initiateSliders = (parameters) => {
         const parameterSettings = initiateParameterSettings(parameters);
+        const bindings = {};
+        console.log("We will create bindings for the following parameters:", parameterSettings);
+
     
-        Object.keys(parameters.intracellularParameters).forEach(paramName => {
-            console.log("Creating slider for parameter:", paramName);
-            intracellular.addBlade({
-                view: 'slider',
-                label: paramName,
-                min: parameters.intracellularParameters[paramName].minValue,
-                max: parameters.intracellularParameters[paramName].maxValue,
-                value: parameters.intracellularParameters[paramName].value
+      Object.keys(parameterSettings.intracellular).forEach(paramName => {
+            const settings = parameterSettings.intracellular;
+            bindings[paramName] = intracellular.addBinding(
+                settings,
+                paramName,
+                {
+                    label: paramName,
+                    min: parameters.intracellularParameters[paramName].minValue,
+                    max: parameters.intracellularParameters[paramName].maxValue,
+                }
+            );
+            bindings[paramName].on('change', () => {
+                guiActions.setIntracellularParameter(paramName, settings[paramName]);
             });
         });
         
-        Object.keys(parameters.extracellularParameters).forEach(paramName => {
-            console.log("Creating slider for parameter:", paramName);
-            extracellular.addBlade({
-                view: 'slider',
-                label: paramName,
-                min: parameters.extracellularParameters[paramName].minValue,
-                max: parameters.extracellularParameters[paramName].maxValue,
-                value: parameters.extracellularParameters[paramName].value
+        Object.keys(parameterSettings.extracellular).forEach(paramName => {
+            const settings = parameterSettings.extracellular;
+            bindings[paramName] = extracellular.addBinding(
+                settings,
+                paramName,
+                {
+                    label: paramName,
+                    min: parameters.extracellularParameters[paramName].minValue,
+                    max: parameters.extracellularParameters[paramName].maxValue,
+                }
+            );
+            bindings[paramName].on('change', () => {
+                guiActions.setExtracellularParameter(paramName, settings[paramName]);
             });
         });
+
+
+  
     }
 
 

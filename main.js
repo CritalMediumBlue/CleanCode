@@ -41,6 +41,9 @@ const guiActions = {
         
         return {intracellularParameters, extracellularParameters};
      },
+     setIntracellularParameter: (paramName, settings) => {
+        console.log(`Setting intracellular parameter: ${paramName} to ${settings[paramName]}`);
+     }
 
 };
 
