@@ -29,7 +29,7 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
         bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
             parsedEquations);
         
-        diffuse(concentrationState, timeLapse);
+        diffuse(concentrationState, timeLapse*0.2);
     }
     
     

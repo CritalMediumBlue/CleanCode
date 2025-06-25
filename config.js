@@ -13,13 +13,11 @@ export const CONFIG = {
         CONTROLS_MIN_DISTANCE: 20
     },
     BACTERIUM: {
-        CAP_SEGMENTS: 3,
-        RADIAL_SEGMENTS: 7,
+        CAP_SEGMENTS: 2,
+        RADIAL_SEGMENTS: 5,
         INITIAL_POOL_SIZE: 2000,
         POOL_GROWTH_FACTOR: 1.1,
-        WIREFRAME_SCALE: 1.05,
-        WIREFRAME_COLOR: 'rgb(100, 100, 100)',
-        NEIGHBOR_RADIUS: 7,
+        WIREFRAME_SCALE: 1.03,
         COLOR_BY_INHERITANCE: true,
         SIGNAL: {
             DEFAULT: 0,
