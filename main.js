@@ -37,9 +37,8 @@ const guiActions = {
     stepForward: () => { singleStep(); },
     init: (processedData) => {init(processedData);},
     setEquations: (equations) => {
-        const {intracellularParameters, extracellularParameters} = createBacteriumSystem(CONFIG, equations);
+        createBacteriumSystem(CONFIG, equations);
         
-        return {intracellularParameters, extracellularParameters};
      },
      setIntracellularParameter: (paramName, value) => {
          setIntraParameter(paramName, value);

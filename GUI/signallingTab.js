@@ -20,8 +20,8 @@ export const initSignallingTab = (tab, guiActions) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           const equations = e.target.result;
-          const parameters = guiActions.setEquations(equations);
-          initiateSliders(parameters);
+          guiActions.setEquations(equations);
+          initiateSliders(equations);
         };
         reader.readAsText(file);
       }
@@ -50,7 +50,14 @@ export const initSignallingTab = (tab, guiActions) => {
     return parameterSettings;
   };
   
-  const initiateSliders = (parameters) => {
+  const initiateSliders = (equations) => {
+    
+    const intracellularParameters = JSON.parse(equations).intracellularConstants;
+    const extracellularParameters = JSON.parse(equations).extracellularConstants;
+    const parameters = {
+      intracellularParameters: intracellularParameters,
+      extracellularParameters: extracellularParameters
+    };
     parameterSettings = initiateParameterSettings(parameters);
     const bindings = {};
 
