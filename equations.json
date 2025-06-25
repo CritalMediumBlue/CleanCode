@@ -1,35 +1,33 @@
 {
-  "name": "SimulationName",
-  "description": "Description of the ODE system",
-  "variables": {
-    "r": {
+  "name": "Test ODE System",
+  "description": "Synthetic Gene circuit to test",
+  "intracellularSpecies": {
+    "x": {
       "initialValue": 0.26,
-      "equation": "Ksyn*(r)/(Kr+r) - Kon*p*r - DilutionRate*r",
-      "minValue": 1e-10
+      "diffEquation": "v",
+      "minValue": -1000
     },
-    "p": {
+    "v": {
       "initialValue": 1.13,
-      "equation": "Kin*(extracellular)/(Kp+extracellular) - Kon*p*r - DilutionRate*p",
-      "minValue": 1e-10,
-      "extracellularDependency": "extracellular"
+      "diffEquation": "-w^2*x",
+      "minValue": -1000
+    },
+    "y": {
+      "initialValue": 0.5,
+      "diffEquation": "0",
+      "minValue": -1000
     }
   },
   "constants": {
-    "Kin": 0.20,
-    "Ksyn": 0.3,
-    "Kp": 0.06,
-    "Kr": 0.4,
-    "Kon": 0.34,
-    "DilutionRate": 0.0625
-  },
-  "extracellular": {
-    "sources": {
-      "equation": "Kout * (r / (Kr + r))",
-      "scaleFactor": "4 * timeLapse"
+    "w": {
+      "value": 0.5,
+      "minValue": 0,
+      "maxValue": 20
     },
-    "sinks": {
-      "equation": "Kin * (extracellular / (Kp + extracellular))",
-      "scaleFactor": "2 * timeLapse"
+    "timeStep": {
+      "value": 0.1,
+      "minValue": 0,
+      "maxValue": 1
     }
   }
 }

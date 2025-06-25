@@ -51,13 +51,13 @@ const meshHeightScaleBinding = meshFolder.addBinding(MeshScalesSettings, 'meshHe
   label: 'Z-Scale mesh',
   min: 0,
   max: 60,
-  step: 1
+  step: 0.1
 });
 const meshTranslationZBinding = meshFolder.addBinding(MeshScalesSettings, 'meshTranslationZ', {
   label: 'Mesh offset',
-  min: -50,
-  max: 30,
-  step: 1
+  min: -100,
+  max: 100,
+  step: 0.1
 });
 const colorMultiplierBinding = meshFolder.addBinding(MeshScalesSettings, 'colorMultiplier', {
   label: 'Scale color',

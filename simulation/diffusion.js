@@ -163,13 +163,13 @@ export const ADI = (
             
             thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
             
-            for (let j = 0; j < HEIGHT; j++) {
+             for (let j = 0; j < HEIGHT; j++) {
                 currentConcentrationData[j * WIDTH + i] = solution2[j];
-                if (currentConcentrationData[j * WIDTH + i] < 0) {
+                /* if (currentConcentrationData[j * WIDTH + i] < 0) {
                     currentConcentrationData[j * WIDTH + i] = 0; 
                     console.warn("Concentration went negative at ADI");
-                }
-            }
+                } */
+            } 
         }
 
         // LEFT POINTS i = 0
@@ -187,13 +187,13 @@ export const ADI = (
             }
             thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
             
-            for (let j = 0; j < HEIGHT; j++) {
+             for (let j = 0; j < HEIGHT; j++) {
                 currentConcentrationData[j * WIDTH] = solution2[j];
-                if (currentConcentrationData[j * WIDTH] < 0) {
+               /*  if (currentConcentrationData[j * WIDTH] < 0) {
                     currentConcentrationData[j * WIDTH] = 0; 
                     console.warn("Concentration went negative at ADI");
-                }
-            }
+                } */
+            } 
 
 
 
@@ -209,13 +209,13 @@ export const ADI = (
                 d2[j] = alpha*left + (oneMinus2Alpha)*center + alpha*right + (sources[idx] - sinks[idx]) * halfDeltaT;
         }
         thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
-        for (let j = 0; j < HEIGHT; j++) {
+         for (let j = 0; j < HEIGHT; j++) {
             currentConcentrationData[j * WIDTH + (WIDTH - 1)] = solution2[j];
-            if (currentConcentrationData[j * WIDTH + (WIDTH - 1)] < 0) {
+          /*   if (currentConcentrationData[j * WIDTH + (WIDTH - 1)] < 0) {
                 currentConcentrationData[j * WIDTH + (WIDTH - 1)] = 0; 
                 console.warn("Concentration went negative at ADI");
-            }
-        }
+            } */
+        } 
 
 
     }

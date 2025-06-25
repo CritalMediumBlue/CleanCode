@@ -1,4 +1,4 @@
- import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
+ import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationModular.js';
 //import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
@@ -11,19 +11,10 @@ let parsedEquations = null;
 
 const width = 100; // Assuming a grid width of 100
 const height = 60; // Assuming a grid height of 60
-const surfactinXField = new Float64Array(width * height); // Initialize surfactinXField with the grid size
-
-for (let i = 0; i < width; i++) {
-    for (let j = 0; j < height; j++) {
-        const index = i + j * width;
-        surfactinXField[index] =(height- j)* 0.03; 
-    }
-}
 
 
 export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
-   // concentrationState.concentrationField = surfactinXField; // This is only for the Spo simulation, comment out for the original simulation
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
     const timeLapse = 1.5; // seconds
@@ -58,10 +49,10 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
     let totalCount = 0;
 
     bacteriaData.forEach((bacterium) => {
-        const aimP = bacterium.cytoplasmConcentrations.p
-        const aimR = bacterium.cytoplasmConcentrations.r
-        totalAimP+=aimP
-        totalAimR+=aimR
+        const aimP = bacterium.cytoplasmConcentrations.p;
+        const aimR = bacterium.cytoplasmConcentrations.r;
+        totalAimP+=aimP;
+        totalAimR+=aimR;
         totalCount++;
     } );
 
@@ -82,18 +73,20 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 
 
 export function createBacteriumSystem(config, equations) {
-
     parsedEquations = JSON.parse(equations);
-
-    console.log(parsedEquations.variables)
    
-    cytoplasmManager = {
-        rConcentrationMemo: new Map(),
-        iConcentrationMemo: new Map(),
-        lConcentrationMemo: new Map(),
-        aConcentrationMemo: new Map(),
-        pConcentrationMemo: new Map()
-    };
+    // Initialize cytoplasmManager dynamically based on species in the JSON
+    cytoplasmManager = {};
+    
+    // Get all species names from the parsed equations
+    const speciesNames = Object.keys(parsedEquations.intracellularSpecies);
+    
+    // Create a concentration Map for each species
+    speciesNames.forEach(speciesName => {
+        cytoplasmManager[`${speciesName}`] = new Map();
+    });
+    
+    // Lock the object to prevent modifications
     Object.seal(cytoplasmManager);
     Object.preventExtensions(cytoplasmManager);
 
