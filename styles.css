@@ -36,8 +36,8 @@ body, html {
 
 #pane {
     position: fixed;
-    top: 0;
-    right: 1px;
+    top: 5px;
+    right: 5px;
     width: 18%; 
     height: 100%;
 }

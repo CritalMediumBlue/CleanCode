@@ -24,13 +24,8 @@ loadEquations.on('click', () => {
         reader.onload = (e) => {
             const equations = e.target.result;
             const parameters = guiActions.setEquations(equations);
-            console.log('parameter names loaded:', parameters); 
+            console.log("parameter loaded:", parameters);
 
-/* The log looks like this:
-parameter names loaded: 
-Object { intracellularParameters: (6) […], extracellularParameters: (4) […] }
-signallingTab.js:28:21
- */
 
             initiateSliders(parameters);
 
@@ -48,62 +43,66 @@ signallingTab.js:28:21
 
     });
 
+    const initiateParameterSettings = (parameters) => {
+       
+        const parameterSettings = {
+          intracellular: {},
+          extracellular: {}
+        };
+        
+        Object.entries(parameters.intracellularParameters).forEach(([key, constant]) => {
+          parameterSettings.intracellular[key] = constant.value;
+          console.log(key, constant.value);
+        });
+    
+        Object.entries(parameters.extracellularParameters).forEach(([key, constant]) => {
+          parameterSettings.extracellular[key] = constant.value;
+          console.log(key, constant.value);
+        });
+    
+        return parameterSettings;
+    }
+    
     const initiateSliders = (parameters) => {
-      
-
-      const parameterSettings = initiateParameterSettings( parameters );
-
-      console.log("Parameter settings initialized:", parameterSettings);
-
-      for ( let i = 0; i < parameters.intracellularParameters.length; i++) {
-        const parameter = parameters.intracellularParameters[i];
-        console.log("Creating slider for parameter:", parameter);
-        // Create a slider for each species in the intracellular folder
-        intracellular.addBlade({
-          view: 'slider',
-          label: parameter,
-          min: 0,
-          max: 1,
-          value: 0.5
+        const parameterSettings = initiateParameterSettings(parameters);
+    
+        Object.keys(parameters.intracellularParameters).forEach(paramName => {
+            console.log("Creating slider for parameter:", paramName);
+            intracellular.addBlade({
+                view: 'slider',
+                label: paramName,
+                min: parameters.intracellularParameters[paramName].minValue,
+                max: parameters.intracellularParameters[paramName].maxValue,
+                value: parameters.intracellularParameters[paramName].value
+            });
         });
-      }
-      
-      for ( let i = 0; i < parameters.extracellularParameters.length; i++) {
-        const parameter = parameters.extracellularParameters[i];
-        console.log("Creating slider for parameter:", parameter);
-        // Create a slider for each species in the extracellular folder
-        extracellular.addBlade({
-          view: 'slider',
-          label: parameter,
-          min: 0,
-          max: 1,
-          value: 0.5
+        
+        Object.keys(parameters.extracellularParameters).forEach(paramName => {
+            console.log("Creating slider for parameter:", paramName);
+            extracellular.addBlade({
+                view: 'slider',
+                label: paramName,
+                min: parameters.extracellularParameters[paramName].minValue,
+                max: parameters.extracellularParameters[paramName].maxValue,
+                value: parameters.extracellularParameters[paramName].value
+            });
         });
-      }
-
     }
 
-    const initiateParameterSettings = (parameters) => {
-    const parameterSettings = {
-      intracellular: {},
-      extracellular: {}
-    };
-    parameters.intracellularParameters.forEach(constant => {
-      parameterSettings.intracellular[constant] = constant.value;
-    });
 
-    parameters.extracellularParameters.forEach(constant => {
-      parameterSettings.extracellular[constant] = constant.value;
-    });
-    return parameterSettings;
-    
-  }
+
 
 /* const MeshScalesSettings = {
   meshHeightScale: 15,
   meshTranslationZ: -10,
   colorMultiplier: 1,
 }
+const colorMultiplierBinding = meshFolder.addBinding(MeshScalesSettings, 'colorMultiplier', {
+  label: 'Scale color',
+  min: 0,
+  max: 100,
+  step: 1
+});
 colorMultiplierBinding.on('change', () => {
   guiActions.setColorMultiplier(MeshScalesSettings.colorMultiplier);
 });

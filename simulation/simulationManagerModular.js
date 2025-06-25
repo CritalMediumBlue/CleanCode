@@ -77,8 +77,11 @@ export function createBacteriumSystem(config, equations) {
     cytoplasmManager = {};
     
     const speciesNames = Object.keys(parsedEquations.intracellularSpecies);
-    const intracellularParameters = Object.keys(parsedEquations.intracellularConstants);
-    const extracellularParameters = Object.keys(parsedEquations.extracellularConstants);
+    const intracellularSpecies = parsedEquations.intracellularSpecies;
+    const intracellularParameters = parsedEquations.intracellularConstants;
+    const extracellularSpecies = parsedEquations.extracellularSpecies;
+    const extracellularParameters = parsedEquations.extracellularConstants;
+
     
     // Create a concentration Map for each species
     speciesNames.forEach(speciesName => {

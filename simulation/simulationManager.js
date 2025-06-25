@@ -85,7 +85,6 @@ export function createBacteriumSystem(config, equations) {
 
     parsedEquations = JSON.parse(equations);
 
-    console.log(parsedEquations.variables)
    
     cytoplasmManager = {
         rConcentrationMemo: new Map(),
