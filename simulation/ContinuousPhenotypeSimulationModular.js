@@ -3,7 +3,7 @@ import { getAdjustedCoordinates } from "./grid.js";
 
 function simulateConcentration(speciesMemos, ID, localConcentration, timeLapse, parsedEquations) {
     const originalConcentrations = {};
-    const timeFactor = parsedEquations.constants.timeStep.value;
+    const timeFactor = parsedEquations.intracellularConstants.timeStep.value;
     
     // Iterate over each species using Object.entries instead of forEach
     Object.entries(speciesMemos).forEach(([speciesName, memo]) => {
@@ -12,8 +12,8 @@ function simulateConcentration(speciesMemos, ID, localConcentration, timeLapse, 
     });
 
     // Get constants from the parsed equations
-    const w = parsedEquations.constants.w.value;
-    
+    const w = parsedEquations.intracellularConstants.w.value;
+
     // Check if we have the necessary species values
     if (originalConcentrations.x !== undefined && originalConcentrations.v !== undefined) {
         // Calculate changes based on the differential equations in the JSON

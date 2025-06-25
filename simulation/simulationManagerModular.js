@@ -1,5 +1,4 @@
  import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationModular.js';
-//import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
 
@@ -75,11 +74,11 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 export function createBacteriumSystem(config, equations) {
     parsedEquations = JSON.parse(equations);
    
-    // Initialize cytoplasmManager dynamically based on species in the JSON
     cytoplasmManager = {};
     
-    // Get all species names from the parsed equations
     const speciesNames = Object.keys(parsedEquations.intracellularSpecies);
+    const intracellularParameters = Object.keys(parsedEquations.intracellularConstants);
+    const extracellularParameters = Object.keys(parsedEquations.extracellularConstants);
     
     // Create a concentration Map for each species
     speciesNames.forEach(speciesName => {
@@ -92,4 +91,6 @@ export function createBacteriumSystem(config, equations) {
 
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
+
+    return {intracellularParameters, extracellularParameters}
 }

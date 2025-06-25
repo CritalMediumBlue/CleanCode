@@ -1,7 +1,7 @@
 
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
     setColorMultiplier,visibleGridAndAxes,takeScreenshot} from './scene/graphicsManager.js';
-import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
+import {createBacteriumSystem,updateSimulation} from './simulation/simulationManagerModular.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
 import { CONFIG } from './config.js';
@@ -37,7 +37,9 @@ const guiActions = {
     stepForward: () => { singleStep(); },
     init: (processedData) => {init(processedData);},
     setEquations: (equations) => { console.log('Equations loaded:', equations);
-        createBacteriumSystem(CONFIG, equations);
+        const {intracellularParameters, extracellularParameters} = createBacteriumSystem(CONFIG, equations);
+        console.log('Parameters:', {intracellularParameters, extracellularParameters});
+        return {intracellularParameters, extracellularParameters};
      },
 
 };

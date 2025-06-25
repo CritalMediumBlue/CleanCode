@@ -3,6 +3,7 @@ export const initVisualizationTab = (tab, guiActions) => {
 
 // Visualization controls
 const visualizationFolder = tab.pages[2].addFolder({title: 'Visualization'});
+tab.pages[2].addBlade({view: 'separator',  });
 const meshFolder = tab.pages[2].addFolder({title: 'Mesh rendering'});
 // More descriptive naming
 const visualSettings = {

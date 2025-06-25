@@ -1,18 +1,13 @@
 export const initSignallingTab = (tab, guiActions) => {
 // Signalling controls
 const equations = tab.pages[1].addFolder({title: 'Equations'});
-const intracellular = tab.pages[1].addFolder({title: 'Cytoplasm params'});
+tab.pages[1].addBlade({view: 'separator',  });
+const intracellular = tab.pages[1].addFolder({title: 'Intracellular params'});
+tab.pages[1].addBlade({view: 'separator',  });
 const extracellular = tab.pages[1].addFolder({title: 'Extracellular params'});
-intracellular.hidden = true;
-extracellular.hidden = true;
 const loadEquations = equations.addButton({title: '📂',label:"Load Equations"});
 
-const sliderK1 = intracellular.addBlade({view: 'slider',label: 'k1',min: 0,max: 1,value: 0.5});
-const sliderK2 = intracellular.addBlade({view: 'slider',label: 'k2',min: 0,max: 1,value: 0.5});
-const diffusionCoefficient = extracellular.addBlade({view: 'slider',label: 'Diff Coeff',min: 0,max: 1,value: 0.5});
-const kout = extracellular.addBlade({view: 'slider',label: 'kout',min: 0,max: 1,value: 0.5    });
-const Kin = extracellular.addBlade({view: 'slider',label: 'Kin',min: 0,max: 1,value: 0.5});
-
+let parameters = null;
 
 loadEquations.on('click', () => {
       
@@ -29,20 +24,60 @@ loadEquations.on('click', () => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const equations = e.target.result;
-            guiActions.setEquations(equations);
-            intracellular.hidden = false;
-            extracellular.hidden = false;
+            parameters = guiActions.setEquations(equations);
+            console.log('parameter names loaded:', parameters); 
+
+/* The log looks like this:
+parameter names loaded: 
+Object { intracellularParameters: (6) […], extracellularParameters: (4) […] }
+signallingTab.js:28:21
+ */
+
+            initiateSliders();
+
         };
         reader.readAsText(event.target.files[0]);
         }
         
         // Clean up
         document.body.removeChild(fileInput);
+
       };
       
       fileInput.click();
-    
+
+
     });
+
+    const initiateSliders = () => {
+
+      for ( let i = 0; i < parameters.intracellularParameters.length; i++) {
+        const parameter = parameters.intracellularParameters[i];
+        console.log("Creating slider for parameter:", parameter);
+        // Create a slider for each species in the intracellular folder
+        intracellular.addBlade({
+          view: 'slider',
+          label: parameter,
+          min: 0,
+          max: 1,
+          value: 0.5
+        });
+      }
+      
+      for ( let i = 0; i < parameters.extracellularParameters.length; i++) {
+        const parameter = parameters.extracellularParameters[i];
+        console.log("Creating slider for parameter:", parameter);
+        // Create a slider for each species in the extracellular folder
+        extracellular.addBlade({
+          view: 'slider',
+          label: parameter,
+          min: 0,
+          max: 1,
+          value: 0.5
+        });
+      }
+
+    }
 
 
 }
