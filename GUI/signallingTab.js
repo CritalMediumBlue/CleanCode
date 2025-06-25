@@ -21,7 +21,6 @@ export const initSignallingTab = (tab, guiActions) => {
         reader.onload = (e) => {
           const equations = e.target.result;
           const parameters = guiActions.setEquations(equations);
-          console.log("parameter loaded:", parameters);
           initiateSliders(parameters);
         };
         reader.readAsText(file);
@@ -42,12 +41,10 @@ export const initSignallingTab = (tab, guiActions) => {
     
     Object.entries(parameters.intracellularParameters).forEach(([key, constant]) => {
       parameterSettings.intracellular[key] = constant.value;
-      console.log(key, constant.value);
     });
 
     Object.entries(parameters.extracellularParameters).forEach(([key, constant]) => {
       parameterSettings.extracellular[key] = constant.value;
-      console.log(key, constant.value);
     });
 
     return parameterSettings;

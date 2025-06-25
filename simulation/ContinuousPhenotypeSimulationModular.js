@@ -3,97 +3,44 @@ import { getAdjustedCoordinates } from "./grid.js";
 let parsedEquations = null;
 export const initEquations = (equations) => {
     parsedEquations = equations;
-    console.log(parsedEquations.intracellularConstants);
-    console.log(parsedEquations.intracellularSpecies);
+    Object.keys(parsedEquations.intracellularSpecies).forEach(species => {
+    console.log('Change of '+ species+ ' with respect to time is given by ' + 'd' + species + '/dt = ' + parsedEquations.intracellularSpecies[species].diffEquation);
+    });
+    Object.keys(parsedEquations.intracellularConstants).forEach(constant => {
+        console.log('constant ' + constant + ' = ' + parsedEquations.intracellularConstants[constant].value); 
+    });
+
+    // The resulting log is shown below
+    /*
+    Change of x with respect to time is given by dx/dt = v 
+    Change of v with respect to time is given by dv/dt = -Math.pow(w, 2) * x 
+    Change of y with respect to time is given by dy/dt = 0 
+    constant w = 0.5 
+    constant timeStep = 0.001 
+    */
 };
 function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLapse) {
     const originalConcentrations = {};
-    const timeFactor = parsedEquations.intracellularConstants.timeStep.value;
     
     Object.keys(cytoplasmManager).forEach(speciesName => {
         const originalConcentration = cytoplasmManager[speciesName].get(ID);
         originalConcentrations[speciesName] = originalConcentration;
     });
 
-   // console.log(parsedEquations.intracellularSpecies);
-/*     
-Object { x: {…}, v: {…}, y: {…} }
-​
-v: Object { initialValue: 0, diffEquation: "-Math.pow(w, 2) * x", minValue: -1000 }
-​​
-diffEquation: "-Math.pow(w, 2) * x"
-​​
-initialValue: 0
-​​
-minValue: -1000
-​​
-<prototype>: Object { … }
-​
-x: Object { initialValue: 1, diffEquation: "v", minValue: -1000 }
-​​
-diffEquation: "v"
-​​
-initialValue: 1
-​​
-minValue: -1000
-​​
-<prototype>: Object { … }
-​
-y: Object { initialValue: 0.5, diffEquation: "0", minValue: -1000 }
-​​
-diffEquation: "0"
-​​
-initialValue: 0.5
-​​
-minValue: -1000
-​​
-<prototype>: Object { … }
-​
-<prototype>: Object { … }
+    const w = parsedEquations.intracellularConstants.w.value; // This should not be hardcoded, please use the parsed constants
+    const timeStep = parsedEquations.intracellularConstants.timeStep.value; // This should not be hardcoded, please use the parsed constants
 
-*/
-
-   // console.log(parsedEquations.intracellularConstants);
-/* 
-Object { w: {…}, timeStep: {…} }
-​
-timeStep: Object { value: 0.001, minValue: 0, maxValue: 0.1 }
-​​
-maxValue: 0.1
-​​
-minValue: 0
-​​
-value: 0.001
-​​
-<prototype>: Object { … }
-​
-w: Object { value: 0.5, minValue: 0, maxValue: 2 }
-​​
-maxValue: 2
-​​
-minValue: 0
-​​
-value: 0.5
-​​
-<prototype>: Object { … }
-​
-<prototype>: Object { … }
-
-
- */
-
-    const w = parsedEquations.intracellularConstants.w.value;
 
 
     if (originalConcentrations.x !== undefined && originalConcentrations.v !== undefined) {
-       
-        const deltaX = originalConcentrations.v ; 
-        const deltaV = -Math.pow(w, 2) * originalConcentrations.x;
-        const deltaY = 0;
 
-        let finalConcentrationX = originalConcentrations.x + deltaX * timeLapse * timeFactor;
-        let finalConcentrationV = originalConcentrations.v + deltaV * timeLapse * timeFactor;
-        let finalConcentrationY = originalConcentrations.y + deltaY * timeLapse * timeFactor;
+        const deltaX = originalConcentrations.v; // This should not be hardcoded, please use the parsed equations
+        const deltaV = -Math.pow(w, 2) * originalConcentrations.x; // This should not be hardcoded, please use the parsed equations
+        const deltaY = 0; // This should not be hardcoded, please use the parsed equations
+
+        let finalConcentrationX = originalConcentrations.x + deltaX * timeLapse * timeStep;
+        let finalConcentrationV = originalConcentrations.v + deltaV * timeLapse * timeStep;
+        let finalConcentrationY = originalConcentrations.y + deltaY * timeLapse * timeStep;
 
         return {
             x: finalConcentrationX,

@@ -10,7 +10,6 @@ let parsedEquations = null;
 export const setIntraParameter = (paramName, newValue) => {
   parsedEquations.intracellularConstants[paramName].value = newValue;
   initEquations(parsedEquations);
-
 }
 export const setExtraParameter = (paramName, newValue) => {
     parsedEquations.extracellularConstants[paramName].value = newValue;
