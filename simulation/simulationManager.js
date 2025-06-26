@@ -1,5 +1,5 @@
- import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
-//import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
+ //import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
+import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
 
@@ -23,7 +23,7 @@ for (let i = 0; i < width; i++) {
 
 export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
-   // concentrationState.concentrationField = surfactinXField; // This is only for the Spo simulation, comment out for the original simulation
+    concentrationState.concentrationField = surfactinXField; // This is only for the Spo simulation, comment out for the original simulation
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
     const timeLapse = 1.5; // seconds
@@ -35,7 +35,7 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
         bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
             parsedEquations);
         
-        diffuse(concentrationState, timeLapse);
+        //diffuse(concentrationState, timeLapse);
     }
     
     
