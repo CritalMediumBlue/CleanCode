@@ -10,7 +10,7 @@ export const initSignallingTab = (tab, guiActions) => {
   loadEquations.on('click', () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = '.json'; 
+    fileInput.accept = '.js'; 
     document.body.appendChild(fileInput);
     
     // Set up the file handling
@@ -19,7 +19,9 @@ export const initSignallingTab = (tab, guiActions) => {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const equations = e.target.result;
+          const equationsFile = e.target.result;
+          eval(equationsFile); 
+          const equations = window.equations; // Assuming the equations are stored in a global variable
           guiActions.setEquations(equations);
           initiateSliders(equations);
         };
@@ -52,8 +54,8 @@ export const initSignallingTab = (tab, guiActions) => {
   
   const initiateSliders = (equations) => {
     
-    const intracellularParameters = JSON.parse(equations).intracellularConstants;
-    const extracellularParameters = JSON.parse(equations).extracellularConstants;
+    const intracellularParameters = equations.intracellularConstants;
+    const extracellularParameters = equations.extracellularConstants;
     const parameters = {
       intracellularParameters: intracellularParameters,
       extracellularParameters: extracellularParameters

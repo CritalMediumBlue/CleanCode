@@ -2,7 +2,7 @@ import { getAdjustedCoordinates } from "./grid.js";
 
 let parsedEquations = null;
 export const initEquations = (equations) => {
-    parsedEquations = JSON.parse(equations);
+    parsedEquations = equations;
     Object.keys(parsedEquations.intracellularSpecies).forEach(species => {
     console.log('Change of '+ species+ ' with respect to time is given by ' + 'd' + species + '/dt = ' + parsedEquations.intracellularSpecies[species].diffEquation);
     });
