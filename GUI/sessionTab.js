@@ -13,7 +13,7 @@ export const initSessionTab = (tab, guiActions) => {
     tab.pages[0].addBlade({view: 'separator',  });
     // ############### Simulation execution controls
     const executionfolder = tab.pages[0].addFolder({title: 'Simulation execution'});
-    executionfolder.hidden = true;
+    executionfolder.disabled = true;
 
     const runPauseButton=executionfolder.addButton({title: '▶/⏸', label:"Run/Pause"});
     const stopButton=executionfolder.addButton({title: '⏹', label:"Stop "});
@@ -26,7 +26,7 @@ export const initSessionTab = (tab, guiActions) => {
 
     // ############### Simulation recording controls
     const recordFolder = tab.pages[0].addFolder({title: 'Record Screen'});
-    recordFolder.hidden = true;
+    recordFolder.disabled = true;
     
     const screenShotButton = recordFolder.addButton({title: '📸', label: "Screenshot"});
     const recordButton = recordFolder.addButton({title: '⏺', label: "Start "});
@@ -53,8 +53,8 @@ export const initSessionTab = (tab, guiActions) => {
         reader.onload = (e) => {
             const processedData = processFileData(e.target.result);
             guiActions.init(processedData);
-            executionfolder.hidden = false;
-            recordFolder.hidden = false;
+            executionfolder.disabled = false;
+            recordFolder.disabled = false;
         };
         reader.readAsText(event.target.files[0]);
         }
