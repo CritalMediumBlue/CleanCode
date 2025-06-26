@@ -1,7 +1,7 @@
 
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
     setColorMultiplier,visibleGridAndAxes,takeScreenshot} from './scene/graphicsManager.js';
-import {createBacteriumSystem,updateSimulation, setIntraParameter, setExtraParameter} from './simulation/simulationManagerModular.js';
+import {createBacteriumSystem,updateSimulation} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
 import { CONFIG } from './config.js';
@@ -35,17 +35,9 @@ const guiActions = {
     visibleGridAndAxes: (visible) => {visibleGridAndAxes(visible);},
     takeScreenshot: (filename) => {takeScreenshot(filename);},
     stepForward: () => { singleStep(); },
-    init: (processedData) => {init(processedData);},
-    setEquations: (equations) => {
-        createBacteriumSystem(CONFIG, equations);
-        
-     },
-     setIntracellularParameter: (paramName, value) => {
-         setIntraParameter(paramName, value);
-     },
-     setExtracellularParameter: (paramName, value) => {
-       setExtraParameter(paramName, value);
-     }
+    init: (processedData) => {init(processedData);
+        createBacteriumSystem(CONFIG);
+    }
 
 };
 

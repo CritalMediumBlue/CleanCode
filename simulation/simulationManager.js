@@ -81,9 +81,9 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 }
 
 
-export function createBacteriumSystem(config, equations) {
+export function createBacteriumSystem(config) {
 
-    parsedEquations = JSON.parse(equations);
+    parsedEquations = null
 
    
     cytoplasmManager = {
