@@ -2,7 +2,6 @@
 //import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
-
 let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
@@ -81,9 +80,8 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 }
 
 
-export function createBacteriumSystem(config, circuit) {
+export function createBacteriumSystem(config) {
 
-    getSpeciesAndEquations(config, circuit)
    
     cytoplasmManager = {
         rConcentrationMemo: new Map(),
@@ -100,19 +98,3 @@ export function createBacteriumSystem(config, circuit) {
 }
 
 
-const getSpeciesAndEquations = (config, circuit) => {
-   switch (circuit) {
-        case 'DEFA':
-            species = config.CIRCUITS.DEFAULT.species;
-            constants = config.CIRCUITS.DEFAULT.constants;
-            break;
-        case 'SPOR':
-            species = config.CIRCUITS.SPORULATION.species;
-            constants = config.CIRCUITS.SPORULATION.constants;
-            break;
-        case 'ARBI':
-            species = config.CIRCUITS.ARBITRUM.species;
-            constants = config.CIRCUITS.ARBITRUM.constants;
-            break;
-    };
-}
