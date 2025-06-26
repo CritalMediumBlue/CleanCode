@@ -1,4 +1,3 @@
-
 export const CONFIG = {
     SCENE: {
         FOG_COLOR: 0x0f0000,
@@ -24,23 +23,21 @@ export const CONFIG = {
             MIN: 0,
             MAX: 0.005
         }
-      
     },
     COLORS: {
         MIN_COLOR: 0x0000FF,
         MAX_COLOR: 0xFF0000,
         MAGENTA: 0xFF00FF,
         CYAN: 0x00FFFF,
-        DEFAULT_PHENOTYPE: 0xFFFFFF,
+        DEFAULT_PHENOTYPE: 0xFFFFFF
     },
-   
     PLOT: {
         MAX_POINTS: 1000,
         AXIS_COLOR: 0x808080,
-        SIZE_RATIO: 1/4,
+        SIZE_RATIO: 1 / 4,
         MAX_Y_VALUE: 1600,
         Y_TICK_STEP: 200,
-        UPDATE_PLOT_INTERVAL: 10,
+        UPDATE_PLOT_INTERVAL: 10
     },
     PHENOTYPES: {
         MAGENTA: 'MAGENTA',
@@ -49,10 +46,69 @@ export const CONFIG = {
     GRID: {
         WIDTH: 100,
         HEIGHT: 60,
-        DIFFUSION_RATE: 100,
+        DIFFUSION_RATE: 100
     },
-   /*  SPECIES: {
-        DEFAULT
-    } */
-};
+    CIRCUITS: {
+        DEFAULT: {
+            species: {
+                'AimP': {
+                    color: 0xFF0000,
+                    value: 0.35,
+                    diffEquation: (Kin, Kp, Kon, AimP, AimR, locCon, Dil) => {
+                        return Kin * (locCon) / (Kp + locCon)
+                            - Kon * AimP * AimR
+                            - Dil * AimP;
+                    }
+                },
+                'AimR': {
+                    color: 0x0000FF,
+                    value: 0.01,
+                    diffEquation: (Ksyn, AimR, Kr, Kon, AimP,Dil) => {
+                        return Ksyn*(AimR)/(Kr+AimR)
+                            - Kon*AimP*AimR
+                            - Dil*AimR;
+                    }
+                }
+            },
+            constants: {
+                Kin:{
+                    val:0.20,
+                    min:0,
+                    max:15,
+                    step:0.01
+                },
+                Ksyn: {
+                    val: 0.3,
+                    min: 0,
+                    max: 15,
+                    step: 0.01
+                },
+                Kp: {
+                    val: 0.06,
+                    min: 0,
+                    max: 15,
+                    step: 0.01
+                },
+                Kr: {
+                    val: 0.4,
+                    min: 0,
+                    max: 15,
+                    step: 0.01
+                },
+                Kon: {
+                    val: 0.34,
+                    min: 0,
+                    max: 15,
+                    step: 0.01
+                },
+                Dil: {
+                    val: 0.0625,
+                    min: 0,
+                    max: 1,
+                    step: 0.0001
+                },
 
+            }
+        }
+    }
+};

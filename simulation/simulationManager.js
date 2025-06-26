@@ -7,7 +7,6 @@ let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
 let species =null;
-let equations = null;
 let constants = null;
 
     
@@ -84,7 +83,7 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 
 export function createBacteriumSystem(config, circuit) {
 
-    //getSpeciesAndEquations(config, circuit)
+    getSpeciesAndEquations(config, circuit)
    
     cytoplasmManager = {
         rConcentrationMemo: new Map(),
@@ -104,35 +103,16 @@ export function createBacteriumSystem(config, circuit) {
 const getSpeciesAndEquations = (config, circuit) => {
    switch (circuit) {
         case 'DEFA':
-            
-            species = config.SPECIES.DEFAULT;
-            equations = config.EQUATIONS.DEFAULT;
-            constants = config.CONSTANTS.DEFAULT;
-            cytoplasmManager = config.CYTOPLASM_MANAGER.DEFAULT;
-            break;
-        case 'SINI':
-            species = config.SPECIES.SINIR;
-            equations = config.EQUATIONS.SINIR;
-            constants = config.CONSTANTS.SINIR;
-            cytoplasmManager = config.CYTOPLASM_MANAGER.SINIR;
+            species = config.CIRCUITS.DEFAULT.species;
+            constants = config.CIRCUITS.DEFAULT.constants;
             break;
         case 'SPOR':
-            species = config.SPECIES.SPORULATION;
-            equations = config.EQUATIONS.SPORULATION;
-            constants = config.CONSTANTS.SPORULATION;
-            cytoplasmManager = config.CYTOPLASM_MANAGER.SPORULATION;
-            break;
-        case 'QUOR':
-            species = config.SPECIES.QUORUM_SENSING;
-            equations = config.EQUATIONS.QUORUM_SENSING;
-            constants = config.CONSTANTS.QUORUM_SENSING;
-            cytoplasmManager = config.CYTOPLASM_MANAGER.QUORUM_SENSING;
+            species = config.CIRCUITS.SPORULATION.species;
+            constants = config.CIRCUITS.SPORULATION.constants;
             break;
         case 'ARBI':
-            species = config.SPECIES.ARBITRIUM;
-            equations = config.EQUATIONS.ARBITRIUM;
-            constants = config.CONSTANTS.ARBITRIUM;
-            cytoplasmManager = config.CYTOPLASM_MANAGER.ARBITRIUM;
+            species = config.CIRCUITS.ARBITRUM.species;
+            constants = config.CIRCUITS.ARBITRUM.constants;
             break;
     };
 }
