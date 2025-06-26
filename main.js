@@ -35,9 +35,14 @@ const guiActions = {
     visibleGridAndAxes: (visible) => {visibleGridAndAxes(visible);},
     takeScreenshot: (filename) => {takeScreenshot(filename);},
     stepForward: () => { singleStep(); },
-    init: (processedData) => {init(processedData);
-        createBacteriumSystem(CONFIG);
-    }
+    initializeState: (processedData) => {init(processedData);
+        
+    },
+    setSignallingCircuit: (circuit) => {
+        console.log(`Setting signalling circuit to: ${circuit}`);
+        createBacteriumSystem(CONFIG, circuit);
+    },
+
 
 };
 

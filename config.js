@@ -51,5 +51,8 @@ export const CONFIG = {
         HEIGHT: 60,
         DIFFUSION_RATE: 100,
     },
+   /*  SPECIES: {
+        DEFAULT
+    } */
 };
 

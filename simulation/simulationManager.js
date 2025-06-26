@@ -1,14 +1,16 @@
- //import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
-import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
+ import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
+//import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
 import { diffuse } from './diffusionStep.js';;
 
 
 let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
-let parsedEquations = null;
+let species =null;
+let equations = null;
+let constants = null;
 
-
+    
 const width = 100; // Assuming a grid width of 100
 const height = 60; // Assuming a grid height of 60
 const surfactinXField = new Float64Array(width * height); // Initialize surfactinXField with the grid size
@@ -23,7 +25,7 @@ for (let i = 0; i < width; i++) {
 
 export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
-    concentrationState.concentrationField = surfactinXField; // This is only for the Spo simulation, comment out for the original simulation
+    //concentrationState.concentrationField = surfactinXField; // This is only for the Spo simulation, comment out for the original simulation
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
     const timeLapse = 1.5; // seconds
@@ -32,10 +34,9 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
     let bacteriaDataUpdated
     
     for (let i = 0; i < numberOfIterations; i++) {
-        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
-            parsedEquations);
+        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse);
         
-        //diffuse(concentrationState, timeLapse);
+        diffuse(concentrationState, timeLapse);
     }
     
     
@@ -81,10 +82,9 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 }
 
 
-export function createBacteriumSystem(config) {
+export function createBacteriumSystem(config, circuit) {
 
-    parsedEquations = null
-
+    //getSpeciesAndEquations(config, circuit)
    
     cytoplasmManager = {
         rConcentrationMemo: new Map(),
@@ -98,4 +98,41 @@ export function createBacteriumSystem(config) {
 
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
+}
+
+
+const getSpeciesAndEquations = (config, circuit) => {
+   switch (circuit) {
+        case 'DEFA':
+            
+            species = config.SPECIES.DEFAULT;
+            equations = config.EQUATIONS.DEFAULT;
+            constants = config.CONSTANTS.DEFAULT;
+            cytoplasmManager = config.CYTOPLASM_MANAGER.DEFAULT;
+            break;
+        case 'SINI':
+            species = config.SPECIES.SINIR;
+            equations = config.EQUATIONS.SINIR;
+            constants = config.CONSTANTS.SINIR;
+            cytoplasmManager = config.CYTOPLASM_MANAGER.SINIR;
+            break;
+        case 'SPOR':
+            species = config.SPECIES.SPORULATION;
+            equations = config.EQUATIONS.SPORULATION;
+            constants = config.CONSTANTS.SPORULATION;
+            cytoplasmManager = config.CYTOPLASM_MANAGER.SPORULATION;
+            break;
+        case 'QUOR':
+            species = config.SPECIES.QUORUM_SENSING;
+            equations = config.EQUATIONS.QUORUM_SENSING;
+            constants = config.CONSTANTS.QUORUM_SENSING;
+            cytoplasmManager = config.CYTOPLASM_MANAGER.QUORUM_SENSING;
+            break;
+        case 'ARBI':
+            species = config.SPECIES.ARBITRIUM;
+            equations = config.EQUATIONS.ARBITRIUM;
+            constants = config.CONSTANTS.ARBITRIUM;
+            cytoplasmManager = config.CYTOPLASM_MANAGER.ARBITRIUM;
+            break;
+    };
 }

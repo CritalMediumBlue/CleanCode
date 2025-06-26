@@ -52,7 +52,7 @@ export const initSessionTab = (tab, guiActions) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const processedData = processFileData(e.target.result);
-            guiActions.init(processedData);
+            guiActions.initializeState(processedData);
             executionfolder.hidden = false;
             recordFolder.hidden = false;
         };

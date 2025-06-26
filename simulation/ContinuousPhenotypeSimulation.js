@@ -8,7 +8,7 @@ import { getAdjustedCoordinates } from "./grid.js";
     const DilutionRate = 0.0625;
 
 
-function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLapse, parsedEquations) {
+function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLapse) {
     const {pConcentrationMemo, rConcentrationMemo} = cytoplasmManager;
     const originalConcentrationP = pConcentrationMemo.get(ID);
     const originalConcentrationR = rConcentrationMemo.get(ID);
@@ -50,7 +50,7 @@ function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLap
     }
 }
 
-export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse, parsedEquations) => {
+export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse) => {
     const concentrations = concentrationsState.concentrationField;
     const { pConcentrationMemo, rConcentrationMemo } = cytoplasmManager;
     const sourcesArray = concentrationsState.sources;
@@ -76,7 +76,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
         // Process 1: Update cytoplasm concentrations
         const adjustedCoords = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
         const idx = adjustedCoords.idx;
-        const localConcentration = concentrations[idx] || 0;
+        const localConcentration = concentrations[idx] || 0; 
 
         // Check if ID already exists in memo
         if (!pConcentrationMemo.has(ID) || !rConcentrationMemo.has(ID)) {
@@ -85,7 +85,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
         }
        
         const cytoplasmConcentrations = simulateConcentration(
-            cytoplasmManager, ID, localConcentration, timeLapse, parsedEquations
+            cytoplasmManager, ID, localConcentration, timeLapse
         );
         
         pConcentrationMemo.set(ID, cytoplasmConcentrations.p);

@@ -5,19 +5,24 @@ export const initSignallingTab = (tab, guiActions) => {
   tab.pages[1].addBlade({ view: 'separator' });
 
 const options = [
-  { text: 'Continuous', value: 'CONT' },
-  { text: 'Discrete', value: 'DISC' },
-  { text: 'Modular', value: 'MOD' },
-]
+  { text: 'Default', value: 'DEFA' },
+  { text: 'Arbitrium', value: 'ARBI' },
+  { text: 'SinI/SinR', value: 'SINI' },
+  { text: 'Sporulation', value: 'SPOR' },
+  { text: 'Quorum Sensing', value: 'QUOR' }
+];
 
- 
 const blade = equations.addBlade({
   view: 'list',
-  label: 'Signalling configuration',
+  label: 'Signalling circuit',
   options: options,
-  value: 'DEF',
+  value: 'DEFA',
 });
-  
+
+blade.on('change', (ev) => {
+  console.log('Selected:', ev.value);
+  guiActions.setSignallingCircuit(ev.value);
+});
 
 
 }; 
