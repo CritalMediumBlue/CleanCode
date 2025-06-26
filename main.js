@@ -36,8 +36,8 @@ const guiActions = {
     takeScreenshot: (filename) => {takeScreenshot(filename);},
     stepForward: () => { singleStep(); },
     init: (processedData) => {init(processedData);},
-    setEquations: (equations) => {
-        createBacteriumSystem(CONFIG, equations);
+    setEquations: (equationsObject) => {
+        createBacteriumSystem(CONFIG, equationsObject);
         
      },
      setIntracellularParameter: (paramName, value) => {

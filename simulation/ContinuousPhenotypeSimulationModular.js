@@ -34,8 +34,8 @@ function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLap
 
     if (originalConcentrations.x !== undefined && originalConcentrations.v !== undefined) {
 
-        const deltaX = originalConcentrations.v; // This should not be hardcoded, please use the parsed equations
-        const deltaV = -Math.pow(w, 2) * originalConcentrations.x; // This should not be hardcoded, please use the parsed equations
+        const deltaX = parsedEquations.intracellularSpecies.x.diffEquation(originalConcentrations.v); 
+        const deltaV = parsedEquations.intracellularSpecies.v.diffEquation(w, originalConcentrations.x);
         const deltaY = 0; // This should not be hardcoded, please use the parsed equations
 
         let finalConcentrationX = originalConcentrations.x + deltaX * timeLapse * timeStep;
@@ -88,7 +88,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
         });
        
         const cytoplasmConcentrations = simulateConcentration(
-            cytoplasmManager, ID, localConcentration, timeLapse, parsedEquations
+            cytoplasmManager, ID, localConcentration, timeLapse
         );
         
         speciesNames.forEach(species => {

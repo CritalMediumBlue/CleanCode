@@ -11,11 +11,11 @@ let parsedEquations = null;
 
 export const setIntraParameter = (paramName, newValue) => {
   parsedEquations.intracellularConstants[paramName].value = newValue;
-  //initEquations(equations);
+  initEquations(equations);
 }
 export const setExtraParameter = (paramName, newValue) => {
     parsedEquations.extracellularConstants[paramName].value = newValue;
-    //initEquations(equations);
+    initEquations(equations);
 }
 
 
@@ -79,15 +79,15 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 }
 
 
-export function createBacteriumSystem(config, equationsfile) {
-    equations = equationsfile;
-    //initEquations(equationsfile);
-    parsedEquations = equationsfile;
+export function createBacteriumSystem(config, equationsObject) {
+    equations = equationsObject;
+    initEquations(equationsObject);
+    parsedEquations = equationsObject;
 
    
     cytoplasmManager = {};
     
-    const speciesNames = Object.keys(equationsfile.intracellularSpecies);
+    const speciesNames = Object.keys(equationsObject.intracellularSpecies);
    
     
     // Create a concentration Map for each species
