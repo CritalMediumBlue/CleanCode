@@ -5,6 +5,7 @@ let equations = null;
 let variables = null;
 let parameters = null;
 let cytoplasmManager = null;
+let speciesNames = null;
 
 export const setModel = (eqs, params, vars) => {
   
@@ -12,10 +13,7 @@ export const setModel = (eqs, params, vars) => {
     parameters = params;
     variables = vars;
     cytoplasmManager = {};
-
-
-    const speciesNames = Object.keys(variables.int)
-    
+    speciesNames = Object.keys(variables.int)
     speciesNames.forEach(speciesName => {
         cytoplasmManager[`${speciesName}`] = new Map();
     });
@@ -27,29 +25,30 @@ export const setModel = (eqs, params, vars) => {
 export const setExtraParameter = (paramName, value) => {
 parameters.ext[paramName].val = value;
 }
-
 export const setIntraParameter = (paramName, value) => {
     parameters.int[paramName].val = value;
 }
+
+export const setCytopManager = (bacteriaData) => {
+
+    speciesNames.forEach(speciesName => {
+        bacteriaData.forEach(bacterium => {
+            const ID = bacterium.ID;
+            if (!cytoplasmManager[speciesName].has(ID)) {
+                cytoplasmManager[speciesName].set(ID, variables.int[speciesName].val);
+            }
+        });
+    });
+};
 
 
 function simulateConcentration( ID, localConcentration, timeLapse) {
     const originalConcentrations = {};
 
-
-
-    Object.keys(cytoplasmManager).forEach(speciesName => {
-        let originalConcentration = cytoplasmManager[speciesName].get(ID);
-        if (Number.isNaN(originalConcentration) || originalConcentration === undefined) {
-            cytoplasmManager[speciesName].set(ID, variables.int[speciesName].val);
-            originalConcentration = variables.int[speciesName].val;
-        }
-
-        originalConcentrations[speciesName] = originalConcentration;
+    Object.keys(cytoplasmManager).forEach(speciesName => {   
+        originalConcentrations[speciesName] = cytoplasmManager[speciesName].get(ID);
     });
 
- 
-        
         const deltaX = equations.int.x(variables, parameters) ;
         const deltaV = equations.int.v(variables, parameters);
         const deltaY = equations.int.y(variables, parameters);
