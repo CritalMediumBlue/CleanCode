@@ -20,9 +20,17 @@ export const initSignallingTab = (tab, guiActions) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           eval(e.target.result); 
-          const equationsObject = window.equations; 
-          guiActions.setEquations(equationsObject);
-          initiateSliders(equationsObject);
+
+          const eqs = window.eqs; 
+          const vars = window.vars;
+          const params = window.params;
+
+          console.log('Equations loaded:', eqs);
+          console.log('Variables loaded:', vars);
+          console.log('Parameters loaded:', params);
+
+          guiActions.setModel(vars, params, eqs);
+          initiateSliders(params);
         };
         reader.readAsText(file); 
       }
@@ -38,59 +46,68 @@ export const initSignallingTab = (tab, guiActions) => {
       intracellular: {},
       extracellular: {}
     };
+
+    console.log(parameters.int)
     
-    Object.entries(parameters.intracellularParameters).forEach(([key, constant]) => {
-      parameterSettings.intracellular[key] = constant.value;
+    Object.entries(parameters.int).forEach(([key, constant]) => {
+      parameterSettings.intracellular[key] = constant.val;
     });
 
-    Object.entries(parameters.extracellularParameters).forEach(([key, constant]) => {
-      parameterSettings.extracellular[key] = constant.value;
+    console.log(parameters.ext)
+
+    Object.entries(parameters.ext).forEach(([key, constant]) => {
+      parameterSettings.extracellular[key] = constant.val;
     });
 
     return parameterSettings;
   };
   
-  const initiateSliders = (equations) => {
-    
-    const intracellularParameters = equations.intracellularConstants;
-    const extracellularParameters = equations.extracellularConstants;
+  const initiateSliders = (params) => {
+   
     const parameters = {
-      intracellularParameters: intracellularParameters,
-      extracellularParameters: extracellularParameters
+      int: params.int,
+      ext: params.ext
     };
     parameterSettings = initiateParameterSettings(parameters);
     const bindings = {};
 
-    Object.keys(parameterSettings.intracellular).forEach(paramName => {
-      bindings[paramName] = intracellularFolder.addBinding(
-        parameterSettings.intracellular,
-        paramName,
-        {
-          label: paramName,
-          min: parameters.intracellularParameters[paramName].minValue,
-          max: parameters.intracellularParameters[paramName].maxValue,
-        }
-      );
-      
-      bindings[paramName].on('change', () => {
-        guiActions.setIntracellularParameter(paramName, parameterSettings.intracellular[paramName]);
-      });
+Object.keys(parameterSettings.intracellular).forEach(paramName => {
+  // Only add binding if value is a number
+  console.log("Adding bindings")
+  console.log(parameterSettings.intracellular)
+  if (typeof parameterSettings.intracellular[paramName] === 'number') {
+    bindings[paramName] = intracellularFolder.addBinding(
+      parameterSettings.intracellular,
+      paramName,
+      {
+        label: paramName,
+        min: parameters.int[paramName].min,
+        max: parameters.int[paramName].max,
+      }
+    );
+    bindings[paramName].on('change', () => {
+      guiActions.setIntracellularParameter(paramName, parameterSettings.intracellular[paramName]);
+    console.log("parameters Set!")
     });
-    
-    Object.keys(parameterSettings.extracellular).forEach(paramName => {
-      bindings[paramName] = extracellularFolder.addBinding(
-        parameterSettings.extracellular,
-        paramName,
-        {
-          label: paramName,
-          min: parameters.extracellularParameters[paramName].minValue,
-          max: parameters.extracellularParameters[paramName].maxValue,
-        }
-      );
+  }
+});
 
-      bindings[paramName].on('change', () => {
-        guiActions.setExtracellularParameter(paramName, parameterSettings.extracellular[paramName]);
-      });
+Object.keys(parameterSettings.extracellular).forEach(paramName => {
+  // Only add binding if value is a number
+  if (typeof parameterSettings.extracellular[paramName] === 'number') {
+    bindings[paramName] = extracellularFolder.addBinding(
+      parameterSettings.extracellular,
+      paramName,
+      {
+        label: paramName,
+        min: parameters.ext[paramName].min,
+        max: parameters.ext[paramName].max,
+      }
+    );
+    bindings[paramName].on('change', () => {
+      guiActions.setExtracellularParameter(paramName, parameterSettings.extracellular[paramName]);
     });
+  }
+});
   };
 };

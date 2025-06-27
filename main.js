@@ -38,14 +38,16 @@ const guiActions = {
     init: (processedData) => {init(processedData);},
     setEquations: (equationsObject) => {
         createBacteriumSystem(CONFIG, equationsObject);
-        
      },
      setIntracellularParameter: (paramName, value) => {
          setIntraParameter(paramName, value);
      },
      setExtracellularParameter: (paramName, value) => {
        setExtraParameter(paramName, value);
-     }
+        },
+    setModel: (vars, params, eqs) => {
+        createBacteriumSystem(CONFIG, vars, params, eqs);
+    }
 
 };
 

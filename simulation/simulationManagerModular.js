@@ -7,14 +7,14 @@ let WIDTH;
 let HEIGHT;
 let equations = null;
 
-let parsedEquations = null;
+let parameters = null;
 
 export const setIntraParameter = (paramName, newValue) => {
-  parsedEquations.intracellularConstants[paramName].value = newValue;
+  parameters.intracellularConstants[paramName].value = newValue;
   initEquations(equations);
 }
 export const setExtraParameter = (paramName, newValue) => {
-    parsedEquations.extracellularConstants[paramName].value = newValue;
+    parameters.extracellularConstants[paramName].value = newValue;
     initEquations(equations);
 }
 
@@ -79,15 +79,33 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 }
 
 
-export function createBacteriumSystem(config, equationsObject) {
-    equations = equationsObject;
-    initEquations(equationsObject);
-    parsedEquations = equationsObject;
+export function createBacteriumSystem(config, vars, params, eqs) {
+    equations = eqs;
+    initEquations(eqs);
+    parameters = params;
 
    
     cytoplasmManager = {};
-    
-    const speciesNames = Object.keys(equationsObject.intracellularSpecies);
+
+    console.log("The internal variables are " );
+    console.log(vars.int);
+
+    //The log look like this:
+/*     
+    The internal variables are simulationManagerModular.js:90:13
+    Object { x: {…}, v: {…}, y: {…} }
+    ​
+    v: Object { val: 0, min: -1000, max: 1000 }
+    ​
+    x: Object { val: 1, min: -1000, max: 1000 }
+    ​
+    y: Object { val: 0.5, min: -1000, max: 1000 }
+    ​
+    <prototype>: Object { … }
+    simulationManagerModular.js:91:13
+ */
+        
+    const speciesNames = Object.keys(vars.int)
    
     
     // Create a concentration Map for each species

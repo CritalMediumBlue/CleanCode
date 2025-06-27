@@ -1,23 +1,8 @@
 import { getAdjustedCoordinates } from "./grid.js";
 
 let parsedEquations = null;
-export const initEquations = (equations) => {
-    parsedEquations = equations;
-    Object.keys(parsedEquations.intracellularSpecies).forEach(species => {
-    console.log('Change of '+ species+ ' with respect to time is given by ' + 'd' + species + '/dt = ' + parsedEquations.intracellularSpecies[species].diffEquation);
-    });
-    Object.keys(parsedEquations.intracellularConstants).forEach(constant => {
-        console.log('constant ' + constant + ' = ' + parsedEquations.intracellularConstants[constant].value); 
-    });
-
-    // The resulting log is shown below
-    /*
-    Change of x with respect to time is given by dx/dt = v 
-    Change of v with respect to time is given by dv/dt = -Math.pow(w, 2) * x 
-    Change of y with respect to time is given by dy/dt = 0 
-    constant w = 0.5 
-    constant timeStep = 0.001 
-    */
+export const initEquations = (eqs) => {
+    parsedEquations = eqs;
 };
 function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLapse) {
     const originalConcentrations = {};
