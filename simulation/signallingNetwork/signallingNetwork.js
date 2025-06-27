@@ -47,18 +47,13 @@ function simulateConcentration( ID, localConcentration, timeLapse) {
 
     Object.keys(cytoplasmManager).forEach(speciesName => {   
         originalConcentrations[speciesName] = cytoplasmManager[speciesName].get(ID);
+        const delta = equations.int[speciesName](variables, parameters);
     });
 
         const deltaX = equations.int.x(variables, parameters) ;
         const deltaV = equations.int.v(variables, parameters);
         const deltaY = equations.int.y(variables, parameters);
 
-        
-if (
-  originalConcentrations.x !== undefined ||
-  originalConcentrations.v !== undefined ||
-  originalConcentrations.y !== undefined
-) {
   variables.int.x.val = originalConcentrations.x + deltaX * timeLapse;
   variables.int.v.val = originalConcentrations.v + deltaV * timeLapse;
   variables.int.y.val = originalConcentrations.y + deltaY * timeLapse;
@@ -68,9 +63,7 @@ if (
     v: variables.int.v.val,
     y: variables.int.y.val,
   };
-} else {
-  return { x: 0, v: 0, y: 0 };
-}
+
    
 }
 
