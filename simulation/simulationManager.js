@@ -25,7 +25,6 @@ export const setParamFromGUI = (paramName, newValue) => {
 }
 
 export function assignInitialConcentrations(bacteriaData) {
-
 setCytopManager(bacteriaData);
 }
 
@@ -68,7 +67,7 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
     let totalCount = 0;
 
     bacteriaData.forEach((bacterium) => {
-        const aimP = bacterium.cytoplasmConcentrations.p;
+        const aimP = bacterium.cytoplasmConcentrations.x;
         const aimR = bacterium.cytoplasmConcentrations.r;
         totalAimP+=aimP;
         totalAimR+=aimR;

@@ -52,7 +52,7 @@ export function setupPlot(Chart) {
 }
 
 export function updatePlot(data, chart) {
-    if (!data || !data[0] || !data[1] || data[0].length === 0 || data[1].length === 0) return;
+    if (!data) return;
     
     let scaledData = scaleData(data, 1);
     const end = scaledData[0].length;
@@ -64,7 +64,7 @@ export function updatePlot(data, chart) {
     chart.data.labels = slicedData[0]; // X-axis values
     
     // For Y values, we just need the array of values
-    chart.data.datasets[0].data = slicedData[1];
+    chart.data.datasets[0].data = slicedData[2];
     
     // Ensure update doesn't animate for performance
     chart.update();
