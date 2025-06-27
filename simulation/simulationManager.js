@@ -1,29 +1,34 @@
- import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulation.js';
-//import { updateBacteriaCytoplasm } from './ContinuousPhenotypeSimulationSpo.js';
-import { diffuse } from './diffusionStep.js';;
+ import { updateBacteriaCytoplasm, setModel,setIntraParameter,setExtraParameter } from './signallingNetwork/signallingNetwork.js';
 
 
-let cytoplasmManager = null;
 let WIDTH;
 let HEIGHT;
-let parsedEquations = null;
+let parameters = null;
 
+export function createBacteriumSystem(config, vars, params, eqs) {
+  
+    parameters = params;
 
-const width = 100; // Assuming a grid width of 100
-const height = 60; // Assuming a grid height of 60
-const surfactinXField = new Float64Array(width * height); // Initialize surfactinXField with the grid size
+    setModel(eqs, params, vars);
 
-for (let i = 0; i < width; i++) {
-    for (let j = 0; j < height; j++) {
-        const index = i + j * width;
-        surfactinXField[index] =(height- j)* 0.03; 
-    }
+    WIDTH = config.GRID.WIDTH;
+    HEIGHT = config.GRID.HEIGHT;
+
 }
+
+export const setParamFromGUI = (paramName, newValue) => {
+    if (parameters.int[paramName]) {
+        setIntraParameter(paramName, newValue);
+    } else if (parameters.ext[paramName]) {
+        setExtraParameter(paramName, newValue);
+    } 
+}
+
+
 
 
 export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
-   // concentrationState.concentrationField = surfactinXField; // This is only for the Spo simulation, comment out for the original simulation
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
     const timeLapse = 1.5; // seconds
@@ -32,10 +37,8 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
     let bacteriaDataUpdated
     
     for (let i = 0; i < numberOfIterations; i++) {
-        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState,cytoplasmManager,HEIGHT,WIDTH,timeLapse, 
-            parsedEquations);
+        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState, HEIGHT, WIDTH, timeLapse);
         
-        diffuse(concentrationState, timeLapse);
     }
     
     
@@ -49,6 +52,8 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
 }
 
 
+
+
 function getGlobalParamsCont(bacteriaData,concentrationState) {
     const concentration = concentrationState.concentrationField;
     let length = concentration.length;
@@ -58,10 +63,10 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
     let totalCount = 0;
 
     bacteriaData.forEach((bacterium) => {
-        const aimP = bacterium.cytoplasmConcentrations.p
-        const aimR = bacterium.cytoplasmConcentrations.r
-        totalAimP+=aimP
-        totalAimR+=aimR
+        const aimP = bacterium.cytoplasmConcentrations.p;
+        const aimR = bacterium.cytoplasmConcentrations.r;
+        totalAimP+=aimP;
+        totalAimR+=aimR;
         totalCount++;
     } );
 
@@ -81,21 +86,3 @@ function getGlobalParamsCont(bacteriaData,concentrationState) {
 }
 
 
-export function createBacteriumSystem(config, equations) {
-
-    parsedEquations = JSON.parse(equations);
-
-   
-    cytoplasmManager = {
-        rConcentrationMemo: new Map(),
-        iConcentrationMemo: new Map(),
-        lConcentrationMemo: new Map(),
-        aConcentrationMemo: new Map(),
-        pConcentrationMemo: new Map()
-    };
-    Object.seal(cytoplasmManager);
-    Object.preventExtensions(cytoplasmManager);
-
-    WIDTH = config.GRID.WIDTH;
-    HEIGHT = config.GRID.HEIGHT;
-}

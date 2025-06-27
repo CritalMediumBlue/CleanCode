@@ -1,7 +1,7 @@
 
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
     setColorMultiplier,visibleGridAndAxes,takeScreenshot} from './scene/graphicsManager.js';
-import {createBacteriumSystem,updateSimulation, setIntraParameter, setExtraParameter} from './simulation/simulationManagerModular.js';
+import {createBacteriumSystem,updateSimulation, setParamFromGUI} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
 import { CONFIG } from './config.js';
@@ -36,18 +36,8 @@ const guiActions = {
     takeScreenshot: (filename) => {takeScreenshot(filename);},
     stepForward: () => { singleStep(); },
     init: (processedData) => {init(processedData);},
-    setEquations: (equationsObject) => {
-        createBacteriumSystem(CONFIG, equationsObject);
-     },
-     setIntracellularParameter: (paramName, value) => {
-         setIntraParameter(paramName, value);
-     },
-     setExtracellularParameter: (paramName, value) => {
-       setExtraParameter(paramName, value);
-        },
-    setModel: (vars, params, eqs) => {
-        createBacteriumSystem(CONFIG, vars, params, eqs);
-    }
+    setParam: (paramName, newValue) => {setParamFromGUI(paramName, newValue); },
+    setModel: (vars, params, eqs) => {createBacteriumSystem(CONFIG, vars, params, eqs); }
 
 };
 
@@ -68,8 +58,6 @@ const init = (processedData) => {
     ({session,concentrationState} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
 
     setupNewScene(CONFIG);
-    
-    
     animate();
 };
 

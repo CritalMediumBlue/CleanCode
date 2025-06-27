@@ -5,7 +5,6 @@ export const initSignallingTab = (tab, guiActions) => {
   const intracellularFolder = tab.pages[1].addFolder({ title: 'Intracellular params' });
   tab.pages[1].addBlade({ view: 'separator' });
   const extracellularFolder = tab.pages[1].addFolder({ title: 'Extracellular params' });
-  let parameterSettings = null;
 
   loadEquationsBtn.on('click', () => {
     const fileInput = document.createElement('input');
@@ -20,17 +19,13 @@ export const initSignallingTab = (tab, guiActions) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           eval(e.target.result); 
-
-          const eqs = window.eqs; 
+          
           const vars = window.vars;
           const params = window.params;
-
-          console.log('Equations loaded:', eqs);
-          console.log('Variables loaded:', vars);
-          console.log('Parameters loaded:', params);
+          const eqs = window.eqs; 
 
           guiActions.setModel(vars, params, eqs);
-          initiateSliders(params);
+          initiateSliders(params, intracellularFolder, extracellularFolder, guiActions);
         };
         reader.readAsText(file); 
       }
@@ -41,55 +36,35 @@ export const initSignallingTab = (tab, guiActions) => {
     fileInput.click();
   });
 
-  const initiateParameterSettings = (parameters) => {
-    const parameterSettings = {
-      intracellular: {},
-      extracellular: {}
-    };
+};
 
-    console.log(parameters.int)
-    
-    Object.entries(parameters.int).forEach(([key, constant]) => {
-      parameterSettings.intracellular[key] = constant.val;
-    });
 
-    console.log(parameters.ext)
 
-    Object.entries(parameters.ext).forEach(([key, constant]) => {
-      parameterSettings.extracellular[key] = constant.val;
-    });
 
-    return parameterSettings;
-  };
-  
-  const initiateSliders = (params) => {
+
+
+  const initiateSliders = (params, intracellularFolder, extracellularFolder, guiActions) => {
+
    
-    const parameters = {
-      int: params.int,
-      ext: params.ext
-    };
-    parameterSettings = initiateParameterSettings(parameters);
+    
+    const parameterSettings = initiateParameterSettings(params);
     const bindings = {};
 
 Object.keys(parameterSettings.intracellular).forEach(paramName => {
-  // Only add binding if value is a number
-  console.log("Adding bindings")
-  console.log(parameterSettings.intracellular)
-  if (typeof parameterSettings.intracellular[paramName] === 'number') {
+
     bindings[paramName] = intracellularFolder.addBinding(
       parameterSettings.intracellular,
       paramName,
       {
         label: paramName,
-        min: parameters.int[paramName].min,
-        max: parameters.int[paramName].max,
+        min: params.int[paramName].min,
+        max: params.int[paramName].max,
       }
     );
     bindings[paramName].on('change', () => {
-      guiActions.setIntracellularParameter(paramName, parameterSettings.intracellular[paramName]);
-    console.log("parameters Set!")
+      guiActions.setParam(paramName, parameterSettings.intracellular[paramName]);
     });
-  }
+  
 });
 
 Object.keys(parameterSettings.extracellular).forEach(paramName => {
@@ -100,14 +75,42 @@ Object.keys(parameterSettings.extracellular).forEach(paramName => {
       paramName,
       {
         label: paramName,
-        min: parameters.ext[paramName].min,
-        max: parameters.ext[paramName].max,
+        min: params.ext[paramName].min,
+        max: params.ext[paramName].max,
       }
     );
     bindings[paramName].on('change', () => {
-      guiActions.setExtracellularParameter(paramName, parameterSettings.extracellular[paramName]);
+      guiActions.setParam(paramName, parameterSettings.extracellular[paramName]);
     });
   }
 });
   };
+
+
+
+// Helper function to initiate parameter settings
+
+
+const initiateParameterSettings = (parameters) => {
+    const newParameterSettings = {
+      intracellular: {},
+      extracellular: {}
+    };
+
+    
+    Object.entries(parameters.int).forEach(([species, param]) => {
+      newParameterSettings.intracellular[species] = param.val;
+    });
+
+
+    Object.entries(parameters.ext).forEach(([species, param]) => {
+      newParameterSettings.extracellular[species] = param.val;
+    });
+    
+    Object.seal(newParameterSettings.intracellular);
+    Object.seal(newParameterSettings.extracellular);
+    Object.preventExtensions(newParameterSettings.intracellular);
+    Object.preventExtensions(newParameterSettings.extracellular);
+
+    return newParameterSettings;
 };
