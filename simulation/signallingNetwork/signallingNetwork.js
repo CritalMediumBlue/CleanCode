@@ -49,6 +49,7 @@ export const setModel = (params, vars, config) => {
 
   console.log("Cytoplasm Manager Initialized", interiorManager);
   console.log("Exterior Manager Initialized", exteriorManager);
+  console.log("Diffusion Manager Initialized", diffussionManager);
 };
 
 
