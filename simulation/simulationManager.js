@@ -3,15 +3,29 @@
 
 let WIDTH;
 let HEIGHT;
-
+/**
+ * Initializes the bacterium simulation system with configuration, variables, and parameters.
+ * @param {Object} config - Simulation configuration object.
+ * @param {Object} vars - Model variables.
+ * @param {Object} params - Model parameters.
+ */
 export function createBacteriumSystem(config, vars, params) {
-    setModel(params, vars);
+    setModel(params, vars,config);
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
 }
-
+/**
+ * Updates a model parameter from the GUI.
+ * @param {string} paramName - The name of the parameter to update.
+ * @param {*} newValue - The new value to set for the parameter.
+ */
 export const setParamFromGUI = (paramName, newValue) => {setParameter(paramName, newValue);}
 
+
+/**
+ * Assigns initial cytoplasm and exterior concentrations to each bacterium.
+ * @param {Array} bacteriaData - Array of bacterium objects with unique IDs.
+ */
 export function assignInitialConcentrations(bacteriaData) {setCytopManager(bacteriaData);}
 
 
