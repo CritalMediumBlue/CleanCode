@@ -3,23 +3,32 @@ import { diffuse } from "./diffusionStep.js";
 
 let variables = null;
 let parameters = null;
-let cytoplasmManager = null;
-let speciesNames = null;
+let cytoplasmManager = {};
+let intSpeciesNames = null;
+let extSpeciesNames = null;
+let exteriorManager = {};
 
 
 export const setModel = (params, vars) => {
   parameters = params;
   variables = vars;
-  cytoplasmManager = {};
-  speciesNames = Object.keys(variables.int);
 
-  speciesNames.forEach((speciesName) => {
+  intSpeciesNames = Object.keys(variables.int);
+  intSpeciesNames.forEach((speciesName) => {
     cytoplasmManager[speciesName] = new Map();
   });
 
+    extSpeciesNames = Object.keys(variables.ext);
+    extSpeciesNames.forEach((extSpeciesNames) => {
+    exteriorManager[extSpeciesNames] = new Map();
+    });
+
   Object.seal(cytoplasmManager);
   Object.preventExtensions(cytoplasmManager);
+    Object.seal(exteriorManager);
+    Object.preventExtensions(exteriorManager);
   console.log("Cytoplasm Manager Initialized", cytoplasmManager);   
+  console.log("Exterior Manager Initialized", exteriorManager);
 };
 
 
@@ -29,7 +38,7 @@ export const setParameter = (paramName, value) => {parameters[paramName].val = v
 
 
 export const setCytopManager = (bacteriaData) => {
-  speciesNames.forEach((speciesName) => {
+  intSpeciesNames.forEach((speciesName) => {
     bacteriaData.forEach((bacterium) => {
       const ID = bacterium.ID;
       if (!cytoplasmManager[speciesName].has(ID)) {cytoplasmManager[speciesName].set(ID, variables.int[speciesName].val);}
