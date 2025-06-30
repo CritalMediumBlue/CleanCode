@@ -22,9 +22,8 @@ export const initSignallingTab = (tab, guiActions) => {
           
           const vars = window.vars;
           const params = window.params;
-          const eqs = window.eqs; 
 
-          guiActions.setModel(vars, params, eqs);
+          guiActions.setModel(vars, params);
           initiateSliders(params, intracellularFolder, extracellularFolder, guiActions);
         };
         reader.readAsText(file); 

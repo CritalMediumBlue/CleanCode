@@ -51,14 +51,14 @@ const plot2Binding = visualizationFolder.addBinding(visualSettings, 'plot2', {
 const meshHeightScaleBinding = meshFolder.addBinding(MeshScalesSettings, 'meshHeightScale', {
   label: 'Z-Scale mesh',
   min: 0,
-  max: 60,
-  step: 0.1
+  max: 30,
+  step: 0.01
 });
 const meshTranslationZBinding = meshFolder.addBinding(MeshScalesSettings, 'meshTranslationZ', {
   label: 'Mesh offset',
-  min: -100,
-  max: 100,
-  step: 0.1
+  min: -30,
+  max: 30,
+  step: 0.01
 });
 const colorMultiplierBinding = meshFolder.addBinding(MeshScalesSettings, 'colorMultiplier', {
   label: 'Scale color',

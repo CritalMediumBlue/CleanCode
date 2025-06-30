@@ -5,11 +5,11 @@ let WIDTH;
 let HEIGHT;
 let parameters = null;
 
-export function createBacteriumSystem(config, vars, params, eqs) {
+export function createBacteriumSystem(config, vars, params) {
   
     parameters = params;
 
-    setModel(eqs, params, vars);
+    setModel(params, vars);
 
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;

@@ -84,7 +84,7 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
                 break;
             }
             case "test": {
-                const factor = 0.5;
+                const factor = 0.2;
                 const red = Math.abs(cytoplasmConcentrations.x*factor);
                 const green = Math.abs(cytoplasmConcentrations.v*factor);
                 const blue = Math.abs(cytoplasmConcentrations.y*factor);

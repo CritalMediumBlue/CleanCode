@@ -101,5 +101,5 @@ export function getAdjustedCoordinates(x, y, HEIGHT, WIDTH) {
   // Calculate the 1D index corresponding to the 2D grid coordinates.
   const idx = adjustedY * WIDTH + adjustedX;
 
-  return { x: adjustedX, y: adjustedY, idx };
+  return idx ;
 }
