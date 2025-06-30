@@ -25,8 +25,8 @@ export const setModel = (params, vars) => {
 
   Object.seal(interiorManager);
   Object.preventExtensions(interiorManager);
-    Object.seal(exteriorManager);
-    Object.preventExtensions(exteriorManager);
+  Object.seal(exteriorManager);
+  Object.preventExtensions(exteriorManager);
   console.log("Cytoplasm Manager Initialized", interiorManager);   
   console.log("Exterior Manager Initialized", exteriorManager);
 };
