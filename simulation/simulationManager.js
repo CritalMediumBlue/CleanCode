@@ -1,4 +1,4 @@
- import { updateBacteriaCytoplasm, setModel,setIntraParameter,setExtraParameter,setCytopManager } from './signallingNetwork/signallingNetwork.js';
+ import { updateBacteriaCytoplasm, setModel,setParameter,setCytopManager } from './signallingNetwork/signallingNetwork.js';
 
 
 let WIDTH;
@@ -17,10 +17,8 @@ export function createBacteriumSystem(config, vars, params) {
 }
 
 export const setParamFromGUI = (paramName, newValue) => {
-    if (parameters.int[paramName]) {
-        setIntraParameter(paramName, newValue);
-    } else if (parameters.ext[paramName]) {
-        setExtraParameter(paramName, newValue);
+    if (parameters[paramName]) {
+        setParameter(paramName, newValue);
     } 
 }
 

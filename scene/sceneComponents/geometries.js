@@ -84,10 +84,10 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
                 break;
             }
             case "test": {
-                const factor = 0.2;
-                const red = Math.abs(cytoplasmConcentrations.x*factor);
-                const green = Math.abs(cytoplasmConcentrations.v*factor);
-                const blue = Math.abs(cytoplasmConcentrations.y*factor);
+                 const factor = 0.5;
+                const red = cytoplasmConcentrations.AimR*factor;
+                const green = cytoplasmConcentrations.AimP*factor;
+                const blue = cytoplasmConcentrations.AimP*factor+ cytoplasmConcentrations.AimR*factor;
 
                 color = `rgb(${Math.round(red * 255)}, ${Math.round(green * 255)}, ${Math.round(blue * 255)})`;
                 capsule.children[0].visible = true;

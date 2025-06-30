@@ -7,7 +7,7 @@ let cytoplasmManager = null;
 let speciesNames = null;
 
 
-export const setModel = ( params, vars) => {
+export const setModel = (params, vars) => {
   parameters = params;
   variables = vars;
   cytoplasmManager = {};
@@ -19,13 +19,13 @@ export const setModel = ( params, vars) => {
 
   Object.seal(cytoplasmManager);
   Object.preventExtensions(cytoplasmManager);
+  console.log("Cytoplasm Manager Initialized", cytoplasmManager);   
 };
 
 
-export const setExtraParameter = (paramName, value) => {parameters.ext[paramName].val = value;};
+export const setParameter = (paramName, value) => {parameters[paramName].val = value; console.log(`Parameter ${paramName} set to ${value}`);};
 
 
-export const setIntraParameter = (paramName, value) => {parameters.int[paramName].val = value;};
 
 
 export const setCytopManager = (bacteriaData) => {
@@ -35,25 +35,40 @@ export const setCytopManager = (bacteriaData) => {
       if (!cytoplasmManager[speciesName].has(ID)) {cytoplasmManager[speciesName].set(ID, variables.int[speciesName].val);}
     });
   });
+  console.log("Cytoplasm Manager Updated", cytoplasmManager);
 };
-
-
 
 
 
 function simulateConcentrations(ID, localConcentration, timeLapse) {
   const originalConcentrations = {};
   const finalConcentrations = {};
+     Object.keys(cytoplasmManager).forEach((speciesName) => {
 
-  Object.keys(cytoplasmManager).forEach((speciesName) => {
     if (!cytoplasmManager[speciesName].has(ID)) {
         cytoplasmManager[speciesName].set(ID, cytoplasmManager[speciesName].get(ID / 2n));
       }
+    } );
+
+  // update the internal variables with the current concentrations
+   Object.keys(variables.int).forEach((speciesName) => {
+    variables.int[speciesName].val = cytoplasmManager[speciesName].get(ID) 
+   });
+
+
+   
+  Object.keys(cytoplasmManager).forEach((speciesName) => {
+
+ 
+
+
     originalConcentrations[speciesName] = cytoplasmManager[speciesName].get(ID);
-    const delta = variables.int[speciesName].eq(variables, parameters);
+    const delta = variables.int[speciesName].eq(variables, parameters)*0.01;
     variables.int[speciesName].val = originalConcentrations[speciesName] + delta * timeLapse;
     finalConcentrations[speciesName] = variables.int[speciesName].val;
     cytoplasmManager[speciesName].set(ID, finalConcentrations[speciesName]);
+
+
   });
 
 
@@ -82,13 +97,16 @@ export const updateBacteriaCytoplasm = (currentBacteria,concentrationsState,HEIG
 
     const idx = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
     const localConcentration = concentrations[idx] || 0;
+  
+
+    
 
 
     const cytoplasmConcentrations = simulateConcentrations(ID,localConcentration,timeLapse);
 
  
 
-    sourcesArray[idx] += Math.abs(cytoplasmConcentrations.x) * 0.1;
+    sourcesArray[idx] += cytoplasmConcentrations.AimP * 0.1;
     sinksArray[idx] += 0;//Math.abs(cytoplasmConcentrations.v) * localConcentration;
 
     resultArray[i] = {

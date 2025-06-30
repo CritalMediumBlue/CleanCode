@@ -37,7 +37,7 @@ const guiActions = {
     stepForward: () => { singleStep(); },
     init: (processedData) => {init(processedData);},
     setParam: (paramName, newValue) => {setParamFromGUI(paramName, newValue); },
-    setModel: (vars, params, eqs) => {createBacteriumSystem(CONFIG, vars, params, eqs); }
+    setModel: (vars, params) => {createBacteriumSystem(CONFIG, vars, params); }
 
 };
 

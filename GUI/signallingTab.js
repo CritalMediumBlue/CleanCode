@@ -2,9 +2,7 @@ export const initSignallingTab = (tab, guiActions) => {
 
   const loadEquationsBtn = tab.pages[1].addButton({ title: '📂', label: "Load Equations" });
   tab.pages[1].addBlade({ view: 'separator' });
-  const intracellularFolder = tab.pages[1].addFolder({ title: 'Intracellular params' });
-  tab.pages[1].addBlade({ view: 'separator' });
-  const extracellularFolder = tab.pages[1].addFolder({ title: 'Extracellular params' });
+  const parametersFolder = tab.pages[1].addFolder({ title: 'Parameters' });
 
   loadEquationsBtn.on('click', () => {
     const fileInput = document.createElement('input');
@@ -24,7 +22,7 @@ export const initSignallingTab = (tab, guiActions) => {
           const params = window.params;
 
           guiActions.setModel(vars, params);
-          initiateSliders(params, intracellularFolder, extracellularFolder, guiActions);
+          initiateSliders(params, parametersFolder, guiActions);
         };
         reader.readAsText(file); 
       }
@@ -42,47 +40,31 @@ export const initSignallingTab = (tab, guiActions) => {
 
 
 
-  const initiateSliders = (params, intracellularFolder, extracellularFolder, guiActions) => {
+  const initiateSliders = (params, parametersFolder, guiActions) => {
 
    
     
     const parameterSettings = initiateParameterSettings(params);
     const bindings = {};
 
-Object.keys(parameterSettings.intracellular).forEach(paramName => {
+Object.keys(parameterSettings).forEach(paramName => {
 
-    bindings[paramName] = intracellularFolder.addBinding(
-      parameterSettings.intracellular,
+    bindings[paramName] = parametersFolder.addBinding(
+      parameterSettings,
       paramName,
       {
         label: paramName,
-        min: params.int[paramName].min,
-        max: params.int[paramName].max,
+        min: params[paramName].min,
+        max: params[paramName].max,
       }
     );
     bindings[paramName].on('change', () => {
-      guiActions.setParam(paramName, parameterSettings.intracellular[paramName]);
+      guiActions.setParam(paramName, parameterSettings[paramName]);
     });
   
 });
 
-Object.keys(parameterSettings.extracellular).forEach(paramName => {
-  // Only add binding if value is a number
-  if (typeof parameterSettings.extracellular[paramName] === 'number') {
-    bindings[paramName] = extracellularFolder.addBinding(
-      parameterSettings.extracellular,
-      paramName,
-      {
-        label: paramName,
-        min: params.ext[paramName].min,
-        max: params.ext[paramName].max,
-      }
-    );
-    bindings[paramName].on('change', () => {
-      guiActions.setParam(paramName, parameterSettings.extracellular[paramName]);
-    });
-  }
-});
+
   };
 
 
@@ -92,24 +74,18 @@ Object.keys(parameterSettings.extracellular).forEach(paramName => {
 
 const initiateParameterSettings = (parameters) => {
     const newParameterSettings = {
-      intracellular: {},
-      extracellular: {}
     };
 
     
-    Object.entries(parameters.int).forEach(([species, param]) => {
-      newParameterSettings.intracellular[species] = param.val;
+    Object.entries(parameters).forEach(([species, param]) => {
+      newParameterSettings[species] = param.val;
     });
 
 
-    Object.entries(parameters.ext).forEach(([species, param]) => {
-      newParameterSettings.extracellular[species] = param.val;
-    });
+   
     
-    Object.seal(newParameterSettings.intracellular);
-    Object.seal(newParameterSettings.extracellular);
-    Object.preventExtensions(newParameterSettings.intracellular);
-    Object.preventExtensions(newParameterSettings.extracellular);
+    Object.seal(newParameterSettings);
+    Object.preventExtensions(newParameterSettings);
 
     return newParameterSettings;
 };
