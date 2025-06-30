@@ -1,4 +1,3 @@
-import { getAdjustedCoordinates } from "./grid.js";
  
    
     const DilutionRate = 0.035;

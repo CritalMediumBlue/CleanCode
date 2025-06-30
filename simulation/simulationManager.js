@@ -3,28 +3,16 @@
 
 let WIDTH;
 let HEIGHT;
-let parameters = null;
 
 export function createBacteriumSystem(config, vars, params) {
-  
-    parameters = params;
-
     setModel(params, vars);
-
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
-
 }
 
-export const setParamFromGUI = (paramName, newValue) => {
-    if (parameters[paramName]) {
-        setParameter(paramName, newValue);
-    } 
-}
+export const setParamFromGUI = (paramName, newValue) => {setParameter(paramName, newValue);}
 
-export function assignInitialConcentrations(bacteriaData) {
-setCytopManager(bacteriaData);
-}
+export function assignInitialConcentrations(bacteriaData) {setCytopManager(bacteriaData);}
 
 
 

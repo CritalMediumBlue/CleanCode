@@ -51,7 +51,7 @@ const plot2Binding = visualizationFolder.addBinding(visualSettings, 'plot2', {
 const meshHeightScaleBinding = meshFolder.addBinding(MeshScalesSettings, 'meshHeightScale', {
   label: 'Z-Scale mesh',
   min: 0,
-  max: 30,
+  max: 60,
   step: 0.01
 });
 const meshTranslationZBinding = meshFolder.addBinding(MeshScalesSettings, 'meshTranslationZ', {

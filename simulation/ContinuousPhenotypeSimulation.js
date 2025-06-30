@@ -1,4 +1,3 @@
-import { getAdjustedCoordinates } from "./grid.js";
  
     const Kin = 0.20;   
     const Ksyn = 0.3;    
