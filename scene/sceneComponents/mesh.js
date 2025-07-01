@@ -1,21 +1,10 @@
-/**
- * Mesh.js - Handles the creation and updating of 3D meshes representing simulation data
- * 
- * This module provides functions for creating, setting up, and updating a surface mesh
- * that visualizes concentration data in 3D space with both height and color mapping.
- */
+
 
 // Grid dimensions, initialized when createMesh is called
 let WIDTH;
 let HEIGHT; 
 
-/**
- * Creates a wireframe mesh for representing simulation data
- * 
- * @param {Object} THREE - Three.js library object
- * @param {Object} GRID - Grid configuration containing WIDTH and HEIGHT properties
- * @returns {Object} - The created surface mesh
- */
+
 function createMesh(THREE, GRID) {
     WIDTH = GRID.WIDTH;
     HEIGHT = GRID.HEIGHT;
@@ -38,8 +27,6 @@ function createMesh(THREE, GRID) {
 
     });
 
-    // Initialize the color attribute buffer before creating the mesh
-    // The size is num_vertices * 3 (r, g, b per vertex)
     const numVertices = WIDTH * HEIGHT;
     const initialColors = new Float32Array(numVertices * 3); // Initialize with zeros
     geometry.setAttribute('color', new THREE.BufferAttribute(initialColors, 3)); // Add color attribute
@@ -49,14 +36,6 @@ function createMesh(THREE, GRID) {
     return surfaceMesh;
 }
 
-/**
- * Sets up the mesh in the 3D scene
- * 
- * @param {Object} stage - The stage object containing the scene
- * @param {Object} THREE - Three.js library object
- * @param {Object} GRID - Grid configuration containing WIDTH and HEIGHT properties
- * @returns {Object} - The configured surface mesh added to the scene
- */
 export function setupMesh(stage, THREE, GRID) {
     // Create and position the surface mesh
     const surfaceMesh = createMesh(THREE, GRID);
@@ -64,20 +43,15 @@ export function setupMesh(stage, THREE, GRID) {
     //surfaceMesh.rotation.x = Math.PI;
     surfaceMesh.rotation.z = Math.PI;
     stage.scene.add(surfaceMesh);
+    surfaceMesh.visible = false; 
 
     return surfaceMesh;
 }
 
-/**
- * Calculates RGB color values based on concentration using sine waves
- * 
- * @param {number} concentration - Value representing concentration (0-1)
- * @returns {Object} - Object containing r, g, b values between 0-1
- */
+
 const calculateColor = (concentration) => {
     
     let con = concentration+2.5;
-    // Calculate RGB components using sine waves with phase shifts, scaled to [0, 1]
     const red = (Math.sin(con) + 1) / 2;
     const green = (Math.sin(con - (2 * Math.PI / 3)) + 1) / 2;
     const blue = (Math.sin(con - (4 * Math.PI / 3)) + 1) / 2;
@@ -90,17 +64,12 @@ const calculateColor = (concentration) => {
     };
 };
 
-/**
- * Updates the surface mesh geometry based on concentration data
- * 
- * @param {Object} surfaceMesh - The Three.js mesh to update
- * @param {Array} concentrationData - Array of concentration values
- * @param {number} heightMultiplier - Factor to multiply height values by
- */
+
 export function updateSurfaceMesh(surfaceMesh, concentrationData, heightMultiplier,translation,colorMultiplier) {
     // Get direct access to the position and color buffer arrays
     const positions = surfaceMesh.geometry.attributes.position.array; // x, y, z for each vertex
     const colorsAttribute = surfaceMesh.geometry.attributes.color; // r, g, b for each vertex
+
 
     // Iterate through each point in the grid
     for (let y = 0; y < HEIGHT; y++) {

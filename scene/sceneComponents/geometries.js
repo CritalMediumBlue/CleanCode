@@ -84,7 +84,8 @@ export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similar
                 break;
             }
             case "test": {
-                 const factor = 0.5;
+                
+                const factor = 0.5;
                 const red = cytoplasmConcentrations.AimR*factor;
                 const green = cytoplasmConcentrations.AimP*factor;
                 const blue = cytoplasmConcentrations.AimP*factor+ cytoplasmConcentrations.AimR*factor;

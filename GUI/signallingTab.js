@@ -1,3 +1,5 @@
+import { initVisualizationTab } from './visualizationTab.js';
+
 export const initSignallingTab = (tab, guiActions) => {
 
   const loadEquationsBtn = tab.pages[1].addButton({ title: '📂', label: "Load Equations" });
@@ -23,6 +25,7 @@ export const initSignallingTab = (tab, guiActions) => {
 
           guiActions.setModel(vars, params);
           initiateSliders(params, parametersFolder, guiActions);
+          initVisualizationTab(tab, guiActions, vars);
         };
         reader.readAsText(file); 
       }

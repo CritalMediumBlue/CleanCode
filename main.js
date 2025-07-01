@@ -1,6 +1,7 @@
 
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
-    setColorMultiplier,visibleGridAndAxes,takeScreenshot} from './scene/graphicsManager.js';
+    setColorMultiplier,visibleGridAndAxes,takeScreenshot,
+    selectSpecies} from './scene/graphicsManager.js';
 import {createBacteriumSystem,updateSimulation, setParamFromGUI,assignInitialConcentrations} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
@@ -26,6 +27,7 @@ let concentrations;
 const guiActions = {
     setPlayState: () => {session.play = !session.play;},
     setMeshVisible: (boolean) => {meshVisibility(boolean);},
+    selectSpecies: (speciesName) => { selectSpecies(speciesName);},
     setMeshScale: (scale) => {scaleMesh(scale);},
     translateMesh: (z) => {translateMesh(z);},
     setCapsuleVisibility: (visible) => {setCapsuleVisibility(visible);},

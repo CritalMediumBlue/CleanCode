@@ -20,6 +20,7 @@ let BACTERIUM = null;
 let currentnextSlices = null;
 let helperGrid = null;
 let helperAxes = null;
+let species = "AimP";
 
 
 export function setupNewScene(config) {
@@ -52,7 +53,9 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
     
     if (session.currentTimeStep % 1 === 0 ) {
 
-        const concentration = concentrationState.AimP.conc;
+        
+
+        const concentration = concentrationState[species].conc;
      
         updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ, colorMultiplier);
         
@@ -72,6 +75,10 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
 
 export function meshVisibility(boolean) {
     mesh.visible = boolean;
+}
+export function selectSpecies(speciesName) {
+    species = speciesName;
+    console.log(`Selected species: ${species}`);
 }
 export function scaleMesh(scale) {
     meshScale = scale;

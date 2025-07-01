@@ -1,6 +1,6 @@
-export const initVisualizationTab = (tab, guiActions) => {
+export const initVisualizationTab = (tab, guiActions, vars) => {
 
-
+const extSpeciesNames = Object.keys(vars.ext);
 // Visualization controls
 const visualizationFolder = tab.pages[2].addFolder({title: 'Visualization'});
 tab.pages[2].addBlade({view: 'separator',  });
@@ -8,7 +8,8 @@ const meshFolder = tab.pages[2].addFolder({title: 'Mesh rendering'});
 // More descriptive naming
 const visualSettings = {
   bacteria: true,
-  mesh: true,
+  mesh: false,
+  species: 'AimP', // Default species, can be changed
   helperCoordinates: true,
   plot1: true,
   plot2: true,
@@ -18,12 +19,33 @@ const MeshScalesSettings = {
   meshTranslationZ: -10,
   colorMultiplier: 1,
 }
+
 const meshBinding = visualizationFolder.addBinding(visualSettings, 'mesh', {
   label: 'Mesh'
 });
 meshBinding.on('change', () => {
   guiActions.setMeshVisible(visualSettings.mesh);
+  if (visualSettings.mesh) {
+    selectSpeciesBinding.disabled = false;
+  } else {
+    selectSpeciesBinding.disabled = true;
+  }
 });
+
+const options = {};
+extSpeciesNames.forEach(name => {
+  options[name] = name;
+});
+
+const selectSpeciesBinding = visualizationFolder.addBinding(visualSettings, 'species', {
+  label: 'Select Species',
+  options: options,
+  
+});
+selectSpeciesBinding.on('change', (value) => {
+  guiActions.selectSpecies(value.value);
+});
+selectSpeciesBinding.disabled =  true; 
 
 // Add bindings with better formatting and labels
 const bacteriaBinding = visualizationFolder.addBinding(visualSettings, 'bacteria', {
