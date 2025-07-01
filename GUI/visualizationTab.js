@@ -9,7 +9,7 @@ const meshFolder = tab.pages[2].addFolder({title: 'Mesh rendering'});
 const visualSettings = {
   bacteria: true,
   mesh: false,
-  species: 'AimP', // Default species, can be changed
+  species: 'null', 
   helperCoordinates: true,
   plot1: true,
   plot2: true,

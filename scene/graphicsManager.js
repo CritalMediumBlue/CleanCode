@@ -20,7 +20,7 @@ let BACTERIUM = null;
 let currentnextSlices = null;
 let helperGrid = null;
 let helperAxes = null;
-let species = "AimP";
+let species = null; // Default species, can be changed
 
 
 export function setupNewScene(config) {
@@ -54,10 +54,12 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
     if (session.currentTimeStep % 1 === 0 ) {
 
         
-
+        if(species !== null) {
         const concentration = concentrationState[species].conc;
-     
+       
+       
         updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ, colorMultiplier);
+        }
         
         if(bacteriaData) {
             currentBacteriaData = bacteriaData;
