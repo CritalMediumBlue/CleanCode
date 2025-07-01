@@ -85,13 +85,13 @@ export const setCytopManager = (bacteriaData) => {
 
 
 function inheritConcentrations(ID, idx) {
-    Object.keys(interiorManager).forEach((speciesName) => {
+    intSpeciesNames.forEach((speciesName) => {
         if (!interiorManager[speciesName].has(ID)) {
             interiorManager[speciesName].set(ID, interiorManager[speciesName].get(ID / 2n));
         }
     });
 
-    Object.keys(exteriorManager).forEach((speciesName) => {
+    extSpeciesNames.forEach((speciesName) => {
         exteriorManager[speciesName].set(ID, concentrationsState[speciesName].conc[idx] );
     });
 
@@ -118,7 +118,7 @@ function simulateConcentrations(ID, timeLapse, idx) {
   inheritConcentrations(ID, idx)
 
     
-  Object.keys(interiorManager).forEach((speciesName) => {
+  intSpeciesNames.forEach((speciesName) => {
 
 
     const originalConcentrations = interiorManager[speciesName].get(ID);
@@ -135,7 +135,7 @@ function simulateConcentrations(ID, timeLapse, idx) {
   });
 
 
-  Object.keys(exteriorManager).forEach((speciesName) => {
+  extSpeciesNames.forEach((speciesName) => {
 
     concentrationsState[speciesName].sources[idx] = variables.ext[speciesName].eq(variables, parameters);
 
@@ -152,9 +152,9 @@ function simulateConcentrations(ID, timeLapse, idx) {
 
 
 
-export const updateSignallingCircuit = (currentBacteria, oldConcentration, HEIGHT,WIDTH,timeLapse) => {
+export const updateSignallingCircuit = (currentBacteria, HEIGHT,WIDTH,timeLapse) => {
 
-  Object.keys(concentrationsState).forEach((speciesName) => {
+  extSpeciesNames.forEach((speciesName) => {
     concentrationsState[speciesName].sources.fill(0);
   } );
 
@@ -187,10 +187,38 @@ export const updateSignallingCircuit = (currentBacteria, oldConcentration, HEIGH
   }
 
 
+  extSpeciesNames.forEach((speciesName) => {
+  diffuse(concentrationsState[speciesName], timeLapse);
+  });
 
-  diffuse(concentrationsState.AimP, timeLapse);
 
-  oldConcentration.conc.set(concentrationsState.AimP.conc);
-
-  return resultArray;
+  
+    return {
+    bacteriaDataUpdated: resultArray,
+    concentrations: concentrationsState
+  };
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//oldConcentration.conc.set(concentrationsState.AimP.conc);

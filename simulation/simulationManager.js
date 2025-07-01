@@ -39,14 +39,15 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
     const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
     let bacteriaDataUpdated
+    let concentrations;
+
     
     for (let i = 0; i < numberOfIterations; i++) {
-        bacteriaDataUpdated = updateSignallingCircuit(currentBacteria, concentrationState, HEIGHT, WIDTH, timeLapse);
-        
+        ({ bacteriaDataUpdated, concentrations } = updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse));
     }
     
-    
-    const globalParams = getGlobalParamsCont(bacteriaDataUpdated,concentrationState);
+    concentrationState.conc.set(concentrations.AimP.conc);
+    const globalParams = getGlobalParamsCont(bacteriaDataUpdated,concentrations);
 
     return {
         bacteriaDataUpdated,
@@ -58,8 +59,8 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
 
 
-function getGlobalParamsCont(bacteriaData,concentrationState) {
-    const concentration = concentrationState.conc;
+function getGlobalParamsCont(bacteriaData,concentrations) {
+    const concentration = concentrations.AimP.conc;
     let length = concentration.length;
     let totalAimP = 0;
     let totalAimR = 0;
