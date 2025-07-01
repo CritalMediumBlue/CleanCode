@@ -10,9 +10,11 @@ let HEIGHT;
  * @param {Object} params - Model parameters.
  */
 export function createBacteriumSystem(config, vars, params) {
-    setModel(params, vars,config);
+    
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
+    return setModel(params, vars,config);
+
 }
 /**
  * Updates a model parameter from the GUI.
@@ -31,7 +33,7 @@ export function assignInitialConcentrations(bacteriaData) {setCytopManager(bacte
 
 
 
-export function updateSimulation(currentBacteria, concentrationState, minutes) {
+export function updateSimulation(currentBacteria, minutes) {
 
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
@@ -46,12 +48,12 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
         ({ bacteriaDataUpdated, concentrations } = updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse));
     }
     
-    concentrationState.conc.set(concentrations.AimP.conc);
     const globalParams = getGlobalParamsCont(bacteriaDataUpdated,concentrations);
 
     return {
         bacteriaDataUpdated,
-        globalParams
+        globalParams,
+        concentrations
     };
 
 }

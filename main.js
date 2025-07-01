@@ -19,7 +19,8 @@ const nextSlices = [];
 let storedProcessedData;
 let bacteriaDataUpdated;
 let previusParams = null;
-let previusVars = null;    
+let previusVars = null;  
+let concentrations;  
 
 
 const guiActions = {
@@ -39,7 +40,8 @@ const guiActions = {
     stepForward: () => { singleStep(); },
     init: (processedData) => {init(processedData);},
     setParam: (paramName, newValue) => {setParamFromGUI(paramName, newValue); },
-    setModel: (vars, params) => {createBacteriumSystem(CONFIG, vars, params); 
+    setModel: (vars, params) => {
+        concentrations=createBacteriumSystem(CONFIG, vars, params); 
         previusParams = params;
         previusVars = vars;
     }
@@ -48,7 +50,7 @@ const guiActions = {
 
 
 const init = (processedData) => {
-    createBacteriumSystem(CONFIG, previusVars, previusParams);
+    concentrationState = createBacteriumSystem(CONFIG, previusVars, previusParams);
     constants = createConstants();
     storedProcessedData = processedData;
     bacteriaTimeSeries = processedData.bacteriaTimeSeries;
@@ -78,7 +80,7 @@ const animate = () => {
     }
     
    
-    renderScene(histories, bacteriaDataUpdated, concentrationState, CONFIG.BACTERIUM, session, constants, nextSlices);
+    renderScene(histories, bacteriaDataUpdated, concentrations, CONFIG.BACTERIUM, session, constants, nextSlices);
 
     if (session.currentTimeStep >= constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
@@ -90,7 +92,7 @@ const animate = () => {
 const singleStep = () => {  
      const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
 
-        ({bacteriaDataUpdated,globalParams} = updateSimulation(currentBacteria, concentrationState,constants.fromStepToMinutes));
+        ({bacteriaDataUpdated,globalParams, concentrations} = updateSimulation(currentBacteria,constants.fromStepToMinutes));
 
         updateData();
 

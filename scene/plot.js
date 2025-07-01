@@ -64,7 +64,7 @@ export function updatePlot(data, chart) {
     chart.data.labels = slicedData[0]; // X-axis values
     
     // For Y values, we just need the array of values
-    chart.data.datasets[0].data = slicedData[2];
+    chart.data.datasets[0].data = slicedData[0];
     
     // Ensure update doesn't animate for performance
     chart.update();

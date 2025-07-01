@@ -50,9 +50,10 @@ export function setupNewScene(config) {
 
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, session, constants, nextSlices) {
     
-    if (session.currentTimeStep % 1 === 0 || !session.play) {
-        
-        const concentration = concentrationState.conc;
+    if (session.currentTimeStep % 1 === 0 ) {
+
+        const concentration = concentrationState.AimP.conc;
+     
         updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ, colorMultiplier);
         
         if(bacteriaData) {
@@ -61,7 +62,7 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
             updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices, capsuleVisibility);
         }
         
-         if (histories) {
+         if (histories & session.currentTimeStep % 5 ===0){
             updatePlot(histories, plot);
         } 
         updateOverlay(session, constants);

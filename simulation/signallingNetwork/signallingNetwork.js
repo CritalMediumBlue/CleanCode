@@ -43,6 +43,7 @@ export const setModel = (params, vars, config) => {
     Object.preventExtensions(variables);
     Object.seal(parameters);
     Object.preventExtensions(parameters);
+    return concentrationsState
 };
 
 
@@ -221,4 +222,3 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT,WIDTH,timeLapse)
 
 
 
-//oldConcentration.conc.set(concentrationsState.AimP.conc);
