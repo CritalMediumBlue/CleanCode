@@ -54,8 +54,7 @@ Object.keys(parameterSettings).forEach(paramName => {
       paramName,
       {
         label: paramName,
-        min: params[paramName].min,
-        max: params[paramName].max,
+        step: 0.0005
       }
     );
     bindings[paramName].on('change', () => {
@@ -78,7 +77,7 @@ const initiateParameterSettings = (parameters) => {
 
     
     Object.entries(parameters).forEach(([species, param]) => {
-      newParameterSettings[species] = param.val;
+      newParameterSettings[species] = param;
     });
 
 

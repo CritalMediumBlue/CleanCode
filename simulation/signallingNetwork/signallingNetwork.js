@@ -62,7 +62,7 @@ export const setModel = (params, vars, config) => {
  * @param {*} value - The new value for the parameter.
  */
 export const setParameter = (paramName, value) => {
-  parameters[paramName].val = value;
+  parameters[paramName] = value;
   console.log(`Parameter ${paramName} set to ${value}`);
 };
 
@@ -97,44 +97,62 @@ export const setCytopManager = (bacteriaData) => {
 };
 
 
+function inheritConcentrations(ID) {
 
-
-
-function simulateConcentrations(ID, localConcentration, timeLapse) {
-
-  const originalConcentrations = {};
-  const finalConcentrations = {};
-     Object.keys(interiorManager).forEach((speciesName) => {
+    Object.keys(interiorManager).forEach((speciesName) => {
 
     if (!interiorManager[speciesName].has(ID)) {
         interiorManager[speciesName].set(ID, interiorManager[speciesName].get(ID / 2n));
       }
     } );
 
-    
+    Object.keys(exteriorManager).forEach((speciesName) => {
+    if (!exteriorManager[speciesName].has(ID)) {
+        exteriorManager[speciesName].set(ID, exteriorManager[speciesName].get(ID / 2n));
+      }
+    }
+  );
 
-  // update the internal variables with the current concentrations
+      // update the internal variables with the current concentrations
    Object.keys(variables.int).forEach((speciesName) => {
     variables.int[speciesName].val = interiorManager[speciesName].get(ID) 
    });
    // update the external variables with the current concentrations
-    Object.keys(variables.ext).forEach((extSpeciesName) => {
-        variables.ext[extSpeciesName].val = localConcentration
+   Object.keys(variables.ext).forEach((extSpeciesName) => {
+        variables.ext[extSpeciesName].val = exteriorManager[extSpeciesName].get(ID);
      });
 
 
-   
+}
+
+
+
+function simulateConcentrations(ID, localConcentration, timeLapse, sourcesArray, idx) {
+
+  const finalConcentrations = {};
+
+  const finalExteriorConcentrations = {};
+
+  inheritConcentrations(ID)
+
+    
   Object.keys(interiorManager).forEach((speciesName) => {
 
 
-    originalConcentrations[speciesName] = interiorManager[speciesName].get(ID);
-    const delta = variables.int[speciesName].eq(variables, parameters)*0.1;
-    variables.int[speciesName].val = originalConcentrations[speciesName] + delta * timeLapse < 1e-6 ? 1e-6 : originalConcentrations[speciesName] + delta * timeLapse;
+    const originalConcentrations = interiorManager[speciesName].get(ID);
+    const delta = variables.int[speciesName].eq(variables, parameters);
+    finalConcentrations[speciesName] = originalConcentrations + delta * timeLapse < 1e-6 ? 1e-6 : originalConcentrations + delta * timeLapse;
 
-    finalConcentrations[speciesName] = variables.int[speciesName].val;
     interiorManager[speciesName].set(ID, finalConcentrations[speciesName]);
 
 
+  });
+
+
+  Object.keys(exteriorManager).forEach((speciesName) => {
+
+    sourcesArray [idx] = variables.ext[speciesName].eq(variables, parameters);
+  
   });
 
 
@@ -167,14 +185,16 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, HE
     const localConcentration = concentrations[idx] || 0;
   
 
-    
+    Object.keys(exteriorManager).forEach((speciesName) => {
+      exteriorManager[speciesName].set(ID, localConcentration);
+    });
 
 
-    const cytoplasmConcentrations = simulateConcentrations(ID,localConcentration,timeLapse);
+    const cytoplasmConcentrations = simulateConcentrations(ID,localConcentration,timeLapse, sourcesArray, idx);
 
  
 
-    sourcesArray[idx] += cytoplasmConcentrations.AimR * 0.5 - localConcentration * 0.5;
+   // sourcesArray[idx] += cytoplasmConcentrations.AimR * 0.5 - localConcentration * 0.5;
    // sinksArray[idx] += ;
 
     resultArray[i] = {
