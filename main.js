@@ -18,6 +18,8 @@ let globalParams;
 const nextSlices = [];
 let storedProcessedData;
 let bacteriaDataUpdated;
+let previusParams = null;
+let previusVars = null;    
 
 
 const guiActions = {
@@ -37,12 +39,16 @@ const guiActions = {
     stepForward: () => { singleStep(); },
     init: (processedData) => {init(processedData);},
     setParam: (paramName, newValue) => {setParamFromGUI(paramName, newValue); },
-    setModel: (vars, params) => {createBacteriumSystem(CONFIG, vars, params); }
+    setModel: (vars, params) => {createBacteriumSystem(CONFIG, vars, params); 
+        previusParams = params;
+        previusVars = vars;
+    }
 
 };
 
 
 const init = (processedData) => {
+    createBacteriumSystem(CONFIG, previusVars, previusParams);
     constants = createConstants();
     storedProcessedData = processedData;
     bacteriaTimeSeries = processedData.bacteriaTimeSeries;

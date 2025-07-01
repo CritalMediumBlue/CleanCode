@@ -174,8 +174,8 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, HE
 
  
 
-    sourcesArray[idx] += cytoplasmConcentrations.AimR * 0.5;
-    sinksArray[idx] += localConcentration * 0.5;
+    sourcesArray[idx] += cytoplasmConcentrations.AimR * 0.5 - localConcentration * 0.5;
+   // sinksArray[idx] += ;
 
     resultArray[i] = {
       id: ID,
