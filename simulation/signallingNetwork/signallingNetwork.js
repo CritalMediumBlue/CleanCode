@@ -152,7 +152,7 @@ function simulateConcentrations(ID, timeLapse, idx) {
 
 
 
-export const updateBacteriaCytoplasm = (currentBacteria, oldConcentration, HEIGHT,WIDTH,timeLapse) => {
+export const updateSignallingCircuit = (currentBacteria, oldConcentration, HEIGHT,WIDTH,timeLapse) => {
 
   Object.keys(concentrationsState).forEach((speciesName) => {
     concentrationsState[speciesName].sources.fill(0);

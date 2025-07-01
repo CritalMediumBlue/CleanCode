@@ -1,4 +1,4 @@
- import { updateBacteriaCytoplasm, setModel,setParameter,setCytopManager } from './signallingNetwork/signallingNetwork.js';
+ import { updateSignallingCircuit, setModel,setParameter,setCytopManager } from './signallingNetwork/signallingNetwork.js';
 
 
 let WIDTH;
@@ -41,7 +41,7 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
     let bacteriaDataUpdated
     
     for (let i = 0; i < numberOfIterations; i++) {
-        bacteriaDataUpdated = updateBacteriaCytoplasm(currentBacteria, concentrationState, HEIGHT, WIDTH, timeLapse);
+        bacteriaDataUpdated = updateSignallingCircuit(currentBacteria, concentrationState, HEIGHT, WIDTH, timeLapse);
         
     }
     
