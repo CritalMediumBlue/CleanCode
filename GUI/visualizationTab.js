@@ -72,21 +72,18 @@ const plot2Binding = visualizationFolder.addBinding(visualSettings, 'plot2', {
 
 const meshHeightScaleBinding = meshFolder.addBinding(MeshScalesSettings, 'meshHeightScale', {
   label: 'Z-Scale mesh',
-  min: 0,
-  max: 60,
-  step: 0.01
+
+  step: 0.1
 });
 const meshTranslationZBinding = meshFolder.addBinding(MeshScalesSettings, 'meshTranslationZ', {
   label: 'Mesh offset',
-  min: -30,
-  max: 30,
-  step: 0.01
+ 
+  step: 0.1
 });
 const colorMultiplierBinding = meshFolder.addBinding(MeshScalesSettings, 'colorMultiplier', {
   label: 'Scale color',
-  min: 0,
-  max: 100,
-  step: 1
+ 
+  step: 0.1
 });
 meshHeightScaleBinding.on('change', () => {
   guiActions.setMeshScale(MeshScalesSettings.meshHeightScale);
