@@ -50,7 +50,7 @@ function simulateConcentration(cytoplasmManager, ID, localConcentration, timeLap
 }
 
 export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cytoplasmManager, HEIGHT, WIDTH, timeLapse, parsedEquations) => {
-    const concentrations = concentrationsState.concentrationField;
+    const concentrations = concentrationsState.conc;
     const { pConcentrationMemo, rConcentrationMemo } = cytoplasmManager;
     const sourcesArray = concentrationsState.sources;
     const sinksArray = concentrationsState.sinks;

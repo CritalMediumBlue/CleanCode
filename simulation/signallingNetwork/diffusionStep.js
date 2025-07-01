@@ -11,13 +11,11 @@ export function diffuse(
     
 
     const sources = concentrationState.sources;
-    const sinks = concentrationState.sinks; 
 
   
-concentrationState.concentrationField.set(ADI(
-        concentrationState.concentrationField,
+concentrationState.conc.set(ADI(
+        concentrationState.conc,
         sources,
-        sinks, 
         deltaX,
         deltaT,
         diffusionRate,

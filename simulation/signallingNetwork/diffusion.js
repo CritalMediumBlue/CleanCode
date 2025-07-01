@@ -55,7 +55,7 @@ let adiArraysCache = null;
 
 export const ADI = (
     concentrationData,
-    sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse
+    sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse
 ) => {
     const WIDTH = 100;
     const HEIGHT = 60;
@@ -98,7 +98,7 @@ export const ADI = (
                 const bottom =  currentConcentrationData[(j-1) * WIDTH + i]; 
                 const top = currentConcentrationData[(j+1) * WIDTH + i]; 
                 
-                d1[i] = alpha*bottom + (oneMinus2Alpha)*center + alpha*top + (sources[idx] - sinks[idx]) * halfDeltaT;
+                d1[i] = alpha*bottom + (oneMinus2Alpha)*center + alpha*top + (sources[idx]) * halfDeltaT;
             }
 
             thomasAlgorithm(a1, b1, c1, d1, WIDTH, modifiedUpperDiagonal1, modifiedRightHandSide1, solution1);
@@ -118,7 +118,7 @@ export const ADI = (
                 const bottom = center;
                 const top = currentConcentrationData[(1) * WIDTH + i]; 
                 
-                d1[i] = alpha*bottom + (oneMinus2Alpha)*center + alpha*top + (sources[idx] - sinks[idx]) * halfDeltaT;
+                d1[i] = alpha*bottom + (oneMinus2Alpha)*center + alpha*top + (sources[idx] ) * halfDeltaT;
         }
         thomasAlgorithm(a1, b1, c1, d1, WIDTH, modifiedUpperDiagonal1, modifiedRightHandSide1, solution1);
         for (let i = 0; i < WIDTH; i++) {
@@ -135,7 +135,7 @@ export const ADI = (
                 const bottom =  currentConcentrationData[(HEIGHT-2) * WIDTH + i]; 
                 const top = center; 
                 
-                d1[i] = alpha*bottom + (oneMinus2Alpha)*center + alpha*top + (sources[idx] - sinks[idx]) * halfDeltaT;
+                d1[i] = alpha*bottom + (oneMinus2Alpha)*center + alpha*top + (sources[idx] ) * halfDeltaT;
         }
         thomasAlgorithm(a1, b1, c1, d1, WIDTH, modifiedUpperDiagonal1, modifiedRightHandSide1, solution1);
         for (let i = 0; i < WIDTH; i++) {
@@ -158,7 +158,7 @@ export const ADI = (
                 const left = i <= 0 ? center : intermediateConcentration[j * WIDTH + (i-1)]; 
                 
 
-                d2[j] = alpha*left + (oneMinus2Alpha)*center + alpha*right + (sources[idx] - sinks[idx]) * halfDeltaT;
+                d2[j] = alpha*left + (oneMinus2Alpha)*center + alpha*right + (sources[idx]) * halfDeltaT;
             }
             
             thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
@@ -183,7 +183,7 @@ export const ADI = (
                 const left = center; 
                 
 
-                d2[j] = alpha*left + (oneMinus2Alpha)*center + alpha*right + (sources[idx] - sinks[idx]) * halfDeltaT;
+                d2[j] = alpha*left + (oneMinus2Alpha)*center + alpha*right + (sources[idx] ) * halfDeltaT;
             }
             thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
             
@@ -206,7 +206,7 @@ export const ADI = (
                 const right = center;
                 const left = intermediateConcentration[j * WIDTH + (WIDTH - 2)];
 
-                d2[j] = alpha*left + (oneMinus2Alpha)*center + alpha*right + (sources[idx] - sinks[idx]) * halfDeltaT;
+                d2[j] = alpha*left + (oneMinus2Alpha)*center + alpha*right + (sources[idx] ) * halfDeltaT;
         }
         thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
          for (let j = 0; j < HEIGHT; j++) {
@@ -230,7 +230,7 @@ export const ADI = (
 
 export const FTCS = (
     concentrationData,
-    sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse
+    sources,  deltaX, deltaT, DIFFUSION_RATE, timeLapse
 ) => {
     const WIDTH = 100;
     const HEIGHT = 60;
@@ -258,7 +258,7 @@ export const FTCS = (
             let bottom = j <= 0 ? currentConcentrationData[idx] : currentConcentrationData[(j-1) * WIDTH + i]; 
             let top = j >= HEIGHT-1 ? currentConcentrationData[idx] : currentConcentrationData[(j+1) * WIDTH + i]; 
             
-            newConcentrationData[idx] = currentConcentrationData[idx] + DIFFUSION_RATE * maxDeltaT / (deltaX * deltaX) * (left + right + bottom + top - 4 * currentConcentrationData[idx]) + (sources[idx] - sinks[idx]) * maxDeltaT;
+            newConcentrationData[idx] = currentConcentrationData[idx] + DIFFUSION_RATE * maxDeltaT / (deltaX * deltaX) * (left + right + bottom + top - 4 * currentConcentrationData[idx]) + (sources[idx]) * maxDeltaT;
             if (newConcentrationData[idx] < 0) {
                 newConcentrationData[idx] = 0; // Ensure concentration doesn't go negative
                 console.warn("Concentration went negative at FTCS");

@@ -3,127 +3,110 @@ import { diffuse } from "./diffusionStep.js";
 
 const variables = {};
 const parameters = {};
+
 const interiorManager = {};
 const exteriorManager = {};
+
 const intSpeciesNames = [];
 const extSpeciesNames = [];
 
-
-const diffussionManager = {
-  conc: {},
-  sources: {},
-  sinks: {},
-};
+const concentrationsState = {};
 
 
 
-/**
- * Initializes the model parameters and variables, and sets up managers for interior and exterior species.
- * @param {Object} params - Model parameters to assign.
- * @param {Object} vars - Model variables, containing 'int' and 'ext' species.
- */
 export const setModel = (params, vars, config) => {
-  Object.assign(parameters, params);
-  Object.assign(variables, vars);
-  const gridSize = config.GRID.WIDTH * config.GRID.HEIGHT
+    Object.assign(parameters, params);
+    Object.assign(variables, vars);
 
-  intSpeciesNames.splice(0, intSpeciesNames.length, ...Object.keys(variables.int));
-  intSpeciesNames.forEach((speciesName) => {
-    interiorManager[speciesName] = new Map();
-  });
+    const gridSize = config.GRID.WIDTH * config.GRID.HEIGHT;
 
-  extSpeciesNames.splice(0, extSpeciesNames.length, ...Object.keys(variables.ext));
-  extSpeciesNames.forEach((speciesName) => {
-    exteriorManager[speciesName] = new Map();
-    diffussionManager.conc[speciesName] = new Float64Array(gridSize).fill(0);
-    diffussionManager.sources[speciesName] = new Float64Array(gridSize).fill(0);
-    diffussionManager.sinks[speciesName] = new Float64Array(gridSize).fill(0);
-  });
+    intSpeciesNames.splice(0, intSpeciesNames.length, ...Object.keys(variables.int));
+    intSpeciesNames.forEach((speciesName) => {
+        interiorManager[speciesName] = new Map();
+    });
 
-  Object.seal(interiorManager);
-  Object.preventExtensions(interiorManager);
-  Object.seal(exteriorManager);
-  Object.preventExtensions(exteriorManager);
-  Object.seal(diffussionManager);
-  Object.preventExtensions(diffussionManager);
+    extSpeciesNames.splice(0, extSpeciesNames.length, ...Object.keys(variables.ext));
+    extSpeciesNames.forEach((speciesName) => {
+        exteriorManager[speciesName] = new Map();
+        concentrationsState[speciesName] = {}; // Initialize as an object first
+        concentrationsState[speciesName].conc = new Float64Array(gridSize).fill(0);
+        concentrationsState[speciesName].sources = new Float64Array(gridSize).fill(0);
+    });
 
-  console.log("Cytoplasm Manager Initialized", interiorManager);
-  console.log("Exterior Manager Initialized", exteriorManager);
-  console.log("Diffusion Manager Initialized", diffussionManager);
+    Object.seal(interiorManager);
+    Object.preventExtensions(interiorManager);
+    Object.seal(exteriorManager);
+    Object.preventExtensions(exteriorManager);
+    Object.seal(concentrationsState);
+    Object.preventExtensions(concentrationsState);
+    Object.seal(variables);
+    Object.preventExtensions(variables);
+    Object.seal(parameters);
+    Object.preventExtensions(parameters);
 };
 
 
 
 
 
-/**
- * Sets the value of a model parameter.
- * @param {string} paramName - The name of the parameter to set.
- * @param {*} value - The new value for the parameter.
- */
+
 export const setParameter = (paramName, value) => {
-  parameters[paramName] = value;
-  console.log(`Parameter ${paramName} set to ${value}`);
+    parameters[paramName] = value;
+    console.log(`Parameter ${paramName} set to ${value}`);
 };
 
 
 
 
 
-/**
- * Initializes cytoplasm and exterior managers for each bacterium based on current species variables.
- * @param {Array} bacteriaData - Array of bacterium objects with unique IDs.
- */
+
 export const setCytopManager = (bacteriaData) => {
-  intSpeciesNames.forEach((speciesName) => {
-    bacteriaData.forEach((bacterium) => {
-      const ID = bacterium.ID;
-      if (!interiorManager[speciesName].has(ID)) {
-        interiorManager[speciesName].set(ID, variables.int[speciesName].val);
-      }
+    intSpeciesNames.forEach((speciesName) => {
+        bacteriaData.forEach((bacterium) => {
+            const ID = bacterium.ID;
+            if (!interiorManager[speciesName].has(ID)) {
+                interiorManager[speciesName].set(ID, variables.int[speciesName].val);
+            }
+        });
     });
-  });
 
-  extSpeciesNames.forEach((speciesName) => {
-    bacteriaData.forEach((bacterium) => {
-      const ID = bacterium.ID;
-      if (!exteriorManager[speciesName].has(ID)) {
-        exteriorManager[speciesName].set(ID, variables.ext[speciesName].val);
-      }
+    extSpeciesNames.forEach((speciesName) => {
+        bacteriaData.forEach((bacterium) => {
+            const ID = bacterium.ID;
+            if (!exteriorManager[speciesName].has(ID)) {
+                exteriorManager[speciesName].set(ID, variables.ext[speciesName].val);
+            }
+        });
     });
-  });
-
-  console.log("Cytoplasm Manager Updated", interiorManager);
 };
 
 
-function inheritConcentrations(ID) {
 
+
+
+function inheritConcentrations(ID, localConcentration) {
     Object.keys(interiorManager).forEach((speciesName) => {
-
-    if (!interiorManager[speciesName].has(ID)) {
-        interiorManager[speciesName].set(ID, interiorManager[speciesName].get(ID / 2n));
-      }
-    } );
+        if (!interiorManager[speciesName].has(ID)) {
+            interiorManager[speciesName].set(ID, interiorManager[speciesName].get(ID / 2n));
+        }
+    });
 
     Object.keys(exteriorManager).forEach((speciesName) => {
-    if (!exteriorManager[speciesName].has(ID)) {
-        exteriorManager[speciesName].set(ID, exteriorManager[speciesName].get(ID / 2n));
-      }
-    }
-  );
+        exteriorManager[speciesName].set(ID, localConcentration);
+    });
 
-      // update the internal variables with the current concentrations
-   Object.keys(variables.int).forEach((speciesName) => {
-    variables.int[speciesName].val = interiorManager[speciesName].get(ID) 
-   });
-   // update the external variables with the current concentrations
-   Object.keys(variables.ext).forEach((extSpeciesName) => {
+    intSpeciesNames.forEach((speciesName) => {
+        variables.int[speciesName].val = interiorManager[speciesName].get(ID);
+    });
+    
+    extSpeciesNames.forEach((extSpeciesName) => {
         variables.ext[extSpeciesName].val = exteriorManager[extSpeciesName].get(ID);
-     });
-
-
+    });
 }
+
+
+
+
 
 
 
@@ -131,9 +114,8 @@ function simulateConcentrations(ID, localConcentration, timeLapse, sourcesArray,
 
   const finalConcentrations = {};
 
-  const finalExteriorConcentrations = {};
 
-  inheritConcentrations(ID)
+  inheritConcentrations(ID, localConcentration)
 
     
   Object.keys(interiorManager).forEach((speciesName) => {
@@ -141,7 +123,11 @@ function simulateConcentrations(ID, localConcentration, timeLapse, sourcesArray,
 
     const originalConcentrations = interiorManager[speciesName].get(ID);
     const delta = variables.int[speciesName].eq(variables, parameters);
-    finalConcentrations[speciesName] = originalConcentrations + delta * timeLapse < 1e-6 ? 1e-6 : originalConcentrations + delta * timeLapse;
+    finalConcentrations[speciesName] = originalConcentrations + delta * timeLapse;
+
+    if (finalConcentrations[speciesName] < 1e-6) {
+      finalConcentrations[speciesName] = 1e-6; 
+    }
 
     interiorManager[speciesName].set(ID, finalConcentrations[speciesName]);
 
@@ -151,8 +137,8 @@ function simulateConcentrations(ID, localConcentration, timeLapse, sourcesArray,
 
   Object.keys(exteriorManager).forEach((speciesName) => {
 
-    sourcesArray [idx] = variables.ext[speciesName].eq(variables, parameters);
-  
+    sourcesArray[idx] = variables.ext[speciesName].eq(variables, parameters);
+
   });
 
 
@@ -163,14 +149,15 @@ function simulateConcentrations(ID, localConcentration, timeLapse, sourcesArray,
 }
 
 
-export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, HEIGHT,WIDTH,timeLapse) => {
-  const concentrations = concentrationsState.concentrationField;
-  const sourcesArray = concentrationsState.sources;
-  const sinksArray = concentrationsState.sinks;
+
+
+
+export const updateBacteriaCytoplasm = (currentBacteria, oldConcentration, HEIGHT,WIDTH,timeLapse) => {
+  const concentrations = concentrationsState.AimP.conc;
+  const sourcesArray = concentrationsState.AimP.sources;
 
 
   sourcesArray.fill(0);
-  sinksArray.fill(0);
 
   const bacteriaCount = currentBacteria.length;
   const resultArray = new Array(bacteriaCount);
@@ -185,18 +172,11 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, HE
     const localConcentration = concentrations[idx] || 0;
   
 
-    Object.keys(exteriorManager).forEach((speciesName) => {
-      exteriorManager[speciesName].set(ID, localConcentration);
-    });
-
 
     const cytoplasmConcentrations = simulateConcentrations(ID,localConcentration,timeLapse, sourcesArray, idx);
 
  
-
-   // sourcesArray[idx] += cytoplasmConcentrations.AimR * 0.5 - localConcentration * 0.5;
-   // sinksArray[idx] += ;
-
+  
     resultArray[i] = {
       id: ID,
       x,
@@ -210,7 +190,9 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, HE
 
 
 
-  diffuse(concentrationsState, timeLapse);
+  diffuse(concentrationsState.AimP, timeLapse);
+
+  oldConcentration.conc.set(concentrationsState.AimP.conc);
 
   return resultArray;
 };

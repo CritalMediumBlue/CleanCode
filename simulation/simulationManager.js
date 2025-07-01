@@ -59,7 +59,7 @@ export function updateSimulation(currentBacteria, concentrationState, minutes) {
 
 
 function getGlobalParamsCont(bacteriaData,concentrationState) {
-    const concentration = concentrationState.concentrationField;
+    const concentration = concentrationState.conc;
     let length = concentration.length;
     let totalAimP = 0;
     let totalAimR = 0;

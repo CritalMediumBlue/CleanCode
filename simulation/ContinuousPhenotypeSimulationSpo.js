@@ -86,7 +86,7 @@ export const updateBacteriaCytoplasm = (currentBacteria, concentrationsState, cy
     // Ensure surfactinXField is initialized only once
         
    
-    const concentrations = concentrationsState.concentrationField;
+    const concentrations = concentrationsState.conc;
     const { rConcentrationMemo, iConcentrationMemo, lConcentrationMemo, aConcentrationMemo, pConcentrationMemo } = cytoplasmManager;
     const sourcesArray = concentrationsState.sources;
     const sinksArray = concentrationsState.sinks;

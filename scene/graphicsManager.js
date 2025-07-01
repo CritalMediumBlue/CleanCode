@@ -52,7 +52,7 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
     
     if (session.currentTimeStep % 1 === 0 || !session.play) {
         
-        const concentration = concentrationState.concentrationField;
+        const concentration = concentrationState.conc;
         updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ, colorMultiplier);
         
         if(bacteriaData) {
