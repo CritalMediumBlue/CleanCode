@@ -62,7 +62,7 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
             updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices, capsuleVisibility);
         }
         
-         if (histories & session.currentTimeStep % 5 ===0){
+         if (histories && session.currentTimeStep % 5 ===0){
             updatePlot(histories, plot);
         } 
         updateOverlay(session, constants);
