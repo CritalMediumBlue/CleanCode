@@ -84,7 +84,7 @@ export const setCytopManager = (bacteriaData) => {
 
 
 
-function inheritConcentrations(ID, localConcentration) {
+function inheritConcentrations(ID, idx) {
     Object.keys(interiorManager).forEach((speciesName) => {
         if (!interiorManager[speciesName].has(ID)) {
             interiorManager[speciesName].set(ID, interiorManager[speciesName].get(ID / 2n));
@@ -92,7 +92,7 @@ function inheritConcentrations(ID, localConcentration) {
     });
 
     Object.keys(exteriorManager).forEach((speciesName) => {
-        exteriorManager[speciesName].set(ID, localConcentration);
+        exteriorManager[speciesName].set(ID, concentrationsState[speciesName].conc[idx] );
     });
 
     intSpeciesNames.forEach((speciesName) => {
@@ -110,12 +110,12 @@ function inheritConcentrations(ID, localConcentration) {
 
 
 
-function simulateConcentrations(ID, localConcentration, timeLapse, sourcesArray, idx) {
+function simulateConcentrations(ID, timeLapse, idx) {
 
   const finalConcentrations = {};
 
 
-  inheritConcentrations(ID, localConcentration)
+  inheritConcentrations(ID, idx)
 
     
   Object.keys(interiorManager).forEach((speciesName) => {
@@ -137,7 +137,7 @@ function simulateConcentrations(ID, localConcentration, timeLapse, sourcesArray,
 
   Object.keys(exteriorManager).forEach((speciesName) => {
 
-    sourcesArray[idx] = variables.ext[speciesName].eq(variables, parameters);
+    concentrationsState[speciesName].sources[idx] = variables.ext[speciesName].eq(variables, parameters);
 
   });
 
@@ -153,11 +153,10 @@ function simulateConcentrations(ID, localConcentration, timeLapse, sourcesArray,
 
 
 export const updateBacteriaCytoplasm = (currentBacteria, oldConcentration, HEIGHT,WIDTH,timeLapse) => {
-  const concentrations = concentrationsState.AimP.conc;
-  const sourcesArray = concentrationsState.AimP.sources;
 
-
-  sourcesArray.fill(0);
+  Object.keys(concentrationsState).forEach((speciesName) => {
+    concentrationsState[speciesName].sources.fill(0);
+  } );
 
   const bacteriaCount = currentBacteria.length;
   const resultArray = new Array(bacteriaCount);
@@ -169,11 +168,10 @@ export const updateBacteriaCytoplasm = (currentBacteria, oldConcentration, HEIGH
     const { x, y, longAxis, angle, ID } = bacterium;
 
     const idx = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
-    const localConcentration = concentrations[idx] || 0;
   
 
 
-    const cytoplasmConcentrations = simulateConcentrations(ID,localConcentration,timeLapse, sourcesArray, idx);
+    const cytoplasmConcentrations = simulateConcentrations(ID,timeLapse, idx);
 
  
   
