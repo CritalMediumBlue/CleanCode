@@ -58,7 +58,7 @@ export function setupCapsulePool(stage, BACTERIUM, THREE, capsules) {
  * @param {Object} THREE - The Three.js library object
  * @param {Array<THREE.Mesh>} capsules - Array of capsule mesh objects to update
  */
-export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices, capsuleVisibility) {
+export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules, capsuleVisibility) {
 
     // Reset active count and hide all capsules
     let activeCount = 0;
@@ -92,23 +92,8 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlic
        
         capsule.visible = true;
     });
-    if (nextSlices === undefined || nextSlices.length === 0) {
-        return;
-    }
-    nextSlices.forEach((slice, index) => {
-        slice.forEach(bacterium => {
-            const { x,y, angle, longAxis, randomSwitch } = bacterium;
-            if (randomSwitch) {
-                const capsule = capsules[activeCount++];
-                const threePosition = new THREE.Vector3(x, y, index*0.5);
-                capsule.position.set(threePosition.x, threePosition.y, threePosition.z);
-                capsule.rotation.z = angle * Math.PI;
-                updateCapsuleGeometry(capsule, longAxis);
-                updateCapsuleColor(capsule, "switch", BACTERIUM, THREE, null, 1-0.01*index);
-                capsule.visible = true;
-            }
-        }); 
-    });
+   
+
 
 } 
 

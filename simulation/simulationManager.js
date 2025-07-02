@@ -51,18 +51,20 @@ export function updateSimulation(currentBacteria, minutes) {
 function getGlobalParamsCont(bacteriaData) {
     let totalAimP = 0;
     let totalAimR = 0;
+    let count = 0;
 
     bacteriaData.forEach((bacterium) => {
         const aimP = bacterium.cytoplasmConcentrations.AimP;
         const aimR = bacterium.cytoplasmConcentrations.AimR;
         totalAimP+=aimP;
         totalAimR+=aimR;
+        count++;
     } );
 
   
     const globalParams = [
-        totalAimR,
-        totalAimP,
+        totalAimR/ count,
+        totalAimP/ count,
     ];
     return globalParams;
 }

@@ -16,7 +16,6 @@ let bacteriaTimeSeries;
 
 let histories;
 let globalParams;
-const nextSlices = [];
 let storedProcessedData;
 let bacteriaDataUpdated;
 let previusParams = null;
@@ -82,7 +81,7 @@ const animate = () => {
     }
     
    
-    renderScene(histories, bacteriaDataUpdated, concentrations, CONFIG.BACTERIUM, session, constants, nextSlices);
+    renderScene(histories, bacteriaDataUpdated, concentrations, CONFIG.BACTERIUM, session, constants);
 
     if (session.currentTimeStep >= constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
@@ -98,14 +97,7 @@ const singleStep = () => {
 
         updateData();
 
-        const stepsInTheFuture = 100;
-        nextSlices.length = 0;
-        for (let i = 0; i < stepsInTheFuture; i++) {
-            if (session.currentTimeStep + i < constants.numberOfTimeSteps) {
-                const nextBacteria = bacteriaTimeSeries[session.currentTimeStep + i];
-                nextSlices.push(nextBacteria);
-            }
-        }
+     
 }
 
 const updateData = () => {

@@ -17,7 +17,6 @@ let colorMultiplier = 1;
 let capsuleVisibility = true;
 let currentBacteriaData = null;
 let BACTERIUM = null;
-let currentnextSlices = null;
 let helperGrid = null;
 let helperAxes = null;
 let species = null; // Default species, can be changed
@@ -49,7 +48,7 @@ export function setupNewScene(config) {
 }
 
 
-export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, session, constants, nextSlices) {
+export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, session, constants) {
     
     if (session.currentTimeStep % 1 === 0 ) {
 
@@ -63,8 +62,7 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
         
         if(bacteriaData) {
             currentBacteriaData = bacteriaData;
-            currentnextSlices = nextSlices;
-            updateCapsules(bacteriaData, BACTERIUM, THREE, capsules,nextSlices, capsuleVisibility);
+            updateCapsules(bacteriaData, BACTERIUM, THREE, capsules, capsuleVisibility);
         }
         
          if (histories && session.currentTimeStep % 5 ===0){
@@ -90,7 +88,7 @@ export function translateMesh(z){
 }
 export function setCapsuleVisibility(visible) {
     capsuleVisibility = visible;
-    updateCapsules(currentBacteriaData, BACTERIUM, THREE, capsules, currentnextSlices, capsuleVisibility);
+    updateCapsules(currentBacteriaData, BACTERIUM, THREE, capsules, capsuleVisibility);
 }
 export function setColorMultiplier(multiplier) {
     colorMultiplier = multiplier;

@@ -29,12 +29,22 @@ export function setupPlot(Chart) {
     // Create initial empty dataset
     const chartData = {
         labels: [], // x-axis data points (empty initially)
-        datasets: [{
+        datasets: [
+        {
+            label: 'AimR [nM]',
+            data: [], // y-axis data points (empty initially)
+            borderColor: 'magenta',
+            backgroundColor: 'rgba(255, 0, 255, 1)',
+            borderWidth: 1.5,
+            fill: false,
+            tension: 0.1,
+            pointRadius: 0, // Hide points for cleaner look
+        },{
             label: 'AimP [nM]',
             data: [], // y-axis data points (empty initially)
-            borderColor: 'yellow',
-            backgroundColor: 'rgba(255, 255, 0, 0.1)',
-            borderWidth: 1,
+            borderColor: 'cyan',
+            backgroundColor: 'rgba(0, 255, 255, 1)',
+            borderWidth: 1.5,
             fill: false,
             tension: 0.1,
             pointRadius: 0, // Hide points for cleaner look
@@ -65,6 +75,7 @@ export function updatePlot(data, chart) {
     
     // For Y values, we just need the array of values
     chart.data.datasets[0].data = slicedData[1];
+    chart.data.datasets[1].data = slicedData[2];
     
     // Ensure update doesn't animate for performance
     chart.update();
