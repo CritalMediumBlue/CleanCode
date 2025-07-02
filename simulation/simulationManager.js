@@ -3,12 +3,7 @@
 
 let WIDTH;
 let HEIGHT;
-/**
- * Initializes the bacterium simulation system with configuration, variables, and parameters.
- * @param {Object} config - Simulation configuration object.
- * @param {Object} vars - Model variables.
- * @param {Object} params - Model parameters.
- */
+
 export function createBacteriumSystem(config, vars, params) {
     
     WIDTH = config.GRID.WIDTH;
@@ -16,18 +11,10 @@ export function createBacteriumSystem(config, vars, params) {
     return setModel(params, vars,config);
 
 }
-/**
- * Updates a model parameter from the GUI.
- * @param {string} paramName - The name of the parameter to update.
- * @param {*} newValue - The new value to set for the parameter.
- */
+
 export const setParamFromGUI = (paramName, newValue) => {setParameter(paramName, newValue);}
 
 
-/**
- * Assigns initial cytoplasm and exterior concentrations to each bacterium.
- * @param {Array} bacteriaData - Array of bacterium objects with unique IDs.
- */
 export function assignInitialConcentrations(bacteriaData) {setCytopManager(bacteriaData);}
 
 
@@ -38,17 +25,17 @@ export function updateSimulation(currentBacteria, minutes) {
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
     const timeLapse = 1.5; // seconds
-
     const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
+
     let bacteriaDataUpdated
     let concentrations;
 
     
-    for (let i = 0; i < numberOfIterations; i++) {
-        ({ bacteriaDataUpdated, concentrations } = updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse));
-    }
+   // for (let i = 0; i < numberOfIterations; i++) {
+        ({ bacteriaDataUpdated, concentrations } = updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse,numberOfIterations));
+   // }
     
-    const globalParams = getGlobalParamsCont(bacteriaDataUpdated,concentrations);
+    const globalParams = getGlobalParamsCont(bacteriaDataUpdated);
 
     return {
         bacteriaDataUpdated,
@@ -61,33 +48,21 @@ export function updateSimulation(currentBacteria, minutes) {
 
 
 
-function getGlobalParamsCont(bacteriaData,concentrations) {
-    const concentration = concentrations.AimP.conc;
-    let length = concentration.length;
+function getGlobalParamsCont(bacteriaData) {
     let totalAimP = 0;
     let totalAimR = 0;
-    let extracellulatAimP = 0;
-    let totalCount = 0;
 
     bacteriaData.forEach((bacterium) => {
         const aimP = bacterium.cytoplasmConcentrations.x;
         const aimR = bacterium.cytoplasmConcentrations.r;
         totalAimP+=aimP;
         totalAimR+=aimR;
-        totalCount++;
     } );
 
-    for (let i = 0; i < length; i++) {
-        extracellulatAimP += concentration[i];
-    }
-    extracellulatAimP = extracellulatAimP/length;
-    
-
+  
     const globalParams = [
-        totalCount,
         totalAimR,
         totalAimP,
-        extracellulatAimP,
     ];
     return globalParams;
 }
