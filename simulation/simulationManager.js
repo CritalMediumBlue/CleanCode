@@ -53,8 +53,8 @@ function getGlobalParamsCont(bacteriaData) {
     let totalAimR = 0;
 
     bacteriaData.forEach((bacterium) => {
-        const aimP = bacterium.cytoplasmConcentrations.x;
-        const aimR = bacterium.cytoplasmConcentrations.r;
+        const aimP = bacterium.cytoplasmConcentrations.AimP;
+        const aimR = bacterium.cytoplasmConcentrations.AimR;
         totalAimP+=aimP;
         totalAimR+=aimR;
     } );

@@ -36,16 +36,12 @@ const sealObject = (obj) => {
 
 
 
-let totalBacteriaCountHistory = [];
 let magentaBacteriaCountHistory = [];
 let cyanBacteriaCountHistory = [];
-let averageSimilarityHistory = [];
 
 export const resetHistories = () => {
-    totalBacteriaCountHistory = [];
     magentaBacteriaCountHistory = [];
     cyanBacteriaCountHistory = [];
-    averageSimilarityHistory = [];
 }
 
 /**
@@ -55,11 +51,9 @@ export const resetHistories = () => {
  * @param {number} cyanCount - Cyan bacteria count
  * @param {number} averageSimilarity - Average similarity value
  */
-export const updateHistories = (totalCount, magentaCount, cyanCount, averageSimilarity) => {
-    totalBacteriaCountHistory.push(totalCount);
-    magentaBacteriaCountHistory.push(magentaCount/totalCount);
-    cyanBacteriaCountHistory.push(cyanCount/totalCount);
-    averageSimilarityHistory.push(averageSimilarity);
+export const updateHistories = ( magentaCount, cyanCount) => {
+    magentaBacteriaCountHistory.push(magentaCount);
+    cyanBacteriaCountHistory.push(cyanCount);
 };
 
 /**
@@ -67,12 +61,11 @@ export const updateHistories = (totalCount, magentaCount, cyanCount, averageSimi
  * @returns {Array} Array containing all history data series
  */
 export const getHistories = () => {
-    const dataLength = totalBacteriaCountHistory.length;
+    const dataLength = cyanBacteriaCountHistory.length;
     const data = [
         Array.from({ length: dataLength }, (_, index) => index),
         magentaBacteriaCountHistory,
         cyanBacteriaCountHistory,
-        averageSimilarityHistory
     ];
 
     return data;
