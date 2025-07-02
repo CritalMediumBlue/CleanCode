@@ -50,7 +50,7 @@ export function setupNewScene(config) {
 
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, session, constants) {
     
-    if (session.currentTimeStep % 1 === 0 ) {
+    if (session.currentTimeStep % 2 === 0 ) {
 
         
         if(species !== null) {
@@ -65,7 +65,7 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
             updateCapsules(bacteriaData, BACTERIUM, THREE, capsules, capsuleVisibility);
         }
         
-         if (histories && session.currentTimeStep % 5 ===0){
+         if (histories && session.currentTimeStep % 6 ===0){
             updatePlot(histories, plot);
         } 
         updateOverlay(session, constants);

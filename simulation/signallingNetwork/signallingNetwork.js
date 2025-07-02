@@ -124,24 +124,49 @@ function clearConcentrationSources() {
     });
 }
 
+const positionMap = new Map();
+
+function createPositionMap(currentBacteria, HEIGHT, WIDTH) {
+    positionMap.clear();
+    currentBacteria.forEach(bacterium => {
+        const { x, y, ID } = bacterium;
+        const idx = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
+        positionMap.set(ID, idx);
+    });
+}
+
 export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLapse, numberOfIterations) => {
+    createPositionMap(currentBacteria, HEIGHT, WIDTH);
     for (let i = 0; i < numberOfIterations; i++) {
         clearConcentrationSources();
         
+
+
+        //One web Worker can handle this loop
         currentBacteria.forEach(bacterium => {
-            const { x, y, ID } = bacterium;
-            const idx = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
+            const { ID } = bacterium;
+            const idx = positionMap.get(ID);
             simulateConcentrations(ID, timeLapse, idx);
         });
+
         
+
+
+
+        // Another web Worker can handle this loop
         extSpeciesNames.forEach((speciesName) => {
           diffuse(concentrationsState[speciesName], timeLapse);
         });
+
+
+
+
+
     }
 
     const resultArray = currentBacteria.map(bacterium => {
         const { ID, x, y, longAxis, angle } = bacterium;
-        const idx = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
+        const idx = positionMap.get(ID);
         const cytoplasmConcentrations = simulateConcentrations(ID, timeLapse, idx);
         
         return {
