@@ -19,9 +19,12 @@ import {ADI, FTCS} from './diffusion.js';
         let numberOfSources = 100;
 
         while (numberOfSources > 0) {
-            const randomIndex = Math.floor(Math.random() * (100*60));
-            if (sources[randomIndex] < 8) {
-                sources[randomIndex] += 8*(Math.random() - 0.5);
+            const randomIndex = Math.floor(Math.random() * (WIDTH*HEIGHT));
+            const randomIndex2 = Math.floor(Math.random() * (WIDTH*HEIGHT));
+            if (Math.abs(sources[randomIndex]) < 8 && Math.abs(sources[randomIndex2]) < 8) {
+                const randomSource = 8 * (Math.random() - 0.5);
+                sources[randomIndex] += randomSource;
+                sources[randomIndex2] -= randomSource;
                 numberOfSources--;
             }
         }
@@ -34,8 +37,7 @@ describe('Compare Diffusion methods', () => {
             
             const resultADI = ADI(initialForADI, sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
             const resultFTCS = FTCS(initialForFTCS, sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
-            console.log('ADI:', resultADI);
-            console.log('FTCS:', resultFTCS);
+           
             let maxValue = 0;
             let minValue = 1e20;
             for (let i = 0; i < totalCells; i++) {
@@ -94,7 +96,7 @@ describe('Compare SteadyState time', () => {
         expect(relativeDiff).toBeLessThan(SteadyStateTolerance);
     });
 });
-
+ 
 
 // Update the countIterationsToSteadyState function to accept a timeStep parameter
 const countIterationsToSteadyState = (method, timeStep) => {
@@ -116,7 +118,7 @@ const countIterationsToSteadyState = (method, timeStep) => {
         );
         // Check for steady state
         for (let i = 0; i < totalCells; i++) {
-            if (Math.abs(nextConcentration[i] - original[i]) > tolerance) {
+            if (Math.abs(nextConcentration[i] - original[i]) > tolerance ) {
                 steadyState = false;
                 break;
             }
