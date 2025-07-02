@@ -16,33 +16,26 @@ import {ADI, FTCS} from './diffusion.js';
         }
         
         const sources = new Float64Array(100*60).fill(0);
-        const sinks = new Float64Array(100*60).fill(0);
         let numberOfSources = 100;
-        let numberOfSinks = 100;
 
         while (numberOfSources > 0) {
             const randomIndex = Math.floor(Math.random() * (100*60));
             if (sources[randomIndex] < 8) {
-                sources[randomIndex] += 4;
+                sources[randomIndex] += 8*(Math.random() - 0.5);
                 numberOfSources--;
             }
         }
-        while (numberOfSinks > 0) {
-            const randomIndex = Math.floor(Math.random() * (100*60));
-            if (sinks[randomIndex] < 8) {
-                sinks[randomIndex] += 4;
-                numberOfSinks--;
-            }
-        }
+       
 
 describe('Compare Diffusion methods', () => {   
         test.each(timeLapses)('%s sec', (timeLapse) => {
             const initialForADI = new Float64Array(totalCells).fill(1);
             const initialForFTCS = new Float64Array(totalCells).fill(1);
             
-            const resultADI = ADI(initialForADI, sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
-            const resultFTCS = FTCS(initialForFTCS, sources, sinks, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
-
+            const resultADI = ADI(initialForADI, sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
+            const resultFTCS = FTCS(initialForFTCS, sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
+            console.log('ADI:', resultADI);
+            console.log('FTCS:', resultFTCS);
             let maxValue = 0;
             let minValue = 1e20;
             for (let i = 0; i < totalCells; i++) {
@@ -54,7 +47,6 @@ describe('Compare Diffusion methods', () => {
                 }
             }
             const range = Math.abs(maxValue - minValue);
-            console.log(range);
             
             for (let i = 0; i < totalCells; i++) {
                 const diff = Math.abs(resultADI[i] - resultFTCS[i]);
@@ -117,7 +109,6 @@ const countIterationsToSteadyState = (method, timeStep) => {
         const nextConcentration = method(
             initial,
             sources,
-            sinks, 
             deltaX,
             deltaT,
             DIFFUSION_RATE,
