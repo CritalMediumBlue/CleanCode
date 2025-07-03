@@ -36,15 +36,75 @@ function initializeSpecies(speciesObj, speciesNames, manager, isExternal, gridSi
         manager[speciesName] = new Map();
         
         if (isExternal) {
+            // Create a single buffer for both concentration and sources
+            // Using a single typed array is more efficient for transferring to workers
+            const totalSize = gridSize * 2;
+            const buffer = new ArrayBuffer(totalSize * Float64Array.BYTES_PER_ELEMENT);
+            
+            // Create views into different parts of the buffer
+            const conc = new Float64Array(buffer, 0, gridSize);
+            const sources = new Float64Array(buffer, gridSize * Float64Array.BYTES_PER_ELEMENT, gridSize);
+            
             concentrationsState[speciesName] = {
-                conc: new Float64Array(gridSize).fill(0),
-                sources: new Float64Array(gridSize).fill(0)
+                conc,
+                sources,
+                buffer // Store reference to the buffer for potential transferable objects
             };
-            // Create a module worker with the correct path and type
-            const workerURL = new URL('/simulation/signallingNetwork/diffusionWorker.js', window.location.origin);
-            const worker = new Worker(workerURL, { type: 'module' });
-            worker.busy = false; // Initialize as not busy
-            webWorkers[speciesName] = worker;
+            
+            try {
+                // Create a module worker with the correct path and type
+                const workerURL = new URL('/simulation/signallingNetwork/diffusionWorker.js', window.location.origin);
+                const worker = new Worker(workerURL, { type: 'module' });
+                
+                // Set up message handler once during initialization
+                worker.onmessage = (event) => {
+                    if (event.data.success) {
+                        // Update the concentration data
+                        concentrationsState[speciesName].conc.set(event.data.data.conc);
+                        
+                        // Resolve the promise if it exists
+                        if (worker._resolve) {
+                            worker._resolve();
+                            // Clear references to prevent memory leaks
+                            worker._resolve = null;
+                            worker._reject = null;
+                        }
+                    } else {
+                        console.error(`Worker for ${speciesName} reported an error:`, event.data.error);
+                        if (worker._reject) {
+                            worker._reject(new Error(event.data.error));
+                            worker._resolve = null;
+                            worker._reject = null;
+                        }
+                    }
+                };
+                
+                worker.onerror = (error) => {
+                    console.error(`Worker for ${speciesName} encountered an error:`, error);
+                    if (worker._reject) {
+                        worker._reject(error);
+                        worker._resolve = null;
+                        worker._reject = null;
+                    }
+                };
+                
+                // Add helper method to create a promise for this worker
+                worker.createPromise = function() {
+                    // Clear any existing resolve/reject that weren't used
+                    this._resolve = null;
+                    this._reject = null;
+                    
+                    return new Promise((resolve, reject) => {
+                        this._resolve = resolve;
+                        this._reject = reject;
+                    });
+                };
+                
+                webWorkers[speciesName] = worker;
+                console.log(`Worker for ${speciesName} initialized successfully`);
+            } catch (error) {
+                console.error(`Failed to create worker for ${speciesName}:`, error);
+            }
         }
     });
 }
@@ -146,67 +206,57 @@ export const updateSignallingCircuit = async (currentBacteria, HEIGHT, WIDTH, ti
     createPositionMap(currentBacteria, HEIGHT, WIDTH);
     const bacteriaCytoplasmConcentrations = new Map();
     let iteration = 0;
-    let workersBusy = false;
-    let allowedToSimulateConcentrations = true;
-
- 
     
+    // Initial concentration calculation before any diffusion
+    clearConcentrationSources();
+    currentBacteria.forEach(bacterium => {
+        const { ID } = bacterium;
+        const idx = positionMap.get(ID);
+        simulateConcentrations(ID, timeLapse, idx);
+    });
+    
+    // Main simulation loop
     while (iteration < numberOfIterations) {
-        // Process bacteria concentrations
-        if (allowedToSimulateConcentrations) {
+        
+        // 1. Process diffusion using workers
+        const workerPromises = extSpeciesNames.map(speciesName => {
+            const worker = webWorkers[speciesName];
+            // Use the pre-defined promise creator
+            const promise = worker.createPromise();
+            
+            // Transfer data to worker - use transferable objects if possible
+            worker.postMessage({
+                concentrations: concentrationsState[speciesName],
+                timeLapse: timeLapse
+            });
+            
+            return promise;
+        });
+
+        try {
+            // 2. Wait for all diffusion workers to complete
+            await Promise.all(workerPromises);
+            
+            // 3. Now update the bacteria concentrations based on the new diffusion results
             clearConcentrationSources();
             currentBacteria.forEach(bacterium => {
                 const { ID } = bacterium;
                 const idx = positionMap.get(ID);
                 const cytoplasmConcentrations = simulateConcentrations(ID, timeLapse, idx);
                 
+                // Only store the final concentrations on the last iteration
                 if (iteration === numberOfIterations - 1) {
                     bacteriaCytoplasmConcentrations.set(ID, cytoplasmConcentrations);
                 }
             });
-            allowedToSimulateConcentrations = false; 
+            
+            iteration++;
+        } catch (error) {
+            console.error("Error in worker processing:", error);
+            iteration++; // Continue to next iteration even if there's an error
         }
-
-            // Process diffusion using workers
-            const workerPromises = extSpeciesNames.map(speciesName => {
-                return new Promise((resolve, reject) => {
-                    const worker = webWorkers[speciesName];
-                    
-                    worker.onmessage = (event) => {
-                        if (event.data.success) {
-                            concentrationsState[speciesName].conc.set(event.data.data.conc);
-                            resolve();
-                        } else {
-                            console.error(`Worker for ${speciesName} reported an error:`, event.data.error);
-                            reject(new Error(event.data.error));
-                        }
-                    };
-                    
-                    worker.onerror = (error) => {
-                        console.error(`Worker for ${speciesName} encountered an error:`, error);
-                        reject(error);
-                    };
-                    
-                    worker.postMessage({
-                        concentrations: concentrationsState[speciesName],
-                        timeLapse: timeLapse
-                    });
-                });
-            });
-
-            try {
-                // Wait for all workers to complete
-                await Promise.all(workerPromises);
-                iteration++;
-                allowedToSimulateConcentrations = true; 
-            } catch (error) {
-                console.error("Error in worker processing:", error);
-                // Handle error case - we could break or continue depending on requirements
-                // For now, we'll continue to the next iteration
-                iteration++;
-            }
-        
     }
+   
 
     const resultArray = currentBacteria.map(bacterium => {
         const { ID, x, y, longAxis, angle } = bacterium;

@@ -22,7 +22,7 @@ export function assignInitialConcentrations(bacteriaData) {setCytopManager(bacte
 
 export async function updateSimulation(currentBacteria, minutes) {
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
-    const timeLapse = 3; // seconds
+    const timeLapse = 2; // seconds
     const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
 
     let bacteriaDataUpdated;
