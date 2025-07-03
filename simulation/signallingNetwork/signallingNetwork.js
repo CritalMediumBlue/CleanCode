@@ -11,6 +11,8 @@ const concentrationsState = {};
 
 const MIN_CONCENTRATION = 1e-6;
 
+const webWorkers = {}
+
 
 export const setModel = (params, vars, config) => {
     Object.assign(parameters, params);
@@ -38,6 +40,11 @@ function initializeSpecies(speciesObj, speciesNames, manager, isExternal, gridSi
                 conc: new Float64Array(gridSize).fill(0),
                 sources: new Float64Array(gridSize).fill(0)
             };
+            // Create a module worker with the correct path and type
+            const workerURL = new URL('/simulation/signallingNetwork/diffusionWorker.js', window.location.origin);
+            const worker = new Worker(workerURL, { type: 'module' });
+            worker.busy = false; // Initialize as not busy
+            webWorkers[speciesName] = worker;
         }
     });
 }
@@ -92,7 +99,7 @@ function inheritConcentrations(ID, idx) {
     });
 }
 
-
+//we will move this function to a web worker. we have to implement dependency injection
 function simulateConcentrations(ID, timeLapse, idx) {
     const finalConcentrations = {};
 
@@ -135,39 +142,74 @@ function createPositionMap(currentBacteria, HEIGHT, WIDTH) {
     });
 }
 
-export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLapse, numberOfIterations) => {
+export const updateSignallingCircuit = async (currentBacteria, HEIGHT, WIDTH, timeLapse, numberOfIterations) => {
     createPositionMap(currentBacteria, HEIGHT, WIDTH);
-    for (let i = 0; i < numberOfIterations; i++) {
-        clearConcentrationSources();
+    const bacteriaCytoplasmConcentrations = new Map();
+    let iteration = 0;
+    let workersBusy = false;
+    let allowedToSimulateConcentrations = true;
+
+ 
+    
+    while (iteration < numberOfIterations) {
+        // Process bacteria concentrations
+        if (allowedToSimulateConcentrations) {
+            clearConcentrationSources();
+            currentBacteria.forEach(bacterium => {
+                const { ID } = bacterium;
+                const idx = positionMap.get(ID);
+                const cytoplasmConcentrations = simulateConcentrations(ID, timeLapse, idx);
+                
+                if (iteration === numberOfIterations - 1) {
+                    bacteriaCytoplasmConcentrations.set(ID, cytoplasmConcentrations);
+                }
+            });
+            allowedToSimulateConcentrations = false; 
+        }
+
+            // Process diffusion using workers
+            const workerPromises = extSpeciesNames.map(speciesName => {
+                return new Promise((resolve, reject) => {
+                    const worker = webWorkers[speciesName];
+                    
+                    worker.onmessage = (event) => {
+                        if (event.data.success) {
+                            concentrationsState[speciesName].conc.set(event.data.data.conc);
+                            resolve();
+                        } else {
+                            console.error(`Worker for ${speciesName} reported an error:`, event.data.error);
+                            reject(new Error(event.data.error));
+                        }
+                    };
+                    
+                    worker.onerror = (error) => {
+                        console.error(`Worker for ${speciesName} encountered an error:`, error);
+                        reject(error);
+                    };
+                    
+                    worker.postMessage({
+                        concentrations: concentrationsState[speciesName],
+                        timeLapse: timeLapse
+                    });
+                });
+            });
+
+            try {
+                // Wait for all workers to complete
+                await Promise.all(workerPromises);
+                iteration++;
+                allowedToSimulateConcentrations = true; 
+            } catch (error) {
+                console.error("Error in worker processing:", error);
+                // Handle error case - we could break or continue depending on requirements
+                // For now, we'll continue to the next iteration
+                iteration++;
+            }
         
-
-
-        //One web Worker can handle this loop
-        currentBacteria.forEach(bacterium => {
-            const { ID } = bacterium;
-            const idx = positionMap.get(ID);
-            simulateConcentrations(ID, timeLapse, idx);
-        });
-
-        
-
-
-
-        // Another web Worker can handle this loop
-        extSpeciesNames.forEach((speciesName) => {
-          diffuse(concentrationsState[speciesName], timeLapse);
-        });
-
-
-
-
-
     }
 
     const resultArray = currentBacteria.map(bacterium => {
         const { ID, x, y, longAxis, angle } = bacterium;
-        const idx = positionMap.get(ID);
-        const cytoplasmConcentrations = simulateConcentrations(ID, timeLapse, idx);
         
         return {
             id: ID,
@@ -176,7 +218,7 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
             angle,
             longAxis,
             phenotype: "test",
-            cytoplasmConcentrations,
+            cytoplasmConcentrations: bacteriaCytoplasmConcentrations.get(ID),
         };
     });
 

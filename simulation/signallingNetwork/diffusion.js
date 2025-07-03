@@ -262,6 +262,7 @@ export const FTCS = (
             if (newConcentrationData[idx] < 0) {
                 newConcentrationData[idx] = 0; // Ensure concentration doesn't go negative
                 console.warn("Concentration went negative at FTCS");
+                
 
             }
         }

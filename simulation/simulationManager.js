@@ -20,28 +20,38 @@ export function assignInitialConcentrations(bacteriaData) {setCytopManager(bacte
 
 
 
-export function updateSimulation(currentBacteria, minutes) {
-
-
+export async function updateSimulation(currentBacteria, minutes) {
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
-    const timeLapse = 1.5; // seconds
+    const timeLapse = 3; // seconds
     const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
 
-    let bacteriaDataUpdated
+    let bacteriaDataUpdated;
     let concentrations;
 
-    
-   // for (let i = 0; i < numberOfIterations; i++) {
-        ({ bacteriaDataUpdated, concentrations } = updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse,numberOfIterations));
-   // }
-    
-    const globalParams = getGlobalParamsCont(bacteriaDataUpdated);
+    try {
+        // Since updateSignallingCircuit is now async, we need to await its result
+        const result = await updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse, numberOfIterations);
+        bacteriaDataUpdated = result.bacteriaDataUpdated;
+        concentrations = result.concentrations;
+        
+        // Make sure bacteriaDataUpdated exists before calling getGlobalParamsCont
+        if (!bacteriaDataUpdated) {
+            console.error("bacteriaDataUpdated is undefined after updateSignallingCircuit");
+            return null;
+        }
+        
+        const globalParams = getGlobalParamsCont(bacteriaDataUpdated);
 
-    return {
-        bacteriaDataUpdated,
-        globalParams,
-        concentrations
-    };
+        return {
+            bacteriaDataUpdated,
+            globalParams,
+            concentrations
+        };
+    } catch (error) {
+        console.error("Error in updateSimulation:", error);
+        // Return a fallback or null to avoid further errors
+        return null;
+    }
 
 }
 

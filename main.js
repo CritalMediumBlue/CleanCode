@@ -38,7 +38,20 @@ const guiActions = {
     },
     visibleGridAndAxes: (visible) => {visibleGridAndAxes(visible);},
     takeScreenshot: (filename) => {takeScreenshot(filename);},
-    stepForward: () => { singleStep(); },
+    stepForward: () => { 
+        // Only step forward if a simulation is not already in progress
+        if (!session.simulationInProgress) {
+            session.simulationInProgress = true;
+            singleStep().then(() => {
+                session.simulationInProgress = false;
+            }).catch(error => {
+                console.error("Error in step forward:", error);
+                session.simulationInProgress = false;
+            });
+        } else {
+            console.log("Simulation step already in progress, please wait");
+        }
+    },
     init: (processedData) => {init(processedData);},
     setParam: (paramName, newValue) => {setParamFromGUI(paramName, newValue); },
     setModel: (vars, params) => {
@@ -72,33 +85,48 @@ const init = (processedData) => {
 };
 
 const animate = () => {
-
-    
     session.animationFrameId = requestAnimationFrame(animate);
 
-    if (session.play) {
-      singleStep();
+    if (session.play && !session.simulationInProgress) {
+        // Set a flag to prevent multiple overlapping simulation steps
+        session.simulationInProgress = true;
+        
+        singleStep().then(() => {
+            // Clear the flag when the step is done
+            session.simulationInProgress = false;
+        }).catch(error => {
+            console.error("Error in animation step:", error);
+            session.simulationInProgress = false;
+        });
     }
     
-   
+    // Render the scene with current data
     renderScene(histories, bacteriaDataUpdated, concentrations, CONFIG.BACTERIUM, session, constants);
 
     if (session.currentTimeStep >= constants.numberOfTimeSteps) {
         console.log('Simulation finished.');
         init(storedProcessedData);
     }
-
 };
 
 //97% of the time we will be in this function
-const singleStep = () => {  
+const singleStep = async () => {  
+    try {
         const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
-
-        ({bacteriaDataUpdated,globalParams, concentrations} = updateSimulation(currentBacteria,constants.fromStepToMinutes));
-
-        updateData();
-
-     
+        
+        // Now we need to await the result since updateSimulation is async
+        const result = await updateSimulation(currentBacteria, constants.fromStepToMinutes);
+        
+        // Check if result is valid before destructuring
+        if (result) {
+            ({bacteriaDataUpdated, globalParams, concentrations} = result);
+            updateData();
+        } else {
+            console.error("Failed to update simulation: result was null or undefined");
+        }
+    } catch (error) {
+        console.error("Error in singleStep:", error);
+    }
 }
 
 const updateData = () => {

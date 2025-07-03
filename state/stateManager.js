@@ -4,6 +4,7 @@ export const createStates = (gridSize) => {
         /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
         /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
         /** @type {boolean} */ play: false, // Controls whether the animation is running
+        /** @type {boolean} */ simulationInProgress: false, // Flag to track if a simulation step is currently in progress
     }; 
     sealObject(session);
     const concentrationState = {
