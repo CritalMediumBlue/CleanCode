@@ -90,8 +90,9 @@ const animate = () => {
 
 };
 
+//97% of the time we will be in this function
 const singleStep = () => {  
-     const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
+        const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
 
         ({bacteriaDataUpdated,globalParams, concentrations} = updateSimulation(currentBacteria,constants.fromStepToMinutes));
 
