@@ -1,5 +1,5 @@
 
-export const createStates = (gridSize) => {
+export const createStates = () => {
     const session = {
         /** @type {number | null} */ animationFrameId: null, // ID for requestAnimationFrame
         /** @type {number} */ currentTimeStep: 1, // Current step in the simulation playback
@@ -32,14 +32,18 @@ const sealObject = (obj) => {
 
 let firstMeanHistory = [];
 let secondMeanHistory = [];
+let thirdMeanHistory = [];
 let firstStdDevHistory = [];
 let secondStdDevHistory = [];
+let thirdStdDevHistory = [];
 
 export const resetHistories = () => {
     firstMeanHistory = [];
     secondMeanHistory = [];
+    thirdMeanHistory = [];
     firstStdDevHistory = [];
     secondStdDevHistory = [];
+    thirdStdDevHistory = [];
 }
 
 /**
@@ -53,8 +57,10 @@ export const updateHistories = ( means, standardDevs) => {
         
     firstMeanHistory.push(means[0]);
     secondMeanHistory.push(means[1]);
+    thirdMeanHistory.push(means[2]);
     firstStdDevHistory.push(standardDevs[0]);
     secondStdDevHistory.push(standardDevs[1]);
+    thirdStdDevHistory.push(standardDevs[2]);
 };
 
 /**
@@ -67,11 +73,13 @@ export const getHistories = () => {
         Array.from({ length: dataLength }, (_, index) => index),
         firstMeanHistory,
         secondMeanHistory,
+        thirdMeanHistory
     ];
     const stdDevs = [
         Array.from({ length: dataLength }, (_, index) => index),
         firstStdDevHistory,
         secondStdDevHistory,
+        thirdStdDevHistory
     ];
     const data = [means, stdDevs];
 
