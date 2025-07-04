@@ -32,8 +32,8 @@ export function setupPlot(Chart, previusVars) {
         {
             label: nameOfSpecies[0] + ' [nM]', // Use the first species name for the label
             data: [], // y-axis data points (empty initially)
-            borderColor: 'magenta',
-            backgroundColor: 'rgba(255, 0, 255, 1)',
+            borderColor: 'cyan',
+            backgroundColor: 'rgba(0, 255, 255, 1)',
             borderWidth: 2.5,
             fill: false,
             tension: 0.1,
@@ -43,8 +43,8 @@ export function setupPlot(Chart, previusVars) {
         },{
             label: nameOfSpecies[1] + ' [nM]', // Use the second species name for the label
             data: [], // y-axis data points (empty initially)
-            borderColor: 'cyan',
-            backgroundColor: 'rgba(0, 255, 255, 1)',
+            borderColor: 'magenta',
+            backgroundColor: 'rgba(255, 0, 255, 1)',
             borderWidth: 2.5,
             fill: false,
             tension: 0.1,
@@ -137,8 +137,8 @@ export function updatePlot(data, chart) {
         
         // Create filled area datasets between the bounds (with dashed lines)
         // Each call uses 4 dataset slots: 2 for filled area, 2 for dashed lines
-        createFilledAreaDataset(chart, 2, `${chart.data.datasets[0].label} (±SD)`, 'rgba(255, 0, 255, 0.3)', upperBound1, lowerBound1);
-        createFilledAreaDataset(chart, 6, `${chart.data.datasets[1].label} (±SD)`, 'rgba(0, 255, 255, 0.3)', upperBound2, lowerBound2);
+        createFilledAreaDataset(chart, 2, `${chart.data.datasets[0].label} (±SD)`, 'rgba(0, 255, 255, 0.3)', upperBound1, lowerBound1);
+        createFilledAreaDataset(chart, 6, `${chart.data.datasets[1].label} (±SD)`, 'rgba(255, 0, 255, 0.3)', upperBound2, lowerBound2);
     
       }
     
