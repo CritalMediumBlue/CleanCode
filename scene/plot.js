@@ -135,10 +135,12 @@ export function updatePlot(data, chart) {
             }
         }
         
-        // Create filled area datasets between the bounds
+        // Create filled area datasets between the bounds (with dashed lines)
+        // Each call uses 4 dataset slots: 2 for filled area, 2 for dashed lines
         createFilledAreaDataset(chart, 2, `${chart.data.datasets[0].label} (±SD)`, 'rgba(255, 0, 255, 0.2)', upperBound1, lowerBound1);
-        createFilledAreaDataset(chart, 4, `${chart.data.datasets[1].label} (±SD)`, 'rgba(0, 255, 255, 0.2)', upperBound2, lowerBound2);
-    }
+        createFilledAreaDataset(chart, 6, `${chart.data.datasets[1].label} (±SD)`, 'rgba(0, 255, 255, 0.2)', upperBound2, lowerBound2);
+    
+      }
     
     // Ensure update doesn't animate for performance
     chart.update();
@@ -175,7 +177,7 @@ function sliceData(start, end, data) {
 
 
 /**
- * Creates a filled area dataset between upper and lower bounds
+ * Creates a filled area dataset between upper and lower bounds with dashed lines at bounds
  * @param {Object} chart - Chart.js instance
  * @param {number} index - Index for the dataset
  * @param {string} label - Dataset label
@@ -184,12 +186,16 @@ function sliceData(start, end, data) {
  * @param {Array} lowerData - Lower bound values
  */
 function createFilledAreaDataset(chart, index, label, color, upperData, lowerData) {
-  // If dataset doesn't exist, create it
+  // Extract the solid color from the transparent color for dashed lines
+  const dashColor = color.replace('0.2', '0.7'); // Make dashed lines more visible
+  
+  // Create or update the filled area between bounds (this takes 2 dataset slots)
+  // First, create the upper bound dataset with fill
   if (!chart.data.datasets[index]) {
     chart.data.datasets[index] = {
       label: label,
       data: upperData,
-      borderColor: 'transparent', // No border for the upper line
+      borderColor: 'transparent', // No border for the fill area
       backgroundColor: color,
       fill: '+1', // Fill to the next dataset (which will be lowerData)
       tension: 0.1,
@@ -201,12 +207,12 @@ function createFilledAreaDataset(chart, index, label, color, upperData, lowerDat
     chart.data.datasets[index].data = upperData;
   }
 
-  // Create or update the lower bound dataset that will be filled to
+  // Create or update the lower bound dataset that completes the filled area
   if (!chart.data.datasets[index + 1]) {
     chart.data.datasets[index + 1] = {
       label: '', // Empty label to hide from legend
       data: lowerData,
-      borderColor: 'transparent', // No border for the lower line
+      borderColor: 'transparent', // No border for the fill area
       pointRadius: 0,
       tension: 0.1,
       order: 2 // Draw behind the main lines
@@ -214,5 +220,42 @@ function createFilledAreaDataset(chart, index, label, color, upperData, lowerDat
   } else {
     // Update existing dataset
     chart.data.datasets[index + 1].data = lowerData;
+  }
+  
+  // Now add two more datasets for the dashed lines (these take 2 more slots)
+  // Upper bound dashed line
+  if (!chart.data.datasets[index + 2]) {
+    chart.data.datasets[index + 2] = {
+      label: '', // Empty label to hide from legend
+      data: upperData,
+      borderColor: dashColor,
+      backgroundColor: 'transparent',
+      borderWidth: 1.5,
+      fill: false,
+      tension: 0.1,
+      pointRadius: 0,
+      borderDash: [5, 5], // Add dashed line style
+      order: 1 // Draw on top of filled area but below mean lines
+    };
+  } else {
+    chart.data.datasets[index + 2].data = upperData;
+  }
+  
+  // Lower bound dashed line
+  if (!chart.data.datasets[index + 3]) {
+    chart.data.datasets[index + 3] = {
+      label: '', // Empty label to hide from legend
+      data: lowerData,
+      borderColor: dashColor,
+      backgroundColor: 'transparent',
+      borderWidth: 1.5,
+      fill: false,
+      tension: 0.1,
+      pointRadius: 0,
+      borderDash: [5, 5], // Add dashed line style
+      order: 1 // Draw on top of filled area but below mean lines
+    };
+  } else {
+    chart.data.datasets[index + 3].data = lowerData;
   }
 }

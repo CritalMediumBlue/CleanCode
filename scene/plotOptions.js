@@ -30,48 +30,25 @@ export function createPlotOptions() {
                         // Only show items with non-empty labels
                         return item.text !== '';
                     },
-                    generateLabels: function(chart) {
-                        const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
-                        // Keep only the main line labels
-                        return labels.filter(label => 
-                            !label.text.includes('±SD') && label.text !== ''
-                        );
+                    filter: function(item) {
+                        // Only show the main lines in the legend (exclude SD bounds)
+                        return item.text !== '' && !item.text.includes('±SD');
                     }
                 }
             },
             tooltip: {
                 callbacks: {
                     label: function(context) {
-                        // Show mean values and add SD info when hovering over mean lines
+                        // Show mean values only
                         const label = context.dataset.label || '';
                         const value = context.parsed.y;
                         
-                        if (label.includes('±SD')) {
-                            return null; // Don't show tooltips for SD bands
-                        }
-                        
-                        // Find the corresponding SD dataset
-                        const stdDatasetIndex = context.datasetIndex + 2; // Adjust based on your dataset order
-                        const stdDataset = context.chart.data.datasets[stdDatasetIndex];
-                        
-                        if (stdDataset && stdDataset.data && stdDataset.data[context.dataIndex]) {
-                            const stdDev = stdDataset.data[context.dataIndex] - value;
-                            return `${label}: ${value.toFixed(2)} ± ${stdDev.toFixed(2)}`;
+                        if (label.includes('±SD') || label === '') {
+                            return null; // Don't show tooltips for SD bands or empty labels
                         }
                         
                         return `${label}: ${value.toFixed(2)}`;
                     }
-                }
-            },
-            // Add a custom plugin to make SD bands translucent on hover for better visibility
-            customCanvasBackgroundColor: {
-                beforeDraw: (chart) => {
-                    const ctx = chart.canvas.getContext('2d');
-                    ctx.save();
-                    ctx.globalCompositeOperation = 'destination-over';
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-                    ctx.fillRect(0, 0, chart.width, chart.height);
-                    ctx.restore();
                 }
             }
         },
