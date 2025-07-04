@@ -118,9 +118,9 @@ export const updateSignallingCircuit = async (currentBacteria, HEIGHT, WIDTH, ti
             const promise = worker.createPromise();
 
             worker.postMessage({
-                concentration: concentrationsState[speciesName].conc,
-                sources: concentrationsState[speciesName].sources,
-                timeLapse: timeLapse
+                concentration: concentrationsState[speciesName].conc, //this is a Float64Array
+                sources: concentrationsState[speciesName].sources, //this is a Float64Array
+                timeLapse: timeLapse // timeLapse is a constant real number
             });
 
             return promise;

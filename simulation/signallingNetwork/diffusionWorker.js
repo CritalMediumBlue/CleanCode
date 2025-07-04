@@ -21,5 +21,5 @@ onmessage = (event) => {
     newConcentration = diffuse(concentration, sources, timeLapse);
 
     // Send the result back to the main thread
-    postMessage(newConcentration); 
+    postMessage(newConcentration);  // This is a Float64Array
 }
