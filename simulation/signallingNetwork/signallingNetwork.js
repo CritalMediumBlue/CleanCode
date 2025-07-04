@@ -32,7 +32,8 @@ export const setModel = (params, vars, config) => {
 
     return concentrationsState;
 };
-
+let tempConcentrations;
+let tempSources;
 
 
 export const setParameter = (paramName, value) => {
@@ -67,14 +68,16 @@ export const setCytopManager = (bacteriaData) => {
         const worker = new Worker(new URL('./diffusionWorker.js', import.meta.url), { type: 'module' });
         worker.busy = false; 
         workers[speciesName] = worker;
-              worker.onmessage = (event) => {
-                        // The worker is returning the concentration data directly, not as an object with a conc property
-                        concentrationsState[speciesName].conc.set(event.data);
-                        // Resolve the promise when the worker completes
-                        if (worker._resolve) {
-                            worker._resolve();
-                        }
-                };
+       worker.onmessage = (event) => {
+    // Create new Float64Arrays with the transferred buffers
+    concentrationsState[speciesName].conc = new Float64Array(event.data.concentration);
+    concentrationsState[speciesName].sources = new Float64Array(event.data.sources);
+    
+    // Resolve the promise when the worker completes
+    if (worker._resolve) {
+        worker._resolve();
+    }
+};
                  worker.createPromise = function() {
                     // Clear any existing resolve/reject that weren't used
                     this._resolve = null;
@@ -116,12 +119,13 @@ export const updateSignallingCircuit = async (currentBacteria, HEIGHT, WIDTH, ti
         const workerPromises = extSpeciesNames.map(speciesName => {
             const worker = workers[speciesName];
             const promise = worker.createPromise();
-
+            
+        
             worker.postMessage({
                 concentration: concentrationsState[speciesName].conc, //this is a Float64Array
                 sources: concentrationsState[speciesName].sources, //this is a Float64Array
                 timeLapse: timeLapse // timeLapse is a constant real number
-            });
+            }, [concentrationsState[speciesName].conc.buffer, concentrationsState[speciesName].sources.buffer]); // Transfer ownership of these buffers
 
             return promise;
         });

@@ -20,6 +20,10 @@ onmessage = (event) => {
     // Perform the diffusion step
     newConcentration = diffuse(concentration, sources, timeLapse);
 
-    // Send the result back to the main thread
-    postMessage(newConcentration);  // This is a Float64Array
+    // Send the result back to the main thread using transferable objects
+    postMessage({
+        concentration: concentration,
+        sources: sources
+    }, [concentration.buffer, sources.buffer]);
+
 }
