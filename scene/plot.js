@@ -230,11 +230,11 @@ function createFilledAreaDataset(chart, index, label, color, upperData, lowerDat
       data: upperData,
       borderColor: dashColor,
       backgroundColor: 'transparent',
-      borderWidth: 1.5,
+      borderWidth: 2,
       fill: false,
       tension: 0.1,
       pointRadius: 0,
-      borderDash: [5, 5], // Add dashed line style
+      borderDash: [7, 7], // Add dashed line style
       order: 1 // Draw on top of filled area but below mean lines
     };
   } else {
@@ -248,11 +248,11 @@ function createFilledAreaDataset(chart, index, label, color, upperData, lowerDat
       data: lowerData,
       borderColor: dashColor,
       backgroundColor: 'transparent',
-      borderWidth: 1.5,
+      borderWidth: 2,
       fill: false,
       tension: 0.1,
       pointRadius: 0,
-      borderDash: [5, 5], // Add dashed line style
+      borderDash: [7, 7], // Add dashed line style
       order: 1 // Draw on top of filled area but below mean lines
     };
   } else {
