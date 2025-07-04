@@ -70,7 +70,7 @@ export const initSessionTab = (tab, guiActions) => {
     // ################ Simulation execution controls
     runPauseButton.on('click', () => {guiActions.setPlayState();});
     resetButton.on('click', () => {guiActions.reset();});
-    stepForwardButton.on('click', () => {guiActions.stepForward();});
+    stepForwardButton.on('click', async () => {await guiActions.stepForward();});
     
     
     // ################ Simulation recording controls

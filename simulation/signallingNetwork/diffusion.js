@@ -25,7 +25,7 @@ import { initADIArrays } from './utils.js';
 
 export const ADI = (
     concentrationData,
-    sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse
+    sources, timeLapse
 ) => {
 
 
@@ -179,7 +179,7 @@ export const ADI = (
 
 export const FTCS = (
     concentrationData,
-    sources,  deltaX, deltaT, DIFFUSION_RATE, timeLapse
+    sources, timeLapse
 ) => {
     
     const n = WIDTH * HEIGHT;

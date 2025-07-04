@@ -29,18 +29,18 @@ export function assignInitialConcentrations(bacteriaData) {setCytopManager(bacte
 
 
 
-export function updateSimulation(currentBacteria, minutes) {
+export async function updateSimulation(currentBacteria, minutes) {
 
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
     const timeLapse = 1.5; // seconds
     const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
 
-    let bacteriaDataUpdated
+    let bacteriaDataUpdated;
     let concentrations;
 
     
-    ({ bacteriaDataUpdated, concentrations } = updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse,numberOfIterations));
+    ({ bacteriaDataUpdated, concentrations } = await updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse, numberOfIterations));
  
     
 
@@ -55,6 +55,18 @@ export function updateSimulation(currentBacteria, minutes) {
 
 
 export function getGlobalSpeciesConcentrations(bacteriaData) {
+    // Guard against undefined or empty bacteriaData
+    if (!bacteriaData || !bacteriaData.length) {
+        console.warn("getGlobalSpeciesConcentrations received undefined or empty bacteriaData");
+        return {
+            mean: meanConcentrations.fill(0),
+            standardDeviation: stdDeviations.fill(0)
+        };
+    }
+
+    // Reset arrays for new calculation
+    meanConcentrations.fill(0);
+    stdDeviations.fill(0);
 
     // Calculate mean (average) concentrations
     nameOfSpecies.forEach((speciesName, index) => {

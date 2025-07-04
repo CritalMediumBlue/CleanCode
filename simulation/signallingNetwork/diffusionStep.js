@@ -1,25 +1,19 @@
 import { ADI,FTCS } from './diffusion.js';
 
-    const diffusionRate = 100;
-    const deltaX = 1; //micrometers
-    const deltaT = 0.1; //seconds
-    
+let newConcentration;
 export function diffuse(
-    concentrationState,
+    concentration,
+    sources,
     timeLapse
 ) {
     
-
-    const sources = concentrationState.sources;
-
   
-concentrationState.conc.set(ADI(
-        concentrationState.conc,
+newConcentration = ADI(
+        concentration,
         sources,
-        deltaX,
-        deltaT,
-        diffusionRate,
         timeLapse
-    )); 
+    ); 
+
+    return newConcentration;
 
 }

@@ -5,7 +5,6 @@ import {ADI, FTCS} from './diffusion.js';
 
         // Pick parameters so that both methods cover the same physical time.
         const DIFFUSION_RATE = 100; // choose a moderate value
-        const deltaX = 1; // micrometers
         const deltaT = 0.1;  // seconds
         const tolerance = 1e-5; 
 
@@ -35,8 +34,8 @@ describe('Compare Diffusion methods', () => {
             const initialForADI = new Float64Array(totalCells).fill(1);
             const initialForFTCS = new Float64Array(totalCells).fill(1);
             
-            const resultADI = ADI(initialForADI, sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
-            const resultFTCS = FTCS(initialForFTCS, sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
+            const resultADI = ADI(initialForADI, sources , timeLapse);
+            const resultFTCS = FTCS(initialForFTCS, sources, timeLapse);
            
             let maxValue = 0;
             let minValue = 1e20;
@@ -111,9 +110,6 @@ const countIterationsToSteadyState = (method, timeStep) => {
         const nextConcentration = method(
             initial,
             sources,
-            deltaX,
-            deltaT,
-            DIFFUSION_RATE,
             timeStep
         );
         // Check for steady state

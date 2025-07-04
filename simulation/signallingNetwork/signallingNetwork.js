@@ -1,5 +1,11 @@
 import { getAdjustedCoordinates } from "./grid.js";
-import { diffuse } from "./diffusionStep.js";
+import { 
+    initializeSpecies, 
+    lockObjects, 
+    simulateConcentrations, 
+    clearConcentrationSources, 
+    createPositionMap 
+} from "./signallingUtils.js";
 
 const variables = {};
 const parameters = {};
@@ -8,8 +14,9 @@ const exteriorManager = {};
 const intSpeciesNames = [];
 const extSpeciesNames = [];
 const concentrationsState = {};
+const workers = {};
 
-const MIN_CONCENTRATION = 1e-6;
+let positionMap;
 
 
 export const setModel = (params, vars, config) => {
@@ -18,37 +25,14 @@ export const setModel = (params, vars, config) => {
 
     const gridSize = config.GRID.WIDTH * config.GRID.HEIGHT;
 
-    initializeSpecies(variables.int, intSpeciesNames, interiorManager, false, gridSize);
-    initializeSpecies(variables.ext, extSpeciesNames, exteriorManager, true, gridSize);
+    initializeSpecies(variables.int, intSpeciesNames, interiorManager, false, gridSize, concentrationsState);
+    initializeSpecies(variables.ext, extSpeciesNames, exteriorManager, true, gridSize, concentrationsState);
 
     lockObjects([interiorManager, exteriorManager, concentrationsState, variables, parameters]);
 
     return concentrationsState;
 };
 
-
-function initializeSpecies(speciesObj, speciesNames, manager, isExternal, gridSize) {
-    speciesNames.splice(0, speciesNames.length, ...Object.keys(speciesObj));
-    
-    speciesNames.forEach((speciesName) => {
-        manager[speciesName] = new Map();
-        
-        if (isExternal) {
-            concentrationsState[speciesName] = {
-                conc: new Float64Array(gridSize).fill(0),
-                sources: new Float64Array(gridSize).fill(0)
-            };
-        }
-    });
-}
-
-
-function lockObjects(objectArray) {
-    objectArray.forEach(obj => {
-        Object.seal(obj);
-        Object.preventExtensions(obj);
-    });
-}
 
 
 export const setParameter = (paramName, value) => {
@@ -74,109 +58,110 @@ export const setCytopManager = (bacteriaData) => {
                 exteriorManager[speciesName].set(ID, variables.ext[speciesName].val);
             }
         });
+
     });
+
+        //one worker will be created for each extracellular species. The worker will handle the diffusion of that species
+    extSpeciesNames.forEach((speciesName) => {
+        // Create a new worker for each extracellular species
+        const worker = new Worker(new URL('./diffusionWorker.js', import.meta.url), { type: 'module' });
+        worker.busy = false; 
+        workers[speciesName] = worker;
+              worker.onmessage = (event) => {
+                        // The worker is returning the concentration data directly, not as an object with a conc property
+                        concentrationsState[speciesName].conc.set(event.data);
+                        // Resolve the promise when the worker completes
+                        if (worker._resolve) {
+                            worker._resolve();
+                        }
+                };
+                 worker.createPromise = function() {
+                    // Clear any existing resolve/reject that weren't used
+                    this._resolve = null;
+                    this._reject = null;
+                    
+                    return new Promise((resolve, reject) => {
+                        this._resolve = resolve;
+                        this._reject = reject;
+                    });
+                };
+    }   
+);
+        
 };
 
-
-function inheritConcentrations(ID, idx) {
-    intSpeciesNames.forEach((speciesName) => {
-        if (!interiorManager[speciesName].has(ID)) {
-            interiorManager[speciesName].set(ID, interiorManager[speciesName].get(ID / 2n));
-        }
-        variables.int[speciesName].val = interiorManager[speciesName].get(ID);
-    });
-
-    extSpeciesNames.forEach((speciesName) => {
-        exteriorManager[speciesName].set(ID, concentrationsState[speciesName].conc[idx]);
-        variables.ext[speciesName].val = exteriorManager[speciesName].get(ID);
-    });
-}
-
-
-function simulateConcentrations(ID, timeLapse, idx) {
-    const finalConcentrations = {};
-
-    inheritConcentrations(ID, idx);
+export const updateSignallingCircuit = async (currentBacteria, HEIGHT, WIDTH, timeLapse, numberOfIterations) => {
+    positionMap = createPositionMap(currentBacteria, HEIGHT, WIDTH, getAdjustedCoordinates);
+    const bacteriaCytoplasmConcentrations = new Map();
+    let iteration = 0;
     
-    intSpeciesNames.forEach((speciesName) => {
-        const originalConcentration = interiorManager[speciesName].get(ID);
-        const delta = variables.int[speciesName].eq(variables, parameters);
-        finalConcentrations[speciesName] = originalConcentration + delta * timeLapse;
-
-        if (finalConcentrations[speciesName] < MIN_CONCENTRATION) {
-            finalConcentrations[speciesName] = MIN_CONCENTRATION; 
-        }
-
-        interiorManager[speciesName].set(ID, finalConcentrations[speciesName]);
-    });
-
-    extSpeciesNames.forEach((speciesName) => {
-        concentrationsState[speciesName].sources[idx] = 
-            variables.ext[speciesName].eq(variables, parameters);
-    });
-
-    return finalConcentrations;
-}
-
-function clearConcentrationSources() {
-    extSpeciesNames.forEach((speciesName) => {
-        concentrationsState[speciesName].sources.fill(0);
-    });
-}
-
-const positionMap = new Map();
-
-function createPositionMap(currentBacteria, HEIGHT, WIDTH) {
-    positionMap.clear();
+    
+    clearConcentrationSources(extSpeciesNames, concentrationsState);
     currentBacteria.forEach(bacterium => {
-        const { x, y, ID } = bacterium;
-        const idx = getAdjustedCoordinates(x, y, HEIGHT, WIDTH);
-        positionMap.set(ID, idx);
+        const { ID } = bacterium;
+        const idx = positionMap.get(ID);
+        simulateConcentrations(
+            ID, timeLapse, idx, intSpeciesNames, extSpeciesNames, 
+            interiorManager, exteriorManager, concentrationsState, 
+            variables, parameters
+        );
     });
-}
-
-export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLapse, numberOfIterations) => {
-    createPositionMap(currentBacteria, HEIGHT, WIDTH);
-    for (let i = 0; i < numberOfIterations; i++) {
-        clearConcentrationSources();
         
 
 
-        //One web Worker can handle this loop
+
+    while (iteration < numberOfIterations) {
+        
+        // Process all workers in parallel with Promise.all
+        const workerPromises = extSpeciesNames.map(speciesName => {
+            const worker = workers[speciesName];
+            const promise = worker.createPromise();
+
+            worker.postMessage({
+                concentration: concentrationsState[speciesName].conc,
+                sources: concentrationsState[speciesName].sources,
+                timeLapse: timeLapse
+            });
+
+            return promise;
+        });
+
+
+        try {
+
+        // Wait for all workers to complete before moving to next iteration
+        await Promise.all(workerPromises);
+        clearConcentrationSources(extSpeciesNames, concentrationsState);
         currentBacteria.forEach(bacterium => {
             const { ID } = bacterium;
             const idx = positionMap.get(ID);
-            simulateConcentrations(ID, timeLapse, idx);
+            const cytoplasmConcentrations = simulateConcentrations(
+                ID, timeLapse, idx, intSpeciesNames, extSpeciesNames,
+                interiorManager, exteriorManager, concentrationsState,
+                variables, parameters
+            );
+
+            if (iteration === numberOfIterations - 1) {
+                // Store the final concentrations for each bacterium
+                bacteriaCytoplasmConcentrations.set(ID, cytoplasmConcentrations);
+            }
         });
-
-        
-
-
-
-        // Another web Worker can handle this loop
-        extSpeciesNames.forEach((speciesName) => {
-          diffuse(concentrationsState[speciesName], timeLapse);
-        });
-
-
-
-
-
+        iteration++;
+    } catch (error) {
+            console.error("Error during simulation iteration:", error);
+            throw error; // Re-throw the error to be handled by the caller
+        }
     }
-
+    
+    // Create the final result once all iterations are done
     const resultArray = currentBacteria.map(bacterium => {
         const { ID, x, y, longAxis, angle } = bacterium;
-        const idx = positionMap.get(ID);
-        const cytoplasmConcentrations = simulateConcentrations(ID, timeLapse, idx);
         
         return {
             id: ID,
-            x,
-            y,
-            angle,
-            longAxis,
+            x, y, angle, longAxis,
             phenotype: "test",
-            cytoplasmConcentrations,
+            cytoplasmConcentrations: bacteriaCytoplasmConcentrations.get(ID),
         };
     });
 
@@ -184,4 +169,5 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
         bacteriaDataUpdated: resultArray,
         concentrations: concentrationsState
     };
-};
+}
+
