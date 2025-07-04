@@ -64,7 +64,7 @@ const init = (processedData) => {
         cancelAnimationFrame(session.animationFrameId);
     }
     
-    ({session,concentrationState} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
+    ({session} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
 
     setupNewScene(CONFIG,previusVars);
     assignInitialConcentrations(bacteriaTimeSeries[session.currentTimeStep])
@@ -102,7 +102,7 @@ const singleStep = () => {
 }
 
 const updateData = () => {
-    updateHistories(...globalParams);
+    updateHistories(globalParams.mean, globalParams.standardDeviation);
     histories = getHistories();
     session.currentTimeStep++;
 }

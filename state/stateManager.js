@@ -6,15 +6,9 @@ export const createStates = (gridSize) => {
         /** @type {boolean} */ play: false, // Controls whether the animation is running
     }; 
     sealObject(session);
-    const concentrationState = {
-        conc: new Float64Array(gridSize).fill(0.21),
-        sources: new Float64Array(gridSize).fill(0),
-        visible:null,
-    }
-    sealObject(concentrationState);
+ 
     return {
-        session,
-        concentrationState
+        session
     }
 }
 
@@ -36,12 +30,16 @@ const sealObject = (obj) => {
 
 
 
-let magentaBacteriaCountHistory = [];
-let cyanBacteriaCountHistory = [];
+let firstMeanHistory = [];
+let secondMeanHistory = [];
+let firstStdDevHistory = [];
+let secondStdDevHistory = [];
 
 export const resetHistories = () => {
-    magentaBacteriaCountHistory = [];
-    cyanBacteriaCountHistory = [];
+    firstMeanHistory = [];
+    secondMeanHistory = [];
+    firstStdDevHistory = [];
+    secondStdDevHistory = [];
 }
 
 /**
@@ -51,9 +49,12 @@ export const resetHistories = () => {
  * @param {number} cyanCount - Cyan bacteria count
  * @param {number} averageSimilarity - Average similarity value
  */
-export const updateHistories = ( magentaCount, cyanCount) => {
-    magentaBacteriaCountHistory.push(magentaCount);
-    cyanBacteriaCountHistory.push(cyanCount);
+export const updateHistories = ( means, standardDevs) => {
+        
+    firstMeanHistory.push(means[0]);
+    secondMeanHistory.push(means[1]);
+    firstStdDevHistory.push(standardDevs[0]);
+    secondStdDevHistory.push(standardDevs[1]);
 };
 
 /**
@@ -61,12 +62,18 @@ export const updateHistories = ( magentaCount, cyanCount) => {
  * @returns {Array} Array containing all history data series
  */
 export const getHistories = () => {
-    const dataLength = cyanBacteriaCountHistory.length;
-    const data = [
+    const dataLength = secondMeanHistory.length;
+    const means = [
         Array.from({ length: dataLength }, (_, index) => index),
-        magentaBacteriaCountHistory,
-        cyanBacteriaCountHistory,
+        firstMeanHistory,
+        secondMeanHistory,
     ];
+    const stdDevs = [
+        Array.from({ length: dataLength }, (_, index) => index),
+        firstStdDevHistory,
+        secondStdDevHistory,
+    ];
+    const data = [means, stdDevs];
 
     return data;
 };

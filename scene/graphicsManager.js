@@ -65,7 +65,9 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
             updateCapsules(bacteriaData, BACTERIUM, THREE, capsules, capsuleVisibility);
         }
         
-         if (histories && session.currentTimeStep % 6 ===0){
+        if (histories && session.currentTimeStep % 6 === 0 && session.play) {
+            // Check and log the structure of histories to debug
+            console.log("History data structure:", histories);
             updatePlot(histories, plot);
         } 
         updateOverlay(session, constants);

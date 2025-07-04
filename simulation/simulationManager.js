@@ -4,11 +4,16 @@
 let WIDTH;
 let HEIGHT;
 let nameOfSpecies = [];
+let meanConcentrations ;
+let stdDeviations;
+    
 export function createBacteriumSystem(config, vars, params) {
     
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
     nameOfSpecies = Object.keys(vars.int);
+     meanConcentrations = new Array(nameOfSpecies.length).fill(0);
+     stdDeviations = new Array(nameOfSpecies.length).fill(0);
     return setModel(params, vars,config);
 
 }
@@ -50,20 +55,36 @@ export function updateSimulation(currentBacteria, minutes) {
 
 
 export function getGlobalSpeciesConcentrations(bacteriaData) {
-    // Initialize array with zeros for each species
-    const arrayOfConcentrations = new Array(nameOfSpecies.length).fill(0);
 
+    // Calculate mean (average) concentrations
     nameOfSpecies.forEach((speciesName, index) => {
         bacteriaData.forEach((bacterium) => {
             const conc = bacterium.cytoplasmConcentrations[speciesName];
-            arrayOfConcentrations[index] += conc;
+            meanConcentrations[index] += conc;
         });
     });
 
-    // Calculate average concentration for each species
-    for (let i = 0; i < arrayOfConcentrations.length; i++) {
-        arrayOfConcentrations[i] /= bacteriaData.length;
+    // Divide by count to get mean
+    for (let i = 0; i < meanConcentrations.length; i++) {
+        meanConcentrations[i] /= bacteriaData.length;
     }
     
-    return arrayOfConcentrations;
+    // Calculate variance (squared differences from mean)
+    nameOfSpecies.forEach((speciesName, index) => {
+        bacteriaData.forEach((bacterium) => {
+            const conc = bacterium.cytoplasmConcentrations[speciesName];
+            const diff = conc - meanConcentrations[index];
+            stdDeviations[index] += diff * diff;
+        });
+    });
+    
+    // Divide by count and take square root to get standard deviation
+    for (let i = 0; i < stdDeviations.length; i++) {
+        stdDeviations[i] = Math.sqrt(stdDeviations[i] / bacteriaData.length);
+    }
+    
+    return {
+        mean: meanConcentrations,
+        standardDeviation: stdDeviations
+    };
 }
