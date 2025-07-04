@@ -1,4 +1,4 @@
-export function createPlotOptions({ width, height }) {
+export function createPlotOptions() {
     // Define text color for axis labels and values
     const axisTextColor = "rgb(255, 255, 255)";
     const gridColor = "rgba(255, 255, 255, 0.25)"; 
@@ -12,7 +12,7 @@ export function createPlotOptions({ width, height }) {
         plugins: {
             title: {
                 display: true,
-                text: "Average Extracellular concentration of AimP",
+                text: "Average intracellular concentrations",
                 color: axisTextColor,
                 font: {
                     size: 16
@@ -25,14 +25,6 @@ export function createPlotOptions({ width, height }) {
                     font: {
                         family: 'Arial',
                         size: 12
-                    }
-                }
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        let value = context.parsed.y;
-                        return `AimP [nM]: ${value.toFixed(2)}`;
                     }
                 }
             }

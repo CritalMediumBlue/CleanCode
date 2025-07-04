@@ -2,7 +2,7 @@
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
     setColorMultiplier,visibleGridAndAxes,takeScreenshot,
     selectSpecies} from './scene/graphicsManager.js';
-import {createBacteriumSystem,updateSimulation, setParamFromGUI,assignInitialConcentrations} from './simulation/simulationManager.js';
+import {createBacteriumSystem,updateSimulation, setParamFromGUI,assignInitialConcentrations,getGlobalSpeciesConcentrations} from './simulation/simulationManager.js';
 import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
 import { CONFIG } from './config.js';
@@ -66,7 +66,7 @@ const init = (processedData) => {
     
     ({session,concentrationState} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
 
-    setupNewScene(CONFIG);
+    setupNewScene(CONFIG,previusVars);
     assignInitialConcentrations(bacteriaTimeSeries[session.currentTimeStep])
     animate();
 };
@@ -94,8 +94,8 @@ const animate = () => {
 const singleStep = () => {  
         const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
 
-        ({bacteriaDataUpdated,globalParams, concentrations} = updateSimulation(currentBacteria,constants.fromStepToMinutes));
-
+        ({bacteriaDataUpdated, concentrations} = updateSimulation(currentBacteria,constants.fromStepToMinutes));
+        globalParams = getGlobalSpeciesConcentrations(bacteriaDataUpdated);
         updateData();
 
      

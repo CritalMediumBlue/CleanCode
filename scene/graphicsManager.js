@@ -22,7 +22,7 @@ let helperAxes = null;
 let species = null; // Default species, can be changed
 
 
-export function setupNewScene(config) {
+export function setupNewScene(config,previusVars) {
 
 
     const SCENE = config.SCENE;
@@ -33,7 +33,7 @@ export function setupNewScene(config) {
     stage = setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules);
     capsules = setupCapsulePool(stage, BACTERIUM, THREE, capsules);
     mesh = setupMesh(stage, THREE, GRID);
-    plot = setupPlot(Chart);
+    plot = setupPlot(Chart,previusVars);
     helperAxes = new THREE.AxesHelper(100);
     helperGrid = new THREE.GridHelper(200, 200, 0xFFFFFF, 0xFFFFFF);
     helperGrid.material.transparent = true;

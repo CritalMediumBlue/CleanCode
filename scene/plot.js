@@ -5,7 +5,10 @@ import { createPlotOptions } from './plotOptions.js';
  * @param {Object} Chart - Chart.js library
  * @returns {Object} - Reference to the created chart
  */
-export function setupPlot(Chart) {
+export function setupPlot(Chart,previusVars) {
+  const nameOfSpecies = Object.keys(previusVars.int);
+  console.log("Name of the species: ", nameOfSpecies); 
+
     const Id = 'plot-overlay';
     const plotContainer = document.getElementById(Id);
     
@@ -21,17 +24,14 @@ export function setupPlot(Chart) {
     const ctx = canvas.getContext('2d');
     
     // Get chart options from plotOptions.js
-    const options = createPlotOptions({
-        width: canvas.width,
-        height: canvas.height
-    });
+    const options = createPlotOptions();
     
     // Create initial empty dataset
     const chartData = {
         labels: [], // x-axis data points (empty initially)
         datasets: [
         {
-            label: 'AimR [nM]',
+            label: nameOfSpecies[0] + ' [nM]', // Use the first species name for the label
             data: [], // y-axis data points (empty initially)
             borderColor: 'magenta',
             backgroundColor: 'rgba(255, 0, 255, 1)',
@@ -40,7 +40,7 @@ export function setupPlot(Chart) {
             tension: 0.1,
             pointRadius: 0, // Hide points for cleaner look
         },{
-            label: 'AimP [nM]',
+            label: nameOfSpecies[1] + ' [nM]', // Use the second species name for the label
             data: [], // y-axis data points (empty initially)
             borderColor: 'cyan',
             backgroundColor: 'rgba(0, 255, 255, 1)',

@@ -3,11 +3,12 @@
 
 let WIDTH;
 let HEIGHT;
-
+let nameOfSpecies = [];
 export function createBacteriumSystem(config, vars, params) {
     
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
+    nameOfSpecies = Object.keys(vars.int);
     return setModel(params, vars,config);
 
 }
@@ -16,6 +17,9 @@ export const setParamFromGUI = (paramName, newValue) => {setParameter(paramName,
 
 
 export function assignInitialConcentrations(bacteriaData) {setCytopManager(bacteriaData);}
+
+
+
 
 
 
@@ -31,15 +35,12 @@ export function updateSimulation(currentBacteria, minutes) {
     let concentrations;
 
     
-   // for (let i = 0; i < numberOfIterations; i++) {
-        ({ bacteriaDataUpdated, concentrations } = updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse,numberOfIterations));
-   // }
+    ({ bacteriaDataUpdated, concentrations } = updateSignallingCircuit(currentBacteria, HEIGHT, WIDTH, timeLapse,numberOfIterations));
+ 
     
-    const globalParams = getGlobalParamsCont(bacteriaDataUpdated);
 
     return {
         bacteriaDataUpdated,
-        globalParams,
         concentrations
     };
 
@@ -48,25 +49,21 @@ export function updateSimulation(currentBacteria, minutes) {
 
 
 
-function getGlobalParamsCont(bacteriaData) {
-    let totalAimP = 0;
-    let totalAimR = 0;
-    let count = 0;
+export function getGlobalSpeciesConcentrations(bacteriaData) {
+    // Initialize array with zeros for each species
+    const arrayOfConcentrations = new Array(nameOfSpecies.length).fill(0);
 
-    bacteriaData.forEach((bacterium) => {
-        const aimP = bacterium.cytoplasmConcentrations.AimP;
-        const aimR = bacterium.cytoplasmConcentrations.AimR;
-        totalAimP+=aimP;
-        totalAimR+=aimR;
-        count++;
-    } );
+    nameOfSpecies.forEach((speciesName, index) => {
+        bacteriaData.forEach((bacterium) => {
+            const conc = bacterium.cytoplasmConcentrations[speciesName];
+            arrayOfConcentrations[index] += conc;
+        });
+    });
 
-  
-    const globalParams = [
-        totalAimR/ count,
-        totalAimP/ count,
-    ];
-    return globalParams;
+    // Calculate average concentration for each species
+    for (let i = 0; i < arrayOfConcentrations.length; i++) {
+        arrayOfConcentrations[i] /= bacteriaData.length;
+    }
+    
+    return arrayOfConcentrations;
 }
-
-
