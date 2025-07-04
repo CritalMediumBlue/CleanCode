@@ -102,8 +102,6 @@ export function updatePlot(data, chart) {
         }
     }
     
-    // Only create standard deviation bounds if stdDevs is available
-    if (stdDevs && Array.isArray(stdDevs)) {
         const slicedSD = sliceData(startMean, endMean, stdDevs);
         
         // Create arrays to hold upper and lower bounds for each species
@@ -117,8 +115,8 @@ export function updatePlot(data, chart) {
             
             if (slicedDataMean[i+1] && slicedSD[i+1]) {
                 for (let j = 0; j < slicedDataMean[i+1].length; j++) {
-                    upperBounds[i].push(slicedDataMean[i+1][j] + slicedSD[i+1][j]);
-                    lowerBounds[i].push(Math.max(0, slicedDataMean[i+1][j] - slicedSD[i+1][j])); // Prevent negative values
+                    upperBounds[i].push(slicedDataMean[i+1][j] + slicedSD[i+1][j]/3);
+                    lowerBounds[i].push(Math.max(0, slicedDataMean[i+1][j] - slicedSD[i+1][j]/3)); // Prevent negative values
                 }
             }
         }
@@ -143,7 +141,7 @@ export function updatePlot(data, chart) {
                 lowerBounds[i]
             );
         }
-    }
+    
     
     // Ensure update doesn't animate for performance
     chart.update();
