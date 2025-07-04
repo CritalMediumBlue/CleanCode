@@ -29,38 +29,49 @@ const sealObject = (obj) => {
 
 
 
+// Dynamic history arrays storage
+let numberOfSpecies = 0;
+let meanHistories = [];
+let stdDevHistories = [];
 
-let firstMeanHistory = [];
-let secondMeanHistory = [];
-let thirdMeanHistory = [];
-let firstStdDevHistory = [];
-let secondStdDevHistory = [];
-let thirdStdDevHistory = [];
+/**
+ * Initialize history arrays for a specific number of time series
+ * @param {number} speciesCount - Number of time series/species to track
+ */
+export const createHistories = (speciesCount) => {
+    numberOfSpecies = speciesCount;
+    meanHistories = Array.from({ length: speciesCount }, () => []);
+    stdDevHistories = Array.from({ length: speciesCount }, () => []);
+}
 
+/**
+ * Reset all history arrays to empty
+ */
 export const resetHistories = () => {
-    firstMeanHistory = [];
-    secondMeanHistory = [];
-    thirdMeanHistory = [];
-    firstStdDevHistory = [];
-    secondStdDevHistory = [];
-    thirdStdDevHistory = [];
+    if (numberOfSpecies === 0) return;
+    
+    meanHistories = Array.from({ length: numberOfSpecies }, () => []);
+    stdDevHistories = Array.from({ length: numberOfSpecies }, () => []);
 }
 
 /**
  * Update history arrays with new data
- * @param {number} totalCount - Total bacteria count
- * @param {number} magentaCount - Magenta bacteria count
- * @param {number} cyanCount - Cyan bacteria count
- * @param {number} averageSimilarity - Average similarity value
+ * @param {Array<number>} means - Array of mean values for each species
+ * @param {Array<number>} standardDevs - Array of standard deviation values for each species
  */
-export const updateHistories = ( means, standardDevs) => {
-        
-    firstMeanHistory.push(means[0]);
-    secondMeanHistory.push(means[1]);
-    thirdMeanHistory.push(means[2]);
-    firstStdDevHistory.push(standardDevs[0]);
-    secondStdDevHistory.push(standardDevs[1]);
-    thirdStdDevHistory.push(standardDevs[2]);
+export const updateHistories = (means, standardDevs) => {
+    // Ensure arrays match the expected size
+    const meansToUpdate = means.slice(0, numberOfSpecies);
+    const stdDevsToUpdate = standardDevs.slice(0, numberOfSpecies);
+    
+    // Update each history array
+    meansToUpdate.forEach((mean, index) => {
+        meanHistories[index].push(mean);
+    });
+    
+    stdDevsToUpdate.forEach((stdDev, index) => {
+        stdDevHistories[index].push(stdDev);
+    });
 };
 
 /**
@@ -68,21 +79,19 @@ export const updateHistories = ( means, standardDevs) => {
  * @returns {Array} Array containing all history data series
  */
 export const getHistories = () => {
-    const dataLength = secondMeanHistory.length;
-    const means = [
-        Array.from({ length: dataLength }, (_, index) => index),
-        firstMeanHistory,
-        secondMeanHistory,
-        thirdMeanHistory
-    ];
-    const stdDevs = [
-        Array.from({ length: dataLength }, (_, index) => index),
-        firstStdDevHistory,
-        secondStdDevHistory,
-        thirdStdDevHistory
-    ];
-    const data = [means, stdDevs];
-
-    return data;
+    // Use the first history's length to determine data length
+    // (all histories should have the same length)
+    const dataLength = meanHistories[0]?.length || 0;
+    
+    // Create time indices (0, 1, 2, ...)
+    const timeIndices = Array.from({ length: dataLength }, (_, index) => index);
+    
+    // Build the means array with time indices as the first element
+    const means = [timeIndices, ...meanHistories];
+    
+    // Build the stdDevs array with time indices as the first element
+    const stdDevs = [timeIndices, ...stdDevHistories];
+    
+    return [means, stdDevs];
 };
 

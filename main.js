@@ -3,7 +3,7 @@ import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCap
     setColorMultiplier,visibleGridAndAxes,takeScreenshot,
     selectSpecies} from './scene/graphicsManager.js';
 import {createBacteriumSystem,updateSimulation, setParamFromGUI,assignInitialConcentrations,getGlobalSpeciesConcentrations} from './simulation/simulationManager.js';
-import { createStates,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
+import { createStates, createHistories,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
 import { CONFIG } from './config.js';
 
@@ -53,6 +53,7 @@ const guiActions = {
 const init = (processedData) => {
     concentrationState = createBacteriumSystem(CONFIG, previusVars, previusParams);
     constants = createConstants();
+    createHistories(Object.keys(previusVars.int).length);
     storedProcessedData = processedData;
     bacteriaTimeSeries = processedData.bacteriaTimeSeries;
     constants.numberOfTimeSteps = bacteriaTimeSeries.length;
