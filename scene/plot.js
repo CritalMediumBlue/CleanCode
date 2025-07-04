@@ -137,8 +137,8 @@ export function updatePlot(data, chart) {
         
         // Create filled area datasets between the bounds (with dashed lines)
         // Each call uses 4 dataset slots: 2 for filled area, 2 for dashed lines
-        createFilledAreaDataset(chart, 2, `${chart.data.datasets[0].label} (±SD)`, 'rgba(255, 0, 255, 0.35)', upperBound1, lowerBound1);
-        createFilledAreaDataset(chart, 6, `${chart.data.datasets[1].label} (±SD)`, 'rgba(0, 255, 255, 0.35)', upperBound2, lowerBound2);
+        createFilledAreaDataset(chart, 2, `${chart.data.datasets[0].label} (±SD)`, 'rgba(255, 0, 255, 0.3)', upperBound1, lowerBound1);
+        createFilledAreaDataset(chart, 6, `${chart.data.datasets[1].label} (±SD)`, 'rgba(0, 255, 255, 0.3)', upperBound2, lowerBound2);
     
       }
     
@@ -187,7 +187,7 @@ function sliceData(start, end, data) {
  */
 function createFilledAreaDataset(chart, index, label, color, upperData, lowerData) {
   // Extract the solid color from the transparent color for dashed lines
-  const dashColor = color.replace('0.35', '0.7'); // Make dashed lines more visible
+  const dashColor = color.replace('0.3', '0.7'); // Make dashed lines more visible
   
   // Create or update the filled area between bounds (this takes 2 dataset slots)
   // First, create the upper bound dataset with fill
