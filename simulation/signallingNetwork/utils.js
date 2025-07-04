@@ -20,7 +20,6 @@ export const initADIArrays = (WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT) => 
     const modifiedRightHandSide2 = new Float64Array(HEIGHT);
     const solution2 = new Float64Array(HEIGHT);
     const intermediateConcentration = new Float64Array(WIDTH * HEIGHT);
-    const concentration = new Float64Array(WIDTH * HEIGHT);
     const alpha = DIFFUSION_RATE * deltaT / (2 * deltaX * deltaX);  
     const {a: a1, b: b1, c: c1, d: d1} = generateDiagonals(WIDTH, alpha);
     const {a: a2, b: b2, c: c2, d: d2} = generateDiagonals(HEIGHT, alpha);
@@ -40,8 +39,5 @@ export const initADIArrays = (WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT) => 
         alpha,
         halfDeltaT,
         oneMinus2Alpha,
-        WIDTH,
-        HEIGHT,
-        concentration
     };
 };

@@ -1,7 +1,11 @@
 import { thomasAlgorithm } from './thomasAlgorithm.js';
 import { initADIArrays } from './utils.js';
 
- 
+ const WIDTH = 100; // Width of the grid
+ const HEIGHT = 60; // Height of the grid
+ const DIFFUSION_RATE = 100; // Diffusion rate
+ const deltaX = 1; // Spatial step size in micrometers
+ const deltaT = 0.1; // Time step size in seconds
     
     const {
         modifiedUpperDiagonal1,
@@ -16,9 +20,8 @@ import { initADIArrays } from './utils.js';
         alpha,
         halfDeltaT,
         oneMinus2Alpha,
-        WIDTH,
-        HEIGHT,
-    } = initADIArrays(100, 60, 100, 1, 0.1); 
+        
+    } = initADIArrays(WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT); // width, height, diffusion rate, deltaX, deltaT
 
 export const ADI = (
     concentrationData,
