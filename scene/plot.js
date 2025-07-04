@@ -30,25 +30,27 @@ export function setupPlot(Chart, previusVars) {
         labels: [], // x-axis data points (empty initially)
         datasets: [
         {
-            label: nameOfSpecies[0] + ' [nM] (Mean)', // Use the first species name for the label
+            label: nameOfSpecies[0] + ' [nM]', // Use the first species name for the label
             data: [], // y-axis data points (empty initially)
             borderColor: 'magenta',
             backgroundColor: 'rgba(255, 0, 255, 1)',
-            borderWidth: 2,
+            borderWidth: 2.5,
             fill: false,
             tension: 0.1,
             pointRadius: 0, // Hide points for cleaner look
-            order: 1, // Draw mean lines on top
+            order: 0, // Draw mean lines on top of everything
+            zIndex: 10 // Make sure lines appear on top
         },{
-            label: nameOfSpecies[1] + ' [nM] (Mean)', // Use the second species name for the label
+            label: nameOfSpecies[1] + ' [nM]', // Use the second species name for the label
             data: [], // y-axis data points (empty initially)
             borderColor: 'cyan',
             backgroundColor: 'rgba(0, 255, 255, 1)',
-            borderWidth: 2,
+            borderWidth: 2.5,
             fill: false,
             tension: 0.1,
             pointRadius: 0, // Hide points for cleaner look
-            order: 1, // Draw mean lines on top
+            order: 0, // Draw mean lines on top of everything
+            zIndex: 10 // Make sure lines appear on top
         }]
     };
     
@@ -133,11 +135,9 @@ export function updatePlot(data, chart) {
             }
         }
         
-        // Update or create datasets for standard deviation bounds
-        ensureDatasetExists(chart, 2, `${chart.data.datasets[0].label} (Upper Bound)`, 'rgba(255, 0, 255, 1)', upperBound1);
-        ensureDatasetExists(chart, 3, `${chart.data.datasets[0].label} (Lower Bound)`, 'rgba(255, 0, 255, 1)', lowerBound1);
-        ensureDatasetExists(chart, 4, `${chart.data.datasets[1].label} (Upper Bound)`, 'rgba(0, 255, 255, 1)', upperBound2);
-        ensureDatasetExists(chart, 5, `${chart.data.datasets[1].label} (Lower Bound)`, 'rgba(0, 255, 255, 1)', lowerBound2);
+        // Create filled area datasets between the bounds
+        createFilledAreaDataset(chart, 2, `${chart.data.datasets[0].label} (±SD)`, 'rgba(255, 0, 255, 0.2)', upperBound1, lowerBound1);
+        createFilledAreaDataset(chart, 4, `${chart.data.datasets[1].label} (±SD)`, 'rgba(0, 255, 255, 0.2)', upperBound2, lowerBound2);
     }
     
     // Ensure update doesn't animate for performance
@@ -175,29 +175,44 @@ function sliceData(start, end, data) {
 
 
 /**
- * Ensures a dataset exists at the specified index, creating it if necessary
+ * Creates a filled area dataset between upper and lower bounds
  * @param {Object} chart - Chart.js instance
  * @param {number} index - Index for the dataset
  * @param {string} label - Dataset label
  * @param {string} color - Dataset color
- * @param {Array} data - Dataset values
+ * @param {Array} upperData - Upper bound values
+ * @param {Array} lowerData - Lower bound values
  */
-function ensureDatasetExists(chart, index, label, color, data) {
+function createFilledAreaDataset(chart, index, label, color, upperData, lowerData) {
   // If dataset doesn't exist, create it
   if (!chart.data.datasets[index]) {
     chart.data.datasets[index] = {
       label: label,
-      data: data,
-      borderColor: color,
+      data: upperData,
+      borderColor: 'transparent', // No border for the upper line
       backgroundColor: color,
-      borderWidth: 2,
-      fill: false,
+      fill: '+1', // Fill to the next dataset (which will be lowerData)
       tension: 0.1,
       pointRadius: 0,
-      borderDash: [5, 7], // Add dashed line style for bounds. 5 mean
+      order: 2 // Draw behind the main lines
     };
   } else {
     // Update existing dataset
-    chart.data.datasets[index].data = data;
+    chart.data.datasets[index].data = upperData;
+  }
+
+  // Create or update the lower bound dataset that will be filled to
+  if (!chart.data.datasets[index + 1]) {
+    chart.data.datasets[index + 1] = {
+      label: '', // Empty label to hide from legend
+      data: lowerData,
+      borderColor: 'transparent', // No border for the lower line
+      pointRadius: 0,
+      tension: 0.1,
+      order: 2 // Draw behind the main lines
+    };
+  } else {
+    // Update existing dataset
+    chart.data.datasets[index + 1].data = lowerData;
   }
 }

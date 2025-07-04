@@ -27,25 +27,51 @@ export function createPlotOptions() {
                         size: 12
                     },
                     filter: function(item) {
-                        // Only show the mean lines in the legend to avoid clutter
-                        return item.text.includes('(Mean)');
+                        // Only show items with non-empty labels
+                        return item.text !== '';
+                    },
+                    generateLabels: function(chart) {
+                        const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                        // Keep only the main line labels
+                        return labels.filter(label => 
+                            !label.text.includes('±SD') && label.text !== ''
+                        );
                     }
                 }
             },
             tooltip: {
                 callbacks: {
                     label: function(context) {
-                        // Show both mean and standard deviation in the tooltip
+                        // Show mean values and add SD info when hovering over mean lines
                         const label = context.dataset.label || '';
                         const value = context.parsed.y;
                         
-                        // Only return detailed info for mean lines
-                        if (label.includes('(Mean)')) {
-                            return `${label}: ${value.toFixed(2)}`;
+                        if (label.includes('±SD')) {
+                            return null; // Don't show tooltips for SD bands
                         }
-                        // Don't show the standard deviation bounds in tooltips
-                        return null;
+                        
+                        // Find the corresponding SD dataset
+                        const stdDatasetIndex = context.datasetIndex + 2; // Adjust based on your dataset order
+                        const stdDataset = context.chart.data.datasets[stdDatasetIndex];
+                        
+                        if (stdDataset && stdDataset.data && stdDataset.data[context.dataIndex]) {
+                            const stdDev = stdDataset.data[context.dataIndex] - value;
+                            return `${label}: ${value.toFixed(2)} ± ${stdDev.toFixed(2)}`;
+                        }
+                        
+                        return `${label}: ${value.toFixed(2)}`;
                     }
+                }
+            },
+            // Add a custom plugin to make SD bands translucent on hover for better visibility
+            customCanvasBackgroundColor: {
+                beforeDraw: (chart) => {
+                    const ctx = chart.canvas.getContext('2d');
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'destination-over';
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+                    ctx.fillRect(0, 0, chart.width, chart.height);
+                    ctx.restore();
                 }
             }
         },
