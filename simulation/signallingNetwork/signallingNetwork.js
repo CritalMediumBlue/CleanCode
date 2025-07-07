@@ -143,7 +143,7 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
     for (let i = 0; i < numberOfIterations; i++) {
         clearConcentrationSources();
         
-        cytoplasmConcentrations = updateAllCytoplasms(currentBacteria, positionMap, timeLapse, simulateConcentrations);
+        updateAllCytoplasms(currentBacteria, positionMap, timeLapse, simulateConcentrations);
 
         // Another web Worker can handle this loop
         extSpeciesNames.forEach((speciesName) => {
@@ -159,9 +159,15 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
 
     const resultArray = currentBacteria.map(bacterium => {
         const { id, x, y, longAxis, angle } = bacterium;
-        const idx = positionMap.get(id);
-        
-        cytoplasmConcentrations = simulateConcentrations(id, timeLapse, idx);
+        // const idx = positionMap.get(id);
+
+        //cytoplasmConcentrations = simulateConcentrations(id, timeLapse, idx);
+        //cytoplasmConcentrations = null;
+        const cytoplasmConcentrations = {}; // Initialize cytoplasmConcentrations here
+        intSpeciesNames.forEach((speciesName) => {
+            //define first
+            cytoplasmConcentrations[speciesName] = interiorManager[speciesName].get(id);
+        });
         return {
             id,
             x,
