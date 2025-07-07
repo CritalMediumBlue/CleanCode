@@ -1,4 +1,4 @@
-import {ADI } from './ADI.js';
+import {ADI } from './ADI/ADI.js';
 import {FTCS } from './FTCS.js';
 
         const WIDTH = 100;

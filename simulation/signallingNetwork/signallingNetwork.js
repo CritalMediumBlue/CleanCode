@@ -1,5 +1,5 @@
 import { getAdjustedCoordinates } from "./grid.js";
-import { diffuse } from "./diffusionStep.js";
+import { ADI } from "./ADI/ADI.js";
 
 const variables = {};
 const parameters = {};
@@ -155,9 +155,13 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
 
         // Another web Worker can handle this loop
         extSpeciesNames.forEach((speciesName) => {
-          diffuse(concentrationsState[speciesName], timeLapse);
+          ADI(concentrationsState[speciesName].conc,
+            concentrationsState[speciesName].sources,
+            1, 
+            0.1, 
+            100, 
+            timeLapse);
         });
-
 
 
 

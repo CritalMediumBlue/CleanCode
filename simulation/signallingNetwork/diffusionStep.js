@@ -1,10 +1,9 @@
-import { ADI } from './ADI.js';
-import { FTCS } from './FTCS.js'
+import { ADI } from './ADI/ADI.js';
 
     const diffusionRate = 100;
     const deltaX = 1; //micrometers
     const deltaT = 0.1; //seconds
-    const method = FTCS
+    const method = ADI
     
 export function diffuse(
     concentrationState,

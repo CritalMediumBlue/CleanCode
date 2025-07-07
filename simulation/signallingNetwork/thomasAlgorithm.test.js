@@ -1,4 +1,4 @@
-import { thomasAlgorithm } from './thomasAlgorithm';
+import { thomasAlgorithm } from './ADI/thomasAlgorithm';
 
 
 describe('Thomas Algorithm', () => {

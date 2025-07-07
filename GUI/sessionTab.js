@@ -51,6 +51,7 @@ export const initSessionTab = (tab, guiActions) => {
             
         const reader = new FileReader();
         reader.onload = (e) => {
+          console.log("File loaded");
             const processedData = processFileData(e.target.result);
             guiActions.init(processedData);
             executionfolder.disabled = false;
