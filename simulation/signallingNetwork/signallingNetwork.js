@@ -158,11 +158,12 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
     }
 
     const resultArray = currentBacteria.map(bacterium => {
-        const { ID, x, y, longAxis, angle } = bacterium;
-        const idx = positionMap.get(ID);
+        const { id, x, y, longAxis, angle } = bacterium;
+        const idx = positionMap.get(id);
         
+        cytoplasmConcentrations = simulateConcentrations(id, timeLapse, idx);
         return {
-            id: ID,
+            id,
             x,
             y,
             angle,
