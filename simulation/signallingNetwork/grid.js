@@ -55,7 +55,7 @@ export function countNeighbors(x, y, phenotypeManager) {
         const distSquared = dx * dx + dy * dy;
         
         if (distSquared < radiusSquared) {
-          const phenotype = phenotypeMemo.get(point.ID);
+          const phenotype = phenotypeMemo.get(pointid);
           if (phenotype && phenotype === phenotypes.MAGENTA) {
             magentaCount++;
           } else if (phenotype && phenotype === phenotypes.CYAN) {

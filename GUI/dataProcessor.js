@@ -14,13 +14,12 @@ export function processFileData(fileContent) {
      
         const bacteriaInTimeSlice= bacteria.map(bacterium => (
             { 
-            ID: BigInt(bacterium.ID),
+            id: BigInt(bacterium.ID),
             y: Math.round((bacterium.y - 170)*10)/10,
             x: Math.round(bacterium.x*10)/10,
             angle: Math.round(bacterium.angle*50)/50,
             longAxis: Math.round(bacterium.length),
             parent: bacterium.parent ? bacterium.parent : undefined,
-            randomSwitch: Math.random() < 0.0000? true : false,
         }
     ));  
 
@@ -44,15 +43,15 @@ function analyzeBacteriaLineage(bacteriaTimeSeries) {
     const AllIDs = new Set();
     for (const bacteriaInTimeSlice of bacteriaTimeSeries) {
         for (const bacterium of bacteriaInTimeSlice) {
-          AllIDs.add(bacterium.ID);
+          AllIDs.add(bacterium.id);
         }
       }
 
     const bacteriaWithParentsandChildren = new Set();
     for (const bacteriaInTimeSlice of bacteriaTimeSeries) {
         for (const bacterium of bacteriaInTimeSlice) {
-            if (AllIDs.has(bacterium.ID/2n) && (AllIDs.has(bacterium.ID*2n))) {
-                bacteriaWithParentsandChildren.add(bacterium.ID);
+            if (AllIDs.has(bacterium.id/2n) && (AllIDs.has(bacterium.id*2n))) {
+                bacteriaWithParentsandChildren.add(bacterium.id);
             }
         }
     }
@@ -60,11 +59,11 @@ function analyzeBacteriaLineage(bacteriaTimeSeries) {
     const lifetimes = new Map();
     for (let timeIndex = 0; timeIndex < bacteriaTimeSeries.length; timeIndex++) {
         for (const bacterium of bacteriaTimeSeries[timeIndex]) {
-            if (bacteriaWithParentsandChildren.has(bacterium.ID)) {
-                if (!lifetimes.has(bacterium.ID)) {
-                    lifetimes.set(bacterium.ID, [timeIndex, timeIndex]);
+            if (bacteriaWithParentsandChildren.has(bacterium.id)) {
+                if (!lifetimes.has(bacterium.id)) {
+                    lifetimes.set(bacterium.id, [timeIndex, timeIndex]);
                 } else {
-                    lifetimes.get(bacterium.ID)[1] = timeIndex;
+                    lifetimes.get(bacterium.id)[1] = timeIndex;
                 }
             }
         }
