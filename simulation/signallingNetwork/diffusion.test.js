@@ -1,4 +1,4 @@
-import {ADI } from './ADI/ADI.js';
+import {ADI } from './extracellular/ADI.js';
 import {FTCS } from './FTCS.js';
 
         const WIDTH = 100;

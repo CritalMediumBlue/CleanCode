@@ -1,4 +1,4 @@
-import { thomasAlgorithm } from './ADI/thomasAlgorithm';
+import { thomasAlgorithm } from './extracellular/thomasAlgorithm';
 
 
 describe('Thomas Algorithm', () => {

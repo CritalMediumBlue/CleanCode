@@ -1,5 +1,5 @@
 import { getAdjustedCoordinates } from "./grid.js";
-import { ADI } from "./ADI/ADI.js";
+import { ADI } from "./extracellular/ADI.js";
 
 const variables = {};
 const parameters = {};

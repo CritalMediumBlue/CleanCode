@@ -1,10 +1,4 @@
-/**
- * Grid-based spatial partitioning implementation.
- * Alternative to the quadtree approach for performance comparison.
- */
 
-// The grid structure will be a Map where keys are cell coordinates (as strings)
-// and values are arrays of points in that cell
 let grid = null;
 let _cellSize = 7; // Default cell size, matching the neighbor search radius
 
