@@ -91,14 +91,17 @@ const animate = () => {
 
 };
 
+
+
 //97% of the time we will be in this function
 const singleStep = () => {  
+
+
         const currentBacteria = bacteriaTimeSeries[session.currentTimeStep];
 
         ({bacteriaDataUpdated, concentrations} = updateSimulation(currentBacteria,constants.fromStepToMinutes));
         globalParams = getGlobalSpeciesConcentrations(bacteriaDataUpdated);
-        updateData();
-
+        updateData();   
      
 }
 

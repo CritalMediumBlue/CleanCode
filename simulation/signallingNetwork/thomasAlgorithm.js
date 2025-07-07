@@ -1,3 +1,4 @@
+const tolerance = 1e-10;
 export function thomasAlgorithm(
     lowerDiagonal,
     mainDiagonal,
@@ -8,13 +9,12 @@ export function thomasAlgorithm(
     modifiedRightHandSide,
     solution
 ) {
-    const tolerance = 1e-10;
+    
 
     let pivot = mainDiagonal[0];
-    if (Math.abs(pivot) < tolerance) {
-     
+     if (Math.abs(pivot) < tolerance) {
         pivot = (pivot >= 0) ? tolerance : -tolerance;
-    }
+    } 
     const invPivot = 1.0 / pivot; 
 
     modifiedUpperDiagonal[0] = upperDiagonal[0] * invPivot;
@@ -27,9 +27,9 @@ export function thomasAlgorithm(
 
         let currentDenominator = mainDiagonal[i] - l_i * u_prime_prev;
 
-        if (Math.abs(currentDenominator) < tolerance) {
+         if (Math.abs(currentDenominator) < tolerance) {
             currentDenominator = (currentDenominator >= 0) ? tolerance : -tolerance;
-        }
+        } 
         const invDenominator = 1.0 / currentDenominator; 
 
         modifiedUpperDiagonal[i] = upperDiagonal[i] * invDenominator;
@@ -42,3 +42,4 @@ export function thomasAlgorithm(
     }
 
 }
+

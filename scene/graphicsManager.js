@@ -56,7 +56,6 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
         if(species !== null) {
         const concentration = concentrationState[species].conc;
        
-       
         updateSurfaceMesh(mesh, concentration, meshScale, meshTranslationZ, colorMultiplier);
         }
         
@@ -70,8 +69,9 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
             updatePlot(histories, plot);
         } 
         updateOverlay(session, constants);
-        stage.renderer.render(stage.scene, stage.camera);
     }
+            stage.renderer.render(stage.scene, stage.camera);
+
 }
 
 export function meshVisibility(boolean) {

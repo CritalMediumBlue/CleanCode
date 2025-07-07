@@ -1,4 +1,6 @@
-import {ADI, FTCS} from './diffusion.js';
+import {ADI } from './ADI.js';
+import {FTCS } from './FTCS.js';
+
         const WIDTH = 100;
         const HEIGHT = 60;
         const totalCells = WIDTH * HEIGHT;
