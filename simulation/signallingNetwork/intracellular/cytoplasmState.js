@@ -63,10 +63,11 @@ const setCytopManager = (bacteriaData) => {
     bacteriaData.forEach((bacterium) => { 
         const ID = bacterium.id; 
         intSpeciesNames.forEach((speciesName) => { 
-            interiorManager[speciesName].set(ID, variables.int[speciesName].val); 
+            console.log(variables.int[speciesName].val() + " " +speciesName)
+            interiorManager[speciesName].set(ID, variables.int[speciesName].val()); 
         }); 
         extSpeciesNames.forEach((speciesName) => { 
-            exteriorManager[speciesName].set(ID, variables.ext[speciesName].val); 
+            exteriorManager[speciesName].set(ID, variables.ext[speciesName].val()); 
         }); 
     }); 
 };

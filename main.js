@@ -44,6 +44,11 @@ const guiActions = {
     setVarsAndParams: (vars, params) => {
         previusParams = params;
         previusVars = vars;
+        Object.keys(previusVars.int).forEach(speciesName => {
+            console.log(previusVars.int[speciesName].val());
+        }
+        );
+            
     }
 
 };
@@ -70,6 +75,10 @@ const init = (processedData) => {
     setupNewScene(CONFIG,previusVars);
     //assignInitialConcentrations(bacteriaTimeSeries[session.currentTimeStep])
     animate();
+    session.animationFrameId = requestAnimationFrame(animate);
+
+    renderScene(histories, bacteriaDataUpdated, concentrations, CONFIG.BACTERIUM, session, constants);
+
 };
 
 const animate = () => {

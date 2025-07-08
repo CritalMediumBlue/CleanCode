@@ -50,7 +50,6 @@ export function setupNewScene(config,previusVars) {
 
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, session, constants) {
     
-    if (session.currentTimeStep % 2 === 0 ) {
 
         
         if(species !== null) {
@@ -71,7 +70,7 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
         updateOverlay(session, constants);
         stage.renderer.render(stage.scene, stage.camera);
 
-    }
+   
 
 }
 

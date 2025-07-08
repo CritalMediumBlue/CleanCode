@@ -27,7 +27,7 @@ function simulateConcentrations(ID, timeLapse, idx, concentrationsState) {
         const origConc = manager.get(ID);
         const delta = varInt.eq(variables, parameters);
         const newConc = origConc + delta * timeLapse;
-        manager.set(ID, newConc > 1e-6 ? newConc : 1e-6);
+        manager.set(ID, newConc);
     }
 
     secretedSpecies.forEach((speciesName) => {
