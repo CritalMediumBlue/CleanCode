@@ -1,5 +1,3 @@
-// Shared state module for cytoplasm functionality
-// This module contains all shared state that both initializer and updater modules need
 
 export const variables = {};
 export const parameters = {};
@@ -9,17 +7,70 @@ export const intSpeciesNames = [];
 export const extSpeciesNames = [];
 export const concentrationsState = {};
 
-// Internal state (not exported directly)
+
 let speciesNames = null;
 let secretedSpecies = null;
 
-// Getters and setters for internal state
 export const getSpeciesNames = () => speciesNames;
 export const getSecretedSpecies = () => secretedSpecies;
 export const setSpeciesNames = (names) => { speciesNames = names; };
 export const setSecretedSpecies = (species) => { secretedSpecies = species; };
 
-// GUI Communication - Parameter modification
+export const setModel = (params, vars, config, bacteriaData) => {
+    Object.assign(parameters, params);
+    Object.assign(variables, vars);
+    
+    const speciesNamesLocal = Object.keys(variables.int);
+    const secretedSpeciesLocal = Object.keys(variables.ext);
+    
+    // Set internal state
+    setSpeciesNames(speciesNamesLocal);
+    setSecretedSpecies(secretedSpeciesLocal);
+    
+    const gridSize = config.GRID.WIDTH * config.GRID.HEIGHT;
+
+    initializeSpecies(variables.int, intSpeciesNames, interiorManager, false, gridSize);
+    initializeSpecies(variables.ext, extSpeciesNames, exteriorManager, true, gridSize);
+    lockObjects([interiorManager, exteriorManager, concentrationsState, variables, parameters]);
+    setCytopManager(bacteriaData);
+
+    return concentrationsState;
+};
+
+function initializeSpecies(speciesObj, speciesNames, manager, isExternal, gridSize) {
+    speciesNames.splice(0, speciesNames.length, ...Object.keys(speciesObj));
+    
+    speciesNames.forEach((speciesName) => {
+        manager[speciesName] = new Map();
+        
+        if (isExternal) {
+            concentrationsState[speciesName] = {
+                conc: new Float64Array(gridSize).fill(0),
+                sources: new Float64Array(gridSize).fill(0)
+            };
+        }
+    });
+}
+
+function lockObjects(objectArray) {
+    objectArray.forEach(obj => {
+        Object.seal(obj); 
+        Object.preventExtensions(obj);
+    });
+}
+
+const setCytopManager = (bacteriaData) => { 
+    bacteriaData.forEach((bacterium) => { 
+        const ID = bacterium.id; 
+        intSpeciesNames.forEach((speciesName) => { 
+            interiorManager[speciesName].set(ID, variables.int[speciesName].val); 
+        }); 
+        extSpeciesNames.forEach((speciesName) => { 
+            exteriorManager[speciesName].set(ID, variables.ext[speciesName].val); 
+        }); 
+    }); 
+};
+
 export const setParameter = (paramName, value) => {
     parameters[paramName] = value;
 };

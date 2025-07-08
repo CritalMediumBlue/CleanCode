@@ -115,8 +115,8 @@ export function updatePlot(data, chart) {
             
             if (slicedDataMean[i+1] && slicedSD[i+1]) {
                 for (let j = 0; j < slicedDataMean[i+1].length; j++) {
-                    upperBounds[i].push(slicedDataMean[i+1][j] + slicedSD[i+1][j]/3);
-                    lowerBounds[i].push(Math.max(0, slicedDataMean[i+1][j] - slicedSD[i+1][j]/3)); // Prevent negative values
+                    upperBounds[i].push(slicedDataMean[i+1][j] + slicedSD[i+1][j]/2);
+                    lowerBounds[i].push(Math.max(0, slicedDataMean[i+1][j] - slicedSD[i+1][j]/2)); // Prevent negative values
                 }
             }
         }

@@ -1,17 +1,6 @@
 import { getAdjustedCoordinates } from "./grid.js";
 import { ADI } from "./extracellular/ADI.js";
-import { 
-    setModel, 
-    setParameter, 
-    updateAllCytoplasms, 
-    calculateResultArray, 
-    variables, 
-    parameters, 
-    interiorManager, 
-    exteriorManager, 
-    extSpeciesNames, 
-    concentrationsState 
-} from "./intracellular/cytoplasmManager.js";
+import { setModel, setParameter,  updateAllCytoplasms,  calculateResultArray,  extSpeciesNames,  concentrationsState } from "./intracellular/cytoplasmManager.js";
 export { setModel, setParameter };
 
 
@@ -40,7 +29,7 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
     for (let i = 0; i < numberOfIterations; i++) {
         clearConcentrationSources();
         
-        updateAllCytoplasms(positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState);
+        updateAllCytoplasms(positionMap, timeLapse, concentrationsState);
 
         extSpeciesNames.forEach((speciesName) => {
           ADI(concentrationsState[speciesName].conc,concentrationsState[speciesName].sources,1, 0.1, 100, timeLapse);
@@ -48,7 +37,7 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
 
     }
 
-    const resultArray = calculateResultArray(currentBacteria, interiorManager);
+    const resultArray = calculateResultArray(currentBacteria);
 
 
     return {

@@ -1,18 +1,14 @@
-// Cytoplasm Updater Module
-// This module handles frequent updates and calculations for cytoplasm concentrations
-// This is hot code that gets called very frequently during simulation
 
 import { 
-    variables, 
-    parameters, 
-    interiorManager, 
-    exteriorManager, 
-    concentrationsState,
     getSpeciesNames,
-    getSecretedSpecies
+    getSecretedSpecies,
+    variables,
+    parameters,
+    interiorManager,
+    exteriorManager
 } from './cytoplasmState.js';
 
-export const updateAllCytoplasms = (positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState) => {
+export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState) => {
     for (const [id, idx] of positionMap.entries()) {
         simulateConcentrations(id, timeLapse, idx, variables, parameters, interiorManager, exteriorManager, concentrationsState);
     }
@@ -62,7 +58,7 @@ function inheritConcentrations(ID, idx, interiorManager, exteriorManager, variab
     }
 }
 
-export const calculateResultArray = (currentBacteria, interiorManager) => {
+export const calculateResultArray = (currentBacteria) => {
     const speciesNames = getSpeciesNames();
     
     const resultArray = currentBacteria.map(bacterium => {
