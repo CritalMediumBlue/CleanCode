@@ -1,6 +1,6 @@
 import { getAdjustedCoordinates } from "./grid.js";
 import { ADI } from "./extracellular/ADI.js";
-import {updateAllCytoplasms} from "./intracellular/cytoplasm.js"
+import {updateAllCytoplasms, initCytoplasmConstants,calculateResultArray} from "./intracellular/cytoplasm.js"
 
 const variables = {};
 const parameters = {};
@@ -10,12 +10,12 @@ const intSpeciesNames = [];
 const extSpeciesNames = [];
 const concentrationsState = {};
 
-const MIN_CONCENTRATION = 1e-6;
-
 
 export const setModel = (params, vars, config) => {
     Object.assign(parameters, params);
     Object.assign(variables, vars);
+
+    initCytoplasmConstants(variables);
 
     const gridSize = config.GRID.WIDTH * config.GRID.HEIGHT;
 
@@ -79,46 +79,6 @@ export const setCytopManager = (bacteriaData) => {
 };
 
 
-function inheritConcentrations(ID, idx) {
-    intSpeciesNames.forEach((speciesName) => {
-        if (!interiorManager[speciesName].has(ID)) {
-            interiorManager[speciesName].set(ID, interiorManager[speciesName].get(ID / 2n));
-        }
-        variables.int[speciesName].val = interiorManager[speciesName].get(ID);
-    });
-
-    extSpeciesNames.forEach((speciesName) => {
-        exteriorManager[speciesName].set(ID, concentrationsState[speciesName].conc[idx]);
-        variables.ext[speciesName].val = exteriorManager[speciesName].get(ID);
-    });
-}
-
-
-function simulateConcentrations(ID, timeLapse, idx) {
-    const finalConcentrations = {};
-
-    inheritConcentrations(ID, idx);
-    
-    intSpeciesNames.forEach((speciesName) => {
-        const originalConcentration = interiorManager[speciesName].get(ID);
-        const delta = variables.int[speciesName].eq(variables, parameters);
-        finalConcentrations[speciesName] = originalConcentration + delta * timeLapse;
-
-        if (finalConcentrations[speciesName] < MIN_CONCENTRATION) {
-            finalConcentrations[speciesName] = MIN_CONCENTRATION; 
-        }
-
-        interiorManager[speciesName].set(ID, finalConcentrations[speciesName]);
-    });
-
-    extSpeciesNames.forEach((speciesName) => {
-        concentrationsState[speciesName].sources[idx] = 
-            variables.ext[speciesName].eq(variables, parameters);
-    });
-
-    return finalConcentrations;
-}
-
 function clearConcentrationSources() {
     extSpeciesNames.forEach((speciesName) => {
         concentrationsState[speciesName].sources.fill(0);
@@ -138,14 +98,12 @@ function createPositionMap(currentBacteria, HEIGHT, WIDTH) {
 
 export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLapse, numberOfIterations) => {
     createPositionMap(currentBacteria, HEIGHT, WIDTH);
-    let cytoplasmConcentrations;
 
     for (let i = 0; i < numberOfIterations; i++) {
         clearConcentrationSources();
         
-        updateAllCytoplasms(currentBacteria, positionMap, timeLapse, simulateConcentrations);
+        updateAllCytoplasms(currentBacteria, positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState);
 
-        // Another web Worker can handle this loop
         extSpeciesNames.forEach((speciesName) => {
           ADI(concentrationsState[speciesName].conc,
             concentrationsState[speciesName].sources,
@@ -157,27 +115,8 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
 
     }
 
-    const resultArray = currentBacteria.map(bacterium => {
-        const { id, x, y, longAxis, angle } = bacterium;
-        // const idx = positionMap.get(id);
+    const resultArray = calculateResultArray(currentBacteria, interiorManager);
 
-        //cytoplasmConcentrations = simulateConcentrations(id, timeLapse, idx);
-        //cytoplasmConcentrations = null;
-        const cytoplasmConcentrations = {}; // Initialize cytoplasmConcentrations here
-        intSpeciesNames.forEach((speciesName) => {
-            //define first
-            cytoplasmConcentrations[speciesName] = interiorManager[speciesName].get(id);
-        });
-        return {
-            id,
-            x,
-            y,
-            angle,
-            longAxis,
-            phenotype: "test",
-            cytoplasmConcentrations,
-        };
-    });
 
     return {
         bacteriaDataUpdated: resultArray,
