@@ -64,13 +64,14 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
             updateCapsules(bacteriaData, BACTERIUM, THREE, capsules, capsuleVisibility);
         }
         
-        if (histories && session.currentTimeStep % 6 === 0 && session.play) {
+        if (histories && session.currentTimeStep % 10 === 0 && session.play) {
             // Check and log the structure of histories to debug
             updatePlot(histories, plot);
         } 
         updateOverlay(session, constants);
+        stage.renderer.render(stage.scene, stage.camera);
+
     }
-            stage.renderer.render(stage.scene, stage.camera);
 
 }
 
