@@ -2,29 +2,21 @@ let speciesNames = null;
 let secretedSpecies = null;
 
 
-export const updateAllCytoplasms = (currentBacteria, positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState) => {
-    currentBacteria.forEach(bacterium => {
-        const { id } = bacterium;
-        const idx = positionMap.get(id);
+export const updateAllCytoplasms = (positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState) => {
+    positionMap.forEach((idx, id) => {
         simulateConcentrations(id, timeLapse, idx, variables, parameters, interiorManager, exteriorManager, concentrationsState);
-    });
-};
+        });
+    };
 
 function simulateConcentrations(ID, timeLapse, idx, variables, parameters, interiorManager, exteriorManager, concentrationsState) {
-    const finalConcentrations = {};
-
+    
     inheritConcentrations(ID, idx, interiorManager, exteriorManager, variables, concentrationsState);
 
     speciesNames.forEach((speciesName) => {
-        const originalConcentration = interiorManager[speciesName].get(ID);
-        const delta = variables.int[speciesName].eq(variables, parameters);
-        finalConcentrations[speciesName] = originalConcentration + delta * timeLapse;
+       
+        const finalConcentration  = interiorManager[speciesName].get(ID) + variables.int[speciesName].eq(variables, parameters) * timeLapse;
 
-        if (finalConcentrations[speciesName] < 1e-6) {
-            finalConcentrations[speciesName] = 1e-6; 
-        }
-
-        interiorManager[speciesName].set(ID, finalConcentrations[speciesName]);
+        interiorManager[speciesName].set(ID, finalConcentration > 1e-6 ? finalConcentration : 1e-6);
     });
 
     secretedSpecies.forEach((speciesName) => {
@@ -46,6 +38,11 @@ function inheritConcentrations(ID, idx, interiorManager, exteriorManager, variab
         variables.ext[speciesName].val = exteriorManager[speciesName].get(ID);
     });
 }
+
+
+
+
+
 
 export const calculateResultArray = (currentBacteria, interiorManager) => {
     const resultArray = currentBacteria.map(bacterium => {

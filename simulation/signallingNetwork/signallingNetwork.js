@@ -29,7 +29,7 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
     for (let i = 0; i < numberOfIterations; i++) {
         clearConcentrationSources();
         
-        updateAllCytoplasms(currentBacteria, positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState);
+        updateAllCytoplasms(positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState);
 
         extSpeciesNames.forEach((speciesName) => {
           ADI(concentrationsState[speciesName].conc,concentrationsState[speciesName].sources,1, 0.1, 100, timeLapse);
