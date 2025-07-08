@@ -23,13 +23,6 @@ export function createBacteriumSystem(config, vars, params, bacteriaData) {
 export const setParamFromGUI = (paramName, newValue) => {setParameter(paramName, newValue);}
 
 
-
-
-
-
-
-
-
 export function updateSimulation(currentBacteria, minutes) {
 
 

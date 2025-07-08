@@ -1,6 +1,17 @@
 import { getAdjustedCoordinates } from "./grid.js";
 import { ADI } from "./extracellular/ADI.js";
-import { updateAllCytoplasms, calculateResultArray, variables, parameters, interiorManager, exteriorManager, extSpeciesNames, concentrationsState, setModel, setParameter } from "./intracellular/cytoplasm.js"
+import { 
+    setModel, 
+    setParameter, 
+    updateAllCytoplasms, 
+    calculateResultArray, 
+    variables, 
+    parameters, 
+    interiorManager, 
+    exteriorManager, 
+    extSpeciesNames, 
+    concentrationsState 
+} from "./intracellular/cytoplasmManager.js";
 export { setModel, setParameter };
 
 
