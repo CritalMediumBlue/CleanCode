@@ -73,7 +73,6 @@ yarn-error.log*
 # Local Netlify folder
 .netlify
 
-.dependency-cruiser.cjs
 
 package.json
 package.json
