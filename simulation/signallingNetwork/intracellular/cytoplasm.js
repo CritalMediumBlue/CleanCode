@@ -1,6 +1,61 @@
 let speciesNames = null;
 let secretedSpecies = null;
 
+/////// Part 1: Initiation of cytoplasm model. This part only get's called once, at the beggining of the program
+
+export const variables = {};
+export const parameters = {};
+export const interiorManager = {};
+export const exteriorManager = {};
+export const intSpeciesNames = [];
+export const extSpeciesNames = [];
+export const concentrationsState = {};
+
+export const setModel = (params, vars, config, bacteriaData) => {
+    Object.assign(parameters, params);
+    Object.assign(variables, vars);
+    speciesNames = Object.keys(variables.int);
+    secretedSpecies = Object.keys(variables.ext);
+    
+    const gridSize = config.GRID.WIDTH * config.GRID.HEIGHT;
+
+    initializeSpecies(variables.int, intSpeciesNames, interiorManager, false, gridSize);
+    initializeSpecies(variables.ext, extSpeciesNames, exteriorManager, true, gridSize);
+    lockObjects([interiorManager, exteriorManager, concentrationsState, variables, parameters]);
+    setCytopManager(bacteriaData)
+
+    return concentrationsState;
+};
+
+function initializeSpecies(speciesObj, speciesNames, manager, isExternal, gridSize) {
+    speciesNames.splice(0, speciesNames.length, ...Object.keys(speciesObj));
+    
+    speciesNames.forEach((speciesName) => {
+        manager[speciesName] = new Map();
+        
+        if (isExternal) {
+            concentrationsState[speciesName] = {
+                conc: new Float64Array(gridSize).fill(0),
+                sources: new Float64Array(gridSize).fill(0)
+            };
+        }
+    });
+}
+
+function lockObjects(objectArray) {objectArray.forEach(obj => {Object.seal(obj); Object.preventExtensions(obj);});}
+
+const setCytopManager = (bacteriaData) => { 
+    bacteriaData.forEach((bacterium) => { 
+        const ID = bacterium.id; 
+        intSpeciesNames.forEach((speciesName) => { interiorManager[speciesName].set(ID, variables.int[speciesName].val); }); 
+        extSpeciesNames.forEach((speciesName) => { exteriorManager[speciesName].set(ID, variables.ext[speciesName].val); }); 
+    }); 
+};
+
+
+
+
+/////// Part 2: Update of Cytoplasm variables. This is hot code and gets called very frecuently.
 
 export const updateAllCytoplasms = (positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState) => {
     for (const [id, idx] of positionMap.entries()) {
@@ -50,10 +105,6 @@ function inheritConcentrations(ID, idx, interiorManager, exteriorManager, variab
 }
 
 
-
-
-
-
 export const calculateResultArray = (currentBacteria, interiorManager) => {
     const resultArray = currentBacteria.map(bacterium => {
         const { id, x, y, longAxis, angle } = bacterium;
@@ -74,82 +125,9 @@ export const calculateResultArray = (currentBacteria, interiorManager) => {
     return resultArray;
 };
 
-// Moved functions and constants from signallingNetwork.js
 
-export const variables = {};
-export const parameters = {};
-export const interiorManager = {};
-export const exteriorManager = {};
-export const intSpeciesNames = [];
-export const extSpeciesNames = [];
-export const concentrationsState = {};
 
-export const setModel = (params, vars, config, bacteriaData) => {
-    Object.assign(parameters, params);
-    Object.assign(variables, vars);
 
-    if (speciesNames === null) {
-        speciesNames = Object.keys(variables.int);
-    }
-    if (secretedSpecies === null) {
-        secretedSpecies = Object.keys(variables.ext);
-    }
+/////// Part 3: GUI communication. The user uses this fucntion to modify the parameters.
 
-    const gridSize = config.GRID.WIDTH * config.GRID.HEIGHT;
-
-    initializeSpecies(variables.int, intSpeciesNames, interiorManager, false, gridSize);
-    initializeSpecies(variables.ext, extSpeciesNames, exteriorManager, true, gridSize);
-
-    lockObjects([interiorManager, exteriorManager, concentrationsState, variables, parameters]);
-
-    setCytopManager(bacteriaData)
-
-    return concentrationsState;
-};
-
-function initializeSpecies(speciesObj, speciesNames, manager, isExternal, gridSize) {
-    speciesNames.splice(0, speciesNames.length, ...Object.keys(speciesObj));
-    
-    speciesNames.forEach((speciesName) => {
-        manager[speciesName] = new Map();
-        
-        if (isExternal) {
-            concentrationsState[speciesName] = {
-                conc: new Float64Array(gridSize).fill(0),
-                sources: new Float64Array(gridSize).fill(0)
-            };
-        }
-    });
-}
-
-function lockObjects(objectArray) {
-    objectArray.forEach(obj => {
-        Object.seal(obj);
-        Object.preventExtensions(obj);
-    });
-}
-
-export const setParameter = (paramName, value) => {
-    parameters[paramName] = value;
-    console.log(`Parameter ${paramName} set to ${value}`);
-};
-
-const setCytopManager = (bacteriaData) => {
-    intSpeciesNames.forEach((speciesName) => {
-        bacteriaData.forEach((bacterium) => {
-            const ID = bacterium.id;
-            if (!interiorManager[speciesName].has(ID)) {
-                interiorManager[speciesName].set(ID, variables.int[speciesName].val);
-            }
-        });
-    });
-
-    extSpeciesNames.forEach((speciesName) => {
-        bacteriaData.forEach((bacterium) => {
-            const ID = bacterium.id;
-            if (!exteriorManager[speciesName].has(ID)) {
-                exteriorManager[speciesName].set(ID, variables.ext[speciesName].val);
-            }
-        });
-    });
-};
+export const setParameter = (paramName, value) => {parameters[paramName] = value;};

@@ -41,8 +41,7 @@ const guiActions = {
     stepForward: () => { singleStep(); },
     init: (processedData) => {init(processedData);},
     setParam: (paramName, newValue) => {setParamFromGUI(paramName, newValue); },
-    setModel: (vars, params) => {
-        //concentrations=createBacteriumSystem(CONFIG, vars, params); 
+    setVarsAndParams: (vars, params) => {
         previusParams = params;
         previusVars = vars;
     }

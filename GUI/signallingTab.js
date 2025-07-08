@@ -23,7 +23,7 @@ export const initSignallingTab = (tab, guiActions) => {
           const vars = window.vars;
           const params = window.params;
 
-          guiActions.setModel(vars, params);
+          guiActions.setVarsAndParams(vars, params);
           initiateSliders(params, parametersFolder, guiActions);
           initVisualizationTab(tab, guiActions, vars);
         };
