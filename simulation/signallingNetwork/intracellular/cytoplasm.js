@@ -3,21 +3,22 @@ let secretedSpecies = null;
 
 
 export const updateAllCytoplasms = (positionMap, timeLapse, variables, parameters, interiorManager, exteriorManager, concentrationsState) => {
-    positionMap.forEach((idx, id) => {
+    for (const [id, idx] of positionMap.entries()) {
         simulateConcentrations(id, timeLapse, idx, variables, parameters, interiorManager, exteriorManager, concentrationsState);
-        });
-    };
+    }
+};
 
 function simulateConcentrations(ID, timeLapse, idx, variables, parameters, interiorManager, exteriorManager, concentrationsState) {
     
     inheritConcentrations(ID, idx, interiorManager, exteriorManager, variables, concentrationsState);
 
-    speciesNames.forEach((speciesName) => {
-       
-        const finalConcentration  = interiorManager[speciesName].get(ID) + variables.int[speciesName].eq(variables, parameters) * timeLapse;
-
+    for (let i = 0, len = speciesNames.length; i < len; i++) {
+        const speciesName = speciesNames[i];
+        const originalConcentration = interiorManager[speciesName].get(ID);
+        const delta = variables.int[speciesName].eq(variables, parameters);
+        const finalConcentration = originalConcentration + delta * timeLapse;
         interiorManager[speciesName].set(ID, finalConcentration > 1e-6 ? finalConcentration : 1e-6);
-    });
+    }
 
     secretedSpecies.forEach((speciesName) => {
         concentrationsState[speciesName].sources[idx] = variables.ext[speciesName].eq(variables, parameters);
@@ -26,17 +27,20 @@ function simulateConcentrations(ID, timeLapse, idx, variables, parameters, inter
 }
 
 function inheritConcentrations(ID, idx, interiorManager, exteriorManager, variables, concentrationsState) {
-    speciesNames.forEach((speciesName) => {
-        if (!interiorManager[speciesName].has(ID)) {
-            interiorManager[speciesName].set(ID, interiorManager[speciesName].get(ID / 2n));
+    for (let i = 0, len = speciesNames.length; i < len; i++) {
+        const speciesName = speciesNames[i];
+        const managerInt = interiorManager[speciesName];
+        if (!managerInt.has(ID)) {
+            managerInt.set(ID, managerInt.get(ID / 2n));
         }
-        variables.int[speciesName].val = interiorManager[speciesName].get(ID);
-    });
+        variables.int[speciesName].val = managerInt.get(ID);
+    }
 
-    secretedSpecies.forEach((speciesName) => {
+    for (let i = 0, len = secretedSpecies.length; i < len; i++) {
+        const speciesName = secretedSpecies[i];
         exteriorManager[speciesName].set(ID, concentrationsState[speciesName].conc[idx]);
         variables.ext[speciesName].val = exteriorManager[speciesName].get(ID);
-    });
+    }
 }
 
 
