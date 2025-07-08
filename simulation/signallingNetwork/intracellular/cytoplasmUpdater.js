@@ -10,15 +10,15 @@ import {
 
 export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState) => {
     for (const [id, idx] of positionMap.entries()) {
-        simulateConcentrations(id, timeLapse, idx, variables, parameters, interiorManager, exteriorManager, concentrationsState);
+        simulateConcentrations(id, timeLapse, idx, concentrationsState);
     }
 };
 
-function simulateConcentrations(ID, timeLapse, idx, variables, parameters, interiorManager, exteriorManager, concentrationsState) {
+function simulateConcentrations(ID, timeLapse, idx, concentrationsState) {
     const speciesNames = getSpeciesNames();
     const secretedSpecies = getSecretedSpecies();
     
-    inheritConcentrations(ID, idx, interiorManager, exteriorManager, variables, concentrationsState);
+    inheritConcentrations(ID, idx, concentrationsState);
 
     for (let i = 0, len = speciesNames.length; i < len; i++) {
         const speciesName = speciesNames[i];
@@ -35,7 +35,7 @@ function simulateConcentrations(ID, timeLapse, idx, variables, parameters, inter
     });
 }
 
-function inheritConcentrations(ID, idx, interiorManager, exteriorManager, variables, concentrationsState) {
+function inheritConcentrations(ID, idx, concentrationsState) {
     const speciesNames = getSpeciesNames();
     const secretedSpecies = getSecretedSpecies();
 

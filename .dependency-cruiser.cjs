@@ -21,7 +21,8 @@ module.exports = {
         "^three/addons/",
         "^d3-scale-chromatic$",
         "^chart\\.js$",
-        "^rapier$"
+        "^rapier$",
+        "tweakpane.min.js"
       ]}
     },
     {
@@ -226,7 +227,8 @@ module.exports = {
         "^three/addons/",
         "^d3-scale-chromatic$",
         "^chart\\.js$",
-        "^rapier$"
+        "^rapier$",
+        "https:"
       ]
     },  
    
