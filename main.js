@@ -2,7 +2,7 @@
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
     setColorMultiplier,visibleGridAndAxes,takeScreenshot,
     selectSpecies} from './scene/graphicsManager.js';
-import {createBacteriumSystem,updateSimulation, setParamFromGUI,assignInitialConcentrations,getGlobalSpeciesConcentrations} from './simulation/simulationManager.js';
+import {createBacteriumSystem,updateSimulation, setParamFromGUI,getGlobalSpeciesConcentrations} from './simulation/simulationManager.js';
 import { createStates, createHistories,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
 import { CONFIG } from './config.js';
@@ -42,7 +42,7 @@ const guiActions = {
     init: (processedData) => {init(processedData);},
     setParam: (paramName, newValue) => {setParamFromGUI(paramName, newValue); },
     setModel: (vars, params) => {
-        concentrations=createBacteriumSystem(CONFIG, vars, params); 
+        //concentrations=createBacteriumSystem(CONFIG, vars, params); 
         previusParams = params;
         previusVars = vars;
     }
@@ -51,11 +51,13 @@ const guiActions = {
 
 
 const init = (processedData) => {
-    concentrationState = createBacteriumSystem(CONFIG, previusVars, previusParams);
+    bacteriaTimeSeries = processedData.bacteriaTimeSeries;
+    ({session} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
+
+    concentrationState = createBacteriumSystem(CONFIG, previusVars, previusParams,bacteriaTimeSeries[session.currentTimeStep]);
     constants = createConstants();
     createHistories(Object.keys(previusVars.int).length);
     storedProcessedData = processedData;
-    bacteriaTimeSeries = processedData.bacteriaTimeSeries;
     constants.numberOfTimeSteps = bacteriaTimeSeries.length;
     constants.fromStepToMinutes = constants.doublingTime / processedData.averageLifetime;
     Object.freeze(constants); 
@@ -65,10 +67,9 @@ const init = (processedData) => {
         cancelAnimationFrame(session.animationFrameId);
     }
     
-    ({session} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
 
     setupNewScene(CONFIG,previusVars);
-    assignInitialConcentrations(bacteriaTimeSeries[session.currentTimeStep])
+    //assignInitialConcentrations(bacteriaTimeSeries[session.currentTimeStep])
     animate();
 };
 
