@@ -29,12 +29,12 @@ function simulateConcentrations(ID, timeLapse, idx, variables, parameters, inter
 }
 
 function inheritConcentrations(ID, idx, interiorManager, exteriorManager, variables, concentrationsState) {
-    const halfID = ID / 2n;
+
     for (let i = 0, len = speciesNames.length; i < len; i++) {
         const speciesName = speciesNames[i];
         const managerInt = interiorManager[speciesName];
         if (!managerInt.has(ID)) {
-            const defaultVal = managerInt.get(halfID);
+            const defaultVal = managerInt.get(ID / 2n);
             managerInt.set(ID, defaultVal);
         }
         variables.int[speciesName].val = managerInt.get(ID);
