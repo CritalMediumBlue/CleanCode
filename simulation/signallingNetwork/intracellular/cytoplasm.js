@@ -14,10 +14,12 @@ function simulateConcentrations(ID, timeLapse, idx, variables, parameters, inter
 
     for (let i = 0, len = speciesNames.length; i < len; i++) {
         const speciesName = speciesNames[i];
-        const originalConcentration = interiorManager[speciesName].get(ID);
-        const delta = variables.int[speciesName].eq(variables, parameters);
-        const finalConcentration = originalConcentration + delta * timeLapse;
-        interiorManager[speciesName].set(ID, finalConcentration > 1e-6 ? finalConcentration : 1e-6);
+        const manager = interiorManager[speciesName];
+        const varInt = variables.int[speciesName];
+        const origConc = manager.get(ID);
+        const delta = varInt.eq(variables, parameters);
+        const newConc = origConc + delta * timeLapse;
+        manager.set(ID, newConc > 1e-6 ? newConc : 1e-6);
     }
 
     secretedSpecies.forEach((speciesName) => {
@@ -27,19 +29,23 @@ function simulateConcentrations(ID, timeLapse, idx, variables, parameters, inter
 }
 
 function inheritConcentrations(ID, idx, interiorManager, exteriorManager, variables, concentrationsState) {
+    const halfID = ID / 2n;
     for (let i = 0, len = speciesNames.length; i < len; i++) {
         const speciesName = speciesNames[i];
         const managerInt = interiorManager[speciesName];
         if (!managerInt.has(ID)) {
-            managerInt.set(ID, managerInt.get(ID / 2n));
+            const defaultVal = managerInt.get(halfID);
+            managerInt.set(ID, defaultVal);
         }
         variables.int[speciesName].val = managerInt.get(ID);
     }
 
     for (let i = 0, len = secretedSpecies.length; i < len; i++) {
         const speciesName = secretedSpecies[i];
-        exteriorManager[speciesName].set(ID, concentrationsState[speciesName].conc[idx]);
-        variables.ext[speciesName].val = exteriorManager[speciesName].get(ID);
+        const extManager = exteriorManager[speciesName];
+        const concValue = concentrationsState[speciesName].conc[idx];
+        extManager.set(ID, concValue);
+        variables.ext[speciesName].val = extManager.get(ID);
     }
 }
 
