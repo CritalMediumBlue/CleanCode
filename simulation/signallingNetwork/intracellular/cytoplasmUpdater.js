@@ -1,7 +1,7 @@
 
 import { 
-    getSpeciesNames,
-    getSecretedSpecies,
+    speciesNames,
+    secretedSpecies,
     variables,
     parameters,
     interiorManager,
@@ -15,8 +15,7 @@ export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState)
 };
 
 function simulateConcentrations(ID, timeLapse, idx, concentrationsState) {
-    const speciesNames = getSpeciesNames();
-    const secretedSpecies = getSecretedSpecies();
+   
     
     inheritConcentrations(ID, idx, concentrationsState);
 
@@ -36,8 +35,7 @@ function simulateConcentrations(ID, timeLapse, idx, concentrationsState) {
 }
 
 function inheritConcentrations(ID, idx, concentrationsState) {
-    const speciesNames = getSpeciesNames();
-    const secretedSpecies = getSecretedSpecies();
+   
 
     for (let i = 0, len = speciesNames.length; i < len; i++) {
         const speciesName = speciesNames[i];
@@ -59,7 +57,6 @@ function inheritConcentrations(ID, idx, concentrationsState) {
 }
 
 export const calculateResultArray = (currentBacteria) => {
-    const speciesNames = getSpeciesNames();
     
     const resultArray = currentBacteria.map(bacterium => {
         const { id, x, y, longAxis, angle } = bacterium;

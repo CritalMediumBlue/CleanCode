@@ -8,11 +8,11 @@ export const extSpeciesNames = [];
 export const concentrationsState = {};
 
 
-let speciesNames = null;
-let secretedSpecies = null;
+export let speciesNames = null;
+export let secretedSpecies = null;
 
-export const getSpeciesNames = () => speciesNames;
-export const getSecretedSpecies = () => secretedSpecies;
+/* export const getSpeciesNames = () => speciesNames;
+export const getSecretedSpecies = () => secretedSpecies; */
 export const setSpeciesNames = (names) => { speciesNames = names; };
 export const setSecretedSpecies = (species) => { secretedSpecies = species; };
 
