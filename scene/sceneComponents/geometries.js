@@ -33,7 +33,7 @@ Object.keys(cytoplasmicconcentrations).forEach( species => {
     
 )
 
-    return  [`rgb(${Math.round(newRed )}, ${Math.round(newGreen )}, ${Math.round(newBlue )})`, newAlpha]
+    return  [`rgb(${Math.round(newRed )}, ${Math.round(newGreen )}, ${Math.round(newBlue )})`, newAlpha/2]
 
 
 }

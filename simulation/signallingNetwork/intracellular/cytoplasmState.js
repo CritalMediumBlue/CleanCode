@@ -8,7 +8,8 @@ export const extSpeciesNames = [];
 export const concentrationsState = {};
 export const intEquations = {}
 export const extEquations = {}
-
+let initialIntConFunct = {};
+let initialExtConFunct = {};
 
 export let speciesNames = null;
 export let secretedSpecies = null;
@@ -73,11 +74,25 @@ const setCytopManager = (bacteriaData) => {
     bacteriaData.forEach((bacterium) => { 
         const ID = bacterium.id; 
         intSpeciesNames.forEach((speciesName) => { 
-            
-            interiorManager[speciesName].set(ID, variables.int[speciesName].val()); 
+            if (initialIntConFunct[speciesName] === null || initialIntConFunct[speciesName] === undefined) 
+            {
+                interiorManager[speciesName].set(ID, variables.int[speciesName].val()); 
+                initialIntConFunct[speciesName] = variables.int[speciesName].val;
+            } else {
+                interiorManager[speciesName].set(ID, initialIntConFunct[speciesName]()); 
+            }
         }); 
         extSpeciesNames.forEach((speciesName) => { 
-            exteriorManager[speciesName].set(ID, variables.ext[speciesName].val()); 
+            if (initialExtConFunct[speciesName] === null || initialExtConFunct[speciesName] === undefined) 
+            {
+                exteriorManager[speciesName].set(ID, variables.ext[speciesName].val()); 
+                initialExtConFunct[speciesName] = variables.ext[speciesName].val;
+            } else {
+                interiorManager[speciesName].set(ID, initialExtConFunct[speciesName]()); 
+            }
+
+
+
         }); 
     }); 
 };
