@@ -1,10 +1,13 @@
 export const initVisualizationTab = (tab, guiActions, vars) => {
 
 const extSpeciesNames = Object.keys(vars.ext);
-// Visualization controls
+const intSpeciesNames = Object.keys(vars.int);
 const visualizationFolder = tab.pages[2].addFolder({title: 'Visualization'});
 tab.pages[2].addBlade({view: 'separator',  });
 const meshFolder = tab.pages[2].addFolder({title: 'Mesh rendering'});
+tab.pages[2].addBlade({view: 'separator',  });
+const colorPickerFolder = tab.pages[2].addFolder({title: 'Color of Reporter molecules'})
+
 // More descriptive naming
 const visualSettings = {
   bacteria: true,
@@ -85,6 +88,10 @@ const colorMultiplierBinding = meshFolder.addBinding(MeshScalesSettings, 'colorM
  
   step: 0.1
 });
+
+
+
+
 meshHeightScaleBinding.on('change', () => {
   guiActions.setMeshScale(MeshScalesSettings.meshHeightScale);
 });
@@ -94,4 +101,40 @@ meshTranslationZBinding.on('change', () => {
 colorMultiplierBinding.on('change', () => {
   guiActions.setColorMultiplier(MeshScalesSettings.colorMultiplier);
 });
+
+
+
+
+
+
+
+
+
+const PARAMS = {};
+const colorBindings = {};
+intSpeciesNames.forEach(name => {
+  PARAMS[name] = {r: 0, g: 0, b: 0, a: 0.5};
+
+  colorBindings[name] = colorPickerFolder.addBinding(
+  PARAMS,
+  name
+);
+
+guiActions.setBacteriaColor(name,PARAMS[name])
+
+
+  colorBindings[name].on('change', () => {
+    guiActions.setBacteriaColor(name,PARAMS[name])
+  }
+  )
 }
+);
+
+
+ 
+
+
+
+
+}
+

@@ -1,7 +1,7 @@
 
 import {setupNewScene, renderScene,meshVisibility,scaleMesh,translateMesh,setCapsuleVisibility, 
     setColorMultiplier,visibleGridAndAxes,takeScreenshot,
-    selectSpecies} from './scene/graphicsManager.js';
+    selectSpecies, setBacterialColor} from './scene/graphicsManager.js';
 import {createBacteriumSystem,updateSimulation, setParamFromGUI,getGlobalSpeciesConcentrations} from './simulation/simulationManager.js';
 import { createStates, createHistories,createConstants,updateHistories,getHistories,resetHistories} from './state/stateManager.js';
 import { initGUI } from './GUI/controlManager.js';    
@@ -49,6 +49,13 @@ const guiActions = {
         }
         );
             
+    },
+    setBacteriaColor: (species,color) => 
+    {
+ /*            console.log("At main, species " + species + " is now "+ color);
+        console.log(species,color) */
+
+        setBacterialColor(species, color)
     }
 
 };

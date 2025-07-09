@@ -1,10 +1,10 @@
 import {THREE, OrbitControls, Chart} from './graphycLibrariesImports.js';
 import { setupMesh, updateSurfaceMesh } from './sceneComponents/mesh.js';
-import { setupCapsulePool, updateCapsules } from './sceneComponents/capsulePool.js';
+import { setupCapsulePool, updateCapsules, setBacterialColor } from './sceneComponents/capsulePool.js';
 import { setupPlot, updatePlot } from './plot.js';
 import { updateOverlay } from './overlay.js';
 import { setupStage } from './sceneComponents/stage.js';
-
+export {setBacterialColor}
 
 
 let mesh = null;

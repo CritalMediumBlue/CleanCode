@@ -5,6 +5,41 @@
  */
 import { interpolateViridis } from 'd3-scale-chromatic';
 
+
+
+const  coloringRule = {}
+
+export const setBacterialColor = (species, color) => {
+    console.log( species);
+    console.log(color);
+    coloringRule[species] = color
+}
+
+const getColor = (cytoplasmicconcentrations) => {
+let newRed = 0;
+let newGreen = 0;
+let newBlue = 0;
+let newAlpha = 0;
+Object.keys(cytoplasmicconcentrations).forEach( species => {
+    newRed += coloringRule[species].r*cytoplasmicconcentrations[species]
+    newGreen += coloringRule[species].g *cytoplasmicconcentrations[species]
+    newBlue += coloringRule[species].b * cytoplasmicconcentrations[species]
+    newAlpha += coloringRule[species].a * cytoplasmicconcentrations[species]
+    
+
+}
+
+ 
+
+    
+)
+
+    return  [`rgb(${Math.round(newRed )}, ${Math.round(newGreen )}, ${Math.round(newBlue )})`, newAlpha]
+
+
+}
+
+
 /**
  * Populates geometry caches for different capsule lengths to avoid recreating geometries
  * 
@@ -48,66 +83,15 @@ export function populateMapCaches(BACTERIUM, THREE, capsuleGeometryCache, edgesG
 export function updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity,opacity, changed,cytoplasmConcentrations) {
     if (BACTERIUM.COLOR_BY_INHERITANCE) {
         // Color based on phenotype categories
-        let color;
         
-        switch (phenotype) {
-            case 'MAGENTA':
-                color = 0xFF00FF; // Magenta color
-                capsule.children[0].visible = true;
-                break;
-            case 'CYAN':
-                color = 0x00FFFF; // Cyan color
-                capsule.children[0].visible = true;
-                break;
-            case 'switch':
-                color = 0xFFFF00; // Yellow color for switch
-                capsule.children[0].visible = false;
-                break;
-            case "avigdor": {
-                const factor = 0.5;
-                const red = cytoplasmConcentrations.r*factor;
-                const green = cytoplasmConcentrations.p*factor;
-                const blue = cytoplasmConcentrations.p*factor+ cytoplasmConcentrations.r*factor;
-                
-                color = `rgb(${Math.round(red * 255)}, ${Math.round(green * 255)}, ${Math.round(blue * 255)})`;
-                capsule.children[0].visible = true;
-                break;
-            }
-            case "Sporulation": {
-                const factor = 0.38;
-                const red = cytoplasmConcentrations.l;
-                const green = cytoplasmConcentrations.p*factor;//cytoplasmConcentrations.a*0.0325;//cytoplasmConcentrations.a*0.0325;
-                const blue = cytoplasmConcentrations.l;//cytoplasmConcentrations.p*factor;
-                
-                color = `rgb(${Math.round(red * 255)}, ${Math.round(green * 255)}, ${Math.round(blue * 255)})`;
-                capsule.children[0].visible = true;
-                break;
-            }
-            case "test": {
-                
-                const factor = 0.5;
-                const red = cytoplasmConcentrations.AimR*factor;
-                const green = cytoplasmConcentrations.AimP*factor;
-                const blue = cytoplasmConcentrations.AimP*factor+ cytoplasmConcentrations.AimR*factor;
 
-                color = `rgb(${Math.round(red * 255)}, ${Math.round(green * 255)}, ${Math.round(blue * 255)})`;
-                capsule.children[0].visible = true;
-                break;
-            }
-        }
-
+        const color = getColor(cytoplasmConcentrations)
 
         
-        if (changed > 0.001) {
-            color = 0xFFFF00; // Yellow color for switch
-            capsule.children[0].visible = true;
-        }
-
-        
-        const threeColor = new THREE.Color(color);
+        const threeColor = new THREE.Color(color[0]);
 
         capsule.material.color.copy(threeColor);
-        capsule.material.opacity = changed > 0.001 ? 1-changed : opacity;
+        capsule.material.opacity = color[1]
         capsule.children[0].material.color.copy(threeColor.clone().multiplyScalar(0.3));
         capsule.renderOrder = 0;
       

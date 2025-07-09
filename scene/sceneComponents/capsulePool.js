@@ -1,5 +1,5 @@
-import { populateMapCaches, updateCapsuleColor } from './geometries.js';
-
+import { populateMapCaches, updateCapsuleColor, setBacterialColor } from './geometries.js';
+export {setBacterialColor}
 /**
  * @module capsulePool
  * @description Manages the creation and initialization of a pool of 3D capsule objects 
@@ -27,6 +27,7 @@ export function setupCapsulePool(stage, BACTERIUM, THREE, capsules) {
     while (capsules.length < poolSize) {
         const capsuleGeometry = new THREE.CapsuleGeometry();
         const capsuleMaterial = new THREE.MeshBasicMaterial();
+        capsuleMaterial.transparent = true;
         
         const capsule = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
         
