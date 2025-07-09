@@ -1,5 +1,5 @@
-import { populateMapCaches, updateCapsuleColor, setBacterialColor } from './geometries.js';
-export {setBacterialColor}
+import { populateMapCaches, updateCapsuleColor, setBacterialColor, coloringRule} from './geometries.js';
+export {setBacterialColor, coloringRule}
 /**
  * @module capsulePool
  * @description Manages the creation and initialization of a pool of 3D capsule objects 

@@ -113,7 +113,7 @@ colorMultiplierBinding.on('change', () => {
 const PARAMS = {};
 const colorBindings = {};
 intSpeciesNames.forEach(name => {
-  PARAMS[name] = {r: 0, g: 0, b: 0, a: 0.5};
+  PARAMS[name] = {r: 0, g: 0, b: 255, a: 1};
 
   colorBindings[name] = colorPickerFolder.addBinding(
   PARAMS,

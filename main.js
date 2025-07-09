@@ -52,11 +52,11 @@ const guiActions = {
     },
     setBacteriaColor: (species,color) => 
     {
- /*            console.log("At main, species " + species + " is now "+ color);
-        console.log(species,color) */
+
 
         setBacterialColor(species, color)
-    }
+    },
+   
 
 };
 
@@ -130,7 +130,6 @@ const updateData = () => {
 initGUI(guiActions);
 
 
-console.log("Initial setup complete. Waiting for data file...");
 
 
 

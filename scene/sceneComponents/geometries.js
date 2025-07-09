@@ -7,11 +7,10 @@ import { interpolateViridis } from 'd3-scale-chromatic';
 
 
 
-const  coloringRule = {}
+export const  coloringRule = {}
 
 export const setBacterialColor = (species, color) => {
-    console.log( species);
-    console.log(color);
+   
     coloringRule[species] = color
 }
 
@@ -21,7 +20,7 @@ let newGreen = 0;
 let newBlue = 0;
 let newAlpha = 0;
 Object.keys(cytoplasmicconcentrations).forEach( species => {
-    newRed += coloringRule[species].r*cytoplasmicconcentrations[species]
+    newRed += coloringRule[species].r * cytoplasmicconcentrations[species]
     newGreen += coloringRule[species].g *cytoplasmicconcentrations[species]
     newBlue += coloringRule[species].b * cytoplasmicconcentrations[species]
     newAlpha += coloringRule[species].a * cytoplasmicconcentrations[species]

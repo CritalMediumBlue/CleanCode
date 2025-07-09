@@ -1,6 +1,6 @@
 import {THREE, OrbitControls, Chart} from './graphycLibrariesImports.js';
 import { setupMesh, updateSurfaceMesh } from './sceneComponents/mesh.js';
-import { setupCapsulePool, updateCapsules, setBacterialColor } from './sceneComponents/capsulePool.js';
+import { setupCapsulePool, updateCapsules, setBacterialColor , coloringRule} from './sceneComponents/capsulePool.js';
 import { setupPlot, updatePlot } from './plot.js';
 import { updateOverlay } from './overlay.js';
 import { setupStage } from './sceneComponents/stage.js';
@@ -28,12 +28,12 @@ export function setupNewScene(config,previusVars) {
     const SCENE = config.SCENE;
     BACTERIUM = config.BACTERIUM;
     const GRID = config.GRID;
-
+  
 
     stage = setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules);
     capsules = setupCapsulePool(stage, BACTERIUM, THREE, capsules);
     mesh = setupMesh(stage, THREE, GRID);
-    plot = setupPlot(Chart,previusVars);
+    plot = setupPlot(Chart,previusVars, coloringRule);
     helperAxes = new THREE.AxesHelper(100);
     helperGrid = new THREE.GridHelper(200, 200, 0xFFFFFF, 0xFFFFFF);
     helperGrid.material.transparent = true;
@@ -65,7 +65,7 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
         
         if (histories && session.currentTimeStep % 10 === 0 && session.play) {
             // Check and log the structure of histories to debug
-            updatePlot(histories, plot);
+            updatePlot(histories, plot, coloringRule);
         } 
         updateOverlay(session, constants);
         stage.renderer.render(stage.scene, stage.camera);
@@ -79,7 +79,6 @@ export function meshVisibility(boolean) {
 }
 export function selectSpecies(speciesName) {
     species = speciesName;
-    console.log(`Selected species: ${species}`);
 }
 export function scaleMesh(scale) {
     meshScale = scale;

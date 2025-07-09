@@ -5,10 +5,10 @@ import { createPlotOptions } from './plotOptions.js';
  * @param {Object} previusVars - Variables containing species data
  * @returns {Object} - Reference to the created chart
  */
-export function setupPlot(Chart, previusVars) {
-  const nameOfSpecies = Object.keys(previusVars.int);
-  const speciesCount = nameOfSpecies.length;
 
+
+
+export function setupPlot(Chart, previusVars, coloringRule) {
   const Id = 'plot-overlay';
   const plotContainer = document.getElementById(Id);
   
@@ -29,7 +29,7 @@ export function setupPlot(Chart, previusVars) {
   // Create initial empty dataset with dynamic datasets based on species count
   const chartData = {
     labels: [], // x-axis data points (empty initially)
-    datasets: generateDatasets(nameOfSpecies)
+    datasets: generateDatasets(previusVars.int, coloringRule)
   };
   
   // Create and return the chart instance
@@ -40,32 +40,33 @@ export function setupPlot(Chart, previusVars) {
   });
 }
 
+
+
+  
+
 /**
  * Generates datasets for each species with distinct colors
- * @param {Array} speciesNames - Array of species names
- * @returns {Array} - Array of dataset configurations
  */
-function generateDatasets(speciesNames) {
+function generateDatasets(intVars, colorRule) {
   const datasets = [];
-  const colors = [
-    { border: 'cyan', background: 'rgba(0, 255, 255, 1)' },
-    { border: 'magenta', background: 'rgba(255, 0, 255, 1)' },
-    { border: 'yellow', background: 'rgba(255, 255, 0, 1)' },
-    { border: 'lime', background: 'rgba(0, 255, 0, 1)' },
-    { border: 'orange', background: 'rgba(255, 165, 0, 1)' },
-    { border: 'dodgerblue', background: 'rgba(30, 144, 255, 1)' }
-  ];
+
   
-  for (let i = 0; i < speciesNames.length; i++) {
-    // Use colors from predefined array, or generate one if needed
-    const colorIndex = i % colors.length;
-    const color = colors[colorIndex];
+  Object.keys(intVars).forEach(species =>{
+  // Use colors from predefined array, or generate one if needed
+    //const colorIndex = i % colors.length;
+    let color = colorRule[species];
+
+    const cssColor = `rgba(${color.r}, ${color.g}, ${color.b}, 0.9)`;
+
+    console.log(colorRule)  //Object { AimP: {…}, AimR: {…} }
+    console.log(species)  // AimP
+    console.log(color)  // Object { r: 255, g: 0, b: 0, a: 0.9 }
     
     datasets.push({
-      label: speciesNames[i] + ' [nM]',
+      label: species + ' [nM]',
       data: [], // y-axis data points (empty initially)
-      borderColor: color.border,
-      backgroundColor: color.background,
+      borderColor: cssColor,
+      backgroundColor: cssColor,
       borderWidth: 2.5,
       fill: false,
       tension: 0.1,
@@ -74,11 +75,15 @@ function generateDatasets(speciesNames) {
       zIndex: 10 // Make sure lines appear on top
     });
   }
+
+  )
+  
+  
   
   return datasets;
 }
 
-export function updatePlot(data, chart) {
+export function updatePlot(data, chart, colorRule) {
     if (!data) return;
     
     // Extract data
@@ -102,6 +107,24 @@ export function updatePlot(data, chart) {
         }
     }
     
+    // Update colors based on colorRule
+    if (colorRule) {
+        for (let i = 0; i < numberOfSpecies; i++) {
+            const dataset = chart.data.datasets[i];
+            if (dataset && dataset.label) {
+                // Extract species name from label (remove ' [nM]' suffix)
+                const speciesName = dataset.label.replace(' [nM]', '');
+                const colorObj = colorRule[speciesName];
+                
+                if (colorObj) {
+                    const cssColor = `rgba(${colorObj.r}, ${colorObj.g}, ${colorObj.b}, 0.9)`;
+                    dataset.borderColor = cssColor;
+                    dataset.backgroundColor = cssColor;
+                }
+            }
+        }
+    }
+    
         const slicedSD = sliceData(startMean, endMean, stdDevs);
         
         // Create arrays to hold upper and lower bounds for each species
@@ -115,21 +138,19 @@ export function updatePlot(data, chart) {
             
             if (slicedDataMean[i+1] && slicedSD[i+1]) {
                 for (let j = 0; j < slicedDataMean[i+1].length; j++) {
-                    upperBounds[i].push(slicedDataMean[i+1][j] + slicedSD[i+1][j]);
-                    lowerBounds[i].push(Math.max(0, slicedDataMean[i+1][j] - slicedSD[i+1][j])); // Prevent negative values
+                    upperBounds[i].push(slicedDataMean[i+1][j] + slicedSD[i+1][j]/2);
+                    lowerBounds[i].push(Math.max(0, slicedDataMean[i+1][j] - slicedSD[i+1][j]/2)); // Prevent negative values
                 }
             }
         }
         
         // Create filled area datasets for each species
         for (let i = 0; i < numberOfSpecies; i++) {
-            // Calculate the dataset index for standard deviation bounds
-            // Each species uses 2 dataset slots for bounds (upper and lower)
+           
             const datasetIndex = numberOfSpecies + (i * 2);
             
             // Get the corresponding color for this species with reduced opacity
-            const color = chart.data.datasets[i].backgroundColor;
-            const fillColor = color.replace(/[^,]+\)/, '0.3)'); // Replace the alpha value to make it semi-transparent
+            let fillColor = chart.data.datasets[i].backgroundColor;
             
             // Create filled area datasets between the bounds
             createFilledAreaDataset(
@@ -177,14 +198,19 @@ function sliceData(start, end, data) {
  * @param {Array} lowerData - Lower bound values
  */
 function createFilledAreaDataset(chart, index, label, color, upperData, lowerData) {
-  
+  // Convert existing rgba string to have 0.5 alpha
+  const cssColor = color.replace(/rgba?\([^)]+\)/, match => {
+    const values = match.match(/[\d.]+/g);
+    return `rgba(${values[0]}, ${values[1]}, ${values[2]}, 0.3)`;
+  });
+
   // First, create the upper bound dataset with fill
   if (!chart.data.datasets[index]) {
     chart.data.datasets[index] = {
       label: label,
       data: upperData,
       borderColor: 'white', 
-      backgroundColor: color,
+      backgroundColor: cssColor,
       fill: '+1', // Fill to the next dataset (which will be lowerData)
       tension: 0.1,
       pointRadius: 0,
@@ -193,6 +219,7 @@ function createFilledAreaDataset(chart, index, label, color, upperData, lowerDat
     };
   } else {
     chart.data.datasets[index].data = upperData;
+    chart.data.datasets[index].backgroundColor = cssColor; // Update color for existing dataset
   }
 
   // Create or update the lower bound dataset that completes the filled area
