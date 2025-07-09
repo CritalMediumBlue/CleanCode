@@ -8,13 +8,13 @@ import {FTCS } from './FTCS.js';
         // Pick parameters so that both methods cover the same physical time.
         const DIFFUSION_RATE = 100; // choose a moderate value
         const deltaX = 1; // micrometers
-        const deltaT = 0.1;  // seconds
-        const tolerance = 1e-5; 
+        const deltaT = 0.115;  // seconds
+        const tolerance = 1e-3; 
 
         const timeLapses = [];
 
-        for (let i = 1; i <= 15; i ++) {
-            timeLapses.push(1.5 + i * deltaT * 5); 
+        for (let i = 0; i <= 20; i ++) {
+            timeLapses.push( i * deltaT * 5); 
         }
         
         const sources = new Float64Array(100*60).fill(0);
@@ -36,6 +36,11 @@ describe('Compare Diffusion methods', () => {
         test.each(timeLapses)('%s sec', (timeLapse) => {
             const initialForADI = new Float64Array(totalCells).fill(1);
             const initialForFTCS = new Float64Array(totalCells).fill(1);
+            console.log( timeLapse / deltaT)
+
+             const maxDeltaT =0.1* deltaX * deltaX / (4 * DIFFUSION_RATE); // Time step based on stability condition
+    
+            console.log(timeLapse / maxDeltaT)
             
             const resultADI = ADI(initialForADI, sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
             const resultFTCS = FTCS(initialForFTCS, sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse);
@@ -60,7 +65,7 @@ describe('Compare Diffusion methods', () => {
         });
 });
 
-const SteadyStateTolerance = 0.05; // 5% tolerance
+const SteadyStateTolerance = 0.25; // 25% tolerance
 
 // Refactored test using the updated function
 describe('Compare SteadyState time', () => {

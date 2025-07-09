@@ -6,13 +6,14 @@ export const exteriorManager = {};
 export const intSpeciesNames = [];
 export const extSpeciesNames = [];
 export const concentrationsState = {};
+export const intEquations = {}
+export const extEquations = {}
 
 
-let speciesNames = null;
-let secretedSpecies = null;
+export let speciesNames = null;
+export let secretedSpecies = null;
 
-export const getSpeciesNames = () => speciesNames;
-export const getSecretedSpecies = () => secretedSpecies;
+
 export const setSpeciesNames = (names) => { speciesNames = names; };
 export const setSecretedSpecies = (species) => { secretedSpecies = species; };
 
@@ -40,16 +41,25 @@ export const setModel = (params, vars, config, bacteriaData) => {
 function initializeSpecies(speciesObj, speciesNames, manager, isExternal, gridSize) {
     speciesNames.splice(0, speciesNames.length, ...Object.keys(speciesObj));
     
-    speciesNames.forEach((speciesName) => {
-        manager[speciesName] = new Map();
-        
-        if (isExternal) {
-            concentrationsState[speciesName] = {
-                conc: new Float64Array(gridSize).fill(0),
-                sources: new Float64Array(gridSize).fill(0)
-            };
-        }
-    });
+speciesNames.forEach((speciesName) => {
+    manager[speciesName] = new Map();
+    
+    // Only store equations for species that exist in the respective compartments
+    if (variables.int[speciesName]) {
+        intEquations[speciesName] = variables.int[speciesName].eq;  // Store function reference
+    }
+    if (variables.ext[speciesName]) {
+        extEquations[speciesName] = variables.ext[speciesName].eq;  // Store function reference
+    }
+    
+    if (isExternal) {
+        concentrationsState[speciesName] = {
+            conc: new Float64Array(gridSize).fill(0),
+            sources: new Float64Array(gridSize).fill(0)
+        };
+    }
+});
+
 }
 
 function lockObjects(objectArray) {

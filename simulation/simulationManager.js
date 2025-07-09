@@ -27,7 +27,7 @@ export function updateSimulation(currentBacteria, minutes) {
 
 
     const totalTimeLapse = minutes*60; // seconds  30.99 sec
-    const timeLapse = 1.5; // seconds
+    const timeLapse = 2; // seconds
     const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
 
     let bacteriaDataUpdated

@@ -51,7 +51,8 @@ export function setupNewScene(config,previusVars) {
 export function renderScene(histories, bacteriaData, concentrationState, BACTERIUM, session, constants) {
     
 
-        
+    if (session.currentTimeStep % 5 === 0 && session.play) {
+ 
         if(species !== null) {
         const concentration = concentrationState[species].conc;
        
@@ -63,12 +64,13 @@ export function renderScene(histories, bacteriaData, concentrationState, BACTERI
             updateCapsules(bacteriaData, BACTERIUM, THREE, capsules, capsuleVisibility);
         }
         
-        if (histories && session.currentTimeStep % 10 === 0 && session.play) {
-            // Check and log the structure of histories to debug
+        if (histories && session.currentTimeStep % 15 === 0 && session.play) {
             updatePlot(histories, plot, coloringRule);
         } 
         updateOverlay(session, constants);
-        stage.renderer.render(stage.scene, stage.camera);
+
+    }
+    stage.renderer.render(stage.scene, stage.camera);
 
    
 

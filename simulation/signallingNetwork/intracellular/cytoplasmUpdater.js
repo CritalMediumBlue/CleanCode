@@ -1,11 +1,13 @@
 
 import { 
-    getSpeciesNames,
-    getSecretedSpecies,
+    speciesNames,
+    secretedSpecies,
     variables,
     parameters,
     interiorManager,
-    exteriorManager
+    exteriorManager,
+    intEquations,
+    extEquations
 } from './cytoplasmState.js';
 
 export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState) => {
@@ -15,30 +17,25 @@ export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState)
 };
 
 function simulateConcentrations(ID, timeLapse, idx, concentrationsState) {
-    const speciesNames = getSpeciesNames();
-    const secretedSpecies = getSecretedSpecies();
-    
+  
     inheritConcentrations(ID, idx, concentrationsState);
 
     for (let i = 0, len = speciesNames.length; i < len; i++) {
         const speciesName = speciesNames[i];
         const manager = interiorManager[speciesName];
-        const varInt = variables.int[speciesName];
         const origConc = manager.get(ID);
-        const delta = varInt.eq(variables, parameters);
+        const delta = intEquations[speciesName](variables, parameters);
         const newConc = origConc + delta * timeLapse;
         manager.set(ID, newConc);
     }
 
     secretedSpecies.forEach((speciesName) => {
-        concentrationsState[speciesName].sources[idx] = variables.ext[speciesName].eq(variables, parameters);
+        concentrationsState[speciesName].sources[idx] = extEquations[speciesName](variables, parameters);
     });
 }
 
 function inheritConcentrations(ID, idx, concentrationsState) {
-    const speciesNames = getSpeciesNames();
-    const secretedSpecies = getSecretedSpecies();
-
+ 
     for (let i = 0, len = speciesNames.length; i < len; i++) {
         const speciesName = speciesNames[i];
         const managerInt = interiorManager[speciesName];
@@ -59,7 +56,6 @@ function inheritConcentrations(ID, idx, concentrationsState) {
 }
 
 export const calculateResultArray = (currentBacteria) => {
-    const speciesNames = getSpeciesNames();
     
     const resultArray = currentBacteria.map(bacterium => {
         const { id, x, y, longAxis, angle } = bacterium;
