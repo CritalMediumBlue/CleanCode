@@ -6,13 +6,15 @@ export const exteriorManager = {};
 export const intSpeciesNames = [];
 export const extSpeciesNames = [];
 export const concentrationsState = {};
-
+export const intEquations = {}
+export const extEquations = {}
+let initialIntConFunct = {};
+let initialExtConFunct = {};
 
 export let speciesNames = null;
 export let secretedSpecies = null;
 
-/* export const getSpeciesNames = () => speciesNames;
-export const getSecretedSpecies = () => secretedSpecies; */
+
 export const setSpeciesNames = (names) => { speciesNames = names; };
 export const setSecretedSpecies = (species) => { secretedSpecies = species; };
 
@@ -40,16 +42,25 @@ export const setModel = (params, vars, config, bacteriaData) => {
 function initializeSpecies(speciesObj, speciesNames, manager, isExternal, gridSize) {
     speciesNames.splice(0, speciesNames.length, ...Object.keys(speciesObj));
     
-    speciesNames.forEach((speciesName) => {
-        manager[speciesName] = new Map();
-        
-        if (isExternal) {
-            concentrationsState[speciesName] = {
-                conc: new Float64Array(gridSize).fill(0),
-                sources: new Float64Array(gridSize).fill(0)
-            };
-        }
-    });
+speciesNames.forEach((speciesName) => {
+    manager[speciesName] = new Map();
+    
+    // Only store equations for species that exist in the respective compartments
+    if (variables.int[speciesName]) {
+        intEquations[speciesName] = variables.int[speciesName].eq;  // Store function reference
+    }
+    if (variables.ext[speciesName]) {
+        extEquations[speciesName] = variables.ext[speciesName].eq;  // Store function reference
+    }
+    
+    if (isExternal) {
+        concentrationsState[speciesName] = {
+            conc: new Float64Array(gridSize).fill(0),
+            sources: new Float64Array(gridSize).fill(0)
+        };
+    }
+});
+
 }
 
 function lockObjects(objectArray) {
@@ -63,11 +74,25 @@ const setCytopManager = (bacteriaData) => {
     bacteriaData.forEach((bacterium) => { 
         const ID = bacterium.id; 
         intSpeciesNames.forEach((speciesName) => { 
-            
-            interiorManager[speciesName].set(ID, variables.int[speciesName].val()); 
+            if (initialIntConFunct[speciesName] === null || initialIntConFunct[speciesName] === undefined) 
+            {
+                interiorManager[speciesName].set(ID, variables.int[speciesName].val()); 
+                initialIntConFunct[speciesName] = variables.int[speciesName].val;
+            } else {
+                interiorManager[speciesName].set(ID, initialIntConFunct[speciesName]()); 
+            }
         }); 
         extSpeciesNames.forEach((speciesName) => { 
-            exteriorManager[speciesName].set(ID, variables.ext[speciesName].val()); 
+            if (initialExtConFunct[speciesName] === null || initialExtConFunct[speciesName] === undefined) 
+            {
+                exteriorManager[speciesName].set(ID, variables.ext[speciesName].val()); 
+                initialExtConFunct[speciesName] = variables.ext[speciesName].val;
+            } else {
+                exteriorManager[speciesName].set(ID, initialExtConFunct[speciesName]()); 
+            }
+
+
+
         }); 
     }); 
 };

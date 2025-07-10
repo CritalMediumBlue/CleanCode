@@ -80,7 +80,6 @@ const init = (processedData) => {
     
 
     setupNewScene(CONFIG,previusVars);
-    //assignInitialConcentrations(bacteriaTimeSeries[session.currentTimeStep])
     animate();
     session.animationFrameId = requestAnimationFrame(animate);
 
