@@ -88,7 +88,7 @@ const setCytopManager = (bacteriaData) => {
                 exteriorManager[speciesName].set(ID, variables.ext[speciesName].val()); 
                 initialExtConFunct[speciesName] = variables.ext[speciesName].val;
             } else {
-                interiorManager[speciesName].set(ID, initialExtConFunct[speciesName]()); 
+                exteriorManager[speciesName].set(ID, initialExtConFunct[speciesName]()); 
             }
 
 
