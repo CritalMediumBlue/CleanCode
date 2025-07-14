@@ -112,19 +112,31 @@ colorMultiplierBinding.on('change', () => {
 
 const PARAMS = {};
 const colorBindings = {};
+const intensityBindings = {};
+
 intSpeciesNames.forEach(name => {
-  PARAMS[name] = {r: 0, g: 0, b: 255, a: 1};
+  PARAMS[name] = {r: 0, g: 0, b: 255, a: 1, intesity:1};
 
   colorBindings[name] = colorPickerFolder.addBinding(
   PARAMS,
   name
 );
+intensityBindings[name] = colorPickerFolder.addBinding(PARAMS[name], 'intesity', {
+  label: 'Intensity',
+ 
+  step: 0.1
+});
 
-guiActions.setBacteriaColor(name,PARAMS[name])
+guiActions.setBacteriaColor(name,PARAMS[name]);
 
 
   colorBindings[name].on('change', () => {
-    guiActions.setBacteriaColor(name,PARAMS[name])
+    guiActions.setBacteriaColor(name,PARAMS[name]);
+  }
+  )
+
+    intensityBindings[name].on('change', () => {
+    guiActions.setBacteriaColor(name,PARAMS[name]);
   }
   )
 }
