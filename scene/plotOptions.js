@@ -26,10 +26,7 @@ export function createPlotOptions() {
                         family: 'Arial',
                         size: 12
                     },
-                    filter: function(item) {
-                        // Only show items with non-empty labels
-                        return item.text !== '';
-                    },
+                    
                     filter: function(item) {
                         // Only show the main lines in the legend (exclude SD bounds)
                         return item.text !== '' && !item.text.includes('±SD');

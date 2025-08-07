@@ -23,7 +23,7 @@ export function setupStage(SCENE, THREE, OrbitControls, stage, mesh, capsules) {
     }
 
     // Create and configure core Three.js components
-    stage.scene = new THREE.Scene();
+    stage.scene = new THREE.Scene(); 
     stage.renderer = createRenderer(THREE);
     stage.camera = createCamera(SCENE, THREE, OrbitControls, stage.renderer.domElement);
 

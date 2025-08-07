@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/CritalMediumBlue/CleanCode#readme",
   "devDependencies": {
+    "@eslint/js": "^9.32.0",
     "dependency-cruiser": "^16.10.4",
+    "eslint": "^9.32.0",
+    "globals": "^16.3.0",
     "jest": "^29.7.0"
   },
   "type": "module"

@@ -11,7 +11,6 @@ import { CONFIG } from './config.js';
 
 let session;
 let constants;
-let concentrationState;
 let bacteriaTimeSeries;
 
 let histories;
@@ -65,7 +64,7 @@ const init = (processedData) => {
     bacteriaTimeSeries = processedData.bacteriaTimeSeries;
     ({session} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
 
-    concentrationState = createBacteriumSystem(CONFIG, previusVars, previusParams,bacteriaTimeSeries[session.currentTimeStep]);
+    createBacteriumSystem(CONFIG, previusVars, previusParams,bacteriaTimeSeries[session.currentTimeStep]);
     constants = createConstants();
     createHistories(Object.keys(previusVars.int).length);
     storedProcessedData = processedData;

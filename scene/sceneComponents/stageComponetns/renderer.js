@@ -8,7 +8,7 @@
  * @param {Object} THREE - Three.js library instance
  * @returns {THREE.WebGLRenderer} - Configured Three.js WebGL renderer
  */
-export function createRenderer(THREE, ratio=0.35) {
+export function createRenderer(THREE, ratio=0.5) {
     // Create renderer with specified antialiasing option (default: false)
     const renderer = new THREE.WebGLRenderer({
         antialias: false,

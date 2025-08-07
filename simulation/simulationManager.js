@@ -14,9 +14,9 @@ export function createBacteriumSystem(config, vars, params, bacteriaData) {
     nameOfSpecies = Object.keys(vars.int);
      meanConcentrations = new Array(nameOfSpecies.length).fill(0);
      stdDeviations = new Array(nameOfSpecies.length).fill(0);
-    const model = setModel(params, vars,config, bacteriaData);
+    setModel(params, vars,config, bacteriaData);
 
-    return model
+    
 
 }
 
