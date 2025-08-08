@@ -46,15 +46,16 @@ const guiActions = {
         Object.keys(previusVars.int).forEach(speciesName => {
             console.log(previusVars.int[speciesName].val());
         }
-        );
-            
+        );   
     },
     setBacteriaColor: (species,color) => 
     {
-
-
         setBacterialColor(species, color)
     },
+    saveState: () => 
+    {
+        console.log("we will save this state")
+    }
    
 
 };
@@ -81,7 +82,7 @@ const init = (processedData) => {
     setupNewScene(CONFIG,previusVars);
     animate();
     session.animationFrameId = requestAnimationFrame(animate);
-
+    //initial rendering
     renderScene(histories, bacteriaDataUpdated, concentrations, CONFIG.BACTERIUM, session, constants);
 
 };

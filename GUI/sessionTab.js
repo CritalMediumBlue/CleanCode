@@ -67,6 +67,8 @@ export const initSessionTab = (tab, guiActions) => {
       fileInput.click();
     
     });
+
+    savebutton.on('click', () =>  {guiActions.saveState();});
     
     // ################ Simulation execution controls
     runPauseButton.on('click', () => {guiActions.setPlayState();});
