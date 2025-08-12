@@ -13,12 +13,13 @@ let initialExtConFunct = {};
 
 export let speciesNames = null;
 export let secretedSpecies = null;
+export let lineage = null;
 
 
 export const setSpeciesNames = (names) => { speciesNames = names; };
 export const setSecretedSpecies = (species) => { secretedSpecies = species; };
 
-export const setModel = (params, vars, config, bacteriaData) => {
+export const setModel = (params, vars, config, bacteriaData, lineageMap) => {
     Object.assign(parameters, params);
     Object.assign(variables, vars);
     
@@ -34,7 +35,8 @@ export const setModel = (params, vars, config, bacteriaData) => {
     initializeSpecies(variables.int, intSpeciesNames, interiorManager, false, gridSize);
     initializeSpecies(variables.ext, extSpeciesNames, exteriorManager, true, gridSize);
     lockObjects([interiorManager, exteriorManager, concentrationsState, variables, parameters]);
-    setCytopManager(bacteriaData);
+    setCytopManager(bacteriaData,lineageMap);
+
 
     return concentrationsState;
 };
@@ -70,7 +72,7 @@ function lockObjects(objectArray) {
     });
 }
 
-const setCytopManager = (bacteriaData) => { 
+const setCytopManager = (bacteriaData, lineageMap) => { 
     bacteriaData.forEach((bacterium) => { 
         const ID = bacterium.id; 
         intSpeciesNames.forEach((speciesName) => { 
@@ -95,6 +97,8 @@ const setCytopManager = (bacteriaData) => {
 
         }); 
     }); 
+    lineage=lineageMap
+    
 };
 
 export const setParameter = (paramName, value) => {

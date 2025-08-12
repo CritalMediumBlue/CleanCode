@@ -1,25 +1,27 @@
 
 export function processFileData(fileContent) {
     let bacteriaTimeSeries = [];
+    let bacteriaLineage;
 
    
     const data = JSON.parse(fileContent);
 
     // Process  data object
     Object.entries(data).forEach(([timeStep, bacteria]) => {
-        if (timeStep === "time" ) return; // Skip the first entries
+        if (timeStep === "lineage" ) {
+            bacteriaLineage = bacteria;
+            return; // Skip the first entry
+            }
         const timeStepInt = parseInt(timeStep, 10); 
         if (timeStepInt === 0) return; // Skip the first time step  
-        
-     
+
         const bacteriaInTimeSlice= bacteria.map(bacterium => (
             { 
-            id: BigInt(bacterium.ID),
+            id: bacterium.id,
             y: Math.round((bacterium.y - 170)*10)/10,
             x: Math.round(bacterium.x*10)/10,
-            angle: Math.round(bacterium.angle*50)/50,
-            longAxis: Math.round(bacterium.length),
-            parent: bacterium.parent ? bacterium.parent : undefined,
+            angle: Math.round(bacterium.an*50)/50,
+            longAxis: Math.round(bacterium.le),
         }
     ));  
 
@@ -28,34 +30,46 @@ export function processFileData(fileContent) {
             Object.preventExtensions(bacterium);
         }
 
-        
         bacteriaTimeSeries.push(bacteriaInTimeSlice);
     });
 
-    const averageLifetime = analyzeBacteriaLineage(bacteriaTimeSeries);
+    const averageLifetime = analyzeBacteriaLineage(bacteriaTimeSeries, bacteriaLineage);
 
 
-    return {bacteriaTimeSeries,averageLifetime};
+    return {bacteriaTimeSeries,averageLifetime,bacteriaLineage};
 }
 
 
-function analyzeBacteriaLineage(bacteriaTimeSeries) {
+function analyzeBacteriaLineage(bacteriaTimeSeries, bacteriaLineage) {
     const AllIDs = new Set();
+    const AllParents = new Set();
     for (const bacteriaInTimeSlice of bacteriaTimeSeries) {
         for (const bacterium of bacteriaInTimeSlice) {
           AllIDs.add(bacterium.id);
+          const parent = bacteriaLineage[bacterium.id]
+          AllParents.add(parent)
         }
       }
+    if (AllIDs.size != Object.keys(bacteriaLineage).length){
+        console.warn("The number of unique IDs is not the same as in the lineage")
+    } else if (AllIDs.size === Object.keys(bacteriaLineage).length){
+        console.log("numbert of IDs is correct!")
+        console.log("total Bacteria IDs: ", AllIDs.size)
+        console.log("total Parent IDs: ", AllParents.size) 
+    }
+ 
 
     const bacteriaWithParentsandChildren = new Set();
     for (const bacteriaInTimeSlice of bacteriaTimeSeries) {
         for (const bacterium of bacteriaInTimeSlice) {
-            if (AllIDs.has(bacterium.id/2n) && (AllIDs.has(bacterium.id*2n))) {
+            const parent = bacteriaLineage[bacterium.id]
+            
+            if (parent !== 0 && AllParents.has(bacterium.id)) {
                 bacteriaWithParentsandChildren.add(bacterium.id);
             }
         }
     }
-
+console.log("size of the id set of parents: ", bacteriaWithParentsandChildren.size);
     const lifetimes = new Map();
     for (let timeIndex = 0; timeIndex < bacteriaTimeSeries.length; timeIndex++) {
         for (const bacterium of bacteriaTimeSeries[timeIndex]) {
@@ -77,6 +91,7 @@ function analyzeBacteriaLineage(bacteriaTimeSeries) {
         count++;
     });
     const averageLifetime = sum / count ;
+    console.log("Average Life time: ", averageLifetime)
 
     return averageLifetime
 }

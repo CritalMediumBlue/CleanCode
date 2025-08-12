@@ -71,6 +71,7 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules, capsule
         return;
     }
     
+    let lastConc;
    
     // Update and show capsules for each bacterium
     bacteriaData.forEach(bacterium => {
@@ -92,7 +93,10 @@ export function updateCapsules(bacteriaData, BACTERIUM, THREE, capsules, capsule
         updateCapsuleColor(capsule, phenotype, BACTERIUM, THREE, similarity,1, changed,cytoplasmConcentrations);
        
         capsule.visible = true;
+        lastConc=cytoplasmConcentrations
     });
+
+    //console.log(lastConc)
    
 
 

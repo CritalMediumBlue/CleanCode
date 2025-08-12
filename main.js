@@ -52,9 +52,24 @@ const guiActions = {
     {
         setBacterialColor(species, color)
     },
-    saveState: () => 
-    {
-        console.log("we will save this state")
+    saveState: () => {
+        // Create JSON files for both data structures
+        const bacteriaDataJson = JSON.stringify(bacteriaDataUpdated, null, 2);
+
+        // Create Blob objects for downloading
+        const bacteriaBlob = new Blob([bacteriaDataJson], { type: 'application/json' });
+
+        // Generate timestamps for unique filenames
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+        // Create download links and trigger downloads
+        const bacteriaLink = document.createElement('a');
+        bacteriaLink.href = URL.createObjectURL(bacteriaBlob);
+        bacteriaLink.download = `bacteria_state_${timestamp}.json`;
+        bacteriaLink.click();
+
+        // Clean up temporary URLs
+        URL.revokeObjectURL(bacteriaLink.href);
     }
    
 
@@ -65,7 +80,7 @@ const init = (processedData) => {
     bacteriaTimeSeries = processedData.bacteriaTimeSeries;
     ({session} = createStates(CONFIG.GRID.WIDTH * CONFIG.GRID.HEIGHT));
 
-    createBacteriumSystem(CONFIG, previusVars, previusParams,bacteriaTimeSeries[session.currentTimeStep]);
+    createBacteriumSystem(CONFIG, previusVars, previusParams,bacteriaTimeSeries[session.currentTimeStep], processedData.bacteriaLineage);
     constants = createConstants();
     createHistories(Object.keys(previusVars.int).length);
     storedProcessedData = processedData;
@@ -127,30 +142,3 @@ const updateData = () => {
 }
 
 initGUI(guiActions);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

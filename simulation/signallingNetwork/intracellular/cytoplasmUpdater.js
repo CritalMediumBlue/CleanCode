@@ -7,7 +7,8 @@ import {
     interiorManager,
     exteriorManager,
     intEquations,
-    extEquations
+    extEquations,
+    lineage
 } from './cytoplasmState.js';
 
 export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState) => {
@@ -42,7 +43,13 @@ function inheritConcentrations(ID, idx, concentrationsState) {
         const speciesName = speciesNames[i];
         const managerInt = interiorManager[speciesName];
         if (!managerInt.has(ID)) {
-            const defaultVal = managerInt.get(ID / 2n);
+            const parent = lineage[ID]
+            
+          
+            let defaultVal = managerInt.get(parent);
+              if (parent == 0){
+                defaultVal=0
+            }
             managerInt.set(ID, defaultVal);
         }
         variables.int[speciesName].val = managerInt.get(ID);

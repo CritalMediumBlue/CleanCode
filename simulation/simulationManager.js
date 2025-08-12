@@ -7,14 +7,14 @@ let nameOfSpecies = [];
 let meanConcentrations ;
 let stdDeviations;
     
-export function createBacteriumSystem(config, vars, params, bacteriaData) {
+export function createBacteriumSystem(config, vars, params, bacteriaData,lineageMap) {
     
     WIDTH = config.GRID.WIDTH;
     HEIGHT = config.GRID.HEIGHT;
     nameOfSpecies = Object.keys(vars.int);
      meanConcentrations = new Array(nameOfSpecies.length).fill(0);
      stdDeviations = new Array(nameOfSpecies.length).fill(0);
-    setModel(params, vars,config, bacteriaData);
+    setModel(params, vars,config, bacteriaData, lineageMap);
 
     
 
