@@ -18,9 +18,9 @@ const visualSettings = {
   plot2: true,
 };
 const MeshScalesSettings = {
-  meshHeightScale: 15,
-  meshTranslationZ: -10,
-  colorMultiplier: 1,
+  meshHeightScale: 60,
+  meshTranslationZ: -15,
+  colorMultiplier: 65,
 }
 
 const meshBinding = visualizationFolder.addBinding(visualSettings, 'mesh', {
@@ -113,9 +113,23 @@ colorMultiplierBinding.on('change', () => {
 const PARAMS = {};
 const colorBindings = {};
 const intensityBindings = {};
+const someColors = [
+  {r: 0, g: 0, b: 255, a: 1, intesity: 1},
+  {r: 0, g: 255, b: 0, a: 1, intesity: 1},
+  {r: 255, g: 0, b: 0, a: 1, intesity: 1},
+  {r: 0, g: 255, b: 255, a: 1, intesity: 1},
+  {r: 255, g: 0, b: 255, a: 1, intesity: 1},
+  {r: 255, g: 255, b: 0, a: 1, intesity: 1},
+  {r: 100, g: 255, b: 25, a: 1, intesity: 1},
+  {r: 255, g: 25, b: 100, a: 1, intesity: 1},
+  {r: 25, g: 100, b: 255, a: 1, intesity: 1},
+  {r: 255, g: 100, b: 25, a: 1, intesity: 1},
+  {r: 100, g: 25, b: 255, a: 1, intesity: 1},
+  {r: 255, g: 255, b: 255, a: 1, intesity: 1},
+];
 
-intSpeciesNames.forEach(name => {
-  PARAMS[name] = {r: 0, g: 0, b: 255, a: 1, intesity:1};
+intSpeciesNames.forEach((name, i) => {
+  PARAMS[name] = { ...someColors[i % someColors.length] };
 
   colorBindings[name] = colorPickerFolder.addBinding(
   PARAMS,
@@ -123,7 +137,6 @@ intSpeciesNames.forEach(name => {
 );
 intensityBindings[name] = colorPickerFolder.addBinding(PARAMS[name], 'intesity', {
   label: 'Intensity',
- 
   step: 0.1
 });
 

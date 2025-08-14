@@ -3,9 +3,9 @@ import { initADIArrays } from './initArrays.js';
 
  const WIDTH = 100; // Width of the grid
  const HEIGHT = 60; // Height of the grid
- const DIFFUSION_RATE = 100; // Diffusion rate
+ const DIFFUSION_RATE = 40; // Diffusion rate
  const deltaX = 1; // Spatial step size in micrometers
- const deltaT = 0.115; // Time step size in seconds
+ const deltaT = 0.28; // Time step size in seconds
     
     const {
         modifiedUpperDiagonal1,
@@ -24,7 +24,7 @@ import { initADIArrays } from './initArrays.js';
         
     } = initADIArrays(WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT); // width, height, diffusion rate, deltaX, deltaT
 
-
+let maxSource=0;
 export const ADI = (
     concentrationData,
     sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse
@@ -32,6 +32,10 @@ export const ADI = (
    
     for (let idx = 0; idx < WIDTH * HEIGHT; idx++) {  // Fix: remove -1
         scaledSources[idx] = sources[idx] * halfDeltaT;
+        if (Math.abs(sources[idx])>maxSource){
+            maxSource=Math.abs(sources[idx])
+            console.log(maxSource)
+        }
     }
    
 

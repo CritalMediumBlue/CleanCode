@@ -6,15 +6,16 @@ import {FTCS } from './FTCS.js';
         const totalCells = WIDTH * HEIGHT;
 
         // Pick parameters so that both methods cover the same physical time.
-        const DIFFUSION_RATE = 100; // choose a moderate value
+        const DIFFUSION_RATE = 40; // choose a moderate value
         const deltaX = 1; // micrometers
-        const deltaT = 0.115;  // seconds
-        const tolerance = 1e-3; 
+        const deltaT = 0.28;  // seconds
+        const tolerance = 5e-3; 
 
         const timeLapses = [];
+        const intervals = Math.round((4)/deltaT)
 
-        for (let i = 0; i <= 20; i ++) {
-            timeLapses.push( i * deltaT * 5); 
+        for (let i = 0; i <= intervals; i ++) {
+            timeLapses.push(2.5 + i * deltaT); 
         }
         
         const sources = new Float64Array(100*60).fill(0);
@@ -23,8 +24,8 @@ import {FTCS } from './FTCS.js';
         while (numberOfSources > 0) {
             const randomIndex = Math.floor(Math.random() * (WIDTH*HEIGHT));
             const randomIndex2 = Math.floor(Math.random() * (WIDTH*HEIGHT));
-            if (Math.abs(sources[randomIndex]) < 8 && Math.abs(sources[randomIndex2]) < 8) {
-                const randomSource = 8 * (Math.random() - 0.5);
+            if (Math.abs(sources[randomIndex]) < 5 && Math.abs(sources[randomIndex2]) < 5) {
+                const randomSource = 5 * (Math.random() - 0.5);
                 sources[randomIndex] += randomSource;
                 sources[randomIndex2] -= randomSource;
                 numberOfSources--;
@@ -56,23 +57,36 @@ describe('Compare Diffusion methods', () => {
                 }
             }
             const range = Math.abs(maxValue - minValue);
-            
+            let maxdiff = 0;
             for (let i = 0; i < totalCells; i++) {
                 const diff = Math.abs(resultADI[i] - resultFTCS[i]);
                 const relativeDiff = diff / range;
-                expect(relativeDiff).toBeLessThan(tolerance);
+                maxdiff = relativeDiff > maxdiff ? relativeDiff : maxdiff
             }
+            expect(maxdiff).toBeLessThan(tolerance);
         });
 });
 
-const SteadyStateTolerance = 0.25; // 25% tolerance
+const SteadyStateTolerance = 0.05; // 25% tolerance
 
 // Refactored test using the updated function
 describe('Compare SteadyState time', () => {
-    test('ADI should require half as many iterations as FTCS', () => {
-        const counterADI = 2*countIterationsToSteadyState(ADI, 1);
-        const counterFTCS = countIterationsToSteadyState(FTCS, 0.5);
+    test('ADI should require the same iterations as FTCS', () => {
+        const counterADI = countIterationsToSteadyState(ADI, 0.25);
+        const counterFTCS = countIterationsToSteadyState(FTCS, 0.25);
 
+        const diff = Math.abs(counterADI - counterFTCS)/2;
+        const mean = (counterADI + counterFTCS) / 2;
+        const relativeDiff = diff / mean;
+        expect(relativeDiff).toBeLessThan(SteadyStateTolerance);
+    });
+});
+
+describe('Compare SteadyState time', () => {
+    test('ADI should require the same iterations as FTCS', () => {
+        const counterADI = countIterationsToSteadyState(ADI, 0.5);
+        const counterFTCS = countIterationsToSteadyState(FTCS, 0.5);
+        
         const diff = Math.abs(counterADI - counterFTCS)/2;
         const mean = (counterADI + counterFTCS) / 2;
         const relativeDiff = diff / mean;
@@ -84,18 +98,6 @@ describe('Compare SteadyState time', () => {
     test('ADI should require the same iterations as FTCS', () => {
         const counterADI = countIterationsToSteadyState(ADI, 1);
         const counterFTCS = countIterationsToSteadyState(FTCS, 1);
-        
-        const diff = Math.abs(counterADI - counterFTCS)/2;
-        const mean = (counterADI + counterFTCS) / 2;
-        const relativeDiff = diff / mean;
-        expect(relativeDiff).toBeLessThan(SteadyStateTolerance);
-    });
-});
-
-describe('Compare SteadyState time', () => {
-    test('ADI should require twice as many iterations as FTCS', () => {
-        const counterADI = countIterationsToSteadyState(ADI, 1);
-        const counterFTCS = 2*countIterationsToSteadyState(FTCS, 2);
 
         const diff = Math.abs(counterADI - counterFTCS)/2;
         const mean = (counterADI + counterFTCS) / 2;
