@@ -13,12 +13,12 @@ import {
 
 export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState) => {
     for (const [id, idx] of positionMap.entries()) {
-        //simulateConcentrations(id, timeLapse, idx, concentrationsState);
-        rk4Step(id, timeLapse, idx, concentrationsState);
+        simulateConcentrations(id, timeLapse, idx, concentrationsState);
+        //rk4Step(id, timeLapse, idx, concentrationsState);
     }
 };
 
-/* function simulateConcentrations(ID, timeLapse, idx, concentrationsState) {
+ function simulateConcentrations(ID, timeLapse, idx, concentrationsState) {
    
     
     inheritConcentrations(ID, idx, concentrationsState);
@@ -35,9 +35,9 @@ export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState)
     secretedSpecies.forEach((speciesName) => {
         concentrationsState[speciesName].sources[idx] = extEquations[speciesName](variables, parameters);
     });
-} */
+} 
 
-function rk4Step(ID, timeLapse, idx, concentrationsState) {
+/* function rk4Step(ID, timeLapse, idx, concentrationsState) {
     inheritConcentrations(ID, idx, concentrationsState);
     const k1 = {};
     const k2 = {};
@@ -99,7 +99,7 @@ function rk4Step(ID, timeLapse, idx, concentrationsState) {
     secretedSpecies.forEach((speciesName) => {
         concentrationsState[speciesName].sources[idx] = extEquations[speciesName](variables, parameters);
     });
-}
+} */
 
 
 
