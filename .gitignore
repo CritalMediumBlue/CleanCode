@@ -73,4 +73,7 @@ yarn-error.log*
 # Local Netlify folder
 .netlify
 
-
+circuits/circuitsTosimulate/CompressedHighRes/*
+circuits/circuitsTosimulate/CompressedLowRes/*
+circuits/dataAnalysis/data/*
+circuits/circuitsTosimulate/*.js

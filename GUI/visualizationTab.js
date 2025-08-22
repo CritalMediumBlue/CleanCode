@@ -13,7 +13,7 @@ const visualSettings = {
   bacteria: true,
   mesh: false,
   species: 'null', 
-  helperCoordinates: true,
+  helperCoordinates: false,
   plot1: true,
   plot2: true,
 };
@@ -137,7 +137,7 @@ intSpeciesNames.forEach((name, i) => {
 );
 intensityBindings[name] = colorPickerFolder.addBinding(PARAMS[name], 'intesity', {
   label: 'Intensity',
-  step: 0.1
+  step: 0.001
 });
 
 guiActions.setBacteriaColor(name,PARAMS[name]);

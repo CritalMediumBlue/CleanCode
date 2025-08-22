@@ -22,10 +22,8 @@ let newAlpha = 0;
 Object.keys(cytoplasmicconcentrations).forEach( species => {
     newRed += coloringRule[species].r * cytoplasmicconcentrations[species] * coloringRule[species].intesity;
     newGreen += coloringRule[species].g *cytoplasmicconcentrations[species] * coloringRule[species].intesity;
-    newBlue += coloringRule[species].b * cytoplasmicconcentrations[species]* coloringRule[species].intesity;
-    newAlpha += coloringRule[species].a * cytoplasmicconcentrations[species]
-    
-
+    newBlue += coloringRule[species].b * cytoplasmicconcentrations[species] * coloringRule[species].intesity;
+    newAlpha += coloringRule[species].a * cytoplasmicconcentrations[species] * coloringRule[species].intesity;
 }
     
 )

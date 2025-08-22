@@ -39,6 +39,8 @@ export function setupNewScene(config,previusVars) {
     helperGrid.material.transparent = true;
     helperGrid.material.opacity = 0.50;
     helperGrid.rotation.x = Math.PI / 2; 
+    helperGrid.visible = false;
+    helperAxes.visible = false;
     
 
     stage.scene.add(helperAxes);

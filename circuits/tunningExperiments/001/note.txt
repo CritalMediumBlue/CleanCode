@@ -1,0 +1,1 @@
+these simulations were made using a diffucion coefficient of 40 micrometers / second squared

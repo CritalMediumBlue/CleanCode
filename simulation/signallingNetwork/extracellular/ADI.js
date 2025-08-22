@@ -3,7 +3,7 @@ import { initADIArrays } from './initArrays.js';
 
  const WIDTH = 100; // Width of the grid
  const HEIGHT = 60; // Height of the grid
- const DIFFUSION_RATE = 40; // Diffusion rate
+ const DIFFUSION_RATE = 40.0101; // Diffusion rate
  const deltaX = 1; // Spatial step size in micrometers
  const deltaT = 0.28; // Time step size in seconds
     
@@ -24,7 +24,7 @@ import { initADIArrays } from './initArrays.js';
         
     } = initADIArrays(WIDTH, HEIGHT, DIFFUSION_RATE, deltaX, deltaT); // width, height, diffusion rate, deltaX, deltaT
 
-let maxSource=0;
+//let maxSource=0;
 export const ADI = (
     concentrationData,
     sources, deltaX, deltaT, DIFFUSION_RATE, timeLapse
@@ -32,10 +32,10 @@ export const ADI = (
    
     for (let idx = 0; idx < WIDTH * HEIGHT; idx++) {  // Fix: remove -1
         scaledSources[idx] = sources[idx] * halfDeltaT;
-        if (Math.abs(sources[idx])>maxSource){
+/*         if (Math.abs(sources[idx])>maxSource){
             maxSource=Math.abs(sources[idx])
             console.log(maxSource)
-        }
+        } */
     }
    
 
@@ -125,6 +125,9 @@ export const ADI = (
             
              for (let j = 0; j < HEIGHT; j++) {
                 const pos = j * WIDTH + i
+                if(solution2[j]<= 0){
+                console.log("negative extracellular concentration ")
+            }
                 currentConcentrationData[pos] = solution2[j];
        
             } 
@@ -146,6 +149,9 @@ export const ADI = (
             thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
             
              for (let j = 0; j < HEIGHT; j++) {
+                if(solution2[j]<= 0){
+                console.log("negative extracellular concentration ")
+            }
                 currentConcentrationData[j * WIDTH] = solution2[j];
             
             } 
@@ -165,6 +171,9 @@ export const ADI = (
         }
         thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
          for (let j = 0; j < HEIGHT; j++) {
+            if(solution2[j]<= 0){
+                console.log("negative extracellular concentration ")
+            }
             currentConcentrationData[j * WIDTH + (WIDTH - 1)] = solution2[j];
        
         } 

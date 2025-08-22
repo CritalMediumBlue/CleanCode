@@ -26,8 +26,8 @@ export const setParamFromGUI = (paramName, newValue) => {setParameter(paramName,
 export function updateSimulation(currentBacteria, minutes) {
 
 
-    const totalTimeLapse = minutes*60; // seconds  30.99 sec
-    const timeLapse = 4.5; // seconds
+    const totalTimeLapse = minutes*60; // seconds  
+    const timeLapse = 2; // seconds
     const numberOfIterations = Math.round(totalTimeLapse / timeLapse);
 
     let bacteriaDataUpdated

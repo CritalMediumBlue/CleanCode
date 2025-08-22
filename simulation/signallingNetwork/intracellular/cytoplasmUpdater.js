@@ -28,16 +28,23 @@ export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState)
         const manager = interiorManager[speciesName];
         const origConc = manager.get(ID);
         const delta = intEquations[speciesName](variables, parameters); // calculates the change in concentration by evaluating the differential equation for "speciesName"
-        const newConc = origConc + delta * timeLapse; //New concentration is calculated by simply adding delta concenttration multiplied by delta time to the previous concentration
+        let newConc = origConc + delta * timeLapse; //New concentration is calculated by simply adding delta concenttration multiplied by delta time to the previous concentration
+        if (newConc<0){
+            console.log(speciesName, " cytoplasm concentration negative!!")
+            newConc = 1e-14
+        }
         manager.set(ID, newConc); //updates concentration
     }
 
     secretedSpecies.forEach((speciesName) => {
         concentrationsState[speciesName].sources[idx] = extEquations[speciesName](variables, parameters);
+        const manager = exteriorManager[speciesName];
+        const concentration = concentrationsState[speciesName].conc[idx]
+        manager.set(ID,  concentration); 
     });
 } 
 
-/* function rk4Step(ID, timeLapse, idx, concentrationsState) {
+ function rk4Step(ID, timeLapse, idx, concentrationsState) {
     inheritConcentrations(ID, idx, concentrationsState);
     const k1 = {};
     const k2 = {};
@@ -91,15 +98,20 @@ export const updateAllCytoplasms = (positionMap, timeLapse, concentrationsState)
         const speciesName = speciesNames[i];
         const manager = interiorManager[speciesName];
         const origConc = manager.get(ID);
-        const newConc = origConc + (timeLapse/6) * (k1[speciesName] + 2*k2[speciesName] + 2*k3[speciesName] + k4[speciesName]);
+        let newConc = origConc + (timeLapse/6) * (k1[speciesName] + 2*k2[speciesName] + 2*k3[speciesName] + k4[speciesName]);
+        if (newConc<0){
+            console.log(speciesName, " cytoplasm concentration negative!!")
+            newConc = 1e-14
+        }
         manager.set(ID, newConc);
     }
 
-    // Update secreted species as before
-    secretedSpecies.forEach((speciesName) => {
+   secretedSpecies.forEach((speciesName) => {
         concentrationsState[speciesName].sources[idx] = extEquations[speciesName](variables, parameters);
+        const manager = exteriorManager[speciesName];
+        manager.set(ID, concentrationsState[speciesName].conc[idx] ); //updates concentration
     });
-} */
+} 
 
 
 
@@ -136,9 +148,15 @@ export const calculateResultArray = (currentBacteria) => {
     const resultArray = currentBacteria.map(bacterium => {
         const { id, x, y, longAxis, angle } = bacterium;
         const cytoplasmConcentrations = {};
+        const extracellularConcentrations = {};
         speciesNames.forEach((speciesName) => {
             cytoplasmConcentrations[speciesName] = interiorManager[speciesName].get(id);
         });
+
+        secretedSpecies.forEach((speciesName) => {
+            extracellularConcentrations[speciesName] = exteriorManager[speciesName].get(id);
+        });
+
         return {
             id,
             x,
@@ -147,6 +165,7 @@ export const calculateResultArray = (currentBacteria) => {
             longAxis,
             phenotype: "test",
             cytoplasmConcentrations,
+            extracellularConcentrations
         };
     });
     return resultArray;

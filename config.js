@@ -49,7 +49,7 @@ export const CONFIG = {
     GRID: {
         WIDTH: 100,
         HEIGHT: 60,
-        DIFFUSION_RATE: 40,
+        DIFFUSION_RATE: 40.0101,
     },
 };
 

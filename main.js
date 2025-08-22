@@ -20,6 +20,7 @@ let bacteriaDataUpdated;
 let previusParams = null;
 let previusVars = null;  
 let concentrations;  
+let savinStates = false
 
 
 const guiActions = {
@@ -70,7 +71,14 @@ const guiActions = {
 
         // Clean up temporary URLs
         URL.revokeObjectURL(bacteriaLink.href);
-    }
+    },
+
+    startSaving: () => {
+        savinStates = true;
+    },
+    stopSaving: () => {
+        savinStates = false;
+    },
    
 
 };
@@ -95,10 +103,10 @@ const init = (processedData) => {
     
 
     setupNewScene(CONFIG,previusVars);
-    animate();
-    session.animationFrameId = requestAnimationFrame(animate);
-    //initial rendering
     renderScene(histories, bacteriaDataUpdated, concentrations, CONFIG.BACTERIUM, session, constants);
+    session.animationFrameId = requestAnimationFrame(animate);
+    session.play=true
+    animate();
 
 };
 
@@ -109,6 +117,9 @@ const animate = () => {
 
     if (session.play) {
       singleStep();
+      if(savinStates & session.currentTimeStep%80==0){
+        guiActions.saveState()
+      }
     }
     
    

@@ -7,7 +7,6 @@ export const initSessionTab = (tab, guiActions) => {
     const stateFolder = tab.pages[0].addFolder({title: 'Simulation state'});
     
     const loadButton = stateFolder.addButton({title: '📂',label:"Load state"});
-    const savebutton = stateFolder.addButton({title: '💾', label:"Save state"});
     const newSimulationButton = stateFolder.addButton({title: '➕', label:"New Simulation"});
     
     tab.pages[0].addBlade({view: 'separator',  });
@@ -25,10 +24,11 @@ export const initSessionTab = (tab, guiActions) => {
     tab.pages[0].addBlade({view: 'separator',  });
 
     // ############### Simulation recording controls
-    const recordFolder = tab.pages[0].addFolder({title: 'Record Screen'});
+    const recordFolder = tab.pages[0].addFolder({title: 'Record State'});
     recordFolder.disabled = true;
     
     const screenShotButton = recordFolder.addButton({title: '📸', label: "Screenshot"});
+    const savebutton = recordFolder.addButton({title: '💾', label:"Save state"});
     const recordButton = recordFolder.addButton({title: '⏺', label: "Start "});
     const stopRecordButton = recordFolder.addButton({title: '⏹', label: "Stop "});
     
@@ -78,5 +78,7 @@ export const initSessionTab = (tab, guiActions) => {
     
     // ################ Simulation recording controls
     screenShotButton.on('click', () => {guiActions.takeScreenshot();});
+    recordButton.on('click', () =>  {guiActions.startSaving();})
+    stopRecordButton.on('click', () =>  {guiActions.stopSaving();})
     
 }

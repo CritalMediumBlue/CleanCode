@@ -20,8 +20,10 @@ export const setSpeciesNames = (names) => { speciesNames = names; };
 export const setSecretedSpecies = (species) => { secretedSpecies = species; };
 
 export const setModel = (params, vars, config, bacteriaData, lineageMap) => {
-    Object.assign(parameters, params);
-    Object.assign(variables, vars);
+    if (Object.keys(parameters).length === 0 || Object.keys(variables).length === 0){
+        Object.assign(parameters, params);
+        Object.assign(variables, vars);
+    }
     
     const speciesNamesLocal = Object.keys(variables.int);
     const secretedSpeciesLocal = Object.keys(variables.ext);

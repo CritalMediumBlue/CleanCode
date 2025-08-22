@@ -57,7 +57,7 @@ Object.keys(parameterSettings).forEach(paramName => {
       paramName,
       {
         label: paramName,
-        step: 0.0005
+        step: 0.00001
       }
     );
     bindings[paramName].on('change', () => {

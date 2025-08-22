@@ -6,7 +6,7 @@ import {FTCS } from './FTCS.js';
         const totalCells = WIDTH * HEIGHT;
 
         // Pick parameters so that both methods cover the same physical time.
-        const DIFFUSION_RATE = 40; // choose a moderate value
+        const DIFFUSION_RATE = 40.0101; // choose a moderate value
         const deltaX = 1; // micrometers
         const deltaT = 0.28;  // seconds
         const tolerance = 5e-3; 
@@ -15,7 +15,7 @@ import {FTCS } from './FTCS.js';
         const intervals = Math.round((4)/deltaT)
 
         for (let i = 0; i <= intervals; i ++) {
-            timeLapses.push(2.5 + i * deltaT); 
+            timeLapses.push(0.5 + i * deltaT); 
         }
         
         const sources = new Float64Array(100*60).fill(0);

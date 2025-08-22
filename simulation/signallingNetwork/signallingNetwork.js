@@ -32,7 +32,7 @@ export const updateSignallingCircuit = (currentBacteria, HEIGHT, WIDTH, timeLaps
         updateAllCytoplasms(positionMap, timeLapse/2, concentrationsState);
 
         extSpeciesNames.forEach((speciesName) => {
-          ADI(concentrationsState[speciesName].conc,concentrationsState[speciesName].sources,1, 0.28, 40, timeLapse);
+          ADI(concentrationsState[speciesName].conc,concentrationsState[speciesName].sources,1, 0.28, 40.0101, timeLapse);
         });
 
         updateAllCytoplasms(positionMap, timeLapse/2, concentrationsState);
