@@ -76,4 +76,3 @@ yarn-error.log*
 circuits/circuitsTosimulate/CompressedHighRes/*
 circuits/circuitsTosimulate/CompressedLowRes/*
 circuits/dataAnalysis/data/*
-circuits/circuitsTosimulate/*.js
