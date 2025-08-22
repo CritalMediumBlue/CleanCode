@@ -172,7 +172,7 @@ export const ADI = (
         thomasAlgorithm(a2, b2, c2, d2, HEIGHT, modifiedUpperDiagonal2, modifiedRightHandSide2, solution2);
          for (let j = 0; j < HEIGHT; j++) {
             if(solution2[j]<= 0){
-                console.log("negative extracellular concentration ")
+                console.log("negative extracellular concentration !!")
             }
             currentConcentrationData[j * WIDTH + (WIDTH - 1)] = solution2[j];
        
